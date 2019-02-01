@@ -1,0 +1,5 @@
+#pragma once
+
+#define OPENSH_VERSION_MAJOR 0
+#define OPENSH_VERSION_MINOR 1
+#define OPENSH_VERSION_STRING "0.1"
