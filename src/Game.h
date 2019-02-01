@@ -6,6 +6,7 @@
 #include <Display.h>
 #include <MainMenu.h>
 #include <MlbFile.h>
+#include <Sound.h>
 
 namespace OpenSH
 {

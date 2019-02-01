@@ -1,7 +1,7 @@
-#include <Config.h>
 #include <Game.h>
 
 using namespace OpenSH::Game;
+using namespace OpenSH::Sound;
 using namespace OpenSH::System;
 using namespace OpenSH::Parsers;
 
@@ -21,6 +21,9 @@ bool Game::Init(int argc, char **argv) {
 
     MlbFile mlb;
     mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
+
+    OpenSH::Sound::Sound sound;
+    sound.Init();
 
     return true;
 }
