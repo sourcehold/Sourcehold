@@ -13,11 +13,9 @@ Sound::~Sound() {
 bool Sound::Init() {
     device = alcOpenDevice(NULL);
     if(!device) {
-        Logger::LogToConsole("Unable to open AL device!", Logger::ERROR);
+        Logger::warning("SOUND") << "Unable to open AL device!" << std::endl;
         return false;
     }
-
-
 
     return true;
 }
@@ -25,6 +23,6 @@ bool Sound::Init() {
 void Sound::PrintError() {
     ALCenum error = alGetError();
     if(error != AL_NO_ERROR) {
-        Logger::LogToConsole(alutGetErrorString(error), Logger::ERROR);
+        Logger::error("SOUND") << alutGetErrorString(error) << std::endl;
     }
 }

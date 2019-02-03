@@ -6,7 +6,10 @@
 #include <Display.h>
 #include <MainMenu.h>
 #include <MlbFile.h>
+#include <Gm1File.h>
+#include <TgxFile.h>
 #include <Sound.h>
+#include <Rendering.h>
 
 namespace OpenSH
 {
@@ -15,6 +18,7 @@ namespace OpenSH
         class Game : public Display
         {
                 std::string data_folder;
+                Parsers::TgxFile tgx;
             public:
                 Game();
                 ~Game();

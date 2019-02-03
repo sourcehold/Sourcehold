@@ -7,6 +7,7 @@
 
 #include <Config.h>
 #include <Logger.h>
+#include <Rendering.h>
 
 namespace OpenSH
 {
@@ -30,6 +31,7 @@ namespace OpenSH
 
                 bool IsOpen();
                 SDL_Renderer *GetRenderer();
+                Rendering::Context CreateContext();
             protected:
         };
     }

@@ -8,6 +8,7 @@ namespace OpenSH
     {
         struct Context {
             SDL_Renderer *renderer;
+            SDL_Window *window;
         };
     }
 }

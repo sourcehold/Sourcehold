@@ -15,16 +15,22 @@ namespace OpenSH
 {
     namespace Parsers
     {
-        class Parser : public std::ifstream
+        class Parser : private std::ifstream
         {
+                uint32_t length = 0;
             public:
                 Parser() : std::ifstream() { }; 
                 ~Parser() = default;
             
                 bool Open(boost::filesystem::path &path, std::ios_base::openmode mode);
                 void Close();
+                bool Ok();
                 bool GetData(void *buf, size_t bufsize);
+
                 std::string GetUTF16();
+                uint8_t GetByte();
+                uint16_t GetWord();
+                uint32_t GetLength();
             protected:
         };
     }
