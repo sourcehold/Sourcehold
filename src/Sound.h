@@ -1,8 +1,12 @@
 #pragma once
 
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alut.h>
+#include <boost/filesystem/fstream.hpp>
+
+#include <cstdio>
+#include <vector>
+
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <Config.h>
 #include <Logger.h>
@@ -14,14 +18,20 @@ namespace OpenSH
         /* Sound super class */
         class Sound
         {
-                ALCdevice *device;
+                SDL_AudioSpec spec;
+                SDL_AudioDeviceID dev;
+                FILE *song = NULL;
+                bool playing = false, repeating = false;
             public:
                 Sound();
                 ~Sound();
 
                 bool Init();
+                bool PlayMusic(boost::filesystem::path path, bool repeat = false);
+                bool IsPlaying();
             protected:
                 void PrintError();
+                void AudioCallback(Uint8 *stream, int len);
         };
     }
 }

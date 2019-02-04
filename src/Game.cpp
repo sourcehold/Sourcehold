@@ -35,8 +35,11 @@ bool Game::Init(int argc, char **argv) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
     }
 
-    OpenSH::Sound::Sound sound;
-    sound.Init();
+    Sound::Init();
+    Sound::PlayMusic(boost::filesystem::path("data/fx/music/sadtimesa.raw"), true);
+    
+    bik.Init(ctx);
+    bik.LoadFromDisk(boost::filesystem::path("data/binks/intro.bik"));
 
     return true;
 }
@@ -44,11 +47,16 @@ bool Game::Init(int argc, char **argv) {
 int Game::MainLoop() {
     while(1) {
         Display::Clear();
+        Display::HandleEvents();
+        Display::StartTimer();
 
         // render everything
         tgx.Render(0, 0);
 
-        Display::Update();
+        SDL_Texture *t = bik.RenderFrame();
+
+        Display::Flush();
+        Display::EndTimer();
         if(!Display::IsOpen()) break;
     }
 

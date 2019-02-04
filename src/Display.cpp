@@ -37,16 +37,29 @@ void Display::Close() {
     SDL_DestroyWindow(window);
 }
 
-void Display::Update() {
-    SDL_RenderPresent(renderer);
-
-    SDL_Delay(10);
-
+void Display::HandleEvents() {
     while(SDL_PollEvent(&event) != 0) {
         if(event.type == SDL_QUIT) {
             open = false;
         }
     }
+}
+
+void Display::StartTimer() {
+    timer = SDL_GetTicks();
+}
+
+void Display::EndTimer() {
+    uint32_t ntimer = SDL_GetTicks();
+    uint32_t delta = ntimer - timer;
+    timer = ntimer;
+    if(delta < 1000 / FRAMES_PER_SECOND) {
+        SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);
+    }
+}
+
+void Display::Flush() {
+    SDL_RenderPresent(renderer);
 }
 
 void Display::Clear() {

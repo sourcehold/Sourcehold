@@ -18,6 +18,9 @@ namespace OpenSH
                 SDL_Event event;
                 SDL_Window *window;
                 SDL_Renderer *renderer;
+                const int FRAMES_PER_SECOND = 30;
+                uint32_t timer = 0;
+                int frame = 0;
                 bool open = false;
             public:
                 Display();
@@ -26,7 +29,10 @@ namespace OpenSH
                 void OpenWindowed(std::string title, int width, int height);
                 void Fullscreen();
                 void Close();
-                void Update();
+                void HandleEvents();
+                void StartTimer();
+                void EndTimer();
+                void Flush();
                 void Clear();
 
                 bool IsOpen();

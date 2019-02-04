@@ -6,10 +6,9 @@ This project is currently in an early stage of developement.
 Run `cmake` in the build directory.  
 OpenSH depends on the following libraries:
 * SDL2
+* SDL2_mixer
 * BOOST
-* OpenAL
-* ALUT
-* FFmpeg
+* libavcodec
 
 ## Running
 Copy the following files into the `data` folder:  

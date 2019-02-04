@@ -10,15 +10,17 @@
 #include <TgxFile.h>
 #include <Sound.h>
 #include <Rendering.h>
+#include <BinkVideo.h>
 
 namespace OpenSH
 {
     namespace Game
     {
-        class Game : public Display
+        class Game : public Display, public Sound::Sound
         {
                 std::string data_folder;
                 Parsers::TgxFile tgx;
+                Rendering::BinkVideo bik;
             public:
                 Game();
                 ~Game();

@@ -28,27 +28,24 @@ else(Boost_FOUND)
 	message(FATAL_ERROR "Boost has to be installed!")
 endif(Boost_FOUND)
 
-# Find OpenAL
-find_package(OpenAL)
-if(OPENAL_FOUND)
-	include_directories(${OPENAL_INCLUDE_DIRS})
-else(OPENAL_FOUND)
-	message(FATAL_ERROR "OpenAL has to be installed!")
-endif(OPENAL_FOUND)
+# Find SDL mixer
+find_package(SDL_mixer REQUIRED)
+if(SDL_MIXER_FOUND)
+	include_directories(${SDL_MIXER_INCLUDE_DIRS})
+else(SDL_MIXER_FOUND)
+	message(FATAL_ERROR "SDL_mixer has to be installed!")
+endif(SDL_MIXER_FOUND)
 
-# Find ALUT
-find_package(ALUT REQUIRED)
-if(NOT ALUT_FOUND)
-    message(FATAL_ERROR "ALUT has to be installed!")
-endif(NOT ALUT_FOUND)
-include_directories(${ALUT_INCLUDE_DIR})
-
-# Find FFmpeg (for libavcodec)
-find_package(FFmpeg REQUIRED)
-if(NOT FFMPEG_FOUND)
-    message(FATAL_ERROR "FFmpeg has to be installed!")
-endif(NOT FFMPEG_FOUND)
-include_directories(${FFMPEG_INCLUDE_DIR})
+# Find avcodec
+find_package(LibAV REQUIRED)
+if(LIBAV_FOUND)
+	include_directories(${LIBAV_INCLUDE_DIRS})
+if(NOT LIBAV_SWSCALE_FOUND)
+	message(FATAL_ERROR "libswscale has to be installed!")
+endif()
+else(LIBAV_FOUND)
+	message(FATAL_ERROR "libavcodec has to be installed!")
+endif(LIBAV_FOUND)
 
 # Include sources
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -71,7 +68,7 @@ target_link_libraries(
 	Stronghold 
 	${SDL2_LIBRARY}
 	${Boost_LIBRARIES}
-	${OPENAL_LIBRARIES}
-	${ALUT_LIBRARIES}
-	${FFMPEG_LIBRARIES}
+	${SDL_MIXER_LIBRARIES}
+	${LIBAV_LIBRARIES}
+	${LIBAV_SWSCALE_LIBRARIES}
 )
