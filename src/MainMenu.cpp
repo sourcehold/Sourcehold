@@ -1,6 +1,6 @@
 #include <MainMenu.h>
 
-using namespace OpenSH::Rendering;
+using namespace OpenSH::Game;
 
 MainMenu::MainMenu(Context &ctx) {
 

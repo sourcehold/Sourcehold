@@ -14,8 +14,9 @@ extern "C" {
 }
 
 #include <Config.h>
-#include <Rendering.h>
-#include <Logger.h>
+#include <Rendering/Rendering.h>
+#include <Rendering/Texture.h>
+#include <System/Logger.h>
 
 namespace OpenSH
 {
@@ -32,7 +33,7 @@ namespace OpenSH
                 AVFrame *frame;
                 AVCodecContext *codecCtx;
                 SwsContext *sws;
-                SDL_Texture *framebuffer;
+                Texture texture;
                 int streamn;
                 double timebase = 0.0;
             public:
@@ -42,7 +43,7 @@ namespace OpenSH
                 bool Init(Context &ctx);
                 bool LoadFromDisk(boost::filesystem::path path);
                 void Close();
-                SDL_Texture *RenderFrame();
+                Texture &RenderFrame();
             private:
         };
     }

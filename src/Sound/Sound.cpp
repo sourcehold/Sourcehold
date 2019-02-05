@@ -1,4 +1,4 @@
-#include <Sound.h>
+#include <Sound/Sound.h>
 
 using namespace OpenSH::System;
 using namespace OpenSH::Sound;
@@ -36,6 +36,8 @@ bool Sound::Init() {
 }
 
 bool Sound::PlayMusic(boost::filesystem::path path, bool repeat) {
+    if(playing) return false;
+    
     song = std::fopen(path.native().c_str(), "rb");
     if(!song) {
         Logger::error("SOUND") << "Unable to load music '" << path.native() << "'!" << std::endl;

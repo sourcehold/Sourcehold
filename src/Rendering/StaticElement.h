@@ -1,8 +1,8 @@
 #pragma once
 
 #include <Config.h>
-#include <Rendering.h>
-#include <Texture.h>
+#include <Rendering/Rendering.h>
+#include <Rendering/Texture.h>
 
 namespace OpenSH
 {

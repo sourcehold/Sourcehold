@@ -45,7 +45,7 @@ bool Game::Init(int argc, char **argv) {
 }
 
 int Game::MainLoop() {
-    while(1) {
+    while(Display::IsOpen()) {
         Display::Clear();
         Display::HandleEvents();
         Display::StartTimer();
@@ -53,11 +53,11 @@ int Game::MainLoop() {
         // render everything
         tgx.Render(0, 0);
 
-        SDL_Texture *t = bik.RenderFrame();
+        //Texture &frame = bik.RenderFrame();
+        //Display::RenderTextureXY(frame, 0, 0);
 
         Display::Flush();
         Display::EndTimer();
-        if(!Display::IsOpen()) break;
     }
 
     return EXIT_SUCCESS;
@@ -66,6 +66,7 @@ int Game::MainLoop() {
 int main(int argc, char **argv) {
     Game game;
     if(!game.Init(argc, argv)) {
+        Logger::error("GAME") << "Game initialization failed due to previous errors!" << std::endl;
         return EXIT_FAILURE;
     }
 

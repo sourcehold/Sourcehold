@@ -3,9 +3,9 @@
 #include <cinttypes>
 
 #include <Config.h>
-#include <Parser.h>
-#include <Logger.h>
-#include <Texture.h>
+#include <Parsers/Parser.h>
+#include <System/Logger.h>
+#include <Rendering/Texture.h>
 
 using namespace OpenSH::Rendering;
 

@@ -3,8 +3,8 @@
 #include <vector>
 
 #include <Config.h>
-#include <Logger.h>
-#include <Rendering.h>
+#include <System/Logger.h>
+#include <Rendering/Rendering.h>
 
 namespace OpenSH
 {

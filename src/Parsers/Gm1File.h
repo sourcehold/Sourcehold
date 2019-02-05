@@ -3,8 +3,8 @@
 #include <cinttypes>
 
 #include <Config.h>
-#include <Logger.h>
-#include <Parser.h>
+#include <System/Logger.h>
+#include <Parsers/Parser.h>
 
 namespace OpenSH
 {

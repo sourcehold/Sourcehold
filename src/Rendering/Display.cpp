@@ -1,6 +1,5 @@
-#include <Display.h>
+#include <Rendering/Display.h>
 
-using namespace OpenSH::Game;
 using namespace OpenSH::System;
 using namespace OpenSH::Rendering;
 
@@ -13,13 +12,13 @@ Display::~Display() {
 }
 
 void Display::OpenWindowed(std::string title, int width, int height) {
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS);
-    if(!window) {
+    Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS);
+    if(!Renderer::window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if(!renderer) {
+    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED);
+    if(!Renderer::renderer) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     }
 
@@ -27,14 +26,14 @@ void Display::OpenWindowed(std::string title, int width, int height) {
 }
 
 void Display::Fullscreen() {
-    int err = SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    int err = SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
 }
 
 void Display::Close() {
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(Renderer::window);
 }
 
 void Display::HandleEvents() {
@@ -58,25 +57,10 @@ void Display::EndTimer() {
     }
 }
 
-void Display::Flush() {
-    SDL_RenderPresent(renderer);
-}
-
 void Display::Clear() {
-    SDL_RenderClear(renderer);
+    SDL_RenderClear(Renderer::renderer);
 }
 
 bool Display::IsOpen() {
     return open;
-}
-
-SDL_Renderer *Display::GetRenderer() {
-    return renderer;
-}
-
-Context Display::CreateContext() {
-    Context ctx;
-    ctx.window = window;
-    ctx.renderer = renderer;
-    return ctx;
 }

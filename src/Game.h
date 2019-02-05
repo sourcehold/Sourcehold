@@ -3,14 +3,17 @@
 #include <cstdlib>
 
 #include <Config.h>
-#include <Display.h>
 #include <MainMenu.h>
-#include <MlbFile.h>
-#include <Gm1File.h>
-#include <TgxFile.h>
-#include <Sound.h>
-#include <Rendering.h>
-#include <BinkVideo.h>
+
+#include <Rendering/Display.h>
+#include <Rendering/Rendering.h>
+
+#include <Parsers/MlbFile.h>
+#include <Parsers/Gm1File.h>
+#include <Parsers/TgxFile.h>
+#include <Parsers/BinkVideo.h>
+
+#include <Sound/Sound.h>
 
 namespace OpenSH
 {

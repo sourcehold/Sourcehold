@@ -1,4 +1,4 @@
-#include <BinkVideo.h>
+#include <Parsers/BinkVideo.h>
 
 using namespace OpenSH::System;
 using namespace OpenSH::Rendering;
@@ -8,7 +8,7 @@ BinkVideo::BinkVideo() {
 }
 
 BinkVideo::~BinkVideo() {
-    Close();
+
 }
 
 bool BinkVideo::Init(Context &ctx) {
@@ -79,17 +79,21 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path) {
         0,
         0
     );
+    if(!sws) {
+        Logger::error("RENDERING") << "Unable to create swscale context!" << std::endl;
+        return false;
+    }
 
     return true;
 }
 
-SDL_Texture *BinkVideo::RenderFrame() {
+Texture &BinkVideo::RenderFrame() {
     uint32_t begin_time = SDL_GetTicks();
     if(packet.stream_index == streamn) {
         int ret = avcodec_send_packet(codecCtx, &packet);
         if(ret < 0) {
             Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
-            return NULL;
+            return texture;
         }
 
         avcodec_receive_frame(codecCtx, frame);
@@ -102,7 +106,7 @@ SDL_Texture *BinkVideo::RenderFrame() {
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
     }
 
-    return framebuffer;
+    return texture;
 }
 
 void BinkVideo::Close() {

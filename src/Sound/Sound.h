@@ -9,7 +9,7 @@
 #include <SDL2/SDL_mixer.h>
 
 #include <Config.h>
-#include <Logger.h>
+#include <System/Logger.h>
 
 namespace OpenSH
 {

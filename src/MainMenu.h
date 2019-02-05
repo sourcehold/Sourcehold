@@ -1,13 +1,14 @@
 #pragma once
 
 #include <Config.h>
-#include <StaticElement.h>
-#include <RenderList.h>
+#include <Rendering/StaticElement.h>
+#include <Rendering/RenderList.h>
 
 namespace OpenSH
 {
-    namespace Rendering
+    namespace Game
     {
+        using namespace Rendering;
         class MainMenu
         {
                 RenderList<StaticElement> staticElements;

@@ -1,4 +1,4 @@
-#include <Texture.h>
+#include <Rendering/Texture.h>
 
 using namespace OpenSH::System;
 using namespace OpenSH::Rendering;
@@ -20,7 +20,7 @@ bool Texture::AllocNew(uint32_t width, uint32_t height, uint32_t format) {
     texture = SDL_CreateTexture(
         ctx.renderer,
         format,
-        SDL_TEXTUREACCESS_STREAMING,
+        SDL_TEXTUREACCESS_TARGET,
         width, height
     );
     if(!texture) {
