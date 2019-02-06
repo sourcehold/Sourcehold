@@ -15,7 +15,18 @@ void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::RenderTextureXY(Texture &texture, uint32_t x, uint32_t y) {    
+void Renderer::RenderTextureXY(Texture &texture, int x, int y) {    
+    SDL_Rect rect = {
+        x, y,
+        texture.GetWidth(),
+        texture.GetHeight()
+    };
+    SDL_RenderCopy(
+        renderer,
+        texture.GetTexture(),
+        NULL,
+        &rect
+    );
 }
 
 void Renderer::RenderTextureFullscreen(Texture &texture) {

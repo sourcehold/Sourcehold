@@ -14,7 +14,7 @@ Texture::Texture(Context &ctx) {
 Texture::~Texture() {
 }
 
-bool Texture::AllocNew(uint32_t width, uint32_t height, uint32_t format) {
+bool Texture::AllocNew(int width, int height, int format) {
     this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
@@ -33,12 +33,11 @@ bool Texture::AllocNew(uint32_t width, uint32_t height, uint32_t format) {
     return true;
 }
 
-
 Uint32 color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
    return r << 24 | g << 16 | b << 8 | a;
 }
 
-void Texture::SetPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b) {
+void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
     /*pixels[(x + y * width) + 0] = r;
     pixels[(x + y * width) + 1] = g;
     pixels[(x + y * width) + 2] = b;*/
@@ -62,10 +61,10 @@ SDL_Texture *Texture::GetTexture() {
     return texture;
 }
 
-uint32_t Texture::GetWidth() {
+int Texture::GetWidth() {
     return width;
 }
 
-uint32_t Texture::GetHeight() {
+int Texture::GetHeight() {
     return height;
 }

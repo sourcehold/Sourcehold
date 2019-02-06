@@ -39,10 +39,6 @@ void TgxFile::DumpInformation() {
 
 }
 
-int extractBits(int n, int k, int p) { 
-    return (((1 << k) - 1) & (n >> (p - 1)));
-} 
-
 void TgxFile::ReadTokens() {
     uint32_t x = 0, y = 0;
 
@@ -54,38 +50,39 @@ void TgxFile::ReadTokens() {
 
         if(flag == 0b100) { /* Newline */
             y++;
-            x = 0; //x -= header.width;
+            x = 0;
         }else if(flag == 0b010) { /* Repeating pixel (they call _that_ compression lol) */
-            uint16_t pixel = Parser::GetWord();
             uint8_t r,g,b;
+            ReadPixel(Parser::GetWord(), &r, &g, &b);
 
-            r = extractBits(pixel, 10, 5) * 8;
+            /*r = extractBits(pixel, 10, 5) * 8;
             g = extractBits(pixel, 5, 5) * 8;
-            b = extractBits(pixel, 0, 5) * 8;
+            b = extractBits(pixel, 0, 5) * 8;*/
 
             /* Put the same pixel into buffer */
-            for(uint8_t i = 0; i < len; ++i) {
+            for(uint8_t i = 0; i < len; ++i,++x) {
                 Texture::SetPixel(x, y, r, g, b);
-                x++;
             }
         }else if(flag == 0b000) { /* Pixel stream */
-            for(uint8_t i = 0; i < len; ++i) {
-                uint16_t pixel = Parser::GetWord();
+            for(uint8_t i = 0; i < len; ++i,++x) {
                 uint8_t r,g,b;
-
-            r = extractBits(pixel, 10, 5) * 8;
-            g = extractBits(pixel, 5, 5) * 8;
-            b = extractBits(pixel, 0, 5) * 8;
-
+                ReadPixel(Parser::GetWord(), &r, &g, &b);
                 Texture::SetPixel(x, y, r, g, b);
-
-                x++;
             }
-        }else if(flag == 0b001) {
-            //std::cout << "Trans: " << (int)len << std::endl;
+        }else if(flag == 0b001) { /* Transparent pixel stream */
             x += len;
+        }else if(flag == 0b111) { /* Seems to be end-of-stream */
+            break;
         }else {
-            Logger::warning("PARSERS") << "Unknown token in tgx!" << std::endl;
+            std::bitset<8> tk(b);
+            std::bitset<3> fg(flag);
+            Logger::warning("PARSERS") << "Unknown token in tgx: 0b" << tk << ", extracted length: " << (int)len << ", flag: 0b" << fg << std::endl;
         }
     }
+}
+
+void TgxFile::ReadPixel(uint16_t pixel, uint8_t *r, uint8_t *g, uint8_t *b) {
+    *r = 8 * ((pixel >> 0x02) & 0b11111);
+    *g = 8 * ((pixel >> 0x0d) << 2 | (pixel & 0b11));
+    *b = 8 * ((pixel >> 0x08) & 0b11111);
 }

@@ -15,20 +15,20 @@ namespace Sourcehold
                 Context ctx;
                 SDL_Texture *texture;
                 std::vector<uint32_t> pixels;
-                uint32_t width, height;
+                int width, height;
             public:
                 Texture();
                 Texture(Context &ctx);
                 ~Texture();
 
-                bool AllocNew(uint32_t width, uint32_t height, uint32_t format);
-                void SetPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b);
+                bool AllocNew(int width, int height, int format);
+                void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
                 void UpdateTexture();
                 void SetContext(Context &ctx);
 
                 SDL_Texture *GetTexture();
-                uint32_t GetWidth();
-                uint32_t GetHeight();
+                int GetWidth();
+                int GetHeight();
             protected:
         };
     }

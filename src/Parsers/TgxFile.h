@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cinttypes>
+#include <bitset>
 
 #include <Config.h>
 #include <Parsers/Parser.h>
@@ -30,6 +31,7 @@ namespace Sourcehold
                 void DumpInformation();
             protected:
                 void ReadTokens();
+                void ReadPixel(uint16_t pixel, uint8_t *r, uint8_t *g, uint8_t *b);
             private:
                 TgxHeader header;
                 uint32_t length = 0;

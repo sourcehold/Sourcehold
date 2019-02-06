@@ -12,6 +12,7 @@
 #include <Parsers/Gm1File.h>
 #include <Parsers/TgxFile.h>
 #include <Parsers/BinkVideo.h>
+#include <Parsers/VolumeTxt.h>
 
 #include <Sound/Sound.h>
 

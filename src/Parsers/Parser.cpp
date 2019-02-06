@@ -51,6 +51,12 @@ std::string Parser::GetUTF16() {
     return convert.to_bytes(ws);
 }
 
+std::string Parser::GetLine() {
+    std::string l;
+    std::getline(*this, l);
+    return l;
+}
+
 uint8_t Parser::GetByte() {
     return get();
 }
