@@ -8,4 +8,7 @@ sudo apt update -qq
 sudo apt install -y -qq libsdl2-dev 
 sudo apt install -y -qq libsdl2-mixer-dev
 sudo apt install -y -qq libboost-all-dev
+sudo apt install -y -qq libavcodec-dev
+sudo apt install -y -qq libavformat-dev
+sudo apt install -y -qq libswscale-dev
 sudo apt install -y -qq ffmpeg
