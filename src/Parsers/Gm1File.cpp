@@ -1,7 +1,7 @@
 #include <Parsers/Gm1File.h>
 
-using namespace OpenSH::Parsers;
-using namespace OpenSH::System;
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::System;
 
 Gm1File::Gm1File() : Parser() {
 

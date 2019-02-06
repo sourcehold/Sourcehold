@@ -1,4 +1,4 @@
-# OpenSH
+# Sourcehold
 Open source engine implementation for Stronghold 1 by Firefly Studios.  
 This project is currently in an early stage of developement.
 

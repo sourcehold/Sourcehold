@@ -15,7 +15,7 @@
 
 #include <Sound/Sound.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Game
     {

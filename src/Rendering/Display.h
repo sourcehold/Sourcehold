@@ -9,7 +9,7 @@
 #include <System/Logger.h>
 #include <Rendering/Renderer.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {

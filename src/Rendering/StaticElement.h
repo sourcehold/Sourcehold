@@ -4,7 +4,7 @@
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {

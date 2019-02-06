@@ -4,7 +4,7 @@
 #include <Rendering/StaticElement.h>
 #include <Rendering/RenderList.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Game
     {

@@ -1,6 +1,6 @@
 #include <System/Logger.h>
 
-using namespace OpenSH::System;
+using namespace Sourcehold::System;
 
 Logger::Logger() {
 

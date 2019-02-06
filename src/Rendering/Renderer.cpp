@@ -1,7 +1,7 @@
 #include <Rendering/Renderer.h>
 
-using namespace OpenSH::Rendering;
-using namespace OpenSH::System;
+using namespace Sourcehold::Rendering;
+using namespace Sourcehold::System;
 
 Renderer::Renderer() {
 
@@ -15,12 +15,16 @@ void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::RenderTextureXY(Texture &texture, uint32_t x, uint32_t y) {
-
+void Renderer::RenderTextureXY(Texture &texture, uint32_t x, uint32_t y) {    
 }
 
 void Renderer::RenderTextureFullscreen(Texture &texture) {
-    
+    SDL_RenderCopy(
+        renderer,
+        texture.GetTexture(),
+        NULL,
+        NULL
+    );
 }
 
 Context Renderer::CreateContext() {

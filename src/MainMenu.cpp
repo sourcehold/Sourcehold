@@ -1,6 +1,6 @@
 #include <MainMenu.h>
 
-using namespace OpenSH::Game;
+using namespace Sourcehold::Game;
 
 MainMenu::MainMenu(Context &ctx) {
 

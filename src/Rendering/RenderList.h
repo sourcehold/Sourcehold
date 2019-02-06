@@ -4,7 +4,7 @@
 
 #include <Config.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {

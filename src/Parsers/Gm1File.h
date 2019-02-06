@@ -6,7 +6,7 @@
 #include <System/Logger.h>
 #include <Parsers/Parser.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Parsers
     {

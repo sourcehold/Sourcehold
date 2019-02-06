@@ -1,10 +1,10 @@
 #include <Game.h>
 
-using namespace OpenSH::Game;
-using namespace OpenSH::Sound;
-using namespace OpenSH::System;
-using namespace OpenSH::Parsers;
-using namespace OpenSH::Rendering;
+using namespace Sourcehold::Game;
+using namespace Sourcehold::Sound;
+using namespace Sourcehold::System;
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::Rendering;
 
 Game::Game() : Display() {
 
@@ -15,28 +15,28 @@ Game::~Game() {
 }
 
 bool Game::Init(int argc, char **argv) {
-    Display::OpenWindowed("OpenSH version " OPENSH_VERSION_STRING, 800, 600);
+    Display::OpenWindowed("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600);
 
     Context ctx = Display::CreateContext();
 
     boost::filesystem::path dataPath { "data" };
     data_folder = dataPath.native();
 
-    MlbFile mlb;
+    /*MlbFile mlb;
     mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
 
     Gm1File gm1;
     if(!gm1.LoadFromDisk(boost::filesystem::path("data/gm/anim_armourer.gm1"))) {
         Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
-    }
+    }*/
 
     tgx.SetContext(ctx);
-    if(!tgx.LoadFromDisk(boost::filesystem::path("data/gfx/ap_civil10_first.tgx"))) {
+    if(!tgx.LoadFromDisk(boost::filesystem::path("data/gfx/defeat_pig.tgx"))) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
     }
 
     Sound::Init();
-    Sound::PlayMusic(boost::filesystem::path("data/fx/music/sadtimesa.raw"), true);
+    Sound::PlayMusic(boost::filesystem::path("data/fx/music/underanoldtree.raw"), true);
     
     bik.Init(ctx);
     bik.LoadFromDisk(boost::filesystem::path("data/binks/intro.bik"));
@@ -51,7 +51,8 @@ int Game::MainLoop() {
         Display::StartTimer();
 
         // render everything
-        tgx.Render(0, 0);
+        //tgx.Render(0, 0);
+        Display::RenderTextureFullscreen(tgx);
 
         //Texture &frame = bik.RenderFrame();
         //Display::RenderTextureXY(frame, 0, 0);

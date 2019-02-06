@@ -1,6 +1,6 @@
 #include <Parsers/Parser.h>
 
-using namespace OpenSH::Parsers;
+using namespace Sourcehold::Parsers;
 using namespace boost::filesystem;
 
 bool Parser::Open(boost::filesystem::path &path, std::ios_base::openmode mode) {
@@ -27,7 +27,7 @@ bool Parser::Ok() {
 
 bool Parser::GetData(void *buf, size_t bufsize) {
     if(rdstate() & std::ifstream::failbit) return false;
-    this->get((char*)buf, bufsize);
+    this->read((char*)buf, bufsize);
     return true;
 }
 
@@ -57,10 +57,14 @@ uint8_t Parser::GetByte() {
 
 uint16_t Parser::GetWord() {
     uint16_t w;
-    get((char*)&w, sizeof(uint16_t));
+    read(reinterpret_cast<char *>(&w), sizeof(w));
     return w;
 }
 
 uint32_t Parser::GetLength() {
     return length;
+}
+
+uint32_t Parser::GetOffset() {
+    return tellg();
 }

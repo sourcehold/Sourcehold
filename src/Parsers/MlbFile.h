@@ -8,7 +8,7 @@
 #include <Parsers/Parser.h>
 
 /* File containing scenario description */
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Parsers
     {
@@ -20,7 +20,7 @@ namespace OpenSH
                 MlbFile();
                 ~MlbFile();
 
-                void LoadFromDisk(boost::filesystem::path path);
+                bool LoadFromDisk(boost::filesystem::path path);
                 void Clear();
             protected:
         };

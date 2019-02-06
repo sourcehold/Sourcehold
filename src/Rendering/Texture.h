@@ -6,7 +6,7 @@
 #include <System/Logger.h>
 #include <Rendering/Rendering.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {
@@ -14,7 +14,7 @@ namespace OpenSH
         {
                 Context ctx;
                 SDL_Texture *texture;
-                std::vector<unsigned char> pixels;
+                std::vector<uint32_t> pixels;
                 uint32_t width, height;
             public:
                 Texture();
@@ -22,10 +22,13 @@ namespace OpenSH
                 ~Texture();
 
                 bool AllocNew(uint32_t width, uint32_t height, uint32_t format);
-                void SetPixel(uint32_t x, uint32_t y);
+                void SetPixel(uint32_t x, uint32_t y, uint8_t r, uint8_t g, uint8_t b);
                 void UpdateTexture();
-                void Render(uint32_t x, uint32_t y);
                 void SetContext(Context &ctx);
+
+                SDL_Texture *GetTexture();
+                uint32_t GetWidth();
+                uint32_t GetHeight();
             protected:
         };
     }

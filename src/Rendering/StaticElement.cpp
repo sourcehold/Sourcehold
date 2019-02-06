@@ -1,6 +1,6 @@
 #include <Rendering/StaticElement.h>
 
-using namespace OpenSH::Rendering;
+using namespace Sourcehold::Rendering;
 
 StaticElement::StaticElement(Context &ctx) : Texture(ctx) {
 

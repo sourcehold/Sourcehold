@@ -11,7 +11,7 @@
 #include <Config.h>
 
 /* Parser super class */
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Parsers
     {
@@ -31,6 +31,7 @@ namespace OpenSH
                 uint8_t GetByte();
                 uint16_t GetWord();
                 uint32_t GetLength();
+                uint32_t GetOffset();
             protected:
         };
     }

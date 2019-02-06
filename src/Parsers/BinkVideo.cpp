@@ -1,7 +1,7 @@
 #include <Parsers/BinkVideo.h>
 
-using namespace OpenSH::System;
-using namespace OpenSH::Rendering;
+using namespace Sourcehold::System;
+using namespace Sourcehold::Rendering;
 
 BinkVideo::BinkVideo() {
 

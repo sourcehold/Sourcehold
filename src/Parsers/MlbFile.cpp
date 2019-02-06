@@ -1,7 +1,7 @@
 #include <Parsers/MlbFile.h>
 
-using namespace OpenSH::Parsers;
-using namespace OpenSH::System;
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::System;
 
 MlbFile::MlbFile() : Parser() {
 
@@ -11,20 +11,24 @@ MlbFile::~MlbFile() {
     Clear();
 }
 
-void MlbFile::LoadFromDisk(boost::filesystem::path path) {
+bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
     if(!Parser::Open(path, std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to load Mlb file '" << path.native() << "' from data folder!" << std::endl;
-        return;
+        return false;
     }
 
     /* Parse header - 0x13 bytes */
     char header[0x13];
-    Parser::GetData(header, 0x13);
+    if(!Parser::GetData(header, 0x13)) {
+        Logger::error("PARSERS")  << "Unable to parse Mlb header '" << path.native() << "'!" << std::endl;
+        return false;
+    }
 
     std::string s = Parser::GetUTF16();
-    //std::cout << s << std::endl;
 
     Parser::Close();
+
+    return true;
 }
 
 void MlbFile::Clear() {

@@ -1,7 +1,7 @@
 #include <Rendering/Display.h>
 
-using namespace OpenSH::System;
-using namespace OpenSH::Rendering;
+using namespace Sourcehold::System;
+using namespace Sourcehold::Rendering;
 
 Display::Display() {
     SDL_Init(SDL_INIT_EVERYTHING);

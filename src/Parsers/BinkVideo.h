@@ -18,7 +18,7 @@ extern "C" {
 #include <Rendering/Texture.h>
 #include <System/Logger.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {

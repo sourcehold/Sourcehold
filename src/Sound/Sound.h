@@ -11,7 +11,7 @@
 #include <Config.h>
 #include <System/Logger.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Sound
     {

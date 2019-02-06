@@ -7,9 +7,9 @@
 #include <System/Logger.h>
 #include <Rendering/Texture.h>
 
-using namespace OpenSH::Rendering;
+using namespace Sourcehold::Rendering;
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Parsers
     {
@@ -29,9 +29,10 @@ namespace OpenSH
                 bool LoadFromDisk(boost::filesystem::path path);
                 void DumpInformation();
             protected:
-                void ReadToken();
+                void ReadTokens();
             private:
                 TgxHeader header;
+                uint32_t length = 0;
         };
     }
 }

@@ -6,7 +6,7 @@
 
 #include <Config.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace System
     {
@@ -29,7 +29,7 @@ namespace OpenSH
                 static std::ostream &message(const std::string subsystem);
                 static std::ostream &success(const std::string subsystem);
             private:
-            #ifdef OPENSH_UNIX
+            #ifdef SOURCEHOLD_UNIX
                 static bool const coloredOutput = true;
             #else
                 static bool const coloredOutput = false;

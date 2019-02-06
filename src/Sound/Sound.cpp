@@ -1,7 +1,7 @@
 #include <Sound/Sound.h>
 
-using namespace OpenSH::System;
-using namespace OpenSH::Sound;
+using namespace Sourcehold::System;
+using namespace Sourcehold::Sound;
 
 Sound::Sound() {
 }

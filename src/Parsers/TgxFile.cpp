@@ -1,7 +1,7 @@
 #include <Parsers/TgxFile.h>
 
-using namespace OpenSH::Parsers;
-using namespace OpenSH::System;
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::System;
 
 TgxFile::TgxFile() : Parser(), Texture() {
 
@@ -12,7 +12,7 @@ TgxFile::~TgxFile() {
 }
 
 bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
-    if(!Parser::Open(path, std::ios::binary)) {
+    if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path.native() << "'!" << std::endl;
         return false;
     }
@@ -21,11 +21,16 @@ bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
         return false;
     }
 
+    length = Parser::GetLength();
+
     /* Allocate image */
-    Texture::AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGB332);
+    Texture::AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Read image data */
-    ReadToken();
+    ReadTokens();
+
+    /* Copy image data to texture */
+    Texture::UpdateTexture();
 
     return true;
 }
@@ -34,46 +39,53 @@ void TgxFile::DumpInformation() {
 
 }
 
-void TgxFile::ReadToken() {
-    static uint16_t x = 0, y = 0;
-    bool stream=0,newline=0,repeat=0,trans=0;
+int extractBits(int n, int k, int p) { 
+    return (((1 << k) - 1) & (n >> (p - 1)));
+} 
 
-    if(!Parser::Ok()) return;
+void TgxFile::ReadTokens() {
+    uint32_t x = 0, y = 0;
 
-    /* Read flags */
-    uint8_t b = Parser::GetByte();
-    uint8_t len = (b ^ 0b11100000) + 1;
-    b >>= 5;
-    if(b & 0b00000000) { stream = true; }
-    if(b & 0b00000100) { newline = true; len = 0; }
-    if(b & 0b00000010) { repeat = true; }
-    if(b & 0b00000001) { trans = true; }
+    while(Parser::Ok()) {
+        /* Read token byte */
+        uint8_t b = Parser::GetByte();
+        uint8_t len = (b & 0b11111) + 1;
+        uint8_t flag = (b >> 5);
 
-    /* Read data */
-    if(newline) {
-        y++;
-        x = 0;
-    }else {
-        if(repeat) {
+        if(flag == 0b100) { /* Newline */
+            y++;
+            x = 0; //x -= header.width;
+        }else if(flag == 0b010) { /* Repeating pixel (they call _that_ compression lol) */
             uint16_t pixel = Parser::GetWord();
             uint8_t r,g,b;
-            b = (pixel >> 8) ^ 0b11100000;
-            g = (pixel >> 11) | (pixel ^ 0b1111111111111100);
-            r = (pixel >> 2) ^ 0b1111111111100000;
+
+            r = extractBits(pixel, 10, 5) * 8;
+            g = extractBits(pixel, 5, 5) * 8;
+            b = extractBits(pixel, 0, 5) * 8;
+
+            /* Put the same pixel into buffer */
             for(uint8_t i = 0; i < len; ++i) {
-            }
-            x += len;
-        }else {
-            for(uint8_t i = 0; i < len; ++i) {
-                uint8_t r,g,b;
-                uint16_t pixel = Parser::GetWord();
-                b = (pixel >> 8) ^ 0b11100000;
-                g = (pixel >> 11) | (pixel ^ 0b1111111111111100);
-                r = (pixel >> 2) ^ 0b1111111111100000;
+                Texture::SetPixel(x, y, r, g, b);
                 x++;
             }
+        }else if(flag == 0b000) { /* Pixel stream */
+            for(uint8_t i = 0; i < len; ++i) {
+                uint16_t pixel = Parser::GetWord();
+                uint8_t r,g,b;
+
+            r = extractBits(pixel, 10, 5) * 8;
+            g = extractBits(pixel, 5, 5) * 8;
+            b = extractBits(pixel, 0, 5) * 8;
+
+                Texture::SetPixel(x, y, r, g, b);
+
+                x++;
+            }
+        }else if(flag == 0b001) {
+            //std::cout << "Trans: " << (int)len << std::endl;
+            x += len;
+        }else {
+            Logger::warning("PARSERS") << "Unknown token in tgx!" << std::endl;
         }
     }
-
-    ReadToken();
 }

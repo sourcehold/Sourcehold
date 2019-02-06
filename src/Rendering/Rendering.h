@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {

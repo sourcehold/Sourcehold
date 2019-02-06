@@ -7,7 +7,7 @@
 #include <Rendering/Rendering.h>
 #include <System/Logger.h>
 
-namespace OpenSH
+namespace Sourcehold
 {
     namespace Rendering
     {
