@@ -1,0 +1,16 @@
+os:
+  - linux
+
+language: cpp
+sudo: required
+dist: xenial
+
+script:
+  - cmake .
+  - make
+
+compiler:
+  - gcc
+
+install:
+  source ./travis/install.sh
