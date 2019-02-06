@@ -29,23 +29,25 @@ else(Boost_FOUND)
 endif(Boost_FOUND)
 
 # Find SDL mixer
-find_package(SDL_mixer REQUIRED)
-if(SDL_MIXER_FOUND)
-	include_directories(${SDL_MIXER_INCLUDE_DIRS})
-else(SDL_MIXER_FOUND)
+find_package(SDL2_mixer REQUIRED)
+if(SDLMIXER_FOUND)
+	include_directories(${SDL2_Mixer_INCLUDE_DIRS})
+else(SDLMIXER_FOUND)
 	message(FATAL_ERROR "SDL_mixer has to be installed!")
-endif(SDL_MIXER_FOUND)
+endif(SDLMIXER_FOUND)
 
 # Find avcodec
-find_package(LibAV REQUIRED)
-if(LIBAV_FOUND)
-	include_directories(${LIBAV_INCLUDE_DIRS})
-if(NOT LIBAV_SWSCALE_FOUND)
+find_package(FFmpeg REQUIRED)
+if(FFMPEG_FOUND)
+	include_directories(${FFMPEG_INCLUDE_DIRS})
+if(NOT SWSCALE_FOUND)
 	message(FATAL_ERROR "libswscale has to be installed!")
+else()
+	include_directories(${SWSCALE_INCLUDE_DIRS})
 endif()
-else(LIBAV_FOUND)
+else(FFMPEG_FOUND)
 	message(FATAL_ERROR "libavcodec has to be installed!")
-endif(LIBAV_FOUND)
+endif(FFMPEG_FOUND)
 
 # Include sources
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -68,7 +70,7 @@ target_link_libraries(
 	Stronghold 
 	${SDL2_LIBRARY}
 	${Boost_LIBRARIES}
-	${SDL_MIXER_LIBRARIES}
-	${LIBAV_LIBRARIES}
-	${LIBAV_SWSCALE_LIBRARIES}
+	${SDLMIXER_LIBRARY}
+	${FFMPEG_LIBRARIES}
+	${SWSCALE_LIBRARIES}
 )
