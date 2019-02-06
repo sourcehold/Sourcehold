@@ -1,3 +1,0 @@
-/home/julian/programming/Sourcehold/CMakeFiles/rebuild_cache.dir
-/home/julian/programming/Sourcehold/CMakeFiles/Stronghold.dir
-/home/julian/programming/Sourcehold/CMakeFiles/edit_cache.dir
