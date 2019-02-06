@@ -36,7 +36,7 @@ else(SDLMIXER_FOUND)
 	message(FATAL_ERROR "SDL_mixer has to be installed!")
 endif(SDLMIXER_FOUND)
 
-# Find avcodec
+# Find FFMPEG
 find_package(FFmpeg REQUIRED)
 if(FFMPEG_FOUND)
 	include_directories(${FFMPEG_INCLUDE_DIRS})
@@ -46,7 +46,7 @@ else()
 	include_directories(${SWSCALE_INCLUDE_DIRS})
 endif()
 else(FFMPEG_FOUND)
-	message(FATAL_ERROR "libavcodec has to be installed!")
+	message(FATAL_ERROR "FFMPEG has to be installed!")
 endif(FFMPEG_FOUND)
 
 # Include sources

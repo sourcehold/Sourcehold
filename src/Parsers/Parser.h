@@ -15,7 +15,7 @@ namespace Sourcehold
 {
     namespace Parsers
     {
-        class Parser : private std::ifstream
+        class Parser : public std::ifstream
         {
                 uint32_t length = 0;
             public:
