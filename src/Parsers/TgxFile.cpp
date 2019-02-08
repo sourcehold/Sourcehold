@@ -55,10 +55,6 @@ void TgxFile::ReadTokens() {
             uint8_t r,g,b;
             ReadPixel(Parser::GetWord(), &r, &g, &b);
 
-            /*r = extractBits(pixel, 10, 5) * 8;
-            g = extractBits(pixel, 5, 5) * 8;
-            b = extractBits(pixel, 0, 5) * 8;*/
-
             /* Put the same pixel into buffer */
             for(uint8_t i = 0; i < len; ++i,++x) {
                 Texture::SetPixel(x, y, r, g, b);

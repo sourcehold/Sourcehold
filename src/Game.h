@@ -5,6 +5,9 @@
 #include <Config.h>
 #include <MainMenu.h>
 
+#include <System/System.h>
+#include <System/Logger.h>
+
 #include <Rendering/Display.h>
 #include <Rendering/Rendering.h>
 
@@ -29,7 +32,7 @@ namespace Sourcehold
                 Game();
                 ~Game();
 
-                bool Init(int argc, char **argv);
+                bool Init(System::CmdLineOptions &opt);
                 int MainLoop();
             protected:
         };

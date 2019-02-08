@@ -14,7 +14,7 @@ Game::~Game() {
     
 }
 
-bool Game::Init(int argc, char **argv) {
+bool Game::Init(CmdLineOptions &opt) {
     Display::OpenWindowed("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600);
 
     Context ctx = Display::CreateContext();
@@ -40,7 +40,8 @@ bool Game::Init(int argc, char **argv) {
     int vol = txt.GetVolumeOf("fx\\music\\stainedglass1.raw");
 
     Sound::Init();
-    Sound::PlayMusic(boost::filesystem::path("data/fx/music/stainedglass1.raw"), true);
+    Sound::PlayMusic(boost::filesystem::path("data/fx/music/suspense1b.raw"), true);
+    
     
     bik.Init(ctx);
     bik.LoadFromDisk(boost::filesystem::path("data/binks/intro.bik"));
@@ -71,7 +72,8 @@ int Game::MainLoop() {
 
 int main(int argc, char **argv) {
     Game game;
-    if(!game.Init(argc, argv)) {
+    CmdLineOptions opt = ParseCmdLine(argc, argv);
+    if(!game.Init(opt)) {
         Logger::error("GAME") << "Game initialization failed due to previous errors!" << std::endl;
         return EXIT_FAILURE;
     }

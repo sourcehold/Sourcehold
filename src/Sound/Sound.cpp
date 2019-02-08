@@ -48,6 +48,10 @@ bool Sound::PlayMusic(boost::filesystem::path path, bool repeat) {
     return true;
 }
 
+bool Sound::PlayEffect(boost::filesystem::path path, bool repeat) {
+    return true;
+}
+
 bool Sound::IsPlaying() {
     return playing;
 }

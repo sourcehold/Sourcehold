@@ -2,8 +2,9 @@
 
 #include <boost/filesystem/fstream.hpp>
 
+#include <cinttypes>
 #include <cstdio>
-#include <vector>
+#include <map>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -18,8 +19,12 @@ namespace Sourcehold
         /* Sound super class */
         class Sound
         {
+                /* SDL stuff */
                 SDL_AudioSpec spec;
                 SDL_AudioDeviceID dev;
+                /* Songs */
+                //std::map<>
+                /* Effects */
                 FILE *song = NULL;
                 bool playing = false, repeating = false;
             public:
@@ -28,6 +33,8 @@ namespace Sourcehold
 
                 bool Init();
                 bool PlayMusic(boost::filesystem::path path, bool repeat = false);
+                bool PlayEffect(boost::filesystem::path path, bool repeat = false);
+                
                 bool IsPlaying();
             protected:
                 void PrintError();
