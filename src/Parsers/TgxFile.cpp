@@ -78,7 +78,7 @@ void TgxFile::ReadTokens() {
 }
 
 void TgxFile::ReadPixel(uint16_t pixel, uint8_t *r, uint8_t *g, uint8_t *b) {
-    *r = 8 * ((pixel >> 0x02) & 0b11111);
-    *g = 8 * ((pixel >> 0x0d) << 2 | (pixel & 0b11));
-    *b = 8 * ((pixel >> 0x08) & 0b11111);
+    *r = ((pixel >> 10) & 0b11111) << 3;
+    *g = (((pixel >> 5) & 0b11111) | ((pixel >> 8) & 0b11)) << 3;
+    *b = (pixel & 0b11111) << 3;
 }
