@@ -7,6 +7,11 @@ Renderer::Renderer() {
 
 }
 
+Renderer::Renderer(const Renderer &rend) {
+    window = rend.window;
+    renderer = rend.renderer;
+}
+
 Renderer::~Renderer() {
     
 }

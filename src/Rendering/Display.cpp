@@ -3,8 +3,16 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Display::Display() {
+Display::Display() : Renderer() {
     SDL_Init(SDL_INIT_EVERYTHING);
+}
+
+Display::Display(const Display &dp) : Renderer(dp) {
+    timer = dp.timer;
+    frame = dp.frame;
+    open = dp.open;
+    Renderer::window = dp.window;
+    Renderer::renderer = dp.renderer;
 }
 
 Display::~Display() {

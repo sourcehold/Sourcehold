@@ -6,72 +6,106 @@ using namespace Sourcehold::Sound;
 Sound::Sound() {
 }
 
+Sound::Sound(const Sound &snd) {
+    device = snd.device;
+    context = snd.context;
+}
+
 Sound::~Sound() {
-    Mix_CloseAudio();
+
 }
 
 bool Sound::Init() {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+    alGetError();
+
+    device = alcOpenDevice(NULL);
+    if(!device) {
         PrintError();
         return false;
     }
 
-    /* Stronghold raw's use unsigned 16-bit
-       little endian pcm at a sampling rate of 44100hz
-     */
-    SDL_memset(&spec, 0, sizeof(SDL_AudioSpec));
-    spec.freq = 44100;
-    spec.format = AUDIO_S16LSB;
-    spec.channels = 1;
-    spec.samples = 1024*8;
-    spec.userdata = this;
-    spec.callback = [](void *userdata, Uint8 *stream, int len) {
-        ((Sound*)userdata)->AudioCallback(stream, len);
-    };
-
-    dev = SDL_OpenAudioDevice(NULL, 0, &spec, &spec, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
-    SDL_PauseAudioDevice(dev, 0);
-
-    return true;
-}
-
-bool Sound::PlayMusic(std::string path, bool repeat) {
-    if(playing) return false;
-    
-    song = std::fopen(path.c_str(), "rb");
-    if(!song) {
-        Logger::error("SOUND") << "Unable to load music '" << path << "'!" << std::endl;
+    context = alcCreateContext(device, NULL);
+    if(!alcMakeContextCurrent(context)) {
+        PrintError();
         return false;
     }
-    playing = true;
-    repeating = repeat;
+
     return true;
 }
 
-bool Sound::PlayEffect(std::string path, bool repeat) {
-    return true;
+AudioSource Sound::LoadSong(std::string path, bool repeat) {
+    AudioSource song;
+
+    /* Parameters */
+    song.valid = false;
+    song.repeat = repeat;
+    alGenSources((ALuint)1, &song.source);
+    PrintError();
+    alSourcef(song.source, AL_PITCH, 1);
+    PrintError();
+    alSourcef(song.source, AL_GAIN, 1);
+    PrintError();
+    alSource3f(song.source, AL_POSITION, 0, 0, 0);
+    PrintError();
+    alSource3f(song.source, AL_VELOCITY, 0, 0, 0);
+    PrintError();
+    alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+
+    alGenBuffers((ALuint)1, &song.buffer);
+    PrintError();
+
+    /* Read raw file into buffer */
+    FILE *fp = std::fopen(path.c_str(), "rb");
+    if(!fp) {
+        Logger::error("SOUND") << "Unable to open song '" << path << "'!" << std::endl;
+        return song;
+    }
+    fseek(fp, 0, SEEK_END);
+    song.size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
+
+    song.ptr = (uint8_t*)std::malloc(song.size);
+    fread(song.ptr, song.size, 1, fp);
+    fclose(fp);
+
+    song.valid = true;
+    return song;
+}
+
+AudioSource Sound::LoadEffect(std::string path, bool repeat) {
+    AudioSource song;
+
+    /* Parameters */
+    song.repeat = repeat;
+    alGenSources((ALuint)1, &song.source);
+    PrintError();
+    alSourcef(song.source, AL_PITCH, 1);
+    PrintError();
+    alSourcef(song.source, AL_GAIN, 1);
+    PrintError();
+    alSource3f(song.source, AL_POSITION, 0, 0, 0);
+    PrintError();
+    alSource3f(song.source, AL_VELOCITY, 0, 0, 0);
+    PrintError();
+    alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+
+    alGenBuffers((ALuint)1, &song.buffer);
+    PrintError();
+
+    return song;
+}
+
+void Sound::PlayAudio(AudioSource &source) {
+    if(!source.valid) return;
 }
 
 bool Sound::IsPlaying() {
-    return playing;
+    return false;
 }
 
 void Sound::PrintError() {
-    Logger::error("SOUND") << SDL_GetError() << std::endl;
-}
+    ALCenum err = alGetError();
+    if(err == AL_NO_ERROR) return;
 
-void Sound::AudioCallback(Uint8 *stream, int len) {
-    Uint16 *dest = (Uint16*)stream;
-    len /= sizeof(Uint16);
-
-    std::memset(dest, 0, sizeof(Uint16) * len);
-    if(!playing) return;
-    if(!std::fread(dest, sizeof(Uint16), len, song)) {
-        if(repeating) {
-            std::fseek(song, 0, SEEK_SET);
-        }else {
-            std::fclose(song);
-            playing = false;
-        }
-    }
+    Logger::error("SOUND") << "Error code: " << err << std::endl;
 }

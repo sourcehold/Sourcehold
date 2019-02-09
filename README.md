@@ -8,7 +8,7 @@ This project is currently in an early stage of developement.
 Run `cmake` in the build directory.  
 Sourcehold depends on the following libraries:
 * SDL2
-* SDL2_mixer
+* OpenAL
 * FFmpeg
 
 ## Running

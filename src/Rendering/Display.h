@@ -22,6 +22,7 @@ namespace Sourcehold
                 bool open = false;
             public:
                 Display();
+                Display(const Display &dp);
                 ~Display();
 
                 void OpenWindowed(std::string title, int width, int height);

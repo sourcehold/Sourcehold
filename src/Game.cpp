@@ -6,7 +6,7 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 
-Game::Game() : Display() {
+Game::Game() : GameManager(), menu(*this) {
 
 }
 
@@ -15,45 +15,41 @@ Game::~Game() {
 }
 
 bool Game::Init(CmdLineOptions &opt) {
-    Display::OpenWindowed("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600);
-
-    Context ctx = Display::CreateContext();
-
     //MlbFile mlb;
     //mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
 
-    Gm1File gm1;
-    if(!gm1.LoadFromDisk("data/gm/anim_armourer.gm1")) {
-        Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
-    }
+    //Gm1File gm1;
+    //if(!gm1.LoadFromDisk("data/gm/anim_armourer.gm1")) {
+    //    Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
+    //}
 
-    tgx.SetContext(ctx);
-    if(!tgx.LoadFromDisk("data/gfx/frontend_loading.tgx")) {
-        Logger::error("GAME") << "Tgx file loading error!" << std::endl;
-    }
+    //tgx.SetContext(ctx);
+    //if(!tgx.LoadFromDisk("data/gfx/frontend_loading.tgx")) {
+    //    Logger::error("GAME") << "Tgx file loading error!" << std::endl;
+    //}
 
     VolumeTxt txt;
     txt.LoadFromDisk("data/fx/volume.txt");
-    int vol = txt.GetVolumeOf("fx\\music\\stainedglass1.raw");
 
-    Sound::Init();
-    Sound::PlayMusic("data/fx/music/Glory_01.raw", true);
-    
-    bik.Init(ctx);
-    bik.LoadFromDisk("data/binks/intro.bik");
+    //bik.Init(ctx);
+    //bik.LoadFromDisk("data/binks/intro.bik");
 
     return true;
 }
 
-int Game::MainLoop() {
-    while(Display::IsOpen()) {
+int Game::Start() {
+    if(!menu.Start()) {
+        // exited out of intro or menu
+        return EXIT_SUCCESS;
+    }
+
+    /*while(Display::IsOpen()) {
         Display::Clear();
         Display::HandleEvents();
         Display::StartTimer();
 
         // render everything
         //tgx.Render(0, 0);
-        Display::RenderTextureFullscreen(tgx);
         //Display::RenderTextureXY(tgx, 10, 10);
 
         //Texture &frame = bik.RenderFrame();
@@ -61,7 +57,7 @@ int Game::MainLoop() {
 
         Display::Flush();
         Display::EndTimer();
-    }
+    }*/
 
     return EXIT_SUCCESS;
 }
@@ -74,7 +70,7 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    return game.MainLoop();
+    return game.Start();
 }
 
 #if SOURCEHOLD_WINDOWS == 1

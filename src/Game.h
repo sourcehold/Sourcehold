@@ -3,13 +3,11 @@
 #include <cstdlib>
 
 #include <Config.h>
+#include <GameManager.h>
 #include <MainMenu.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
-
-#include <Rendering/Display.h>
-#include <Rendering/Rendering.h>
 
 #include <Parsers/MlbFile.h>
 #include <Parsers/Gm1File.h>
@@ -17,23 +15,21 @@
 #include <Parsers/BinkVideo.h>
 #include <Parsers/VolumeTxt.h>
 
-#include <Sound/Sound.h>
-
 namespace Sourcehold
 {
     namespace Game
     {
-        class Game : public Display, public Sound::Sound
+        class Game : public GameManager
         {
+                MainMenu menu;
                 std::string data_folder;
-                Parsers::TgxFile tgx;
                 Rendering::BinkVideo bik;
             public:
                 Game();
                 ~Game();
 
                 bool Init(System::CmdLineOptions &opt);
-                int MainLoop();
+                int Start();
             protected:
         };
     }

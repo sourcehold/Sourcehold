@@ -15,6 +15,7 @@ namespace Sourcehold
         {
             public:
                 Renderer();
+                Renderer(const Renderer &rend);
                 ~Renderer();
 
                 void Flush();

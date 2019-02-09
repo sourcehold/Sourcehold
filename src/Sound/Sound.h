@@ -3,10 +3,11 @@
 #include <cinttypes>
 #include <cstdio>
 #include <cstring>
-#include <map>
+#include <vector>
+#include <array>
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+#include <AL/al.h>
+#include <AL/alc.h>
 
 #include <Config.h>
 #include <System/Logger.h>
@@ -15,29 +16,35 @@ namespace Sourcehold
 {
     namespace Sound
     {
+        /* Single audio source */
+        struct AudioSource {
+            ALuint source; /* OpenAL audio source */
+            ALuint buffer; /* OpenAL audio buffer */
+            uint8_t *ptr; /* Audio buffer */
+            size_t size; /* Buffer size */
+            bool repeat, playing, valid; /* Properties */
+        };
+
         /* Sound super class */
         class Sound
         {
-                /* SDL stuff */
-                SDL_AudioSpec spec;
-                SDL_AudioDeviceID dev;
-                /* Songs */
-                //std::map<>
-                /* Effects */
-                FILE *song = NULL;
-                bool playing = false, repeating = false;
+                /* OpenAL stuff */
+                ALCdevice *device;
+                ALCcontext *context;
             public:
                 Sound();
+                Sound(const Sound &snd);
                 ~Sound();
 
                 bool Init();
-                bool PlayMusic(std::string path, bool repeat = false);
-                bool PlayEffect(std::string path, bool repeat = false);
-                
+
+                AudioSource LoadSong(std::string path, bool repeat);
+                AudioSource LoadEffect(std::string path, bool repeat);
+
+                void PlayAudio(AudioSource &source);
                 bool IsPlaying();
             protected:
                 void PrintError();
-                void AudioCallback(Uint8 *stream, int len);
         };
     }
 }

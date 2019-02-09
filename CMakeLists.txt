@@ -16,13 +16,12 @@ if(NOT SDL2_FOUND)
 endif(NOT SDL2_FOUND)
 include_directories(${SDL2_INCLUDE_DIR})
 
-# Find SDL mixer
-find_package(SDL2_mixer REQUIRED)
-if(SDLMIXER_FOUND)
-	include_directories(${SDL2_Mixer_INCLUDE_DIRS})
-else(SDLMIXER_FOUND)
-	message(FATAL_ERROR "SDL_mixer has to be installed!")
-endif(SDLMIXER_FOUND)
+# Find OpenAL
+find_package(OpenAL REQUIRED)
+if(NOT OPENAL_FOUND)
+    message(FATAL_ERROR "OpenAL has to be installed!")
+endif(NOT OPENAL_FOUND)
+include_directories(${OPENAL_INCLUDE_DIR})
 
 # Find FFMPEG
 find_package(FFmpeg REQUIRED)
@@ -63,7 +62,7 @@ target_link_libraries(
 	Stronghold 
 	${SDL2_LIBRARY}
 	${Boost_LIBRARIES}
-	${SDLMIXER_LIBRARY}
+	${OPENAL_LIBRARY}
 	${FFMPEG_LIBRARIES}
 	${SWSCALE_LIBRARIES}
 )
