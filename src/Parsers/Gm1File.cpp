@@ -11,20 +11,20 @@ Gm1File::~Gm1File() {
 
 }
 
-bool Gm1File::LoadFromDisk(boost::filesystem::path path) {
+bool Gm1File::LoadFromDisk(std::string path) {
     if(!Parser::Open(path, std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path << "'!" << std::endl;
         return false;
     }
     if(!Parser::GetData(&header, sizeof(Gm1Header))) {
-        Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path << "'!" << std::endl;
         return false;
     }
     if(header.num > max_num || header.type > 0x07 || header.type == 0x06) {
-        Logger::warning("PARSERS") << "Gm1 file '" << path.native() << "' may be damaged!" << std::endl;
+        Logger::warning("PARSERS") << "Gm1 file '" << path << "' may be damaged!" << std::endl;
     }
     if(header.len != Parser::GetLength() - sizeof(Gm1Header)) {
-        Logger::warning("PARSERS") << "Gm1 file header from '" << path.native() << "' contains wrong data length!" << std::endl;
+        Logger::warning("PARSERS") << "Gm1 file header from '" << path << "' contains wrong data length!" << std::endl;
     }
 
     for(uint32_t i = 0; i < header.num-1; ++i) {

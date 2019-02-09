@@ -61,7 +61,7 @@ namespace Sourcehold
                 Gm1File();
                 ~Gm1File();
 
-                bool LoadFromDisk(boost::filesystem::path path);
+                bool LoadFromDisk(std::string path);
                 void DumpInformation();
             protected:
                 const uint32_t max_num = 255;

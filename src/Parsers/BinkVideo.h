@@ -1,7 +1,5 @@
 #pragma once
 
-#include <boost/filesystem/fstream.hpp>
-
 extern "C" {
 #include <libswscale/swscale.h>
 #include <libavcodec/avcodec.h>
@@ -41,7 +39,7 @@ namespace Sourcehold
                 ~BinkVideo();
 
                 bool Init(Context &ctx);
-                bool LoadFromDisk(boost::filesystem::path path);
+                bool LoadFromDisk(std::string path);
                 void Close();
                 Texture &RenderFrame();
             private:

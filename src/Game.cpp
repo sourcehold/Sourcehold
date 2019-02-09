@@ -19,32 +19,28 @@ bool Game::Init(CmdLineOptions &opt) {
 
     Context ctx = Display::CreateContext();
 
-    boost::filesystem::path dataPath { "data" };
-    data_folder = dataPath.native();
-
     //MlbFile mlb;
     //mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
 
     Gm1File gm1;
-    if(!gm1.LoadFromDisk(boost::filesystem::path("data/gm/anim_armourer.gm1"))) {
+    if(!gm1.LoadFromDisk("data/gm/anim_armourer.gm1")) {
         Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
     }
 
     tgx.SetContext(ctx);
-    if(!tgx.LoadFromDisk(boost::filesystem::path("data/gfx/frontend_loading.tgx"))) {
+    if(!tgx.LoadFromDisk("data/gfx/frontend_loading.tgx")) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
     }
 
     VolumeTxt txt;
-    txt.LoadFromDisk(boost::filesystem::path("data/fx/volume.txt"));
+    txt.LoadFromDisk("data/fx/volume.txt");
     int vol = txt.GetVolumeOf("fx\\music\\stainedglass1.raw");
 
     Sound::Init();
-    Sound::PlayMusic(boost::filesystem::path("data/fx/music/suspense1b.raw"), true);
-    
+    Sound::PlayMusic("data/fx/music/Glory_01.raw", true);
     
     bik.Init(ctx);
-    bik.LoadFromDisk(boost::filesystem::path("data/binks/intro.bik"));
+    bik.LoadFromDisk("data/binks/intro.bik");
 
     return true;
 }
@@ -80,3 +76,10 @@ int main(int argc, char **argv) {
 
     return game.MainLoop();
 }
+
+#if SOURCEHOLD_WINDOWS == 1
+#include <windows.h>
+int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevIns, LPSTR lpszArgument, int iShow) {
+    return main(NULL, 0);
+}
+#endif

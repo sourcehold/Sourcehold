@@ -29,18 +29,18 @@ bool Sound::Init() {
         ((Sound*)userdata)->AudioCallback(stream, len);
     };
 
-    dev = SDL_OpenAudioDevice(NULL, 0, &spec, &spec, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE | SDL_AUDIO_ALLOW_CHANNELS_CHANGE);
+    dev = SDL_OpenAudioDevice(NULL, 0, &spec, &spec, SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
     SDL_PauseAudioDevice(dev, 0);
 
     return true;
 }
 
-bool Sound::PlayMusic(boost::filesystem::path path, bool repeat) {
+bool Sound::PlayMusic(std::string path, bool repeat) {
     if(playing) return false;
     
-    song = std::fopen(path.native().c_str(), "rb");
+    song = std::fopen(path.c_str(), "rb");
     if(!song) {
-        Logger::error("SOUND") << "Unable to load music '" << path.native() << "'!" << std::endl;
+        Logger::error("SOUND") << "Unable to load music '" << path << "'!" << std::endl;
         return false;
     }
     playing = true;
@@ -48,7 +48,7 @@ bool Sound::PlayMusic(boost::filesystem::path path, bool repeat) {
     return true;
 }
 
-bool Sound::PlayEffect(boost::filesystem::path path, bool repeat) {
+bool Sound::PlayEffect(std::string path, bool repeat) {
     return true;
 }
 
@@ -64,7 +64,7 @@ void Sound::AudioCallback(Uint8 *stream, int len) {
     Uint16 *dest = (Uint16*)stream;
     len /= sizeof(Uint16);
 
-    memset(dest, 0, sizeof(Uint16) * len);
+    std::memset(dest, 0, sizeof(Uint16) * len);
     if(!playing) return;
     if(!std::fread(dest, sizeof(Uint16), len, song)) {
         if(repeating) {

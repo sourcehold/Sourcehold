@@ -16,18 +16,6 @@ if(NOT SDL2_FOUND)
 endif(NOT SDL2_FOUND)
 include_directories(${SDL2_INCLUDE_DIR})
 
-# Find BOOST
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-
-find_package(Boost 1.45.0 COMPONENTS system thread)
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS})
-else(Boost_FOUND)
-	message(FATAL_ERROR "Boost has to be installed!")
-endif(Boost_FOUND)
-
 # Find SDL mixer
 find_package(SDL2_mixer REQUIRED)
 if(SDLMIXER_FOUND)
@@ -65,6 +53,11 @@ set_target_properties(Stronghold PROPERTIES
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
+
+# Defaults to win32 app
+if(WIN32)
+	target_compile_options(Stronghold PRIVATE -Wl,-subsystem,console)
+endif()
 
 target_link_libraries(
 	Stronghold 

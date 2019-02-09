@@ -11,9 +11,9 @@ VolumeTxt::~VolumeTxt() {
 
 }
 
-bool VolumeTxt::LoadFromDisk(boost::filesystem::path path) {
+bool VolumeTxt::LoadFromDisk(std::string path) {
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open volume file '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS")  << "Unable to open volume file '" << path << "'!" << std::endl;
         return false;
     }
 

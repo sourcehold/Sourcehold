@@ -11,16 +11,16 @@ MlbFile::~MlbFile() {
     Clear();
 }
 
-bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
+bool MlbFile::LoadFromDisk(std::string path) {
     if(!Parser::Open(path, std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to load Mlb file '" << path.native() << "' from data folder!" << std::endl;
+        Logger::error("PARSERS")  << "Unable to load Mlb file '" << path << "' from data folder!" << std::endl;
         return false;
     }
 
     /* Parse header - 0x13 bytes */
     char header[0x13];
     if(!Parser::GetData(header, 0x13)) {
-        Logger::error("PARSERS")  << "Unable to parse Mlb header '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS")  << "Unable to parse Mlb header '" << path << "'!" << std::endl;
         return false;
     }
 

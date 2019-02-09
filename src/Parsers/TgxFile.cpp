@@ -11,13 +11,13 @@ TgxFile::~TgxFile() {
 
 }
 
-bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
+bool TgxFile::LoadFromDisk(std::string path) {
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open Tgx file '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
     }
     if(!Parser::GetData(&header, sizeof(TgxHeader))) {
-        Logger::error("PARSERS") << "Unable to load Tgx file header from '" << path.native() << "'!" << std::endl;
+        Logger::error("PARSERS") << "Unable to load Tgx file header from '" << path << "'!" << std::endl;
         return false;
     }
 

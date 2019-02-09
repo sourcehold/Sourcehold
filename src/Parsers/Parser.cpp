@@ -1,10 +1,9 @@
 #include <Parsers/Parser.h>
 
 using namespace Sourcehold::Parsers;
-using namespace boost::filesystem;
 
-bool Parser::Open(boost::filesystem::path &path, std::ios_base::openmode mode) {
-    open(path.native(), mode);
+bool Parser::Open(std::string &path, std::ios_base::openmode mode) {
+    open(path, mode);
     if(!is_open()) return false;
 
     std::streampos fsize = 0;

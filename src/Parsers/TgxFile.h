@@ -27,7 +27,7 @@ namespace Sourcehold
                 TgxFile();
                 ~TgxFile();
 
-                bool LoadFromDisk(boost::filesystem::path path);
+                bool LoadFromDisk(std::string path);
                 void DumpInformation();
             protected:
                 void ReadTokens();

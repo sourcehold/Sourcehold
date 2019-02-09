@@ -1,9 +1,8 @@
 #pragma once
 
-#include <boost/filesystem/fstream.hpp>
-
 #include <cinttypes>
 #include <cstdio>
+#include <cstring>
 #include <map>
 
 #include <SDL2/SDL.h>
@@ -32,8 +31,8 @@ namespace Sourcehold
                 ~Sound();
 
                 bool Init();
-                bool PlayMusic(boost::filesystem::path path, bool repeat = false);
-                bool PlayEffect(boost::filesystem::path path, bool repeat = false);
+                bool PlayMusic(std::string path, bool repeat = false);
+                bool PlayEffect(std::string path, bool repeat = false);
                 
                 bool IsPlaying();
             protected:

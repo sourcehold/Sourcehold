@@ -9,19 +9,22 @@ Run `cmake` in the build directory.
 Sourcehold depends on the following libraries:
 * SDL2
 * SDL2_mixer
-* BOOST
-* libavcodec
+* FFmpeg
 
 ## Running
 Copy the following files into the `data` folder:  
 
 ```
 data
+├── binks/
+├── delete.ani
 ├── fx/
 ├── gfx/
 ├── gfx8/
 ├── gm/
+├── hand.ani
+├── jester.ani
 ├── maps/
-├── saves/
-└── stronghold.mlb
+├── stronghold.mlb
+└── sword.ani
 ```

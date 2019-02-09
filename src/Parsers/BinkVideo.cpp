@@ -29,15 +29,15 @@ bool BinkVideo::Init(Context &ctx) {
     return true;
 }
 
-bool BinkVideo::LoadFromDisk(boost::filesystem::path path) {
+bool BinkVideo::LoadFromDisk(std::string path) {
     int out = avformat_open_input(
         &ic,
-        path.native().c_str(),
+        path.c_str(),
         bink_input,
         NULL
     );
     if(out < 0) {
-        Logger::error("RENDERING") << "Unable to open bink input stream: '" << path.native() << "'!" << std::endl;
+        Logger::error("RENDERING") << "Unable to open bink input stream: '" << path << "'!" << std::endl;
         return false;
     }
 
