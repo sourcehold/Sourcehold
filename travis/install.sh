@@ -10,3 +10,4 @@ sudo apt install -y -qq libavcodec-dev
 sudo apt install -y -qq libavformat-dev
 sudo apt install -y -qq libswscale-dev
 sudo apt install -y -qq ffmpeg
+sudo apt install -y -qq libopenal-dev
