@@ -27,7 +27,7 @@ bool TgxFile::LoadFromDisk(std::string path) {
     Texture::AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Read image data */
-    ReadTokens();
+    ReadTgx(this, this);
 
     /* Copy image data to texture */
     Texture::UpdateTexture();
@@ -39,12 +39,12 @@ void TgxFile::DumpInformation() {
 
 }
 
-void TgxFile::ReadTokens() {
+void TgxFile::ReadTgx(Parser *pa, Texture *tex) {
     uint32_t x = 0, y = 0;
 
-    while(Parser::Ok()) {
+    while(pa->Ok()) {
         /* Read token byte */
-        uint8_t b = Parser::GetByte();
+        uint8_t b = pa->GetByte();
         uint8_t len = (b & 0b11111) + 1;
         uint8_t flag = (b >> 5);
 
@@ -53,17 +53,16 @@ void TgxFile::ReadTokens() {
             x = 0;
         }else if(flag == 0b010) { /* Repeating pixel (they call _that_ compression lol) */
             uint8_t r,g,b;
-            ReadPixel(Parser::GetWord(), &r, &g, &b);
-
+            ReadPixel(pa->GetWord(), &r, &g, &b);
             /* Put the same pixel into buffer */
             for(uint8_t i = 0; i < len; ++i,++x) {
-                Texture::SetPixel(x, y, r, g, b);
+                tex->SetPixel(x, y, r, g, b);
             }
         }else if(flag == 0b000) { /* Pixel stream */
             for(uint8_t i = 0; i < len; ++i,++x) {
                 uint8_t r,g,b;
-                ReadPixel(Parser::GetWord(), &r, &g, &b);
-                Texture::SetPixel(x, y, r, g, b);
+                ReadPixel(pa->GetWord(), &r, &g, &b);
+                tex->SetPixel(x, y, r, g, b);
             }
         }else if(flag == 0b001) { /* Transparent pixel stream */
             x += len;

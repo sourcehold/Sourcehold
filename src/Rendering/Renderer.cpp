@@ -20,11 +20,25 @@ void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::RenderTextureXY(Texture &texture, int x, int y) {    
+void Renderer::RenderTexture(Texture &texture, int x, int y) {    
     SDL_Rect rect = {
         x, y,
         texture.GetWidth(),
         texture.GetHeight()
+    };
+    SDL_RenderCopy(
+        renderer,
+        texture.GetTexture(),
+        NULL,
+        &rect
+    );
+}
+
+void Renderer::RenderTextureScale(Texture &texture, int x, int y, int w, int h) {
+    SDL_Rect rect = {
+        x, y,
+        w,
+        h
     };
     SDL_RenderCopy(
         renderer,

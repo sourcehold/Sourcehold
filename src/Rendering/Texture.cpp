@@ -24,7 +24,7 @@ bool Texture::AllocNew(int width, int height, int format) {
         width, height
     );
     if(!texture) {
-        Logger::error("RENDERING") << "Unable to create texture!" << std::endl;
+        Logger::error("RENDERING") << "Unable to create texture: " << SDL_GetError() << std::endl;
         return false;
     }
 

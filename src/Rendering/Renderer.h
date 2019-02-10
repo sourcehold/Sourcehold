@@ -19,7 +19,8 @@ namespace Sourcehold
                 ~Renderer();
 
                 void Flush();
-                void RenderTextureXY(Texture &texture, int x, int y);
+                void RenderTexture(Texture &texture, int x, int y);
+                void RenderTextureScale(Texture &texture, int x, int y, int w, int h);
                 void RenderTextureFullscreen(Texture &texture);
                 Context CreateContext();
             protected:

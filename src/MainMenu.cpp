@@ -23,7 +23,7 @@ MainMenu::~MainMenu() {
 
 bool MainMenu::Start() {
     AudioSource song = LoadSong("data/fx/music/stainedglass1.raw", true);
-    PlayAudio(song);
+    //PlayAudio(song);
 
     while(IsOpen()) {
         Clear();

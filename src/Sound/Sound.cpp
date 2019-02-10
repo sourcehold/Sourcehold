@@ -12,8 +12,8 @@ Sound::Sound(const Sound &snd) {
 }
 
 Sound::~Sound() {
-    alcCloseDevice(device);
-    PrintError();
+    //alcCloseDevice(device);
+    //PrintError();
 }
 
 bool Sound::Init() {

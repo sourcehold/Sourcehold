@@ -1,14 +1,23 @@
 #include <Parsers/Gm1File.h>
 
 using namespace Sourcehold::Parsers;
+using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
 Gm1File::Gm1File() : Parser() {
 
 }
 
+Gm1File::Gm1File(Context &ctx) : Parser() {
+    this->ctx = ctx;
+}
+
 Gm1File::~Gm1File() {
 
+}
+
+void Gm1File::SetContext(Context &ctx) {
+    this->ctx = ctx;
 }
 
 bool Gm1File::LoadFromDisk(std::string path) {
@@ -18,27 +27,116 @@ bool Gm1File::LoadFromDisk(std::string path) {
     }
     if(!Parser::GetData(&header, sizeof(Gm1Header))) {
         Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path << "'!" << std::endl;
+        Parser::Close();
         return false;
     }
-    if(header.num > max_num || header.type > 0x07 || header.type == 0x06) {
-        Logger::warning("PARSERS") << "Gm1 file '" << path << "' may be damaged!" << std::endl;
-    }
-    if(header.len != Parser::GetLength() - sizeof(Gm1Header)) {
-        Logger::warning("PARSERS") << "Gm1 file header from '" << path << "' contains wrong data length!" << std::endl;
+
+    std::cout << "N: " << header.num << ", T: " << header.type << std::endl;
+
+    /* Boundary check */
+    if(header.num > max_num) {
+        Logger::error("PARSERS") << "Gm1 file header from '" << path << "' contains too many images!" << std::endl;
+        Parser::Close();
+        return false;
     }
 
-    for(uint32_t i = 0; i < header.num-1; ++i) {
-        ImageHeader img;
-        if(!Parser::GetData(&img, sizeof(ImageHeader))) {
+    /* Reserve size in vector to fit all entries */
+    entries.resize(header.num);
+
+    /* Read Gm1 palette */
+    ReadPalette();
+
+    /* Read offsets */
+    for(uint32_t n = 0; n < header.num; n++) {
+        Parser::GetData(&entries[n].offset, sizeof(uint32_t));
+    }
+
+    /* Read sizes */
+    for(uint32_t n = 0; n < header.num; n++) {
+        Parser::GetData(&entries[n].size, sizeof(uint32_t));
+    }
+
+    /* Read image headers */
+    for(uint32_t n = 0; n < header.num; n++) {
+        Parser::GetData(&entries[n].header, sizeof(ImageHeader));
+    }
+
+    switch(header.type) {
+        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
+            for(uint32_t n = 0; n < header.num; n++) {
+                Texture tex;
+                tex.SetContext(ctx);
+                tex.AllocNew(entries[n].header.width, entries[n].header.height, SDL_PIXELFORMAT_RGBA8888);
+                //TgxFile::ReadTgx(this, &tex);
+                tex.UpdateTexture();
+                entries[n].image = tex;
+            }
+        }break;
+        case Gm1Header::TYPE_TILE: {
+            for(uint32_t n = 0; n < header.num; n++) {
+                /* Error handling */
+                if(!Parser::Ok()) {
+                    Logger::error("PARSERS") << "Error while parsing entry " << n << " from Gm1 '" << path << "'!" << std::endl;
+                    Parser::Close();
+                    return false;
+                }
+                /* Create texture */
+                Texture tex;
+                tex.SetContext(ctx);
+                tex.AllocNew(30, 16, SDL_PIXELFORMAT_RGBA8888);
+                /* Extract pixel data */
+                const uint8_t lines[16] = {
+                    2, 6, 10, 14,
+                    18, 22, 26, 30,
+                    30, 26, 22, 18,
+                    14, 10, 6, 2
+                };
+                for(uint8_t l = 0; l < 16; l++) {
+                    /* Read every pixel in a line */
+                    for(uint8_t i = 0; i < lines[l]; i++) {
+                        uint16_t pixel = Parser::GetWord();
+                        /* Read RGB */
+                        uint8_t r, g, b;
+                        TgxFile::ReadPixel(pixel, &r, &g, &b);
+                        /* Add to texture */
+                        tex.SetPixel(i, l, r, g, b);
+                    }
+                }
+                /* Write pixels to texture */
+                tex.UpdateTexture();
+                /* Add texture to list */
+                entries[n].image = tex;
+            }
+        }break;
+        case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
+
+        }break;
+        default: {
+            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "'!" << std::endl;
+            Parser::Close();
             return false;
         }
     }
 
     Parser::Close();
-
     return true;
 }
 
 void Gm1File::DumpInformation() {
     Logger::message("PARSERS") << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
+}
+
+Texture& Gm1File::GetImage(uint32_t n) {
+    return entries[n].image;
+}
+
+uint32_t Gm1File::GetNumImages() {
+    return entries.size();
+}
+
+void Gm1File::ReadPalette() {
+    uint8_t palette[5120];
+    if(!Parser::GetData(palette, sizeof(palette))) {
+        Logger::error("PARSERS") << "Unable to read palette from Gm1!" << std::endl;
+    }
 }

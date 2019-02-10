@@ -24,6 +24,8 @@ namespace Sourcehold
                 MainMenu menu;
                 std::string data_folder;
                 Rendering::BinkVideo bik;
+                Parsers::TgxFile tgx;
+                Rendering::Texture tex1, tex2, tex3, tex4;
             public:
                 Game();
                 ~Game();
