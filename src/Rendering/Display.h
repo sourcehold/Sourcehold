@@ -31,6 +31,8 @@ namespace Sourcehold
                 void HandleEvents();
                 void StartTimer();
                 void EndTimer();
+                uint32_t GetTicks();
+                uint32_t GetSeconds();
                 void Clear();
 
                 bool IsOpen();

@@ -12,7 +12,8 @@ Sound::Sound(const Sound &snd) {
 }
 
 Sound::~Sound() {
-
+    alcCloseDevice(device);
+    PrintError();
 }
 
 bool Sound::Init() {
@@ -41,15 +42,16 @@ AudioSource Sound::LoadSong(std::string path, bool repeat) {
     song.repeat = repeat;
     alGenSources((ALuint)1, &song.source);
     PrintError();
-    alSourcef(song.source, AL_PITCH, 1);
+    alSourcef(song.source, AL_PITCH, 1.0f);
     PrintError();
-    alSourcef(song.source, AL_GAIN, 1);
+    alSourcef(song.source, AL_GAIN, 1.0f);
     PrintError();
-    alSource3f(song.source, AL_POSITION, 0, 0, 0);
+    alSource3f(song.source, AL_POSITION, 0.0f, 0.0f, 0.0f);
     PrintError();
-    alSource3f(song.source, AL_VELOCITY, 0, 0, 0);
+    alSource3f(song.source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     PrintError();
     alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+    PrintError();
 
     alGenBuffers((ALuint)1, &song.buffer);
     PrintError();
@@ -68,6 +70,12 @@ AudioSource Sound::LoadSong(std::string path, bool repeat) {
     fread(song.ptr, song.size, 1, fp);
     fclose(fp);
 
+    alBufferData(song.buffer, AL_FORMAT_MONO16, (const ALvoid*)song.ptr, song.size, 44100);
+    PrintError();
+
+    alSourcei(song.source, AL_BUFFER, song.buffer);
+    PrintError();
+
     song.valid = true;
     return song;
 }
@@ -79,13 +87,13 @@ AudioSource Sound::LoadEffect(std::string path, bool repeat) {
     song.repeat = repeat;
     alGenSources((ALuint)1, &song.source);
     PrintError();
-    alSourcef(song.source, AL_PITCH, 1);
+    alSourcef(song.source, AL_PITCH, 1.0f);
     PrintError();
-    alSourcef(song.source, AL_GAIN, 1);
+    alSourcef(song.source, AL_GAIN, 1.0f);
     PrintError();
-    alSource3f(song.source, AL_POSITION, 0, 0, 0);
+    alSource3f(song.source, AL_POSITION, 0.0f, 0.0f, 0.0f);
     PrintError();
-    alSource3f(song.source, AL_VELOCITY, 0, 0, 0);
+    alSource3f(song.source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     PrintError();
     alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
 
@@ -97,6 +105,8 @@ AudioSource Sound::LoadEffect(std::string path, bool repeat) {
 
 void Sound::PlayAudio(AudioSource &source) {
     if(!source.valid) return;
+
+    alSourcePlay(source.source);
 }
 
 bool Sound::IsPlaying() {
@@ -105,7 +115,18 @@ bool Sound::IsPlaying() {
 
 void Sound::PrintError() {
     ALCenum err = alGetError();
-    if(err == AL_NO_ERROR) return;
+    std::string str;
 
-    Logger::error("SOUND") << "Error code: " << err << std::endl;
+    if(err == AL_NO_ERROR) return;
+    switch (err) {
+        case ALC_NO_ERROR: str = "AL_NO_ERROR"; break;
+        case ALC_INVALID_DEVICE: str = "AL_INVALID_DEVICE"; break;
+        case ALC_INVALID_CONTEXT: str = "AL_INVALID_CONTEXT"; break;
+        case ALC_INVALID_ENUM: str = "AL_INVALID_ENUM"; break;
+        case ALC_INVALID_VALUE: str = "AL_INVALID_VALUE"; break;
+        case ALC_OUT_OF_MEMORY: str = "AL_OUT_OF_MEMORY"; break;
+        default: str = "Unknown error"; break;
+    }
+
+    Logger::error("SOUND") << str << std::endl;
 }

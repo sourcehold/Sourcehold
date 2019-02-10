@@ -38,9 +38,6 @@ Uint32 color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 }
 
 void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
-    /*pixels[(x + y * width) + 0] = r;
-    pixels[(x + y * width) + 1] = g;
-    pixels[(x + y * width) + 2] = b;*/
     pixels[x + y * width] = color(r, g, b, 0xFF);
 }
 
