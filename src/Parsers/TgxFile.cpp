@@ -51,7 +51,7 @@ void TgxFile::ReadTgx(Parser *pa, Texture *tex) {
         if(flag == 0b100) { /* Newline */
             y++;
             x = 0;
-        }else if(flag == 0b010) { /* Repeating pixel (they call _that_ compression lol) */
+        }else if(flag == 0b010) { /* Repeating pixel */
             uint8_t r,g,b;
             ReadPixel(pa->GetWord(), &r, &g, &b);
             /* Put the same pixel into buffer */
@@ -67,7 +67,7 @@ void TgxFile::ReadTgx(Parser *pa, Texture *tex) {
         }else if(flag == 0b001) { /* Transparent pixel stream */
             x += len;
         }else if(flag == 0b111) { /* Seems to be end-of-stream */
-            break;
+            //break;
         }else {
             std::bitset<8> tk(b);
             std::bitset<3> fg(flag);

@@ -31,8 +31,6 @@ bool Gm1File::LoadFromDisk(std::string path) {
         return false;
     }
 
-    std::cout << "N: " << header.num << ", T: " << header.type << std::endl;
-
     /* Boundary check */
     if(header.num > max_num) {
         Logger::error("PARSERS") << "Gm1 file header from '" << path << "' contains too many images!" << std::endl;
@@ -61,9 +59,16 @@ bool Gm1File::LoadFromDisk(std::string path) {
         Parser::GetData(&entries[n].header, sizeof(ImageHeader));
     }
 
+    /* Get offset of data start */
+    uint32_t offData = Parser::Tell();
+
+    /* Parse the entries */
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
             for(uint32_t n = 0; n < header.num; n++) {
+                /* Seek to position */
+                Parser::Seek(entries[n].offset + offData);
+                /* Read texture */
                 Texture tex;
                 tex.SetContext(ctx);
                 tex.AllocNew(entries[n].header.width, entries[n].header.height, SDL_PIXELFORMAT_RGBA8888);
@@ -74,6 +79,8 @@ bool Gm1File::LoadFromDisk(std::string path) {
         }break;
         case Gm1Header::TYPE_TILE: {
             for(uint32_t n = 0; n < header.num; n++) {
+                /* Seek to position */
+                Parser::Seek(entries[n].offset + offData);
                 /* Error handling */
                 if(!Parser::Ok()) {
                     Logger::error("PARSERS") << "Error while parsing entry " << n << " from Gm1 '" << path << "'!" << std::endl;

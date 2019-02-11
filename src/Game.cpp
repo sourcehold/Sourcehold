@@ -22,14 +22,14 @@ bool Game::Init(CmdLineOptions &opt) {
 
     Gm1File gm1;
     gm1.SetContext(ctx);
-    if(!gm1.LoadFromDisk("data/gm/interface_army.gm1")) {
+    if(!gm1.LoadFromDisk("data/gm/tile_churches.gm1")) {
         Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
     }
 
-    //tex1 = gm1.GetImage(24);
-    //tex2 = gm1.GetImage(25);
-    //tex3 = gm1.GetImage(26);
-    //tex4 = gm1.GetImage(27);
+    tex1 = gm1.GetImage(16);
+    tex2 = gm1.GetImage(17);
+    tex3 = gm1.GetImage(18);
+    tex4 = gm1.GetImage(19);
     //tex1 = gm1.GetImage(0);
 
     tgx.SetContext(ctx);
@@ -59,10 +59,10 @@ int Game::Start() {
 
         Display::RenderTextureFullscreen(tgx);
         //Display::RenderTexture(tex1, 0, 0);
-        //Display::RenderTextureScale(tex1, 0, 0, 30*8, 16*8);
-        //Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);
-        //Display::RenderTextureScale(tex3, 0, 16*8, 30*8, 16*8);
-        //Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
+        Display::RenderTextureScale(tex1, 0, 0, 30*8, 16*8);
+        Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);
+        Display::RenderTextureScale(tex3, 0, 16*8, 30*8, 16*8);
+        Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
 
         //Texture &frame = bik.RenderFrame();
         //Display::RenderTexture(frame, 0, 0);

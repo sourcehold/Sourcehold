@@ -90,7 +90,7 @@ namespace Sourcehold
                 /* All of the images */
                 std::vector<FileEntry> entries;
             protected:
-                const uint32_t max_num = 1024;
+                const uint32_t max_num = 8192;
                 void ReadPalette();
         };
     }

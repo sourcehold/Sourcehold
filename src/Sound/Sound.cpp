@@ -107,6 +107,7 @@ void Sound::PlayAudio(AudioSource &source) {
     if(!source.valid) return;
 
     alSourcePlay(source.source);
+    PrintError();
 }
 
 bool Sound::IsPlaying() {
