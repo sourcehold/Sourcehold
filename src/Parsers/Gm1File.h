@@ -12,13 +12,13 @@
 #include <Parsers/Parser.h>
 #include <Parsers/TgxFile.h>
 
+/* Gm1 container format for tiles/animations/images */
 namespace Sourcehold
 {
     namespace Parsers
     {
         class Gm1File : private Parser
         {
-            public:
                 struct Gm1Header {
                     /* Unknown */
                     uint32_t u0[3];
@@ -44,7 +44,7 @@ namespace Sourcehold
                     uint32_t len;
                     /* Unknown */
                     uint32_t u3;
-                };
+                } header;
 
                 struct ImageHeader {
                     /* Image dimensions */
@@ -58,7 +58,12 @@ namespace Sourcehold
                     /* Distance from top to bottom */
                     uint16_t dist;
                     /* Left/Right/Center */
-                    uint8_t direction;
+                    enum Direction : uint8_t {
+                        DIR_NONE =  0,
+                        DIR_DOWN =  1,
+                        DIR_RIGHT = 2,
+                        DIR_LEFT =  3,
+                    }direction;
                     /* Horizontal offset */
                     uint8_t horizOffset;
                     /* Width of building part */
@@ -67,13 +72,18 @@ namespace Sourcehold
                     uint8_t color;
                 };
 
-                struct FileEntry {
+                struct Gm1Entry {
                     ImageHeader header;
                     uint32_t size;
                     uint32_t offset;
                     Rendering::Texture image;
                 };
-            
+
+                /* Used to dispatch textures */
+                Rendering::Context ctx;
+                /* All of the images */
+                std::vector<Gm1Entry> entries;
+            public:
                 Gm1File();
                 Gm1File(Rendering::Context &ctx);
                 ~Gm1File();
@@ -82,13 +92,7 @@ namespace Sourcehold
                 bool LoadFromDisk(std::string path);
                 void DumpInformation();
 
-                Rendering::Texture& GetImage(uint32_t n);
-                uint32_t GetNumImages();
-            private:
-                Rendering::Context ctx;
-                Gm1Header header;
-                /* All of the images */
-                std::vector<FileEntry> entries;
+                std::vector<Gm1Entry>& GetEntries();
             protected:
                 const uint32_t max_num = 8192;
                 void ReadPalette();

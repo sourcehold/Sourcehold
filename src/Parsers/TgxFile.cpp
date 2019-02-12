@@ -26,8 +26,11 @@ bool TgxFile::LoadFromDisk(std::string path) {
     /* Allocate image */
     Texture::AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
+    /* Calculate size */
+    size_t size = length - sizeof(TgxHeader);
+
     /* Read image data */
-    ReadTgx(this, this);
+    ReadTgx(this, this, size);
 
     /* Copy image data to texture */
     Texture::UpdateTexture();
@@ -39,10 +42,11 @@ void TgxFile::DumpInformation() {
 
 }
 
-void TgxFile::ReadTgx(Parser *pa, Texture *tex) {
+void TgxFile::ReadTgx(Parser *pa, Texture *tex, size_t size) {
     uint32_t x = 0, y = 0;
+    size_t read = 0, offset = pa->Tell();
 
-    while(pa->Ok()) {
+    while(pa->Ok() && read < size) {
         /* Read token byte */
         uint8_t b = pa->GetByte();
         uint8_t len = (b & 0b11111) + 1;
@@ -71,8 +75,10 @@ void TgxFile::ReadTgx(Parser *pa, Texture *tex) {
         }else {
             std::bitset<8> tk(b);
             std::bitset<3> fg(flag);
-            Logger::warning("PARSERS") << "Unknown token in tgx: 0b" << tk << ", extracted length: " << (int)len << ", flag: 0b" << fg << std::endl;
+            //Logger::warning("PARSERS") << "Unknown token in tgx: 0b" << tk << ", extracted length: " << (int)len << ", flag: 0b" << fg << std::endl;
         }
+
+        read = pa->Tell() - offset;
     }
 }
 

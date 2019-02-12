@@ -21,7 +21,7 @@ void Gm1File::SetContext(Context &ctx) {
 }
 
 bool Gm1File::LoadFromDisk(std::string path) {
-    if(!Parser::Open(path, std::ios::binary)) {
+    if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path << "'!" << std::endl;
         return false;
     }
@@ -72,7 +72,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
                 Texture tex;
                 tex.SetContext(ctx);
                 tex.AllocNew(entries[n].header.width, entries[n].header.height, SDL_PIXELFORMAT_RGBA8888);
-                //TgxFile::ReadTgx(this, &tex);
+                TgxFile::ReadTgx(this, &tex, entries[n].size);
                 tex.UpdateTexture();
                 entries[n].image = tex;
             }
@@ -133,12 +133,8 @@ void Gm1File::DumpInformation() {
     Logger::message("PARSERS") << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
 }
 
-Texture& Gm1File::GetImage(uint32_t n) {
-    return entries[n].image;
-}
-
-uint32_t Gm1File::GetNumImages() {
-    return entries.size();
+std::vector<Gm1File::Gm1Entry>& Gm1File::GetEntries() {
+    return entries;
 }
 
 void Gm1File::ReadPalette() {

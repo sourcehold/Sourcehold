@@ -1,7 +1,7 @@
 Sourcehold [![Build Status](https://travis-ci.org/metalvoidzz/Sourcehold.svg?branch=master)](https://travis-ci.org/metalvoidzz/Sourcehold)
 ============
 
-Open source engine implementation for Stronghold 1 by Firefly Studios.  
+Open source engine implementation of Stronghold by Firefly Studios.  
 This project is currently in an early stage of developement.
 
 ##  Building

@@ -6,8 +6,7 @@ bool Parser::Open(std::string &path, std::ios_base::openmode mode) {
     open(path, mode);
     if(!is_open()) return false;
 
-    std::streampos fsize = 0;
-    fsize = tellg();
+    std::streampos fsize = tellg();
     seekg(0, std::ios::end);
     fsize = tellg() - fsize;
     seekg(0, std::ios::beg);
