@@ -48,6 +48,20 @@ void Renderer::RenderTextureScale(Texture &texture, int x, int y, int w, int h) 
     );
 }
 
+void Renderer::RenderTexture(Texture &texture, double x, double y) {
+    int ix = ToCoordX(x);
+    int iy = ToCoordY(y);
+    RenderTexture(texture, ix, iy);
+}
+
+void Renderer::RenderTextureScale(Texture &texture, double x, double y, double w, double h) {
+    int ix = ToCoordX(x);
+    int iy = ToCoordY(y);
+    int sx = ToCoordX(w);
+    int sy = ToCoordY(h);
+    RenderTextureScale(texture, ix, iy, sx, sy);
+}
+
 void Renderer::RenderTextureFullscreen(Texture &texture) {
     SDL_RenderCopy(
         renderer,
@@ -62,4 +76,32 @@ Context Renderer::CreateContext() {
     ctx.window = window;
     ctx.renderer = renderer;
     return ctx;
+}
+
+uint32_t Renderer::GetWidth() {
+    int s;
+    SDL_GetWindowSize(window, &s, NULL);
+    return s;
+}
+
+uint32_t Renderer::GetHeight() {
+    int s;
+    SDL_GetWindowSize(window, NULL, &s);
+    return s;
+}
+
+double Renderer::NormalizeX(uint32_t c) {
+    return (double)c / (double)GetWidth();
+}
+
+double Renderer::NormalizeY(uint32_t c) {
+    return (double)c / (double)GetHeight();
+}
+
+uint32_t Renderer::ToCoordX(double c) {
+    return (int)(c * GetWidth());
+}
+
+uint32_t Renderer::ToCoordY(double c) {
+    return (int)(c * GetHeight());
 }

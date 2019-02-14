@@ -69,9 +69,9 @@ void TgxFile::ReadTgx(Parser *pa, Texture *tex, size_t size) {
                 tex->SetPixel(x, y, r, g, b, 0xFF);
             }
         }else if(flag == 0b001) { /* Transparent pixel stream */
-            for(uint8_t i = 0; i < len; i++) {
+            /*for(uint8_t i = 0; i < len; i++) {
                 tex->SetPixel(x, y, 193, 31, 104, 0x00);
-            }
+            }*/
             x += len;
         }else if(flag == 0b111) { /* Seems to be end-of-stream */
             break;

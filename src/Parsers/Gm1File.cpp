@@ -137,6 +137,10 @@ std::vector<Gm1File::Gm1Entry>& Gm1File::GetEntries() {
     return entries;
 }
 
+Gm1File::Gm1Entry &Gm1File::GetEntry(uint32_t index) {
+    return entries[index];
+}
+
 void Gm1File::ReadPalette() {
     uint8_t palette[5120];
     if(!Parser::GetData(palette, sizeof(palette))) {

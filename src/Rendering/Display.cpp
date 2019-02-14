@@ -67,18 +67,18 @@ void Display::EndTimer() {
     }
 }
 
-uint32_t Display::GetTicks() {
-    return SDL_GetTicks();
-}
-
-uint32_t Display::GetSeconds() {
-    return SDL_GetTicks() / 1000;
-}
-
 void Display::Clear() {
     SDL_RenderClear(Renderer::renderer);
 }
 
 bool Display::IsOpen() {
     return open;
+}
+
+uint32_t Display::GetTicks() {
+    return SDL_GetTicks();
+}
+
+uint32_t Display::GetSeconds() {
+    return SDL_GetTicks() / 1000;
 }
