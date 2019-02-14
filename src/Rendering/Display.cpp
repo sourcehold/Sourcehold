@@ -30,6 +30,8 @@ void Display::OpenWindowed(std::string title, int width, int height) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     }
 
+    SDL_SetRenderDrawBlendMode(Renderer::renderer, SDL_BLENDMODE_BLEND);
+
     open = true;
 }
 

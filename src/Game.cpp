@@ -22,12 +22,12 @@ bool Game::Init(CmdLineOptions &opt) {
 
     Gm1File gm1;
     gm1.SetContext(ctx);
-    if(!gm1.LoadFromDisk("data/gm/anim_baker.gm1")) {
+    if(!gm1.LoadFromDisk("data/gm/tile_castle.gm1")) {
         Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
     }
 
     auto entries = gm1.GetEntries();
-    tex1 = entries[0].image;
+    tex1 = entries[80].image;
     //tex2 = entries[1].image;
     //tex3 = entries[2].image;
     //tex4 = entries[3].image;
@@ -51,6 +51,9 @@ int Game::Start() {
         // exited out of intro or menu
         return EXIT_SUCCESS;
     }*/
+
+    AudioSource song = LoadSong("data/fx/music/appytimes.raw", true);
+    //PlayAudio(song);
 
     while(Display::IsOpen()) {
         Display::Clear();

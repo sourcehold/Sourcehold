@@ -41,17 +41,11 @@ AudioSource Sound::LoadSong(std::string path, bool repeat) {
     song.valid = false;
     song.repeat = repeat;
     alGenSources((ALuint)1, &song.source);
-    PrintError();
     alSourcef(song.source, AL_PITCH, 1.0f);
-    PrintError();
     alSourcef(song.source, AL_GAIN, 1.0f);
-    PrintError();
     alSource3f(song.source, AL_POSITION, 0.0f, 0.0f, 0.0f);
-    PrintError();
     alSource3f(song.source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-    PrintError();
     alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
-    PrintError();
 
     alGenBuffers((ALuint)1, &song.buffer);
     PrintError();
@@ -71,10 +65,7 @@ AudioSource Sound::LoadSong(std::string path, bool repeat) {
     fclose(fp);
 
     alBufferData(song.buffer, AL_FORMAT_MONO16, (const ALvoid*)song.ptr, song.size, 44100);
-    PrintError();
-
     alSourcei(song.source, AL_BUFFER, song.buffer);
-    PrintError();
 
     song.valid = true;
     return song;
@@ -86,15 +77,10 @@ AudioSource Sound::LoadEffect(std::string path, bool repeat) {
     /* Parameters */
     song.repeat = repeat;
     alGenSources((ALuint)1, &song.source);
-    PrintError();
     alSourcef(song.source, AL_PITCH, 1.0f);
-    PrintError();
     alSourcef(song.source, AL_GAIN, 1.0f);
-    PrintError();
     alSource3f(song.source, AL_POSITION, 0.0f, 0.0f, 0.0f);
-    PrintError();
     alSource3f(song.source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-    PrintError();
     alSourcei(song.source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
 
     alGenBuffers((ALuint)1, &song.buffer);

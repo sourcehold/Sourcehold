@@ -64,7 +64,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
 
     /* Parse the entries */
     switch(header.type) {
-        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
+        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: /*case Gm1Header::TYPE_ANIMATION:*/ {
             for(uint32_t n = 0; n < header.num; n++) {
                 /* Seek to position */
                 Parser::Seek(entries[n].offset + offData);
@@ -106,7 +106,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
                         uint8_t r, g, b;
                         TgxFile::ReadPixel(pixel, &r, &g, &b);
                         /* Add to texture */
-                        tex.SetPixel(i, l, r, g, b);
+                        tex.SetPixel(i, l, r, g, b, 0xFF);
                     }
                 }
                 /* Write pixels to texture */
@@ -116,7 +116,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
             }
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
-
+            Logger::warning("PARSERS") << "Type not handled at the moment!" << std::endl;
         }break;
         default: {
             Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "'!" << std::endl;

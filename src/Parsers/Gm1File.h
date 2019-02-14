@@ -63,7 +63,7 @@ namespace Sourcehold
                         DIR_DOWN =  1,
                         DIR_RIGHT = 2,
                         DIR_LEFT =  3,
-                    }direction;
+                    } direction;
                     /* Horizontal offset */
                     uint8_t horizOffset;
                     /* Width of building part */

@@ -22,7 +22,7 @@ namespace Sourcehold
                 ~Texture();
 
                 bool AllocNew(int width, int height, int format);
-                void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b);
+                void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
                 void UpdateTexture();
                 void SetContext(Context &ctx);
 

@@ -30,6 +30,14 @@ bool Texture::AllocNew(int width, int height, int format) {
 
     pixels.resize(width * height, 0);
 
+    /* Enable transparency */
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+    /* Clear texture */
+    for(uint32_t i = 0; i < pixels.size(); i++) {
+        pixels[i] = 0x00;
+    }
+
     return true;
 }
 
@@ -37,8 +45,8 @@ Uint32 color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
    return r << 24 | g << 16 | b << 8 | a;
 }
 
-void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b) {
-    pixels[x + y * width] = color(r, g, b, 0xFF);
+void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    pixels[x + y * width] = color(r, g, b, a);
 }
 
 void Texture::UpdateTexture() {
