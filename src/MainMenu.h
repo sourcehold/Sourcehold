@@ -4,6 +4,7 @@
 #include <GameManager.h>
 
 #include <Parsers/TgxFile.h>
+#include <Parsers/Gm1File.h>
 #include <Parsers/BinkVideo.h>
 #include <Parsers/VolumeTxt.h>
 
@@ -18,8 +19,10 @@ namespace Sourcehold
         using namespace Rendering;
         class MainMenu : public GameManager
         {
-                /* Images */
+                /* Images (tgx) */
                 Parsers::TgxFile tgx_loading, tgx_firefly, tgx_background;
+                /* Images (gm1) */
+                Parsers::Gm1File gm1_slider_bar;
                 RenderList<StaticElement> staticElements;
             public:
                 MainMenu(GameManager &manager);

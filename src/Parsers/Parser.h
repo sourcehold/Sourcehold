@@ -14,11 +14,11 @@ namespace Sourcehold
 {
     namespace Parsers
     {
-        class Parser : public std::ifstream
+        class Parser : protected std::ifstream
         {
                 uint32_t length = 0;
             public:
-                Parser() : std::ifstream() { }; 
+                Parser(); 
                 ~Parser() = default;
             
                 bool Open(std::string &path, std::ios_base::openmode mode);
@@ -34,7 +34,6 @@ namespace Sourcehold
                 uint16_t GetWord();
                 uint32_t GetLength();
                 uint32_t GetOffset();
-            protected:
         };
     }
 }

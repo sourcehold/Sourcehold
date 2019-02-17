@@ -2,6 +2,10 @@
 
 using namespace Sourcehold::Parsers;
 
+Parser::Parser() : std::ifstream() {
+    
+}
+
 bool Parser::Open(std::string &path, std::ios_base::openmode mode) {
     open(path, mode);
     if(!is_open()) return false;

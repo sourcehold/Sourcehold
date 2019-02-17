@@ -27,6 +27,7 @@ namespace Sourcehold
                 void SetContext(Context &ctx);
 
                 SDL_Texture *GetTexture();
+                uint32_t *GetData();
                 int GetWidth();
                 int GetHeight();
             protected:

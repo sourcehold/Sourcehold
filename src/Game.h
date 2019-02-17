@@ -3,8 +3,13 @@
 #include <cstdlib>
 
 #include <Config.h>
+#include <Assets.h>
 #include <GameManager.h>
 #include <MainMenu.h>
+
+#include <Sound/Sound.h>
+
+#include <Rendering/Tileset.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
@@ -26,6 +31,8 @@ namespace Sourcehold
                 Rendering::BinkVideo bik;
                 Parsers::TgxFile tgx;
                 Rendering::Texture tex1, tex2, tex3, tex4;
+                Sound::AudioSource vidSound;
+                Rendering::Texture vidFrame;
             public:
                 Game();
                 ~Game();

@@ -16,7 +16,7 @@ namespace Sourcehold
         class Display : public Rendering::Renderer
         {
                 SDL_Event event;
-                const int FRAMES_PER_SECOND = 30;
+                const int FRAMES_PER_SECOND = 60;
                 uint32_t timer = 0;
                 int frame = 0;
                 bool open = false;

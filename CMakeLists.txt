@@ -28,13 +28,21 @@ find_package(FFmpeg REQUIRED)
 if(FFMPEG_FOUND)
 	include_directories(${FFMPEG_INCLUDE_DIRS})
 if(NOT SWSCALE_FOUND)
-	message(FATAL_ERROR "libswscale has to be installed!")
+	message(FATAL_ERROR "libswscale has to be installed (provided by FFmpeg)!")
 else()
 	include_directories(${SWSCALE_INCLUDE_DIRS})
 endif()
 else(FFMPEG_FOUND)
 	message(FATAL_ERROR "FFMPEG has to be installed!")
 endif(FFMPEG_FOUND)
+
+# Find swresample
+find_package(Libswresample REQUIRED)
+if(NOT LIBSWRESAMPLE_FOUND)
+	message(FATAL_ERROR "libswresample has to be installed (provided by FFmpeg)!")
+else(NOT LIBSWRESAMPLE_FOUND)
+	include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
+endif(NOT LIBSWRESAMPLE_FOUND)
 
 # Include sources
 file(GLOB_RECURSE SOURCES src/*.cpp)
@@ -65,4 +73,5 @@ target_link_libraries(
 	${OPENAL_LIBRARY}
 	${FFMPEG_LIBRARIES}
 	${SWSCALE_LIBRARIES}
+	${LIBSWRESAMPLE_LIBRARIES}
 )

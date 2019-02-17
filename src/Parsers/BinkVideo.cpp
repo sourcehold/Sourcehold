@@ -12,7 +12,7 @@ BinkVideo::~BinkVideo() {
 }
 
 bool BinkVideo::Init(Context &ctx) {
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_set_level(AV_LOG_ERROR);
     bink_input = av_find_input_format("bink");
     if(!bink_input) {
         Logger::error("RENDERING") << "Unable to find libavcodec input format 'bink'!" << std::endl;
@@ -41,43 +41,80 @@ bool BinkVideo::LoadFromDisk(std::string path) {
         return false;
     }
 
-    avformat_find_stream_info(ic, NULL);
-    streamn = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &decoder, 0);
+    ic->max_analyze_duration = 10000000;
+    if(avformat_find_stream_info(ic, NULL) < 0) {
+        Logger::error("RENDERING") << "Unable to get bink stream info!" << std::endl;
+        return false;
+    };
 
-    decoder = avcodec_find_decoder(ic->streams[streamn]->codecpar->codec_id);
+    videoStream = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &decoder, 0);
+    audioStream = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, &audioDecoder, 0);
+    if(videoStream < 0 || audioStream < 0) {
+        Logger::error("RENDERING") << "Unable to find bink video/audio stream indices!" << std::endl;
+        return false;
+    }
+
+    decoder = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
+    audioDecoder = avcodec_find_decoder(ic->streams[audioStream]->codecpar->codec_id);
+    if(!decoder || !audioDecoder) {
+        Logger::error("RENDERING") << "Unable to find bink video/audio decoder!" << std::endl;
+        return false;
+    }
+    
     codecCtx = avcodec_alloc_context3(decoder);
-    avcodec_parameters_to_context(codecCtx, ic->streams[streamn]->codecpar);
+    audioCtx = avcodec_alloc_context3(audioDecoder);
+    if(!codecCtx || ! audioCtx) {
+        Logger::error("RENDERING") << "Unable to allocate codec context!" << std::endl;
+        return false; 
+    }
 
-    timebase = av_q2d(ic->streams[streamn]->time_base);
+    avcodec_parameters_to_context(codecCtx, ic->streams[videoStream]->codecpar);
+    avcodec_parameters_to_context(audioCtx, ic->streams[audioStream]->codecpar);
+
+    timebase = av_q2d(ic->streams[videoStream]->time_base);
 
     uint8_t bink_extradata[4] = { 0 } ;
     codecCtx->extradata = bink_extradata;
     codecCtx->extradata_size = sizeof(bink_extradata);
+    audioCtx->extradata = bink_extradata;
+    audioCtx->extradata_size = sizeof(bink_extradata);
 
-    int a = avcodec_open2(codecCtx, decoder, NULL);
-    if(a < 0) {
+    int cv = avcodec_open2(codecCtx, decoder, NULL);
+    int ca = avcodec_open2(audioCtx, audioDecoder, NULL);
+    if(cv < 0 || ca < 0) {
         Logger::error("RENDERING") << "Unable to initialize AVCodecContext!" << std::endl;
         return false;
     }
 
+    swr = swr_alloc();
+    av_opt_set_int(swr, "in_channel_count", audioCtx->channels, 0);
+    av_opt_set_int(swr, "out_channel_count", 1, 0);
+    av_opt_set_int(swr, "in_channel_layout", audioCtx->channel_layout, 0);
+    av_opt_set_int(swr, "out_channel_layout", AV_CH_LAYOUT_MONO, 0);
+    av_opt_set_int(swr, "in_sample_rate", audioCtx->sample_rate, 0);
+    av_opt_set_int(swr, "out_sample_rate", 44100, 0);
+    av_opt_set_sample_fmt(swr, "in_sample_fmt", audioCtx->sample_fmt, 0);
+    av_opt_set_sample_fmt(swr, "out_sample_fmt", AV_SAMPLE_FMT_DBL,  0);
+    swr_init(swr);
+
     av_init_packet(&packet);
+
     frame = av_frame_alloc();
     if(!frame) {
         Logger::error("RENDERING") << "Unable to allocate libavcodec frame!" << std::endl;
         return false;
     }
 
-    sws = sws_getCachedContext(
-        0,
+    sws = sws_getContext(
         codecCtx->width,
         codecCtx->height,
         codecCtx->pix_fmt,
         800, 600,
         AV_PIX_FMT_RGB32,
-        SWS_LANCZOS,
-        0,
-        0,
-        0
+        SWS_BILINEAR,
+        NULL,
+        NULL,
+        NULL
     );
     if(!sws) {
         Logger::error("RENDERING") << "Unable to create swscale context!" << std::endl;
@@ -87,26 +124,57 @@ bool BinkVideo::LoadFromDisk(std::string path) {
     return true;
 }
 
-Texture &BinkVideo::RenderFrame() {
-    uint32_t begin_time = SDL_GetTicks();
-    if(packet.stream_index == streamn) {
-        int ret = avcodec_send_packet(codecCtx, &packet);
-        if(ret < 0) {
+void BinkVideo::InitFramebuffer(Texture &texture) {
+    texture.SetContext(ctx);
+    texture.AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
+}
+
+void BinkVideo::Decode(Texture &video, Sound::AudioSource &audio) {
+    int ret;
+
+    if(av_read_frame(ic, &packet) < 0) return;
+    if(packet.stream_index == videoStream) {
+        ret = avcodec_send_packet(codecCtx, &packet);
+        if(ret) {
             Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
-            return texture;
+            return;;
         }
 
-        avcodec_receive_frame(codecCtx, frame);
-        long wait_until = begin_time + packet.pts * timebase;
-        
-        uint32_t dst[800 * 600] = { 0 };
+        ret = avcodec_receive_frame(codecCtx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return;
+        }
+
+        long wait_until = packet.pts * timebase;
+        //SDL_Delay(wait_until);
+
+        uint32_t dst[800 * 600];
         uint8_t* slices[3] = {(uint8_t*)&dst[0], 0, 0};
         int strides[3] = {800*4, 0, 0};
 
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
+        memcpy(video.GetData(), dst, 800*600*4);
+
+        video.UpdateTexture();
+    }else if(packet.stream_index == audioStream) {
+    /*    ret = avcodec_send_packet(codecCtx, &packet);
+        if(ret) {
+            Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
+            return;;
+        }
+
+        ret = avcodec_receive_frame(codecCtx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return;
+        }
+
+        int gotFrame;
+        if(avcodec_decode_audio4(audioCtx, frame, &gotFrame, &packet) < 0) {
+            Logger::error("RENDERING") << "An error occured during bink audio decoding!" << std::endl;
+        }*/
     }
 
-    return texture;
+    av_packet_unref(&packet);
 }
 
 void BinkVideo::Close() {

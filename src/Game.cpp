@@ -20,28 +20,32 @@ bool Game::Init(CmdLineOptions &opt) {
 
     Context ctx = GameManager::CreateContext();
 
-    Gm1File gm1;
-    gm1.SetContext(ctx);
-    if(!gm1.LoadFromDisk("data/gm/tile_castle.gm1")) {
-        Logger::error("GAME") << "Gm1 file loading error!" << std::endl;
-    }
+    /*Tileset set;
+    set.SetContext(ctx);
+    if(!set.LoadFromDisk("data/gm/tile_castle.gm1")) {
+        Logger::error("GAME") << "Tileset loading error!" << std::endl;
+    }*/
 
-    auto entries = gm1.GetEntries();
-    tex1 = entries[80].image;
+    //auto entries = set.GetEntries();
+    //tex1 = entries[0].image;
     //tex2 = entries[1].image;
     //tex3 = entries[2].image;
     //tex4 = entries[3].image;
 
     tgx.SetContext(ctx);
-    if(!tgx.LoadFromDisk("data/gfx/frontend_loading.tgx")) {
+    if(!tgx.LoadFromDisk("data/gfx/defeat_pig.tgx")) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
     }
 
-    //VolumeTxt txt;
-    //txt.LoadFromDisk("data/fx/volume.txt");
+    VolumeTxt txt;
+    txt.LoadFromDisk("data/fx/volume.txt");
 
-    //bik.Init(ctx);
-    //bik.LoadFromDisk("data/binks/intro.bik");
+    bik.Init(ctx);
+    if(!bik.LoadFromDisk("data/binks/intro.bik")) {
+        Logger::error("GAME") << "Bink video error!" << std::endl;
+    }
+    bik.InitFramebuffer(vidFrame);
+    vidSound = GameManager::CreateAudioSource(NULL, 0, false);
 
     return true;
 }
@@ -52,7 +56,7 @@ int Game::Start() {
         return EXIT_SUCCESS;
     }*/
 
-    AudioSource song = LoadSong("data/fx/music/appytimes.raw", true);
+    //AudioSource song = LoadSong("data/fx/music/appytimes.raw", true);
     //PlayAudio(song);
 
     while(Display::IsOpen()) {
@@ -60,15 +64,15 @@ int Game::Start() {
         Display::HandleEvents();
         Display::StartTimer();
 
-        Display::RenderTextureFullscreen(tgx);
-        Display::RenderTexture(tex1, 0, 0);
-        //Display::RenderTextureScale(tex1, 0, 0, 30*8, 16*8);
+        //Display::RenderTextureFullscreen(tgx);
+        //Display::RenderTextureScale(tex1, 0.0, 0.0, 0.1, 0.1);
+        //Display::RenderTextureScale(tex2, 0, 0, 30*8, 16*8);
         //Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);
         //Display::RenderTextureScale(tex3, 0, 16*8, 30*8, 16*8);
         //Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
 
-        //Texture &frame = bik.RenderFrame();
-        //Display::RenderTexture(frame, 0, 0);
+        bik.Decode(vidFrame, vidSound);
+        Display::RenderTextureFullscreen(vidFrame);
 
         Display::Flush();
         Display::EndTimer();

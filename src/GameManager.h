@@ -15,7 +15,7 @@ namespace Sourcehold
 {
     namespace Game
     {
-        class GameManager : public Rendering::Display, public Sound::Sound
+        class GameManager : public Rendering::Display, public Sound::SoundManager
         {
             public:
                 GameManager();

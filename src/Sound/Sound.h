@@ -26,20 +26,21 @@ namespace Sourcehold
         };
 
         /* Sound super class */
-        class Sound
+        class SoundManager
         {
                 /* OpenAL stuff */
                 ALCdevice *device;
                 ALCcontext *context;
             public:
-                Sound();
-                Sound(const Sound &snd);
-                ~Sound();
+                SoundManager();
+                SoundManager(const SoundManager &snd);
+                ~SoundManager();
 
                 bool Init();
 
                 AudioSource LoadSong(std::string path, bool repeat);
                 AudioSource LoadEffect(std::string path, bool repeat);
+                AudioSource CreateAudioSource(void *buffer, size_t size, bool repeat);
 
                 void PlayAudio(AudioSource &source);
                 bool IsPlaying();

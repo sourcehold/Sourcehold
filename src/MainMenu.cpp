@@ -15,6 +15,9 @@ MainMenu::MainMenu(GameManager &manager) : GameManager(manager) {
 
     tgx_background.SetContext(ctx);
     tgx_background.LoadFromDisk("data/gfx/frontend_main2.tgx");
+
+    gm1_slider_bar.SetContext(ctx);
+    gm1_slider_bar.LoadFromDisk("data/gm/interface_slider_bar.gm1");
 }
 
 MainMenu::~MainMenu() {
@@ -23,7 +26,7 @@ MainMenu::~MainMenu() {
 
 bool MainMenu::Start() {
     AudioSource song = LoadSong("data/fx/music/stainedglass1.raw", true);
-    PlayAudio(song);
+    //PlayAudio(song);
 
     while(IsOpen()) {
         Clear();
@@ -31,6 +34,7 @@ bool MainMenu::Start() {
         StartTimer();
 
         RenderTextureFullscreen(tgx_loading);
+        RenderTextureScale(gm1_slider_bar.GetEntry(0).image, 0.1, 0.7, 0.8, 0.1);
 
         Flush();
         EndTimer();

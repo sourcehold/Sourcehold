@@ -66,6 +66,10 @@ SDL_Texture *Texture::GetTexture() {
     return texture;
 }
 
+uint32_t *Texture::GetData() {
+    return pixels.data();
+}
+
 int Texture::GetWidth() {
     return width;
 }

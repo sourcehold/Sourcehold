@@ -3,20 +3,20 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Sound;
 
-Sound::Sound() {
+SoundManager::SoundManager() {
 }
 
-Sound::Sound(const Sound &snd) {
+SoundManager::SoundManager(const SoundManager &snd) {
     device = snd.device;
     context = snd.context;
 }
 
-Sound::~Sound() {
+SoundManager::~SoundManager() {
     //alcCloseDevice(device);
     //PrintError();
 }
 
-bool Sound::Init() {
+bool SoundManager::Init() {
     alGetError();
 
     device = alcOpenDevice(NULL);
@@ -34,7 +34,7 @@ bool Sound::Init() {
     return true;
 }
 
-AudioSource Sound::LoadSong(std::string path, bool repeat) {
+AudioSource SoundManager::LoadSong(std::string path, bool repeat) {
     AudioSource song;
 
     /* Parameters */
@@ -71,7 +71,7 @@ AudioSource Sound::LoadSong(std::string path, bool repeat) {
     return song;
 }
 
-AudioSource Sound::LoadEffect(std::string path, bool repeat) {
+AudioSource SoundManager::LoadEffect(std::string path, bool repeat) {
     AudioSource song;
 
     /* Parameters */
@@ -86,21 +86,33 @@ AudioSource Sound::LoadEffect(std::string path, bool repeat) {
     alGenBuffers((ALuint)1, &song.buffer);
     PrintError();
 
+    song.valid = true;
     return song;
 }
 
-void Sound::PlayAudio(AudioSource &source) {
+AudioSource SoundManager::CreateAudioSource(void *buffer, size_t size, bool repeat) {
+    AudioSource source;
+
+    source.repeat = repeat;
+    source.ptr = (uint8_t*)buffer;
+    source.size = size;
+
+    source.valid = true;
+    return source;
+}
+
+void SoundManager::PlayAudio(AudioSource &source) {
     if(!source.valid) return;
 
     alSourcePlay(source.source);
     PrintError();
 }
 
-bool Sound::IsPlaying() {
+bool SoundManager::IsPlaying() {
     return false;
 }
 
-void Sound::PrintError() {
+void SoundManager::PrintError() {
     ALCenum err = alGetError();
     std::string str;
 

@@ -5,11 +5,11 @@ using namespace Sourcehold::Sound;
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-GameManager::GameManager() : Display(), Sound() {
+GameManager::GameManager() : Display(), SoundManager() {
     this->Init();
 }
 
-GameManager::GameManager(const GameManager &manager) : Display(manager), Sound(manager) {
+GameManager::GameManager(const GameManager &manager) : Display(manager), SoundManager(manager) {
     
 }
 
@@ -19,5 +19,5 @@ GameManager::~GameManager() {
 
 void GameManager::Init() {
     OpenWindowed("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600);
-    Sound::Init();
+    SoundManager::Init();
 }

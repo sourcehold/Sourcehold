@@ -1,7 +1,9 @@
 #pragma once
 
 extern "C" {
+#include <libavutil/opt.h>
 #include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 
@@ -12,9 +14,13 @@ extern "C" {
 }
 
 #include <Config.h>
+
+#include <System/Logger.h>
+
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>
-#include <System/Logger.h>
+
+#include <Sound/Sound.h>
 
 namespace Sourcehold
 {
@@ -26,13 +32,13 @@ namespace Sourcehold
                 AVInputFormat *bink_input;
                 AVCodec *bink_codec;
                 AVFormatContext *ic;
-                AVCodec *decoder;
+                AVCodec *decoder, *audioDecoder;
                 AVPacket packet;
                 AVFrame *frame;
-                AVCodecContext *codecCtx;
+                AVCodecContext *codecCtx, *audioCtx;
                 SwsContext *sws;
-                Texture texture;
-                int streamn;
+                SwrContext *swr;
+                int videoStream, audioStream;
                 double timebase = 0.0;
             public:
                 BinkVideo();
@@ -40,8 +46,9 @@ namespace Sourcehold
 
                 bool Init(Context &ctx);
                 bool LoadFromDisk(std::string path);
+                void InitFramebuffer(Texture &texture);
                 void Close();
-                Texture &RenderFrame();
+                void Decode(Texture &video, Sound::AudioSource &audio);
             private:
         };
     }
