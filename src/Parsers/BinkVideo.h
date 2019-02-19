@@ -20,7 +20,7 @@ extern "C" {
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>
 
-#include <Sound/Sound.h>
+#include <Audio/AudioSource.h>
 
 namespace Sourcehold
 {
@@ -40,6 +40,8 @@ namespace Sourcehold
                 SwrContext *swr;
                 int videoStream, audioStream;
                 double timebase = 0.0;
+
+                bool hasAudio = false;
             public:
                 BinkVideo();
                 ~BinkVideo();
@@ -48,7 +50,7 @@ namespace Sourcehold
                 bool LoadFromDisk(std::string path);
                 void InitFramebuffer(Texture &texture);
                 void Close();
-                void Decode(Texture &video, Sound::AudioSource &audio);
+                void Decode(Texture &video, Audio::AudioSource &audio);
             private:
         };
     }

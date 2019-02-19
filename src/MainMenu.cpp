@@ -1,7 +1,7 @@
 #include <MainMenu.h>
 
 using namespace Sourcehold::Game;
-using namespace Sourcehold::Sound;
+using namespace Sourcehold::Audio;
 
 MainMenu::MainMenu(GameManager &manager) : GameManager(manager) {
     Context ctx = CreateContext();
@@ -25,7 +25,7 @@ MainMenu::~MainMenu() {
 }
 
 bool MainMenu::Start() {
-    AudioSource song = LoadSong("data/fx/music/stainedglass1.raw", true);
+    //AudioSource song = LoadSong("data/fx/music/stainedglass1.raw", true);
     //PlayAudio(song);
 
     while(IsOpen()) {

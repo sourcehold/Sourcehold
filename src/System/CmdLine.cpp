@@ -1,4 +1,5 @@
 #include <System/System.h>
+#include <System/Logger.h>
 
 using namespace Sourcehold::System;
 
@@ -30,17 +31,17 @@ CmdLineOptions Sourcehold::System::ParseCmdLine(int argc, char **argv) {
                     /* help */
                     case 'h': {
                         std::cout << infotext << std::endl;
-                        exit(EXIT_SUCCESS);
+                        opt.info = true;
                     }break;
                     default: {
-                        std::cout << infotext << "\nInvalid option '-" << o[ii] << "'" << std::endl;
-                        exit(EXIT_FAILURE);
+                        Logger::error("SYSTEM") << "Invalid option '-" << o[ii] << "'" << std::endl;
+                        opt.valid = false;
                     }
                 }
             }
         }else {
-            std::cout << infotext << "\nInvalid option '" << o << "'" << std::endl;
-            exit(EXIT_FAILURE);
+            Logger::error("SYSTEM") << "Invalid option '" << o << "'" << std::endl;
+            opt.valid = false;
         }
     }
 

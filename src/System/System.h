@@ -11,7 +11,8 @@ namespace Sourcehold
     namespace System
     {
         struct CmdLineOptions {
-            int fillme;
+            bool info = false;
+            bool valid = true;
         };
         CmdLineOptions ParseCmdLine(int argc, char **argv);
     }

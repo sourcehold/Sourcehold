@@ -1,7 +1,7 @@
 #include <Game.h>
 
 using namespace Sourcehold::Game;
-using namespace Sourcehold::Sound;
+using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
@@ -35,6 +35,7 @@ bool Game::Init(CmdLineOptions &opt) {
     tgx.SetContext(ctx);
     if(!tgx.LoadFromDisk("data/gfx/defeat_pig.tgx")) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
+        return false;
     }
 
     VolumeTxt txt;
@@ -43,9 +44,10 @@ bool Game::Init(CmdLineOptions &opt) {
     bik.Init(ctx);
     if(!bik.LoadFromDisk("data/binks/intro.bik")) {
         Logger::error("GAME") << "Bink video error!" << std::endl;
+        return false;
     }
     bik.InitFramebuffer(vidFrame);
-    vidSound = GameManager::CreateAudioSource(NULL, 0, false);
+    vidSound.Create(NULL, 0, false);
 
     return true;
 }
@@ -56,8 +58,16 @@ int Game::Start() {
         return EXIT_SUCCESS;
     }*/
 
-    //AudioSource song = LoadSong("data/fx/music/appytimes.raw", true);
-    //PlayAudio(song);
+    /*Playlist list({
+        "data/fx/music/the maidenB.raw",
+        "data/fx/music/underanoldtree.raw",
+        "data/fx/music/appytimes.raw",
+    }, false);
+    list.Play();*/
+
+    AudioSource audio;
+    audio.LoadSong("data/fx/music/appytimes.raw", true);
+    audio.Play();
 
     while(Display::IsOpen()) {
         Display::Clear();
@@ -72,7 +82,8 @@ int Game::Start() {
         //Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
 
         bik.Decode(vidFrame, vidSound);
-        Display::RenderTextureFullscreen(vidFrame);
+        //Display::RenderTextureFullscreen(vidFrame);
+        Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);
 
         Display::Flush();
         Display::EndTimer();
@@ -84,6 +95,10 @@ int Game::Start() {
 int main(int argc, char **argv) {
     Game game;
     CmdLineOptions opt = ParseCmdLine(argc, argv);
+
+    if(!opt.valid) return EXIT_FAILURE;
+    if(opt.info) return EXIT_SUCCESS;
+    
     if(!game.Init(opt)) {
         Logger::error("GAME") << "Game initialization failed due to previous errors!" << std::endl;
         return EXIT_FAILURE;

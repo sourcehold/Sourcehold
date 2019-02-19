@@ -9,13 +9,13 @@
 #include <Rendering/Rendering.h>
 #include <Rendering/Renderer.h>
 
-#include <Sound/Sound.h>
+#include <Audio/SoundManager.h>
 
 namespace Sourcehold
 {
     namespace Game
     {
-        class GameManager : public Rendering::Display, public Sound::SoundManager
+        class GameManager : public Rendering::Display, public Audio::SoundManager
         {
             public:
                 GameManager();
