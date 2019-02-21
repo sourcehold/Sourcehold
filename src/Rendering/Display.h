@@ -25,8 +25,7 @@ namespace Sourcehold
                 Display(const Display &dp);
                 ~Display();
 
-                void OpenWindowed(std::string title, int width, int height);
-                void Fullscreen();
+                void Open(std::string title, int width, int height, bool fullscreen = false);
                 void Close();
                 void HandleEvents();
                 void StartTimer();
@@ -34,7 +33,6 @@ namespace Sourcehold
                 void Clear();
 
                 bool IsOpen();
-
                 uint32_t GetTicks();
                 uint32_t GetSeconds();
             protected:

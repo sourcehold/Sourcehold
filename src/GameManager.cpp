@@ -18,7 +18,7 @@ GameManager::~GameManager() {
 }
 
 void GameManager::Init() {
-    OpenWindowed("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600);
-    Fullscreen();
+    Open("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600, false);
+    //Fullscreen();
     SoundManager::Init();
 }

@@ -28,9 +28,8 @@ namespace Sourcehold
                 ~TgxFile();
 
                 bool LoadFromDisk(std::string path);
-                void DumpInformation();
-
-                static void ReadTgx(Parser *pa, Texture *tex, size_t size);
+                
+                static void ReadTgx(Parser *pa, Texture *tex, size_t size, uint16_t width, uint16_t height);
                 static void ReadPixel(uint16_t pixel, uint8_t *r, uint8_t *g, uint8_t *b);
             protected:
             private:

@@ -4,9 +4,11 @@
 #include <string>
 
 #include <Config.h>
+
 #include <Assets.h>
 #include <GameManager.h>
 #include <MainMenu.h>
+#include <Building.h>
 
 #include <Audio/SoundManager.h>
 #include <Audio/Playlist.h>

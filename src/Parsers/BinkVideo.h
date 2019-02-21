@@ -28,10 +28,9 @@ namespace Sourcehold
     {
         class BinkVideo
         {
-                Context ctx;
                 AVInputFormat *bink_input;
                 AVCodec *bink_codec;
-                AVFormatContext *ic;
+                AVFormatContext *ic, *sc;
                 AVCodec *decoder, *audioDecoder;
                 AVPacket packet;
                 AVFrame *frame;
@@ -40,13 +39,12 @@ namespace Sourcehold
                 SwrContext *swr;
                 int videoStream, audioStream;
                 double timebase = 0.0;
-
                 bool hasAudio = false;
             public:
                 BinkVideo();
                 ~BinkVideo();
 
-                bool Init(Context &ctx);
+                bool Init();
                 bool LoadFromDisk(std::string path);
                 void InitFramebuffer(Texture &texture);
                 void Close();

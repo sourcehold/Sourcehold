@@ -79,16 +79,12 @@ namespace Sourcehold
                     Rendering::Texture image;
                 };
 
-                /* Used to dispatch textures */
-                Rendering::Context ctx;
                 /* All of the images */
                 std::vector<Gm1Entry> entries;
             public:
                 Gm1File();
-                Gm1File(Rendering::Context &ctx);
                 ~Gm1File();
 
-                void SetContext(Rendering::Context &ctx);
                 bool LoadFromDisk(std::string path);
                 void DumpInformation();
 

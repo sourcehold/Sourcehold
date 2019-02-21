@@ -4,20 +4,11 @@ using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
 
 MainMenu::MainMenu(GameManager &manager) : GameManager(manager) {
-    Context ctx = CreateContext();
-
     /* Preload images */
-    tgx_loading.SetContext(ctx);
-    tgx_loading.LoadFromDisk("data/gfx/frontend_loading.tgx");
-
-    tgx_firefly.SetContext(ctx);
+/*    tgx_loading.LoadFromDisk("data/gfx/frontend_loading.tgx");
     tgx_firefly.LoadFromDisk("data/gfx/front_firefly_logo.tgx");
-
-    tgx_background.SetContext(ctx);
     tgx_background.LoadFromDisk("data/gfx/frontend_main2.tgx");
-
-    gm1_slider_bar.SetContext(ctx);
-    gm1_slider_bar.LoadFromDisk("data/gm/interface_slider_bar.gm1");
+    gm1_slider_bar.LoadFromDisk("data/gm/interface_slider_bar.gm1");*/
 }
 
 MainMenu::~MainMenu() {

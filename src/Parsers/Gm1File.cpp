@@ -4,20 +4,14 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Gm1File::Gm1File() : Parser() {
+Gm1File::Gm1File() :
+    Parser()
+{
 
-}
-
-Gm1File::Gm1File(Context &ctx) : Parser() {
-    this->ctx = ctx;
 }
 
 Gm1File::~Gm1File() {
 
-}
-
-void Gm1File::SetContext(Context &ctx) {
-    this->ctx = ctx;
 }
 
 bool Gm1File::LoadFromDisk(std::string path) {
@@ -64,62 +58,76 @@ bool Gm1File::LoadFromDisk(std::string path) {
 
     /* Parse the entries */
     switch(header.type) {
-        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: /*case Gm1Header::TYPE_ANIMATION:*/ {
+        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
             for(uint32_t n = 0; n < header.num; n++) {
                 /* Seek to position */
                 Parser::Seek(entries[n].offset + offData);
+
+                /* Error handling */
+                if(!Parser::Ok()) {
+                    Logger::error("PARSERS") << "Error while parsing image " << n << " from Gm1 '" << path << "'!" << std::endl;
+                    Parser::Close();
+                    return false;
+                }
+
                 /* Read texture */
-                Texture tex;
-                tex.SetContext(ctx);
+                /*Texture tex(ctx);
                 tex.AllocNew(entries[n].header.width, entries[n].header.height, SDL_PIXELFORMAT_RGBA8888);
-                TgxFile::ReadTgx(this, &tex, entries[n].size);
+
+                TgxFile::ReadTgx(this, &tex, entries[n].size, entries[n].header.width, entries[n].header.height);
                 tex.UpdateTexture();
-                entries[n].image = tex;
+
+                entries[n].image = tex;*/
             }
         }break;
         case Gm1Header::TYPE_TILE: {
             for(uint32_t n = 0; n < header.num; n++) {
                 /* Seek to position */
                 Parser::Seek(entries[n].offset + offData);
+                
                 /* Error handling */
                 if(!Parser::Ok()) {
-                    Logger::error("PARSERS") << "Error while parsing entry " << n << " from Gm1 '" << path << "'!" << std::endl;
+                    Logger::error("PARSERS") << "Error while parsing tile " << n << " from Gm1 '" << path << "'!" << std::endl;
                     Parser::Close();
                     return false;
                 }
+                
                 /* Create texture */
-                Texture tex;
+                /*Texture tex;
                 tex.SetContext(ctx);
-                tex.AllocNew(30, 16, SDL_PIXELFORMAT_RGBA8888);
+                tex.AllocNew(30, 16, SDL_PIXELFORMAT_RGBA8888);*/
+                
                 /* Extract pixel data */
                 const uint8_t lines[16] = {
-                    2, 6, 10, 14,
-                    18, 22, 26, 30,
-                    30, 26, 22, 18,
-                    14, 10, 6, 2
+                    2, 6, 10, 14, 18, 22, 26, 30,
+                    30, 26, 22, 18, 14, 10, 6, 2
                 };
+
                 for(uint8_t l = 0; l < 16; l++) {
                     /* Read every pixel in a line */
                     for(uint8_t i = 0; i < lines[l]; i++) {
                         uint16_t pixel = Parser::GetWord();
+                
                         /* Read RGB */
                         uint8_t r, g, b;
                         TgxFile::ReadPixel(pixel, &r, &g, &b);
+                
                         /* Add to texture */
-                        tex.SetPixel(i, l, r, g, b, 0xFF);
+                        //tex.SetPixel(i, l, r, g, b, 0xFF);
                     }
                 }
                 /* Write pixels to texture */
-                tex.UpdateTexture();
+                //tex.UpdateTexture();
+                
                 /* Add texture to list */
-                entries[n].image = tex;
+                //entries[n].image = tex;
             }
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
             Logger::warning("PARSERS") << "Type not handled at the moment!" << std::endl;
         }break;
         default: {
-            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "'!" << std::endl;
+            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "': " << header.type << std::endl;
             Parser::Close();
             return false;
         }

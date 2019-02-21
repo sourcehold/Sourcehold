@@ -7,15 +7,11 @@ Texture::Texture() {
 
 }
 
-Texture::Texture(Context &ctx) {
-    this->ctx = ctx;
-}
-
 Texture::~Texture() {
 }
 
 bool Texture::AllocNew(int width, int height, int format) {
-    this->width = width;
+    /*this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
         ctx.renderer,
@@ -26,7 +22,7 @@ bool Texture::AllocNew(int width, int height, int format) {
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create texture: " << SDL_GetError() << std::endl;
         return false;
-    }
+    }*/
 
     pixels.resize(width * height, 0);
 
@@ -56,10 +52,6 @@ void Texture::UpdateTexture() {
         &pixels[0],
         width * 4
     );
-}
-
-void Texture::SetContext(Context &ctx) {
-    this->ctx = ctx;
 }
 
 SDL_Texture *Texture::GetTexture() {

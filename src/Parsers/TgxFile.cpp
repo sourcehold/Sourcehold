@@ -16,6 +16,7 @@ bool TgxFile::LoadFromDisk(std::string path) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
     }
+
     if(!Parser::GetData(&header, sizeof(TgxHeader))) {
         Logger::error("PARSERS") << "Unable to load Tgx file header from '" << path << "'!" << std::endl;
         return false;
@@ -30,7 +31,7 @@ bool TgxFile::LoadFromDisk(std::string path) {
     size_t size = length - sizeof(TgxHeader);
 
     /* Read image data */
-    ReadTgx(this, this, size);
+    ReadTgx(this, this, size, header.width, header.height);
 
     /* Copy image data to texture */
     Texture::UpdateTexture();
@@ -38,11 +39,7 @@ bool TgxFile::LoadFromDisk(std::string path) {
     return true;
 }
 
-void TgxFile::DumpInformation() {
-
-}
-
-void TgxFile::ReadTgx(Parser *pa, Texture *tex, size_t size) {
+void TgxFile::ReadTgx(Parser *pa, Texture *tex, size_t size, uint16_t width, uint16_t height) {
     uint32_t x = 0, y = 0;
     size_t read = 0, offset = pa->Tell();
 
@@ -54,7 +51,8 @@ void TgxFile::ReadTgx(Parser *pa, Texture *tex, size_t size) {
 
         if(flag == 0b100) { /* Newline */
             y++;
-            x = 0;
+            //x = 0;
+            x -= width;
         }else if(flag == 0b010) { /* Repeating pixel */
             uint8_t r,g,b;
             ReadPixel(pa->GetWord(), &r, &g, &b);

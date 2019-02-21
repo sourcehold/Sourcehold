@@ -18,8 +18,6 @@ bool Game::Init(CmdLineOptions &opt) {
     //MlbFile mlb;
     //mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
 
-    Context ctx = GameManager::CreateContext();
-
     /*Tileset set;
     set.SetContext(ctx);
     if(!set.LoadFromDisk("data/gm/tile_castle.gm1")) {
@@ -32,22 +30,22 @@ bool Game::Init(CmdLineOptions &opt) {
     //tex3 = entries[2].image;
     //tex4 = entries[3].image;
 
-    tgx.SetContext(ctx);
+    /*tgx.SetContext(ctx);
     if(!tgx.LoadFromDisk("data/gfx/defeat_pig.tgx")) {
         Logger::error("GAME") << "Tgx file loading error!" << std::endl;
         return false;
-    }
+    }*/
 
-    VolumeTxt txt;
-    txt.LoadFromDisk("data/fx/volume.txt");
+    //VolumeTxt txt;
+    //txt.LoadFromDisk("data/fx/volume.txt");
 
-    bik.Init(ctx);
+    /*bik.Init();
     if(!bik.LoadFromDisk("data/binks/intro.bik")) {
         Logger::error("GAME") << "Bink video error!" << std::endl;
         return false;
     }
     bik.InitFramebuffer(vidFrame);
-    vidSound.Create(NULL, 0, false);
+    vidSound.Create(NULL, 0, false);*/
 
     return true;
 }
@@ -58,32 +56,41 @@ int Game::Start() {
         return EXIT_SUCCESS;
     }*/
 
-    /*Playlist list({
+    Playlist list({
         "data/fx/music/the maidenB.raw",
         "data/fx/music/underanoldtree.raw",
         "data/fx/music/appytimes.raw",
     }, false);
-    list.Play();*/
+    list.Play();
 
-    AudioSource audio;
+    /*AudioSource audio;
     audio.LoadSong("data/fx/music/appytimes.raw", true);
-    audio.Play();
+    audio.Play();*/
+
+//    Building building(ctx);
+//    building.LoadFromDisk("");
+
+//    Gm1File gm1(ctx);
+//    gm1.LoadFromDisk("data/gm/body_siege_tower.gm1");
+//    auto entries = gm1.GetEntries();
+//    tex1 = entries[0].image;
 
     while(Display::IsOpen()) {
         Display::Clear();
         Display::HandleEvents();
         Display::StartTimer();
 
+        list.Update();
+
         //Display::RenderTextureFullscreen(tgx);
-        //Display::RenderTextureScale(tex1, 0.0, 0.0, 0.1, 0.1);
+        //Display::RenderTextureScale(tex1, 0.0, 0.0, 0.6, 0.3);
         //Display::RenderTextureScale(tex2, 0, 0, 30*8, 16*8);
         //Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);
         //Display::RenderTextureScale(tex3, 0, 16*8, 30*8, 16*8);
         //Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
 
-        bik.Decode(vidFrame, vidSound);
-        //Display::RenderTextureFullscreen(vidFrame);
-        Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);
+        //bik.Decode(vidFrame, vidSound);
+        //Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);
 
         Display::Flush();
         Display::EndTimer();

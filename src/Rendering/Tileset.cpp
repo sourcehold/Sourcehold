@@ -3,11 +3,9 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::Parsers;
 
-Tileset::Tileset() {
-
-}
-
-Tileset::Tileset(Rendering::Context &ctx) {
+Tileset::Tileset() :
+    Gm1File()
+{
 
 }
 

@@ -71,13 +71,6 @@ void Renderer::RenderTextureFullscreen(Texture &texture) {
     );
 }
 
-Context Renderer::CreateContext() {
-    Context ctx;
-    ctx.window = window;
-    ctx.renderer = renderer;
-    return ctx;
-}
-
 uint32_t Renderer::GetWidth() {
     int s;
     SDL_GetWindowSize(window, &s, NULL);

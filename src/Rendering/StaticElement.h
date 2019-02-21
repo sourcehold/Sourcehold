@@ -12,7 +12,7 @@ namespace Sourcehold
         {
                 bool shown = true;
             public:
-                StaticElement(Context &ctx);
+                StaticElement();
                 ~StaticElement();
 
                 virtual void Render();

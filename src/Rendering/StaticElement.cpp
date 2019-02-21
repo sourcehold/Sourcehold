@@ -2,7 +2,7 @@
 
 using namespace Sourcehold::Rendering;
 
-StaticElement::StaticElement(Context &ctx) : Texture(ctx) {
+StaticElement::StaticElement() : Texture() {
 
 }
 
