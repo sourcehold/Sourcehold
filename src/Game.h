@@ -14,6 +14,7 @@
 #include <Audio/Playlist.h>
 
 #include <Rendering/Tileset.h>
+#include <Rendering/TextureAtlas.h>
 
 #include <System/System.h>
 #include <System/Logger.h>

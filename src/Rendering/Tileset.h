@@ -12,7 +12,7 @@ namespace Sourcehold
 {
     namespace Rendering
     {
-        class Tileset : protected Parsers::Gm1File
+        class Tileset
         {
             public:
                 Tileset();

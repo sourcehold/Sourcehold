@@ -4,12 +4,13 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
 Texture::Texture(SDL_Renderer *rend) {
-    this->rend = rend;
+    this->renderer = rend;
 }
 
 Texture::Texture(const Texture &tex) :
     pixels(tex.pixels)
 {
+    this->renderer = tex.renderer;
     this->texture = tex.texture;
     this->width = tex.width;
     this->height = tex.height;
@@ -22,7 +23,7 @@ bool Texture::AllocNew(int width, int height, int format) {
     this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
-        rend,
+        renderer,
         format,
         SDL_TEXTUREACCESS_STATIC,
         width, height

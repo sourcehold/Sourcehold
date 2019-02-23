@@ -5,7 +5,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 # Project
 project(Stronghold)
-set(Stronghold_VERSION, 0.0.1)
+set(Stronghold_VERSION, 0.1.0)
 
 include_directories(src)
 
@@ -75,3 +75,18 @@ target_link_libraries(
 	${SWSCALE_LIBRARIES}
 	${LIBSWRESAMPLE_LIBRARIES}
 )
+
+# cpack stuff
+#SET(CPACK_GENERATOR "DEB")
+#SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Julian Offenhäuser")
+
+#SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open source engine implementation of Stronghold by Firefly Studios")
+#SET(CPACK_PACKAGE_VENDOR "Julian Offenhäuser")
+#SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+#SET(CPACK_PACKAGE_VERSION_MAJOR "0")
+#SET(CPACK_PACKAGE_VERSION_MINOR "1")
+#SET(CPACK_PACKAGE_VERSION_PATCH "0")
+#SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Sourcehold ${Stronghold_VERSION}")
+
+#INCLUDE(CPack)
+

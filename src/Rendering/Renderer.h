@@ -1,11 +1,14 @@
 #pragma once
 
 #include <cinttypes>
+
 #include <SDL2/SDL.h>
 
-#include <Rendering/Texture.h>
-#include <Rendering/Rendering.h>
 #include <System/Logger.h>
+
+#include <Rendering/Texture.h>
+#include <Rendering/TextureAtlas.h>
+#include <Rendering/Rendering.h>
 
 namespace Sourcehold
 {
@@ -18,6 +21,7 @@ namespace Sourcehold
                 Renderer(const Renderer &rend);
                 ~Renderer();
 
+                /* Render everything */
                 void Flush();
                 /* Render a texture (screen coordinates) */
                 void RenderTexture(Texture &texture, int x, int y);
@@ -29,6 +33,7 @@ namespace Sourcehold
                 void RenderTextureFullscreen(Texture &texture);
 
                 Texture CreateTexture();
+                TextureAtlas CreateTextureAtlas();
 
                 uint32_t GetWidth();
                 uint32_t GetHeight();

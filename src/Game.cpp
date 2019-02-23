@@ -33,28 +33,31 @@ bool Game::Init(CmdLineOptions &opt) {
     //VolumeTxt txt;
     //txt.LoadFromDisk("data/fx/volume.txt");
 
-    /*bik.Init();
+    return true;
+}
+
+int Game::Start() {
+    /*Playlist list({
+        "data/fx/music/the maidenB.raw",
+        "data/fx/music/underanoldtree.raw",
+        "data/fx/music/appytimes.raw",
+    }, false);
+    list.Play();*/
+
+    Texture tex = CreateTexture();
+    TgxFile tgx;
+    tgx.LoadFromDisk("data/gfx/defeat_pig.tgx", tex);
+
+    /*BinkVideo bik;
+    Texture vidFrame = CreateTexture();
+    AudioSource vidSound;
+    bik.Init();
     if(!bik.LoadFromDisk("data/binks/intro.bik")) {
         Logger::error("GAME") << "Bink video error!" << std::endl;
         return false;
     }
     bik.InitFramebuffer(vidFrame);
     vidSound.Create(NULL, 0, false);*/
-
-    return true;
-}
-
-int Game::Start() {
-    Playlist list({
-        "data/fx/music/the maidenB.raw",
-        "data/fx/music/underanoldtree.raw",
-        "data/fx/music/appytimes.raw",
-    }, false);
-    //list.Play();
-
-    Texture tex = CreateTexture();
-    TgxFile tgx;
-    tgx.LoadFromDisk("data/gfx/defeat_pig.tgx", tex);
 
     /*AudioSource audio;
     audio.LoadSong("data/fx/music/appytimes.raw", true);
@@ -63,24 +66,18 @@ int Game::Start() {
 //    Building building(ctx);
 //    building.LoadFromDisk("");
 
-//    Gm1File gm1(ctx);
-//    gm1.LoadFromDisk("data/gm/body_siege_tower.gm1");
-//    auto entries = gm1.GetEntries();
-//    tex1 = entries[0].image;
+    Gm1File gm1;
+    TextureAtlas atlas = CreateTextureAtlas();
+    gm1.LoadFromDisk("data/gm/tile_castle.gm1", atlas);
 
     while(Display::IsOpen()) {
         Display::Clear();
         Display::HandleEvents();
         Display::StartTimer();
 
-        list.Update();
+        //list.Update();
 
         Display::RenderTextureFullscreen(tex);
-        //Display::RenderTextureScale(tex1, 0.0, 0.0, 0.6, 0.3);
-        //Display::RenderTextureScale(tex2, 0, 0, 30*8, 16*8);
-        //Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);
-        //Display::RenderTextureScale(tex3, 0, 16*8, 30*8, 16*8);
-        //Display::RenderTextureScale(tex4, 30*8, 16*8, 30*8, 16*8);
 
         //bik.Decode(vidFrame, vidSound);
         //Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);

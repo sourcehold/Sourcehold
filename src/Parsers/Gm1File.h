@@ -3,11 +3,11 @@
 #include <cinttypes>
 #include <vector>
 
-#include <Config.h>
 #include <System/Logger.h>
 
 #include <Rendering/Texture.h>
 #include <Rendering/Rendering.h>
+#include <Rendering/TextureAtlas.h>
 
 #include <Parsers/Parser.h>
 #include <Parsers/TgxFile.h>
@@ -78,19 +78,25 @@ namespace Sourcehold
                     uint32_t offset;
                 };
 
-                /* All of the images */
+                std::string path;
+
+                /* Offset of data section */
+                uint32_t offData;
+
+                /* All of the entries */
                 std::vector<Gm1Entry> entries;
             public:
                 Gm1File();
                 ~Gm1File();
 
-                bool LoadFromDisk(std::string path);
+                bool LoadFromDisk(std::string path, Rendering::TextureAtlas &atlas);
                 void DumpInformation();
 
                 std::vector<Gm1Entry>& GetEntries();
                 Gm1Entry &GetEntry(uint32_t index);
             protected:
                 const uint32_t max_num = 8192;
+                bool GetImage(Rendering::Texture &tex, uint32_t index);
                 void ReadPalette();
         };
     }
