@@ -30,12 +30,6 @@ bool Game::Init(CmdLineOptions &opt) {
     //tex3 = entries[2].image;
     //tex4 = entries[3].image;
 
-    /*tgx.SetContext(ctx);
-    if(!tgx.LoadFromDisk("data/gfx/defeat_pig.tgx")) {
-        Logger::error("GAME") << "Tgx file loading error!" << std::endl;
-        return false;
-    }*/
-
     //VolumeTxt txt;
     //txt.LoadFromDisk("data/fx/volume.txt");
 
@@ -51,17 +45,16 @@ bool Game::Init(CmdLineOptions &opt) {
 }
 
 int Game::Start() {
-    /*if(!menu.Start()) {
-        // exited out of intro or menu
-        return EXIT_SUCCESS;
-    }*/
-
     Playlist list({
         "data/fx/music/the maidenB.raw",
         "data/fx/music/underanoldtree.raw",
         "data/fx/music/appytimes.raw",
     }, false);
-    list.Play();
+    //list.Play();
+
+    Texture tex = CreateTexture();
+    TgxFile tgx;
+    tgx.LoadFromDisk("data/gfx/defeat_pig.tgx", tex);
 
     /*AudioSource audio;
     audio.LoadSong("data/fx/music/appytimes.raw", true);
@@ -82,7 +75,7 @@ int Game::Start() {
 
         list.Update();
 
-        //Display::RenderTextureFullscreen(tgx);
+        Display::RenderTextureFullscreen(tex);
         //Display::RenderTextureScale(tex1, 0.0, 0.0, 0.6, 0.3);
         //Display::RenderTextureScale(tex2, 0, 0, 30*8, 16*8);
         //Display::RenderTextureScale(tex2, 30*8, 0, 30*8, 16*8);

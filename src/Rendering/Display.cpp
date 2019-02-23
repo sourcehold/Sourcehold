@@ -20,7 +20,7 @@ Display::~Display() {
 }
 
 void Display::Open(std::string title, int width, int height, bool fullsceen) {
-    int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
+    int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN /*| SDL_WINDOW_INPUT_FOCUS*/;
     if(fullsceen) param |= SDL_WINDOW_FULLSCREEN;
 
     Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);

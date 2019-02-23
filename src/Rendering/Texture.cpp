@@ -3,18 +3,26 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Texture::Texture() {
+Texture::Texture(SDL_Renderer *rend) {
+    this->rend = rend;
+}
 
+Texture::Texture(const Texture &tex) :
+    pixels(tex.pixels)
+{
+    this->texture = tex.texture;
+    this->width = tex.width;
+    this->height = tex.height;
 }
 
 Texture::~Texture() {
 }
 
 bool Texture::AllocNew(int width, int height, int format) {
-    /*this->width = width;
+    this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
-        ctx.renderer,
+        rend,
         format,
         SDL_TEXTUREACCESS_STATIC,
         width, height
@@ -22,7 +30,7 @@ bool Texture::AllocNew(int width, int height, int format) {
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create texture: " << SDL_GetError() << std::endl;
         return false;
-    }*/
+    }
 
     pixels.resize(width * height, 0);
 

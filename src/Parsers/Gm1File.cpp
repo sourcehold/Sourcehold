@@ -19,6 +19,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
         Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path << "'!" << std::endl;
         return false;
     }
+
     if(!Parser::GetData(&header, sizeof(Gm1Header))) {
         Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path << "'!" << std::endl;
         Parser::Close();
@@ -110,7 +111,7 @@ bool Gm1File::LoadFromDisk(std::string path) {
                 
                         /* Read RGB */
                         uint8_t r, g, b;
-                        TgxFile::ReadPixel(pixel, &r, &g, &b);
+                        TgxFile::ReadPixel(pixel, r, g, b);
                 
                         /* Add to texture */
                         //tex.SetPixel(i, l, r, g, b, 0xFF);

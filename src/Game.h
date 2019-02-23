@@ -31,12 +31,6 @@ namespace Sourcehold
         class Game : public GameManager
         {
                 MainMenu menu;
-                std::string data_folder;
-                Rendering::BinkVideo bik;
-                Parsers::TgxFile tgx;
-                Rendering::Texture tex1, tex2, tex3, tex4;
-                Audio::AudioSource vidSound;
-                Rendering::Texture vidFrame;
             public:
                 Game();
                 ~Game();

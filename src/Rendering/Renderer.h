@@ -28,6 +28,8 @@ namespace Sourcehold
                 /* Render a texture to the whole screen */
                 void RenderTextureFullscreen(Texture &texture);
 
+                Texture CreateTexture();
+
                 uint32_t GetWidth();
                 uint32_t GetHeight();
 

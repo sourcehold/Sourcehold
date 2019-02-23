@@ -1,8 +1,8 @@
-#include <Rendering/StaticElement.h>
+#include <StaticElement.h>
 
-using namespace Sourcehold::Rendering;
+using namespace Sourcehold::Game;
 
-StaticElement::StaticElement() : Texture() {
+StaticElement::StaticElement() {
 
 }
 

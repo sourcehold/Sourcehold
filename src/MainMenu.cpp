@@ -24,8 +24,8 @@ bool MainMenu::Start() {
         HandleEvents();
         StartTimer();
 
-        RenderTextureFullscreen(tgx_loading);
-        RenderTextureScale(gm1_slider_bar.GetEntry(0).image, 0.1, 0.7, 0.8, 0.1);
+        //RenderTextureFullscreen(tgx_loading);
+        //RenderTextureScale(gm1_slider_bar.GetEntry(0).image, 0.1, 0.7, 0.8, 0.1);
 
         Flush();
         EndTimer();

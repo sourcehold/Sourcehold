@@ -2,13 +2,13 @@
 
 #include <Config.h>
 #include <GameManager.h>
+#include <StaticElement.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
 #include <Parsers/BinkVideo.h>
 #include <Parsers/VolumeTxt.h>
 
-#include <Rendering/StaticElement.h>
 #include <Rendering/RenderList.h>
 
 /* Handle main menu and preceding intro */

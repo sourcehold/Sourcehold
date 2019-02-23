@@ -13,11 +13,13 @@ namespace Sourcehold
     {
         class Texture
         {
+                SDL_Renderer *rend;
                 SDL_Texture *texture;
                 std::vector<uint32_t> pixels;
                 int width, height;
             public:
-                Texture();
+                Texture(SDL_Renderer *rend);
+                Texture(const Texture &tex);
                 ~Texture();
 
                 bool AllocNew(int width, int height, int format);

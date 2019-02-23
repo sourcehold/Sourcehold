@@ -164,7 +164,6 @@ bool BinkVideo::LoadFromDisk(std::string path) {
 }
 
 void BinkVideo::InitFramebuffer(Texture &texture) {
-    //texture.SetContext(ctx);
     texture.AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
 }
 

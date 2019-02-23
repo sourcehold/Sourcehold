@@ -14,7 +14,7 @@ namespace Sourcehold
 {
     namespace Parsers
     {
-        class TgxFile : private Parser, public Texture
+        class TgxFile : private Parser
         {
             public:
                 struct TgxHeader {
@@ -27,10 +27,10 @@ namespace Sourcehold
                 TgxFile();
                 ~TgxFile();
 
-                bool LoadFromDisk(std::string path);
-                
-                static void ReadTgx(Parser *pa, Texture *tex, size_t size, uint16_t width, uint16_t height);
-                static void ReadPixel(uint16_t pixel, uint8_t *r, uint8_t *g, uint8_t *b);
+                bool LoadFromDisk(std::string path, Texture &target);
+
+                static void ReadTgx(Parser &pa, Texture &tex, size_t size, uint16_t width, uint16_t height);
+                static void ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b);
             protected:
             private:
                 TgxHeader header;

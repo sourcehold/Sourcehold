@@ -37,7 +37,7 @@ namespace Sourcehold
                         TYPE_MISC2      = 0x07, /* Like 0x05 */
                         FIRST           = TYPE_INTERFACE,
                         LAST            = TYPE_MISC2,
-                    }type;
+                    } type;
                     /* Unknown */
                     uint32_t u2[14];
                     /* Data size */
@@ -76,7 +76,6 @@ namespace Sourcehold
                     ImageHeader header;
                     uint32_t size;
                     uint32_t offset;
-                    Rendering::Texture image;
                 };
 
                 /* All of the images */

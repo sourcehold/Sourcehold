@@ -1,14 +1,12 @@
 #pragma once
 
 #include <Config.h>
-#include <Rendering/Rendering.h>
-#include <Rendering/Texture.h>
 
 namespace Sourcehold
 {
-    namespace Rendering
+    namespace Game
     {
-        class StaticElement : public Texture
+        class StaticElement
         {
                 bool shown = true;
             public:
