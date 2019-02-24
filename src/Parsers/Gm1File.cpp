@@ -96,10 +96,14 @@ bool Gm1File::GetImage(Texture &tex, uint32_t index) {
     }
 
     switch(header.type) {
-        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
-            /* Read texture */
+        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
             tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            TgxFile::ReadTgx(*this, tex, entries[index].size, entries[index].header.width, entries[index].header.height);
+            TgxFile::ReadTgx(*this, tex, entries[index].size, entries[index].header.width, entries[index].header.height, NULL);
+            tex.UpdateTexture();
+        }break;
+        case Gm1Header::TYPE_ANIMATION: {
+            tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            TgxFile::ReadTgx(*this, tex, entries[index].size, entries[index].header.width, entries[index].header.height, palette);
             tex.UpdateTexture();
         }break;
         case Gm1Header::TYPE_TILE: {
@@ -160,7 +164,6 @@ bool Gm1File::GetImage(Texture &tex, uint32_t index) {
 }
 
 void Gm1File::ReadPalette() {
-    uint8_t palette[5120];
     if(!Parser::GetData(palette, sizeof(palette))) {
         Logger::error("PARSERS") << "Unable to read palette from Gm1!" << std::endl;
         Parser::Close();

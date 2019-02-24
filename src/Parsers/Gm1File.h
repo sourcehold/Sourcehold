@@ -79,6 +79,7 @@ namespace Sourcehold
                 };
 
                 std::string path;
+                uint16_t palette[2560];
 
                 /* Offset of data section */
                 uint32_t offData;
