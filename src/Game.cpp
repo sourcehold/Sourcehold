@@ -44,10 +44,6 @@ int Game::Start() {
     }, false);
     list.Play();*/
 
-    Texture tex = CreateTexture();
-    TgxFile tgx;
-    tgx.LoadFromDisk("data/gfx/defeat_pig.tgx", tex);
-
     /*BinkVideo bik;
     Texture vidFrame = CreateTexture();
     AudioSource vidSound;
@@ -66,9 +62,13 @@ int Game::Start() {
 //    Building building(ctx);
 //    building.LoadFromDisk("");
 
+    Texture tex = Renderer::CreateTexture();
+    TgxFile tgx;
+    tgx.LoadFromDisk("data/gfx/eco_win.tgx", tex);
+
     Gm1File gm1;
-    TextureAtlas atlas = CreateTextureAtlas();
-    gm1.LoadFromDisk("data/gm/tile_castle.gm1", atlas);
+    TextureAtlas atlas = Renderer::CreateTextureAtlas();
+    gm1.LoadFromDisk("data/gm/tree_oak.gm1", atlas);
 
     while(Display::IsOpen()) {
         Display::Clear();
@@ -78,6 +78,8 @@ int Game::Start() {
         //list.Update();
 
         Display::RenderTextureFullscreen(tex);
+        Display::RenderTexture(atlas.Get(0), 0, 0);
+        //Display::RenderTextureScale(atlas.Get(70), 0.0, 0.0, 0.5, 0.5);
 
         //bik.Decode(vidFrame, vidSound);
         //Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);

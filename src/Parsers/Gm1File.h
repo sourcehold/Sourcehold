@@ -92,8 +92,8 @@ namespace Sourcehold
                 bool LoadFromDisk(std::string path, Rendering::TextureAtlas &atlas);
                 void DumpInformation();
 
-                std::vector<Gm1Entry>& GetEntries();
-                Gm1Entry &GetEntry(uint32_t index);
+                inline std::vector<Gm1Entry>& GetEntries();
+                inline Gm1Entry &GetEntry(uint32_t index);
             protected:
                 const uint32_t max_num = 8192;
                 bool GetImage(Rendering::Texture &tex, uint32_t index);

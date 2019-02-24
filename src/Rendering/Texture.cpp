@@ -3,12 +3,21 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Texture::Texture(SDL_Renderer *rend) {
+Texture::Texture(SDL_Renderer* rend) :
+    angle(0.0),
+    width(0),
+    height(0),
+    flip(SDL_FLIP_NONE)
+{
     this->renderer = rend;
 }
 
 Texture::Texture(const Texture &tex) :
-    pixels(tex.pixels)
+    pixels(tex.pixels),
+    angle(0.0),
+    width(0),
+    height(0),
+    flip(SDL_FLIP_NONE)
 {
     this->renderer = tex.renderer;
     this->texture = tex.texture;
@@ -46,14 +55,6 @@ bool Texture::AllocNew(int width, int height, int format) {
     return true;
 }
 
-Uint32 color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-   return r << 24 | g << 16 | b << 8 | a;
-}
-
-void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    pixels[x + y * width] = color(r, g, b, a);
-}
-
 void Texture::UpdateTexture() {
     SDL_UpdateTexture(
         texture,
@@ -63,18 +64,28 @@ void Texture::UpdateTexture() {
     );
 }
 
-SDL_Texture *Texture::GetTexture() {
-    return texture;
+void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    uint32_t index = x + y * width;
+    if(index >= pixels.size()) return;
+    pixels[index] = ToPixel(r, g, b, a);
 }
 
-uint32_t *Texture::GetData() {
-    return pixels.data();
+void Texture::Rotate(double angle) {
+    this->angle += angle;
 }
 
-int Texture::GetWidth() {
-    return width;
+void Texture::FlipHorizontal() {
+    flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_HORIZONTAL);
 }
 
-int Texture::GetHeight() {
-    return height;
+void Texture::FlipVertical() {
+    flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_VERTICAL);
+}
+
+void Texture::FlipNone() {
+    flip = (SDL_RendererFlip)SDL_FLIP_NONE;
+}
+
+Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+   return r << 24 | g << 16 | b << 8 | a;
 }

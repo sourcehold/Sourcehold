@@ -44,7 +44,6 @@ namespace Sourcehold
                 BinkVideo();
                 ~BinkVideo();
 
-                bool Init();
                 bool LoadFromDisk(std::string path);
                 void InitFramebuffer(Texture &texture);
                 void Close();

@@ -6,10 +6,10 @@
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
-#include <Parsers/BinkVideo.h>
 #include <Parsers/VolumeTxt.h>
 
 #include <Rendering/RenderList.h>
+#include <Rendering/BinkVideo.h>
 
 /* Handle main menu and preceding intro */
 namespace Sourcehold

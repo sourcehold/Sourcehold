@@ -15,6 +15,7 @@
 
 #include <Rendering/Tileset.h>
 #include <Rendering/TextureAtlas.h>
+#include <Rendering/BinkVideo.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
@@ -22,7 +23,6 @@
 #include <Parsers/MlbFile.h>
 #include <Parsers/Gm1File.h>
 #include <Parsers/TgxFile.h>
-#include <Parsers/BinkVideo.h>
 #include <Parsers/VolumeTxt.h>
 
 namespace Sourcehold

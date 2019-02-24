@@ -13,9 +13,9 @@ namespace Sourcehold
     {
         class TextureAtlas : protected std::vector<Rendering::Texture>
         {
-                SDL_Renderer *renderer;
+                SDL_Renderer* renderer;
             public:
-                TextureAtlas(SDL_Renderer *rend, uint32_t hint = 4);
+                TextureAtlas(SDL_Renderer* rend, uint32_t hint = 4);
                 TextureAtlas(const TextureAtlas &atlas);
                 ~TextureAtlas();
 

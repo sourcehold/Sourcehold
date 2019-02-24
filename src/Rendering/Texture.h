@@ -13,24 +13,35 @@ namespace Sourcehold
     {
         class Texture
         {
-                SDL_Renderer *renderer;
+                SDL_Renderer* renderer;
                 SDL_Texture *texture;
                 std::vector<uint32_t> pixels;
                 int width, height;
+                double angle;
+                SDL_RendererFlip flip;
             public:
-                Texture(SDL_Renderer *rend);
+                Texture(SDL_Renderer* rend);
                 Texture(const Texture &tex);
                 ~Texture();
 
                 bool AllocNew(int width, int height, int format);
-                void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
                 void UpdateTexture();
 
-                SDL_Texture *GetTexture();
-                uint32_t *GetData();
-                int GetWidth();
-                int GetHeight();
+                /* Texture manipulation */
+                void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+                void Rotate(double angle);
+                void FlipHorizontal();
+                void FlipVertical();
+                void FlipNone();
+
+                inline SDL_Texture *GetTexture() { return texture; }
+                inline uint32_t *GetData() { return pixels.data(); }
+                inline int GetWidth() { return width; }
+                inline int GetHeight() { return height; }
+                inline double GetAngle() { return angle; }
+                inline SDL_RendererFlip GetFlip() { return flip; }
             protected:
+                Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
         };
     }
 }

@@ -26,11 +26,14 @@ void Renderer::RenderTexture(Texture &texture, int x, int y) {
         texture.GetWidth(),
         texture.GetHeight()
     };
-    SDL_RenderCopy(
+    SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),
         NULL,
-        &rect
+        &rect,
+        texture.GetAngle(),
+        NULL,
+        texture.GetFlip()
     );
 }
 
@@ -40,11 +43,14 @@ void Renderer::RenderTextureScale(Texture &texture, int x, int y, int w, int h) 
         w,
         h
     };
-    SDL_RenderCopy(
+    SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),
         NULL,
-        &rect
+        &rect,
+        texture.GetAngle(),
+        NULL,
+        texture.GetFlip()
     );
 }
 
@@ -63,11 +69,14 @@ void Renderer::RenderTextureScale(Texture &texture, double x, double y, double w
 }
 
 void Renderer::RenderTextureFullscreen(Texture &texture) {
-    SDL_RenderCopy(
+    SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),
         NULL,
-        NULL
+        NULL,
+        texture.GetAngle(),
+        NULL,
+        texture.GetFlip()
     );
 }
 

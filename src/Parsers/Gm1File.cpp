@@ -85,34 +85,24 @@ Gm1File::Gm1Entry &Gm1File::GetEntry(uint32_t index) {
 bool Gm1File::GetImage(Texture &tex, uint32_t index) {
     if(index >= header.num) return false;
 
+    /* Seek to position */
+    Parser::Seek(entries[index].offset + offData);
+
+    /* Error handling */
+    if(!Parser::Ok()) {
+        Logger::error("PARSERS") << "Error while parsing entry " << index << " from Gm1 '" << path << "'!" << std::endl;
+        Parser::Close();
+        return false;
+    }
+
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: case Gm1Header::TYPE_ANIMATION: {
-            /* Seek to position */
-            Parser::Seek(entries[index].offset + offData);
-
-            /* Error handling */
-            if(!Parser::Ok()) {
-                Logger::error("PARSERS") << "Error while parsing image " << index << " from Gm1 '" << path << "'!" << std::endl;
-                Parser::Close();
-                return false;
-            }
-
             /* Read texture */
             tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
             TgxFile::ReadTgx(*this, tex, entries[index].size, entries[index].header.width, entries[index].header.height);
             tex.UpdateTexture();
         }break;
         case Gm1Header::TYPE_TILE: {
-            /* Seek to position */
-            Parser::Seek(entries[index].offset + offData);
-                
-            /* Error handling */
-            if(!Parser::Ok()) {
-                Logger::error("PARSERS") << "Error while parsing tile " << index << " from Gm1 '" << path << "'!" << std::endl;
-                Parser::Close();
-                return false;
-            }
-                
             /* Create texture */
             tex.AllocNew(30, 16, SDL_PIXELFORMAT_RGBA8888);
                 
@@ -141,7 +131,23 @@ bool Gm1File::GetImage(Texture &tex, uint32_t index) {
             tex.UpdateTexture();
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
-            Logger::warning("PARSERS") << "Type not handled at the moment!" << std::endl;
+            /* Read miscellaneous entry */
+            tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            for(uint32_t x = 0; x < entries[index].header.width; x++) {
+                for(uint32_t y = 0; y < entries[index].header.height; y++) {
+                    uint16_t pixel = Parser::GetWord();
+
+                    /* Read RGB */
+                    uint8_t r, g, b;
+                    TgxFile::ReadPixel(pixel, r, g, b);
+            
+                    /* Add to texture */
+                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                }
+            }
+            
+            /* Write pixels to texture */
+            tex.UpdateTexture();
         }break;
         default: {
             Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "': " << header.type << std::endl;
@@ -157,5 +163,6 @@ void Gm1File::ReadPalette() {
     uint8_t palette[5120];
     if(!Parser::GetData(palette, sizeof(palette))) {
         Logger::error("PARSERS") << "Unable to read palette from Gm1!" << std::endl;
+        Parser::Close();
     }
 }

@@ -1,33 +1,21 @@
-#include <Parsers/BinkVideo.h>
+#include <Rendering/BinkVideo.h>
 
 using namespace Sourcehold::System;
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::Rendering;
 
 BinkVideo::BinkVideo() {
-
-}
-
-BinkVideo::~BinkVideo() {
-
-}
-
-bool BinkVideo::Init() {
     av_log_set_level(AV_LOG_ERROR);
     bink_input = av_find_input_format("bink");
     if(!bink_input) {
         Logger::error("RENDERING") << "Unable to find libavcodec input format 'bink'!" << std::endl;
-        return false;
     }
 
     ic = avformat_alloc_context();
     sc = avformat_alloc_context();
     if(!ic || !sc) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
-        return false;
     }
-
-    return true;
 }
 
 bool BinkVideo::LoadFromDisk(std::string path) {
