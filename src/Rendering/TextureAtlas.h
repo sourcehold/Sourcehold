@@ -25,6 +25,8 @@ namespace Sourcehold
                 void Remove(uint32_t index);
                 void Resize(uint32_t num);
                 void Clear();
+
+                inline uint32_t GetSize() { return vector::size(); }
         };
     }
 }

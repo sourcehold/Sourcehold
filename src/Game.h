@@ -9,6 +9,7 @@
 #include <GameManager.h>
 #include <MainMenu.h>
 #include <Building.h>
+#include <AnimationHandler.h>
 
 #include <Audio/SoundManager.h>
 #include <Audio/Playlist.h>

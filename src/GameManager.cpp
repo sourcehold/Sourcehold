@@ -5,16 +5,32 @@ using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-GameManager::GameManager() : Display(), SoundManager() {
+GameManager::GameManager() :
+    AnimationHandler(),
+    Display(),
+    SoundManager()
+{
     this->Init();
 }
 
-GameManager::GameManager(const GameManager &manager) : Display(manager), SoundManager(manager) {
+GameManager::GameManager(const GameManager &manager) :
+    AnimationHandler(manager),
+    Display(manager),
+    SoundManager(manager)
+{
     
 }
 
 GameManager::~GameManager() {
 
+}
+
+bool GameManager::Running() {
+    return Display::IsOpen();
+}
+
+void GameManager::Update() {
+    AnimationHandler::Update();
 }
 
 void GameManager::Init() {

@@ -15,77 +15,37 @@ Game::~Game() {
 }
 
 bool Game::Init(CmdLineOptions &opt) {
-    //MlbFile mlb;
-    //mlb.LoadFromDisk(boost::filesystem::path("data/stronghold.mlb"));
-
-    /*Tileset set;
-    set.SetContext(ctx);
-    if(!set.LoadFromDisk("data/gm/tile_castle.gm1")) {
-        Logger::error("GAME") << "Tileset loading error!" << std::endl;
-    }*/
-
-    //auto entries = set.GetEntries();
-    //tex1 = entries[0].image;
-    //tex2 = entries[1].image;
-    //tex3 = entries[2].image;
-    //tex4 = entries[3].image;
-
-    //VolumeTxt txt;
-    //txt.LoadFromDisk("data/fx/volume.txt");
-
     return true;
 }
 
 int Game::Start() {
-    /*Playlist list({
-        "data/fx/music/the maidenB.raw",
-        "data/fx/music/underanoldtree.raw",
-        "data/fx/music/appytimes.raw",
-    }, false);
-    list.Play();*/
-
-    /*BinkVideo bik;
-    Texture vidFrame = CreateTexture();
-    AudioSource vidSound;
-    bik.Init();
-    if(!bik.LoadFromDisk("data/binks/intro.bik")) {
-        Logger::error("GAME") << "Bink video error!" << std::endl;
-        return false;
-    }
-    bik.InitFramebuffer(vidFrame);
-    vidSound.Create(NULL, 0, false);*/
-
-    /*AudioSource audio;
-    audio.LoadSong("data/fx/music/appytimes.raw", true);
-    audio.Play();*/
-
-//    Building building(ctx);
-//    building.LoadFromDisk("");
-
     Texture tex = Renderer::CreateTexture();
     TgxFile tgx;
-    tgx.LoadFromDisk("data/gfx/eco_win.tgx", tex);
+    tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx", tex);
 
     Gm1File gm1;
     TextureAtlas atlas = Renderer::CreateTextureAtlas();
-    gm1.LoadFromDisk("data/gm/tree_oak.gm1", atlas);
+    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", atlas);
 
-    while(Display::IsOpen()) {
-        Display::Clear();
-        Display::HandleEvents();
-        Display::StartTimer();
+    enum Trebutchet : uint16_t {
+        ANIMATION_1,
+        ANIMATION_2,
+        ANIMATION_3
+    };
 
-        //list.Update();
+    AnimationHandler::AddSlot(Trebutchet::ANIMATION_1, atlas, { 0, 10 });
 
-        Display::RenderTextureFullscreen(tex);
-        Display::RenderTexture(atlas.Get(0), 0, 0);
-        //Display::RenderTextureScale(atlas.Get(70), 0.0, 0.0, 0.5, 0.5);
+    while(GameManager::Running()) {
+        GameManager::Clear();
+        GameManager::HandleEvents();
+        GameManager::StartTimer();
 
-        //bik.Decode(vidFrame, vidSound);
-        //Display::RenderTextureScale(vidFrame, 0.0f, 0.15f, 1.0f, 0.7f);
+        GameManager::RenderTextureFullscreen(tex);
+        GameManager::RenderTextureScale(atlas.Get(AnimationHandler::GetFrame(Trebutchet::ANIMATION_1)), 0.0, 0.0, 0.5, 0.5);
 
-        Display::Flush();
-        Display::EndTimer();
+        GameManager::Flush();
+        GameManager::EndTimer();
+        GameManager::Update();
     }
 
     return EXIT_SUCCESS;
