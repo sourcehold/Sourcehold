@@ -3,11 +3,17 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Display::Display() : Renderer() {
+Display::Display() :
+    Renderer(),
+    Keyboard()
+{
     SDL_Init(SDL_INIT_EVERYTHING);
 }
 
-Display::Display(const Display &dp) : Renderer(dp) {
+Display::Display(const Display &dp) :
+    Renderer(dp),
+    Keyboard()
+{
     timer = dp.timer;
     frame = dp.frame;
     open = dp.open;
@@ -39,7 +45,7 @@ void Display::Open(std::string title, int width, int height, bool fullsceen) {
 }
 
 void Display::Fullscreen() {
-    int err = SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    int err = SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
