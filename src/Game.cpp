@@ -15,17 +15,23 @@ Game::~Game() {
 }
 
 bool Game::Init(CmdLineOptions &opt) {
+    if(opt.fullscreen) {
+        GameManager::Fullscreen();
+    }
+
     return true;
 }
 
 int Game::Start() {
+    const std::string p = "data/gfx/frontend_combat2.tgx", p1 = "data/gm/body_trebutchet.gm1";
+
     Texture tex = Renderer::CreateTexture();
     TgxFile tgx;
-    tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx", tex);
+    tgx.LoadFromDisk(p, tex);
 
     Gm1File gm1;
     TextureAtlas atlas = Renderer::CreateTextureAtlas();
-    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", atlas);
+    gm1.LoadFromDisk(p1, atlas);
 
     enum Trebutchet : uint16_t {
         ANIMATION_1,

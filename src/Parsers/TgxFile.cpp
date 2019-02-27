@@ -11,7 +11,7 @@ TgxFile::~TgxFile() {
 
 }
 
-bool TgxFile::LoadFromDisk(std::string path, Texture &target) {
+bool TgxFile::LoadFromDisk(const std::string &path, Texture &target) {
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;

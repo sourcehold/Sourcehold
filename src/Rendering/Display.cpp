@@ -20,7 +20,7 @@ Display::~Display() {
 }
 
 void Display::Open(std::string title, int width, int height, bool fullsceen) {
-    int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN /*| SDL_WINDOW_INPUT_FOCUS*/;
+    int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
     if(fullsceen) param |= SDL_WINDOW_FULLSCREEN;
 
     Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
@@ -38,12 +38,12 @@ void Display::Open(std::string title, int width, int height, bool fullsceen) {
     open = true;
 }
 
-/*void Display::Fullscreen() {
+void Display::Fullscreen() {
     int err = SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
-}*/
+}
 
 void Display::Close() {
     SDL_DestroyWindow(Renderer::window);
@@ -51,7 +51,20 @@ void Display::Close() {
 
 void Display::HandleEvents() {
     while(SDL_PollEvent(&event) != 0) {
-        if(event.type == SDL_QUIT) {
+        if(
+            event.type == SDL_KEYDOWN ||
+            event.type == SDL_KEYUP
+        ) {
+            /* Handle the keyboard */
+            Keyboard::Generate(event);
+        }else if(
+            event.type == SDL_MOUSEMOTION ||
+            event.type == SDL_MOUSEBUTTONDOWN ||
+            event.type == SDL_MOUSEBUTTONUP ||
+            event.type == SDL_MOUSEWHEEL
+        ) {
+            /* Handle the mouse */
+        }else if(event.type == SDL_QUIT) {
             open = false;
         }
     }
@@ -62,8 +75,8 @@ void Display::StartTimer() {
 }
 
 void Display::EndTimer() {
-    uint32_t ntimer = SDL_GetTicks();
-    uint32_t delta = ntimer - timer;
+    int32_t ntimer = SDL_GetTicks();
+    int32_t delta = ntimer - timer;
     timer = ntimer;
     if(delta < 1000 / FRAMES_PER_SECOND) {
         SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);

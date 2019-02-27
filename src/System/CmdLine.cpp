@@ -23,6 +23,22 @@ CmdLineOptions Sourcehold::System::ParseCmdLine(int argc, char **argv) {
         if(o[0] == '-') {
             /* Single option "--option" */
             if(o[1] == '-') {
+                if(!strcmp(o+2, "nosound")) {
+                    opt.sound = false;
+                }else
+                if(!strcmp(o+2, "help")) {
+                    std::cout << infotext << std::endl;
+                    opt.info = true;
+                }else
+                if(!strcmp(o+2, "debug")) {
+                    opt.debug = true;
+                }else
+                if(!strcmp(o+2, "fullscreen")) {
+                    opt.fullscreen = true;
+                }else
+                if(!strcmp(o+2, "nointro")) {
+                    opt.showintro = false;
+                }
                 continue;
             }
             /* List of options "-abc" */
@@ -32,6 +48,12 @@ CmdLineOptions Sourcehold::System::ParseCmdLine(int argc, char **argv) {
                     case 'h': {
                         std::cout << infotext << std::endl;
                         opt.info = true;
+                    }break;
+                    case 'f' : {
+                        opt.fullscreen = true;
+                    }break;
+                    case 'd' : {
+                        opt.debug = true;
                     }break;
                     default: {
                         Logger::error("SYSTEM") << "Invalid option '-" << o[ii] << "'" << std::endl;

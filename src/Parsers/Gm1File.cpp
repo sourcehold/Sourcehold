@@ -12,7 +12,7 @@ Gm1File::~Gm1File() {
 
 }
 
-bool Gm1File::LoadFromDisk(std::string path, Rendering::TextureAtlas &atlas) {
+bool Gm1File::LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atlas) {
     this->path = path;
 
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {

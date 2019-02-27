@@ -3,16 +3,16 @@
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
 
-AudioSource::AudioSource(const AudioSource &source) :
-    source(source.source),
-    buffer(source.buffer),
-    ptr(source.ptr),
-    size(source.size),
-    repeat(source.repeat),
-    valid(source.valid)
-{ }
+AudioSource::AudioSource(const AudioSource &source) {
+    this->source = source.source;
+    this->buffer = source.buffer;
+    this->ptr = source.ptr;
+    this->size = source.size;
+    this->repeat = source.repeat;
+    this->valid = source.valid;
+}
 
-AudioSource::AudioSource(const std::string path, bool repeat) :
+AudioSource::AudioSource(const std::string &path, bool repeat) :
     repeat(repeat),
     valid(false)
 {
@@ -34,7 +34,7 @@ AudioSource::~AudioSource() {
     //alDeleteBuffers(1, &buffer);
 }
 
-bool AudioSource::LoadSong(const std::string path, bool repeat) {
+bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     alGenSources((ALuint)1, &source);
@@ -67,7 +67,7 @@ bool AudioSource::LoadSong(const std::string path, bool repeat) {
     return true;
 }
 
-bool AudioSource::LoadEffect(const std::string path, bool repeat) {
+bool AudioSource::LoadEffect(const std::string &path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     this->gain = 1.0f;

@@ -20,7 +20,7 @@ namespace Sourcehold
                 VolumeTxt();
                 ~VolumeTxt();
 
-                bool LoadFromDisk(std::string path);
+                bool LoadFromDisk(const std::string &path);
                 void Clear();
 
                 uint8_t GetVolumeOf(std::string key);

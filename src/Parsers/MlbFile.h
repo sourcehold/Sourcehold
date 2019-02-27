@@ -20,7 +20,7 @@ namespace Sourcehold
                 MlbFile();
                 ~MlbFile();
 
-                bool LoadFromDisk(std::string path);
+                bool LoadFromDisk(const std::string &path);
                 void Clear();
             protected:
         };

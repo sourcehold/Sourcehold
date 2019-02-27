@@ -13,6 +13,10 @@ namespace Sourcehold
         struct CmdLineOptions {
             bool info = false;
             bool valid = true;
+            bool debug = false;
+            bool fullscreen = false;
+            bool sound = true;
+            bool showintro = true;
         };
         CmdLineOptions ParseCmdLine(int argc, char **argv);
     }

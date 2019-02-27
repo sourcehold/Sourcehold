@@ -11,7 +11,7 @@ MlbFile::~MlbFile() {
     Clear();
 }
 
-bool MlbFile::LoadFromDisk(std::string path) {
+bool MlbFile::LoadFromDisk(const std::string &path) {
     if(!Parser::Open(path, std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to load Mlb file '" << path << "' from data folder!" << std::endl;
         return false;

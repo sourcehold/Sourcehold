@@ -6,10 +6,10 @@
 
 namespace Sourcehold
 {
-    namespace Game
+    namespace Assets
     {
         /* Asset types */
-        enum Assets {
+        enum Asset {
             BINK_VIDEO, /* Bink video (.bik) file */
             WAVEFILE, /* Wav audio (.wav) file */
             RAWFILE, /* Raw PCM audio (.raw) */
@@ -18,5 +18,10 @@ namespace Sourcehold
             MAPFILE, /* Map file (.map) */
             MLBFILE, /* String container (.mlb) */
         };
+
+        namespace Units
+        {
+            
+        }
     }
 }

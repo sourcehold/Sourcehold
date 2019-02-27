@@ -19,9 +19,9 @@ namespace Sourcehold
                 uint32_t length = 0;
             public:
                 Parser(); 
-                ~Parser() = default;
+                virtual ~Parser() = default;
             
-                bool Open(std::string &path, std::ios_base::openmode mode);
+                bool Open(const std::string &path, std::ios_base::openmode mode);
                 void Close();
                 bool Ok();
                 bool GetData(void *buf, size_t bufsize);

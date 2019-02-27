@@ -25,12 +25,12 @@ namespace Sourcehold
                 const uint32_t SAMPLING_RATE = 44100;
             public:
                 AudioSource(const AudioSource &source);
-                AudioSource(const std::string path, bool repeat = false);
+                AudioSource(const std::string &path, bool repeat = false);
                 AudioSource(uint8_t *ptr = NULL, size_t size = 0, bool repeat = false);
                 ~AudioSource();
 
-                bool LoadSong(const std::string path, bool repeat = false);
-                bool LoadEffect(const std::string path, bool repeat = false);
+                bool LoadSong(const std::string &path, bool repeat = false);
+                bool LoadEffect(const std::string &path, bool repeat = false);
                 bool Create(void *buffer, size_t size, bool repeat = false);
                 bool Play();
                 void Pause();

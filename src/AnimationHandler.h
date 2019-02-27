@@ -4,6 +4,8 @@
 #include <map>
 #include <utility>
 
+#include <SDL2/SDL.h>
+
 #include <Rendering/Texture.h>
 #include <Rendering/TextureAtlas.h>
 
@@ -14,13 +16,23 @@ namespace Sourcehold
         class AnimationHandler
         {
                 struct AnimationSlot {
-                    AnimationSlot(double t, uint16_t n) :
-                        timebase(t),
-                        nframes(n)
-                    {}
-                    double timebase;
+                    enum Flags : uint8_t {
+                        NONE            = 0b00000000,
+                        LOOPING         = 0b10000000,
+                        REVERSE         = 0b01000000,
+                        ONESHOT         = 0b00100000,
+                    } flags;
+
+                    Uint32 timebase;
                     uint16_t nframes;
+
+                    AnimationSlot(Uint32 t, uint16_t n, Flags f) {
+                        timebase = t;
+                        nframes = n;
+                        flags = f;
+                    }
                 };
+                Uint32 localTime;
                 std::map<uint16_t, AnimationSlot> slots;
             public:
                 AnimationHandler();

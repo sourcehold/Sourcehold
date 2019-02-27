@@ -6,14 +6,21 @@
 #include <iostream>
 
 #include <Config.h>
+
 #include <System/Logger.h>
+
 #include <Rendering/Renderer.h>
+
+#include <Events/Event.h>
+#include <Events/Keyboard.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
-        class Display : public Rendering::Renderer
+        class Display :
+            public Rendering::Renderer,
+            public Events::Keyboard
         {
                 SDL_Event event;
                 const int FRAMES_PER_SECOND = 60;
@@ -26,6 +33,7 @@ namespace Sourcehold
                 ~Display();
 
                 void Open(std::string title, int width, int height, bool fullscreen = false);
+                void Fullscreen();
                 void Close();
                 void HandleEvents();
                 void StartTimer();

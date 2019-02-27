@@ -90,7 +90,7 @@ namespace Sourcehold
                 Gm1File();
                 ~Gm1File();
 
-                bool LoadFromDisk(std::string path, Rendering::TextureAtlas &atlas);
+                bool LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atlas);
                 void DumpInformation();
 
                 inline std::vector<Gm1Entry>& GetEntries();
