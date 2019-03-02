@@ -30,8 +30,14 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     /* Calculate size */
     size_t size = length - sizeof(TgxHeader);
 
+    char *buf = new char[size];
+    Parser::GetData(buf, size);
+    Parser::Close();
+
     /* Read image data */
-    //ReadTgx(*this, *this, size, header.width, header.height, NULL);
+    ReadTgx(*this, buf, size, NULL);
+
+    delete [] buf;
 
     /* Copy image data to texture */
     UpdateTexture();
@@ -39,7 +45,7 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     return true;
 }
 
-void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint16_t height, uint16_t *pal) {
+void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t *pal) {
     uint32_t x = 0, y = 0;
     char *end = buf + size;
 
@@ -59,7 +65,8 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint
                         buf++;
                         pixelColor = pal[256 + index];
                     }else {
-                        buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
+                        std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                        buf += 2;
                     }
                     uint8_t r,g,b;
                     ReadPixel(pixelColor, r, g, b);
@@ -77,7 +84,8 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint
                     buf++;
                     pixelColor = pal[256 + index];
                 }else {
-                    buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
+                    std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                    buf += 2;
                 }
                 uint8_t r,g,b;
                 ReadPixel(pixelColor, r, g, b);

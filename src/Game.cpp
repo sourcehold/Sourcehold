@@ -20,7 +20,7 @@ int Game::Start() {
     tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx");
 
     Gm1File gm1(renderer);
-    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", true);
+    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", false);
 
     enum class Trebutchet : uint16_t {
         ANIMATION_1,
@@ -33,7 +33,7 @@ int Game::Start() {
         renderer->HandleEvents();
         renderer->StartTimer();
 
-        renderer->RenderTextureFullscreen(gm1.Get(0));
+        renderer->RenderTextureFullscreen(tgx);
 
         renderer->Flush();
         renderer->EndTimer();

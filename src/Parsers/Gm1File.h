@@ -107,7 +107,7 @@ namespace Sourcehold
                 inline Gm1Entry &GetEntry(uint32_t index);
             protected:
                 const uint32_t max_num = 8192;
-                bool GetImage(Rendering::Texture &tex, uint32_t index);
+                bool GetImage(uint32_t index);
                 void ReadPalette();
         };
     }

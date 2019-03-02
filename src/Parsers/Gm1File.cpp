@@ -63,7 +63,7 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
 
     /* Read compressed images into buffer */
     uint32_t buflen = Parser::GetLength() - offData;
-    imgdata = new char[buflen];    
+    imgdata = new char[buflen];
     Parser::GetData(imgdata, buflen);
 
     /* Close file */
@@ -71,22 +71,24 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
 
     /* Is this worth threading? */
     if(!threaded || header.num < 2) {
+        for(n = 0; n < header.num; n++) {
+            GetImage(n);
+        }
+    }else {
         /* Allocate threads */
         std::thread *threads = new std::thread[header.num];
 
         /* Spawn threads */
         for(n = 0; n < header.num; n++) {
-            threads[n] = std::thread(GetImage, Get(n), n);
+            threads[n] = std::thread(&Gm1File::GetImage, this, n);
         }
 
         /* Join threads */
         for(uint32_t i = 0; i < header.num; i++) {
             threads[i].join();
         }
-    }else {
-        for(n = 0; n < header.num; n++) {
-            GetImage(Get(n), n);
-        }
+
+        delete [] threads;
     }
 
     delete [] imgdata;
@@ -106,8 +108,10 @@ Gm1File::Gm1Entry &Gm1File::GetEntry(uint32_t index) {
     return entries[index];
 }
 
-bool Gm1File::GetImage(Texture &tex, uint32_t index) {
+bool Gm1File::GetImage(uint32_t index) {
     if(index >= header.num) return false;
+
+    Texture &tex = Get(index);
 
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
@@ -115,12 +119,12 @@ bool Gm1File::GetImage(Texture &tex, uint32_t index) {
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
             tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            TgxFile::ReadTgx(tex, position, entries[index].size, entries[index].header.width, entries[index].header.height, NULL);
+            TgxFile::ReadTgx(tex, position, entries[index].size, NULL);
             tex.UpdateTexture();
         }break;
         case Gm1Header::TYPE_ANIMATION: {
             tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            TgxFile::ReadTgx(tex, position, entries[index].size, entries[index].header.width, entries[index].header.height, palette);
+            TgxFile::ReadTgx(tex, position, entries[index].size, palette);
             tex.UpdateTexture();
         }break;
         case Gm1Header::TYPE_TILE: {

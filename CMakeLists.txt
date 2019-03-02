@@ -12,6 +12,9 @@ include_directories(src)
 # Thirdparty
 include_directories(thirdparty/cxxopts/include/)
 
+# Find pthread
+find_package (Threads)
+
 # Find SDL2
 find_package(SDL2 REQUIRED)
 if(NOT SDL2_FOUND)
@@ -57,7 +60,7 @@ endif()
 
 # Link our exe
 add_executable(Stronghold ${SOURCES})
-add_definitions(-Wno-reorder -pedantic-errors -Ofast -pthread)
+add_definitions(-Wno-reorder -pedantic-errors -Ofast)
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED YES
@@ -77,6 +80,7 @@ target_link_libraries(
 	${FFMPEG_LIBRARIES}
 	${SWSCALE_LIBRARIES}
 	${LIBSWRESAMPLE_LIBRARIES}
+	${CMAKE_THREAD_LIBS_INIT}
 )
 
 # cpack stuff
