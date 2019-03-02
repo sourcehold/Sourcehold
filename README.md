@@ -17,14 +17,14 @@ Copy the following files into the `data` folder:
 ```
 data
 ├── binks/
-├── delete.ani
 ├── fx/
 ├── gfx/
 ├── gfx8/
 ├── gm/
-├── hand.ani
-├── jester.ani
 ├── maps/
 ├── stronghold.mlb
+├── delete.ani
+├── hand.ani
+├── jester.ani
 └── sword.ani
 ```
