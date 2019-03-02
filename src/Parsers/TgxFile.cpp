@@ -31,7 +31,7 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     size_t size = length - sizeof(TgxHeader);
 
     /* Read image data */
-    ReadTgx(*this, *this, size, header.width, header.height, NULL);
+    //ReadTgx(*this, *this, size, header.width, header.height, NULL);
 
     /* Copy image data to texture */
     UpdateTexture();
@@ -39,13 +39,14 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     return true;
 }
 
-void TgxFile::ReadTgx(Parser &pa, Texture &tex, size_t size, uint16_t width, uint16_t height, uint16_t *pal) {
+void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint16_t height, uint16_t *pal) {
     uint32_t x = 0, y = 0;
-    size_t read = 0, offset = pa.Tell();
+    char *end = buf + size;
 
-    while(pa.Ok() && read < size) {
+    while(buf < end) {
         /* Read token byte */
-        uint8_t b = pa.GetByte();
+        uint8_t b = *(uint8_t*)buf;
+        buf++;
         uint8_t len = (b & 0b11111) + 1;
         uint8_t flag = b >> 5;
 
@@ -54,10 +55,11 @@ void TgxFile::ReadTgx(Parser &pa, Texture &tex, size_t size, uint16_t width, uin
                 for(uint8_t i = 0; i < len; ++i,++x) {
                     uint16_t pixelColor;
                     if(pal) {
-                        uint8_t index = pa.GetByte();
+                        uint8_t index = *(uint8_t*)buf;
+                        buf++;
                         pixelColor = pal[256 + index];
                     }else {
-                        pixelColor = pa.GetWord();
+                        buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
                     }
                     uint8_t r,g,b;
                     ReadPixel(pixelColor, r, g, b);
@@ -71,10 +73,11 @@ void TgxFile::ReadTgx(Parser &pa, Texture &tex, size_t size, uint16_t width, uin
             case 0b010: {
                 uint16_t pixelColor;
                 if(pal) {
-                    uint8_t index = pa.GetByte();
+                    uint8_t index = *(uint8_t*)buf;
+                    buf++;
                     pixelColor = pal[256 + index];
                 }else {
-                    pixelColor = pa.GetWord();
+                    buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
                 }
                 uint8_t r,g,b;
                 ReadPixel(pixelColor, r, g, b);
@@ -90,8 +93,6 @@ void TgxFile::ReadTgx(Parser &pa, Texture &tex, size_t size, uint16_t width, uin
                 Logger::error("PARSERS") << "Unknown token in gm1!" << std::endl;
             }break;
         }
-
-        read = pa.Tell() - offset;
     }
 }
 

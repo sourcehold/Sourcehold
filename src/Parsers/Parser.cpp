@@ -33,6 +33,12 @@ bool Parser::GetData(void *buf, size_t bufsize) {
     return true;
 }
 
+bool Parser::GetWhole(void *buf) {
+    if(rdstate() & std::ifstream::failbit) return false;
+    this->read((char*)buf, length);
+    return true;
+}
+
 void Parser::Seek(uint32_t pos) {
     seekg(pos, std::ios_base::beg);
 }
@@ -75,10 +81,6 @@ uint16_t Parser::GetWord() {
     uint16_t w;
     read(reinterpret_cast<char *>(&w), sizeof(w));
     return w;
-}
-
-uint32_t Parser::GetLength() {
-    return length;
 }
 
 uint32_t Parser::GetOffset() {

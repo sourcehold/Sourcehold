@@ -1,7 +1,10 @@
 #pragma once
 
 #include <cinttypes>
+#include <algorithm>
 #include <vector>
+#include <thread>
+#include <atomic>
 #include <memory>
 
 #include <System/Logger.h>
@@ -88,13 +91,16 @@ namespace Sourcehold
                 /* Offset of data section */
                 uint32_t offData;
 
+                /* Raw image data */
+                char *imgdata = nullptr;
+
                 /* All of the entries */
                 std::vector<Gm1Entry> entries;
             public:
                 Gm1File(std::shared_ptr<Renderer> rend);
                 ~Gm1File();
 
-                bool LoadFromDisk(const std::string &path);
+                bool LoadFromDisk(const std::string &path, bool threaded = true);
                 void DumpInformation();
 
                 inline std::vector<Gm1Entry>& GetEntries();

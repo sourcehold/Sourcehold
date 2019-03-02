@@ -57,7 +57,7 @@ endif()
 
 # Link our exe
 add_executable(Stronghold ${SOURCES})
-add_definitions(-Wall -Wextra -Wno-reorder -pedantic-errors -Ofast)
+add_definitions(-Wno-reorder -pedantic-errors -Ofast -pthread)
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED YES

@@ -13,6 +13,7 @@ namespace Sourcehold
             bool debug = false;
             bool noborder = false;
             bool fullscreen = false;
+            bool nothread = false;
             uint16_t width,height;
         };
     }

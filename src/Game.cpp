@@ -20,9 +20,9 @@ int Game::Start() {
     tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx");
 
     Gm1File gm1(renderer);
-    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1");
+    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", true);
 
-    enum Trebutchet : uint16_t {
+    enum class Trebutchet : uint16_t {
         ANIMATION_1,
         ANIMATION_2,
         ANIMATION_3
@@ -33,7 +33,7 @@ int Game::Start() {
         renderer->HandleEvents();
         renderer->StartTimer();
 
-        renderer->RenderTextureFullscreen(tgx);
+        renderer->RenderTextureFullscreen(gm1.Get(0));
 
         renderer->Flush();
         renderer->EndTimer();
@@ -52,7 +52,8 @@ int main(int argc, char **argv) {
     ("noborder", "Remove window border")
     ("f,fullscreen", "Run in fullscreen mode")
     ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
-    ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"));
+    ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
+    ("nothread", "Disable threading");
 
     try {
         GameOptions opt;
@@ -74,6 +75,9 @@ int main(int argc, char **argv) {
         }
         opt.width = result["width"].as<uint16_t>();
         opt.height = result["height"].as<uint16_t>();
+        if(result["nothread"].as<bool>()) {
+            opt.nothread = true;
+        }
 
         Game game(opt);
         return game.Start();

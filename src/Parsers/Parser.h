@@ -9,7 +9,9 @@
 
 #include <Config.h>
 
-/* Parser super class */
+/* Parser super class
+ * TODO: DO __NOT__ assume everyone is using little-endian
+ */
 namespace Sourcehold
 {
     namespace Parsers
@@ -25,6 +27,7 @@ namespace Sourcehold
                 void Close();
                 bool Ok();
                 bool GetData(void *buf, size_t bufsize);
+                bool GetWhole(void *buf);
                 void Seek(uint32_t pos);
                 uint32_t Tell();
 
@@ -32,8 +35,9 @@ namespace Sourcehold
                 std::string GetLine();
                 uint8_t GetByte();
                 uint16_t GetWord();
-                uint32_t GetLength();
                 uint32_t GetOffset();
+
+                inline uint32_t GetLength() { return length; }
         };
     }
 }
