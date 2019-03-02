@@ -6,32 +6,21 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 
-Game::Game() : GameManager(), menu(*this) {
-
+Game::Game(GameOptions &opt) :
+    GameManager(opt)
+{
 }
 
 Game::~Game() {
     
 }
 
-bool Game::Init(CmdLineOptions &opt) {
-    if(opt.fullscreen) {
-        GameManager::Fullscreen();
-    }
-
-    return true;
-}
-
 int Game::Start() {
-    const std::string p = "data/gfx/frontend_combat2.tgx", p1 = "data/gm/body_trebutchet.gm1";
+    TgxFile tgx(renderer);
+    tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx");
 
-    Texture tex = Renderer::CreateTexture();
-    TgxFile tgx;
-    tgx.LoadFromDisk(p, tex);
-
-    Gm1File gm1;
-    TextureAtlas atlas = Renderer::CreateTextureAtlas();
-    gm1.LoadFromDisk(p1, atlas);
+    Gm1File gm1(renderer);
+    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1");
 
     enum Trebutchet : uint16_t {
         ANIMATION_1,
@@ -39,40 +28,61 @@ int Game::Start() {
         ANIMATION_3
     };
 
-    AnimationHandler::AddSlot(Trebutchet::ANIMATION_1, atlas, { 0, 10 });
-
     while(GameManager::Running()) {
-        GameManager::Clear();
-        GameManager::HandleEvents();
-        GameManager::StartTimer();
+        renderer->Clear();
+        renderer->HandleEvents();
+        renderer->StartTimer();
 
-        GameManager::RenderTextureFullscreen(tex);
-        GameManager::RenderTextureScale(atlas.Get(AnimationHandler::GetFrame(Trebutchet::ANIMATION_1)), 0.0, 0.0, 0.5, 0.5);
+        renderer->RenderTextureFullscreen(tgx);
 
-        GameManager::Flush();
-        GameManager::EndTimer();
-        GameManager::Update();
+        renderer->Flush();
+        renderer->EndTimer();
     }
 
     return EXIT_SUCCESS;
 }
 
 int main(int argc, char **argv) {
-    Game game;
-    CmdLineOptions opt = ParseCmdLine(argc, argv);
+    /* Parse commandline */
+    cxxopts::Options options("Sourcehold", "Open source engine implementation of Stronghold");
+    options.add_options()
+    ("h,help", "Print this info")
+    ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
+    ("d,debug", "Print debug info")
+    ("noborder", "Remove window border")
+    ("f,fullscreen", "Run in fullscreen mode")
+    ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
+    ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"));
 
-    for(int i = 0; i < argc; i++)
-        std::cout << argv[i] << std::endl;
+    try {
+        GameOptions opt;
+        auto result = options.parse(argc, argv);
 
-    if(!opt.valid) return EXIT_FAILURE;
-    if(opt.info) return EXIT_SUCCESS;
-    
-    if(!game.Init(opt)) {
-        Logger::error("GAME") << "Game initialization failed due to previous errors!" << std::endl;
+        if(result["help"].as<bool>()) {
+            std::cout << options.help(options.groups()) << std::endl;
+            return EXIT_SUCCESS;
+        }
+        opt.config = result["config-file"].as<std::string>();
+        if(result["debug"].as<bool>()) {
+            opt.debug = true;
+        }
+        if(result["noborder"].as<bool>()) {
+            opt.noborder = true;
+        }
+        if(result["fullscreen"].as<bool>()) {
+            opt.fullscreen = true;
+        }
+        opt.width = result["width"].as<uint16_t>();
+        opt.height = result["height"].as<uint16_t>();
+
+        Game game(opt);
+        return game.Start();
+    }catch(cxxopts::OptionException ex) {
+        std::cerr << ex.what() << std::endl;
         return EXIT_FAILURE;
     }
 
-    return game.Start();
+    return EXIT_FAILURE;
 }
 
 #if SOURCEHOLD_WINDOWS == 1

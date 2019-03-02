@@ -4,15 +4,16 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Gm1File::Gm1File() :
-    Parser()
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend) :
+    Parser(),
+    TextureAtlas(rend)
 { }
 
 Gm1File::~Gm1File() {
 
 }
 
-bool Gm1File::LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atlas) {
+bool Gm1File::LoadFromDisk(const std::string &path) {
     this->path = path;
 
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
@@ -35,7 +36,7 @@ bool Gm1File::LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atl
 
     /* Reserve size in vector to fit all entries */
     entries.resize(header.num);
-    atlas.Resize(header.num);
+    Resize(header.num);
 
     /* Read Gm1 palette */
     ReadPalette();
@@ -61,7 +62,7 @@ bool Gm1File::LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atl
     offData = Parser::Tell();
 
     for(n = 0; n < header.num; n++) {
-        GetImage(atlas.Get(n), n);
+        GetImage(Get(n), n);
     }
 
     /* Close file */

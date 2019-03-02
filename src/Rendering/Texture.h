@@ -2,25 +2,29 @@
 
 #include <cinttypes>
 #include <vector>
+#include <memory>
 
 #include <Config.h>
 #include <System/Logger.h>
+
+#include <Rendering/Renderer.h>
 #include <Rendering/Rendering.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
+        class Renderer;
         class Texture
         {
-                SDL_Renderer* renderer;
+                std::shared_ptr<Renderer> renderer;
                 SDL_Texture *texture;
                 std::vector<uint32_t> pixels;
                 int width, height;
                 double angle;
                 SDL_RendererFlip flip;
             public:
-                Texture(SDL_Renderer* rend);
+                Texture(std::shared_ptr<Renderer> rend);
                 Texture(const Texture &tex);
                 ~Texture();
 

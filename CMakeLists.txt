@@ -9,6 +9,9 @@ set(Stronghold_VERSION, 0.1.0)
 
 include_directories(src)
 
+# Thirdparty
+include_directories(thirdparty/cxxopts/include/)
+
 # Find SDL2
 find_package(SDL2 REQUIRED)
 if(NOT SDL2_FOUND)

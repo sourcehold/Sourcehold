@@ -1,23 +1,19 @@
 #pragma once
 
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-
-#include <Config.h>
+#include <cinttypes>
+#include <string>
 
 namespace Sourcehold
 {
     namespace System
     {
-        struct CmdLineOptions {
-            bool info = false;
-            bool valid = true;
+        struct GameOptions
+        {
+            std::string config;
             bool debug = false;
+            bool noborder = false;
             bool fullscreen = false;
-            bool sound = true;
-            bool showintro = true;
+            uint16_t width,height;
         };
-        CmdLineOptions ParseCmdLine(int argc, char **argv);
     }
 }

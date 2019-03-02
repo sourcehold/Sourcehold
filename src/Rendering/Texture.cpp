@@ -3,13 +3,13 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Texture::Texture(SDL_Renderer* rend) :
+Texture::Texture(std::shared_ptr<Renderer> rend) :
     angle(0.0),
     width(0),
     height(0),
-    flip(SDL_FLIP_NONE)
+    flip(SDL_FLIP_NONE),
+    renderer(rend)
 {
-    this->renderer = rend;
 }
 
 Texture::Texture(const Texture &tex) :
@@ -26,13 +26,14 @@ Texture::Texture(const Texture &tex) :
 }
 
 Texture::~Texture() {
+
 }
 
 bool Texture::AllocNew(int width, int height, int format) {
     this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
-        renderer,
+        renderer->GetRenderer(),
         format,
         SDL_TEXTUREACCESS_STATIC,
         width, height

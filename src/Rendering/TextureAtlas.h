@@ -2,6 +2,7 @@
 
 #include <cinttypes>
 #include <vector>
+#include <memory>
 
 #include <SDL2/SDL.h>
 
@@ -11,11 +12,11 @@ namespace Sourcehold
 {
     namespace Rendering
     {
-        class TextureAtlas : protected std::vector<Rendering::Texture>
+        class TextureAtlas : protected std::vector<Texture>
         {
-                SDL_Renderer* renderer;
+                std::shared_ptr<Renderer> renderer;
             public:
-                TextureAtlas(SDL_Renderer* rend, uint32_t hint = 4);
+                TextureAtlas(std::shared_ptr<Renderer> rend, uint32_t hint = 4);
                 TextureAtlas(const TextureAtlas &atlas);
                 ~TextureAtlas();
 

@@ -80,14 +80,6 @@ void Renderer::RenderTextureFullscreen(Texture &texture) {
     );
 }
 
-Texture Renderer::CreateTexture() {
-    return Texture(renderer);
-}
-
-TextureAtlas Renderer::CreateTextureAtlas() {
-    return TextureAtlas(renderer);
-}
-
 uint32_t Renderer::GetWidth() {
     int s;
     SDL_GetWindowSize(window, &s, NULL);

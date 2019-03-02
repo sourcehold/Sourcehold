@@ -2,12 +2,14 @@
 
 #include <cstdlib>
 #include <string>
+#include <memory>
+
+#include <cxxopts.hpp>
 
 #include <Config.h>
 
 #include <Assets.h>
 #include <GameManager.h>
-#include <MainMenu.h>
 #include <Building.h>
 #include <AnimationHandler.h>
 
@@ -15,7 +17,6 @@
 #include <Audio/Playlist.h>
 
 #include <Rendering/Tileset.h>
-#include <Rendering/TextureAtlas.h>
 #include <Rendering/BinkVideo.h>
 
 #include <System/System.h>
@@ -30,14 +31,16 @@ namespace Sourcehold
 {
     namespace Game
     {
-        class Game : public GameManager
+        using System::GameOptions;
+
+        class Game :
+            public GameManager,
+            public std::enable_shared_from_this<Renderer>
         {
-                MainMenu menu;
             public:
-                Game();
+                Game(GameOptions &opt);
                 ~Game();
 
-                bool Init(System::CmdLineOptions &opt);
                 int Start();
             protected:
         };

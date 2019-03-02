@@ -3,7 +3,7 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-TgxFile::TgxFile() : Parser() {
+TgxFile::TgxFile(std::shared_ptr<Renderer> rend) : Parser(), Texture(rend) {
 
 }
 
@@ -11,7 +11,7 @@ TgxFile::~TgxFile() {
 
 }
 
-bool TgxFile::LoadFromDisk(const std::string &path, Texture &target) {
+bool TgxFile::LoadFromDisk(const std::string &path) {
     if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
@@ -25,16 +25,16 @@ bool TgxFile::LoadFromDisk(const std::string &path, Texture &target) {
     length = Parser::GetLength();
 
     /* Allocate image */
-    target.AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
+    AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Calculate size */
     size_t size = length - sizeof(TgxHeader);
 
     /* Read image data */
-    ReadTgx(*this, target, size, header.width, header.height, NULL);
+    ReadTgx(*this, *this, size, header.width, header.height, NULL);
 
     /* Copy image data to texture */
-    target.UpdateTexture();
+    UpdateTexture();
 
     return true;
 }

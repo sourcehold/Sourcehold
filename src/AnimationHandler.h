@@ -6,9 +6,6 @@
 
 #include <SDL2/SDL.h>
 
-#include <Rendering/Texture.h>
-#include <Rendering/TextureAtlas.h>
-
 namespace Sourcehold
 {
     namespace Game
@@ -39,7 +36,7 @@ namespace Sourcehold
                 AnimationHandler(const AnimationHandler &ani);
                 ~AnimationHandler();
 
-                void AddSlot(uint16_t slot, Rendering::TextureAtlas &animation, const std::pair<uint16_t,uint16_t> range);
+                void AddSlot(uint16_t slot, const std::pair<uint16_t,uint16_t> range);
                 void RemoveSlot(uint16_t slot);
                 uint16_t GetFrame(uint16_t slot);
 

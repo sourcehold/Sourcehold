@@ -5,18 +5,21 @@ using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-GameManager::GameManager() :
+GameManager::GameManager(GameOptions &opt) :
     AnimationHandler(),
-    Display(),
-    SoundManager()
+    SoundManager(),
+    opt(opt)
 {
-    this->Init();
+    renderer = std::make_shared<Display>();
+    renderer->Open("Sourcehold version " SOURCEHOLD_VERSION_STRING, opt.width, opt.height, opt.fullscreen);
+
+    SoundManager::Init();
 }
 
 GameManager::GameManager(const GameManager &manager) :
     AnimationHandler(manager),
-    Display(manager),
-    SoundManager(manager)
+    SoundManager(manager),
+    opt(manager.opt)
 {
     
 }
@@ -25,16 +28,10 @@ GameManager::~GameManager() {
 
 }
 
-bool GameManager::Running() {
-    return Display::IsOpen();
-}
-
 void GameManager::Update() {
     AnimationHandler::Update();
 }
 
-void GameManager::Init() {
-    Open("Sourcehold version " SOURCEHOLD_VERSION_STRING, 800, 600, false);
-    //Fullscreen();
-    SoundManager::Init();
+bool GameManager::Running() {
+    return renderer->IsOpen();
 }

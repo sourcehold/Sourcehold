@@ -2,10 +2,12 @@
 
 #include <cinttypes>
 #include <vector>
+#include <memory>
 
 #include <System/Logger.h>
 
 #include <Rendering/Texture.h>
+#include <Rendering/Renderer.h>
 #include <Rendering/Rendering.h>
 #include <Rendering/TextureAtlas.h>
 
@@ -17,7 +19,9 @@ namespace Sourcehold
 {
     namespace Parsers
     {
-        class Gm1File : private Parser
+        using Rendering::TextureAtlas;
+
+        class Gm1File : private Parser, public TextureAtlas
         {
                 struct Gm1Header {
                     /* Unknown */
@@ -87,10 +91,10 @@ namespace Sourcehold
                 /* All of the entries */
                 std::vector<Gm1Entry> entries;
             public:
-                Gm1File();
+                Gm1File(std::shared_ptr<Renderer> rend);
                 ~Gm1File();
 
-                bool LoadFromDisk(const std::string &path, Rendering::TextureAtlas &atlas);
+                bool LoadFromDisk(const std::string &path);
                 void DumpInformation();
 
                 inline std::vector<Gm1Entry>& GetEntries();

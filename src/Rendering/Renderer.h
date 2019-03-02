@@ -7,13 +7,13 @@
 #include <System/Logger.h>
 
 #include <Rendering/Texture.h>
-#include <Rendering/TextureAtlas.h>
 #include <Rendering/Rendering.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
+        class Texture;
         class Renderer
         {
             public:
@@ -32,11 +32,9 @@ namespace Sourcehold
                 /* Render a texture to the whole screen */
                 void RenderTextureFullscreen(Texture &texture);
 
-                Texture CreateTexture();
-                TextureAtlas CreateTextureAtlas();
-
                 uint32_t GetWidth();
                 uint32_t GetHeight();
+                inline SDL_Renderer *GetRenderer() { return renderer; }
 
                 /* Normalize based on window dimensions */
                 double NormalizeX(uint32_t c);

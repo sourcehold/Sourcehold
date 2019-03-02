@@ -1,7 +1,6 @@
 #include <AnimationHandler.h>
 
 using namespace Sourcehold::Game;
-using namespace Sourcehold::Rendering;
 
 AnimationHandler::AnimationHandler() {
 
@@ -15,12 +14,12 @@ AnimationHandler::~AnimationHandler() {
 
 }
 
-void AnimationHandler::AddSlot(uint16_t slot, TextureAtlas &animation, const std::pair<uint16_t,uint16_t> range) {
+void AnimationHandler::AddSlot(uint16_t slot, const std::pair<uint16_t,uint16_t> range) {
     AnimationSlot::Flags flags = AnimationSlot::NONE;
     slots.insert(
         std::make_pair(
             slot,
-            AnimationSlot(SDL_GetTicks(), animation.GetSize(), flags)
+            AnimationSlot(SDL_GetTicks(), 0, flags)
         )
     );
 }

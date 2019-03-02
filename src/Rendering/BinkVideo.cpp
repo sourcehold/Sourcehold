@@ -18,6 +18,10 @@ BinkVideo::BinkVideo() {
     }
 }
 
+BinkVideo::~BinkVideo() {
+    Close();
+}
+
 bool BinkVideo::LoadFromDisk(std::string path) {
     int out = avformat_open_input(
         &ic,
@@ -155,39 +159,53 @@ void BinkVideo::InitFramebuffer(Texture &texture) {
     texture.AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
 }
 
+void BinkVideo::InitAudiobuffer(AudioSource &audiobuffer) {
+
+}
+
 void BinkVideo::Decode(Texture &video, AudioSource &audio) {
     int ret;
-    if(av_read_frame(ic, &packet) >= 0) {
-        if(packet.stream_index == videoStream) {
-            ret = avcodec_send_packet(codecCtx, &packet);
-            if(ret) {
-                Logger::error("RENDERING") << "An error occured during bink video decoding!" << std::endl;
-                return;
-            }
-
-            while(ret > 0) {
-                ret = avcodec_receive_frame(codecCtx, frame);
-                if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-                    return;
-                }
-
-                long wait_until = packet.pts * timebase;
-                //SDL_Delay(wait_until);
-
-                uint32_t dst[800 * 600];
-                uint8_t* slices[3] = {(uint8_t*)&dst[0], 0, 0};
-                int strides[3] = {800*4, 0, 0};
-
-                sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-                memcpy(video.GetData(), dst, 800*600*4);
-
-                video.UpdateTexture();
-            }
-        }else if(packet.stream_index == audioStream) {
-            
+    if(av_read_frame(ic, &packet) < 0) return;
+    if(packet.stream_index == videoStream) {
+        ret = avcodec_send_packet(codecCtx, &packet);
+        if(ret) {
+            Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
+            return;;
         }
-        av_packet_unref(&packet);
+
+        ret = avcodec_receive_frame(codecCtx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return;
+        }
+
+        long wait_until = packet.pts * timebase;
+        //SDL_Delay(wait_until);
+
+        uint32_t dst[800 * 600];
+        uint8_t* slices[3] = {(uint8_t*)&dst[0], 0, 0};
+        int strides[3] = {800*4, 0, 0};
+
+        sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
+        memcpy(video.GetData(), dst, 800*600*4);
+
+        video.UpdateTexture();
+    }else if(packet.stream_index == audioStream && hasAudio) {
+        /*ret = avcodec_send_packet(codecCtx, &packet);
+        if(ret) {
+            Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
+            return;;
+        }
+        ret = avcodec_receive_frame(codecCtx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return;
+        }
+        int gotFrame;
+        if(avcodec_decode_audio4(audioCtx, frame, &gotFrame, &packet) < 0) {
+            Logger::error("RENDERING") << "An error occured during bink audio decoding!" << std::endl;
+        }*/
     }
+
+    av_packet_unref(&packet);
 }
 
 void BinkVideo::Close() {

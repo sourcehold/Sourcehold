@@ -2,7 +2,7 @@
 
 using namespace Sourcehold::Rendering;
 
-TextureAtlas::TextureAtlas(SDL_Renderer* rend, uint32_t hint) :
+TextureAtlas::TextureAtlas(std::shared_ptr<Renderer> rend, uint32_t hint) :
     std::vector<Texture>(),
     renderer(rend)
 {

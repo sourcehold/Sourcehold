@@ -46,6 +46,7 @@ namespace Sourcehold
 
                 bool LoadFromDisk(std::string path);
                 void InitFramebuffer(Texture &texture);
+                void InitAudiobuffer(Audio::AudioSource &audiobuffer);
                 void Close();
                 void Decode(Texture &video, Audio::AudioSource &audio);
             private:
