@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
 #include <Config.h>
 
@@ -19,10 +20,8 @@ namespace Sourcehold
     namespace Rendering
     {
         class Display :
-            public Rendering::Renderer,
-            public Events::Keyboard
+            public Rendering::Renderer
         {
-                SDL_Event event;
                 const int FRAMES_PER_SECOND = 60;
                 uint32_t timer = 0;
                 int frame = 0;
@@ -32,7 +31,7 @@ namespace Sourcehold
                 Display(const Display &dp);
                 ~Display();
 
-                void Open(std::string title, int width, int height, bool fullscreen = false);
+                void Open(const std::string &title, int width, int height, bool fullscreen = false, bool noborder = false);
                 void Fullscreen();
                 void Close();
                 void HandleEvents();

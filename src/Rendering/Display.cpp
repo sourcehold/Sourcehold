@@ -4,15 +4,13 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
 Display::Display() :
-    Renderer(),
-    Keyboard()
+    Renderer()
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 }
 
 Display::Display(const Display &dp) :
-    Renderer(dp),
-    Keyboard()
+    Renderer(dp)
 {
     timer = dp.timer;
     frame = dp.frame;
@@ -25,9 +23,10 @@ Display::~Display() {
     SDL_Quit();
 }
 
-void Display::Open(std::string title, int width, int height, bool fullsceen) {
+void Display::Open(const std::string &title, int width, int height, bool fullsceen, bool noborder) {
     int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
     if(fullsceen) param |= SDL_WINDOW_FULLSCREEN;
+    if(noborder) param |= SDL_WINDOW_BORDERLESS;
 
     Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
     if(!Renderer::window) {
@@ -56,21 +55,23 @@ void Display::Close() {
 }
 
 void Display::HandleEvents() {
-    while(SDL_PollEvent(&event) != 0) {
+    auto event = std::make_shared<SDL_Event>();
+
+    while(SDL_PollEvent(event.get()) != 0) {
         if(
-            event.type == SDL_KEYDOWN ||
-            event.type == SDL_KEYUP
+            event->type == SDL_KEYDOWN ||
+            event->type == SDL_KEYUP
         ) {
             /* Handle the keyboard */
-            Keyboard::Generate(event);
+            //Keyboard::Generate(event);
         }else if(
-            event.type == SDL_MOUSEMOTION ||
-            event.type == SDL_MOUSEBUTTONDOWN ||
-            event.type == SDL_MOUSEBUTTONUP ||
-            event.type == SDL_MOUSEWHEEL
+            event->type == SDL_MOUSEMOTION ||
+            event->type == SDL_MOUSEBUTTONDOWN ||
+            event->type == SDL_MOUSEBUTTONUP ||
+            event->type == SDL_MOUSEWHEEL
         ) {
             /* Handle the mouse */
-        }else if(event.type == SDL_QUIT) {
+        }else if(event->type == SDL_QUIT) {
             open = false;
         }
     }

@@ -2,11 +2,7 @@
 
 using namespace Sourcehold::Events;
 
-Keyboard::Keyboard() : Event() {
-
-}
-
-Keyboard::Keyboard(const Keyboard &key) {
+Keyboard::Keyboard(std::shared_ptr<SDL_Event> event) : Event(event) {
 
 }
 
@@ -14,6 +10,6 @@ Keyboard::~Keyboard() {
 
 }
 
-void Keyboard::Generate(SDL_Event &ev) {
+void Keyboard::Dispatch() {
 
 }

@@ -2,16 +2,8 @@
 
 using namespace Sourcehold::Events;
 
-Event::Event() {
-    
-}
-
-Event::Event(const std::string &name) {
-    this->name = name;
-}
-
-Event::Event(const Event &event) {
-
+Event::Event(std::shared_ptr<SDL_Event> event) {
+   
 }
 
 Event::~Event() {

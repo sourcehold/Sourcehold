@@ -13,7 +13,10 @@ extern "C" {
 #endif
 }
 
+#include <memory>
+
 #include <Config.h>
+#include <GameManager.h>
 
 #include <System/Logger.h>
 
@@ -26,7 +29,10 @@ namespace Sourcehold
 {
     namespace Rendering
     {
-        class BinkVideo
+        using Audio::AudioSource;
+        using Game::GameManager;
+
+        class BinkVideo : public Texture, public AudioSource
         {
                 AVInputFormat *bink_input;
                 AVCodec *bink_codec;
@@ -41,14 +47,12 @@ namespace Sourcehold
                 double timebase = 0.0;
                 bool hasAudio = false;
             public:
-                BinkVideo();
+                BinkVideo(std::shared_ptr<GameManager> man);
                 ~BinkVideo();
 
                 bool LoadFromDisk(std::string path);
-                void InitFramebuffer(Texture &texture);
-                void InitAudiobuffer(Audio::AudioSource &audiobuffer);
                 void Close();
-                void Decode(Texture &video, Audio::AudioSource &audio);
+                void Decode();
             private:
         };
     }

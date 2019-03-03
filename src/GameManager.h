@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include <Config.h>
 #include <AnimationHandler.h>
 
@@ -24,7 +22,8 @@ namespace Sourcehold
 
         class GameManager :
             public AnimationHandler,
-            public SoundManager
+            public SoundManager,
+            public Display
         {
                 GameOptions &opt;
             public:
@@ -32,10 +31,9 @@ namespace Sourcehold
                 GameManager(const GameManager &manager);
                 ~GameManager();
 
+                bool Running();
                 void Update();
             protected:
-                bool Running();
-                std::shared_ptr<Display> renderer;
         };
     }
 }

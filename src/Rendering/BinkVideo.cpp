@@ -4,7 +4,10 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::Rendering;
 
-BinkVideo::BinkVideo() {
+BinkVideo::BinkVideo(std::shared_ptr<GameManager> man) :
+    Texture(man),
+    AudioSource()
+{
     av_log_set_level(AV_LOG_ERROR);
     bink_input = av_find_input_format("bink");
     if(!bink_input) {
@@ -152,18 +155,12 @@ bool BinkVideo::LoadFromDisk(std::string path) {
         return false;
     }
 
+    Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
+
     return true;
 }
 
-void BinkVideo::InitFramebuffer(Texture &texture) {
-    texture.AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
-}
-
-void BinkVideo::InitAudiobuffer(AudioSource &audiobuffer) {
-
-}
-
-void BinkVideo::Decode(Texture &video, AudioSource &audio) {
+void BinkVideo::Decode() {
     int ret;
     if(av_read_frame(ic, &packet) < 0) return;
     if(packet.stream_index == videoStream) {
@@ -186,9 +183,9 @@ void BinkVideo::Decode(Texture &video, AudioSource &audio) {
         int strides[3] = {800*4, 0, 0};
 
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-        memcpy(video.GetData(), dst, 800*600*4);
+        memcpy(Texture::GetData(), dst, 800*600*4);
 
-        video.UpdateTexture();
+        Texture::UpdateTexture();
     }else if(packet.stream_index == audioStream && hasAudio) {
         /*ret = avcodec_send_packet(codecCtx, &packet);
         if(ret) {

@@ -24,13 +24,13 @@ namespace Sourcehold
                 /* Render everything */
                 void Flush();
                 /* Render a texture (screen coordinates) */
-                void RenderTexture(Texture &texture, int x, int y);
-                void RenderTextureScale(Texture &texture, int x, int y, int w, int h);
+                void Render(Texture &texture, int x, int y);
+                void Render(Texture &texture, int x, int y, int w, int h);
                 /* Render a texture (normalized coordinates) */
-                void RenderTexture(Texture &texture, double x, double y);
-                void RenderTextureScale(Texture &texture, double x, double y, double w, double h);
+                void Render(Texture &texture, double x, double y);
+                void Render(Texture &texture, double x, double y, double w, double h);
                 /* Render a texture to the whole screen */
-                void RenderTextureFullscreen(Texture &texture);
+                void RenderFullscreen(Texture &texture);
 
                 uint32_t GetWidth();
                 uint32_t GetHeight();

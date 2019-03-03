@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <SDL2/SDL.h>
 
 #include <Events/Event.h>
@@ -15,11 +17,11 @@ namespace Sourcehold
                     KEYUP
                 } type;
             public:
-                Keyboard();
-                Keyboard(const Keyboard &key);
+                Keyboard(std::shared_ptr<SDL_Event> event);
+                Keyboard(const Keyboard &key) = delete;
                 ~Keyboard();
 
-                void Generate(SDL_Event &ev);
+                void Dispatch() override;
         };
     }
 }

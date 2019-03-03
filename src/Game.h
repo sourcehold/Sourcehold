@@ -7,6 +7,7 @@
 #include <cxxopts.hpp>
 
 #include <Config.h>
+#include <MainMenu.h>
 
 #include <Assets.h>
 #include <GameManager.h>
@@ -35,7 +36,7 @@ namespace Sourcehold
 
         class Game :
             public GameManager,
-            public std::enable_shared_from_this<Renderer>
+            public std::enable_shared_from_this<GameManager>
         {
             public:
                 Game(GameOptions &opt);
