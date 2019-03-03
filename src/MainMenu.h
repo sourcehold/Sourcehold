@@ -6,8 +6,9 @@
 
 #include <GameManager.h>
 
-#include <Events/EventHandler.h>
+#include <Events/Event.h>
 #include <Events/Keyboard.h>
+#include <Events/Mouse.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
@@ -24,7 +25,7 @@ namespace Sourcehold
         using namespace Parsers;
         using namespace Rendering;
 
-        class MainMenu : protected EventHandler<Keyboard>
+        class MainMenu : protected EventConsumer<Keyboard>, protected EventConsumer<Mouse>
         {
             public:
                 MainMenu(std::shared_ptr<GameManager> man);
@@ -33,6 +34,10 @@ namespace Sourcehold
 
                 int Startup();
             protected:
+                void onEventReceive(Keyboard &event) override;
+                void onEventReceive(Mouse &event) override;
+
+                bool introPlaying = true;
                 std::shared_ptr<GameManager> manager;
                 TgxFile tgx_loading, tgx_bg1;
                 BinkVideo intro;

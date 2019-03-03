@@ -19,7 +19,10 @@ GameManager::GameManager(GameOptions &opt) :
         opt.noborder
     );
 
+    eventHandler = std::make_shared<EventHandler>();
     SoundManager::Init();
+
+    running = true;
 }
 
 GameManager::GameManager(const GameManager &manager) :
@@ -28,7 +31,7 @@ GameManager::GameManager(const GameManager &manager) :
     opt(manager.opt),
     Display()
 {
-    
+    this->running = manager.running;
 }
 
 GameManager::~GameManager() {
@@ -36,9 +39,11 @@ GameManager::~GameManager() {
 }
 
 bool GameManager::Running() {
-    return IsOpen();
+    Update();
+    return running;
 }
 
 void GameManager::Update() {
+    if(!eventHandler->FetchEvents() || !IsOpen()) running = false;
     AnimationHandler::Update();
 }

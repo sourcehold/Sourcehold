@@ -1,7 +1,11 @@
 #pragma once
 
+#include <memory>
+
 #include <Config.h>
 #include <AnimationHandler.h>
+
+#include <Events/EventHandler.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
@@ -19,13 +23,16 @@ namespace Sourcehold
         using System::GameOptions;
         using Audio::SoundManager;
         using Rendering::Display;
+        using Events::EventHandler;
 
         class GameManager :
             public AnimationHandler,
             public SoundManager,
             public Display
         {
+                bool running = false;
                 GameOptions &opt;
+                std::shared_ptr<EventHandler> eventHandler;
             public:
                 GameManager(GameOptions &opt);
                 GameManager(const GameManager &manager);
@@ -33,6 +40,8 @@ namespace Sourcehold
 
                 bool Running();
                 void Update();
+
+                inline std::shared_ptr<EventHandler> GetHandler() { return eventHandler; }
             protected:
         };
     }

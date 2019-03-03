@@ -54,29 +54,6 @@ void Display::Close() {
     SDL_DestroyWindow(Renderer::window);
 }
 
-void Display::HandleEvents() {
-    auto event = std::make_shared<SDL_Event>();
-
-    while(SDL_PollEvent(event.get()) != 0) {
-        if(
-            event->type == SDL_KEYDOWN ||
-            event->type == SDL_KEYUP
-        ) {
-            /* Handle the keyboard */
-            //Keyboard::Generate(event);
-        }else if(
-            event->type == SDL_MOUSEMOTION ||
-            event->type == SDL_MOUSEBUTTONDOWN ||
-            event->type == SDL_MOUSEBUTTONUP ||
-            event->type == SDL_MOUSEWHEEL
-        ) {
-            /* Handle the mouse */
-        }else if(event->type == SDL_QUIT) {
-            open = false;
-        }
-    }
-}
-
 void Display::StartTimer() {
     timer = SDL_GetTicks();
 }

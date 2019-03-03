@@ -4,6 +4,7 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 #include <memory>
 
 #include <Config.h>
@@ -13,16 +14,19 @@
 #include <Rendering/Renderer.h>
 
 #include <Events/Event.h>
+#include <Events/EventHandler.h>
 #include <Events/Keyboard.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
+        using namespace Events;
+
         class Display :
             public Rendering::Renderer
         {
-                const int FRAMES_PER_SECOND = 60;
+                const int FRAMES_PER_SECOND = 30;
                 uint32_t timer = 0;
                 int frame = 0;
                 bool open = false;
@@ -34,7 +38,6 @@ namespace Sourcehold
                 void Open(const std::string &title, int width, int height, bool fullscreen = false, bool noborder = false);
                 void Fullscreen();
                 void Close();
-                void HandleEvents();
                 void StartTimer();
                 void EndTimer();
                 void Clear();

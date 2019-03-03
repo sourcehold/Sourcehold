@@ -4,8 +4,9 @@ using namespace Sourcehold::Game;
 using namespace Sourcehold::Rendering;
 
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
+    EventConsumer<Keyboard>(man->GetHandler()),
+    EventConsumer<Mouse>(man->GetHandler()),
     manager(man),
-    EventHandler<Keyboard>(),
     tgx_loading(man),
     tgx_bg1(man),
     intro(man)
@@ -24,7 +25,6 @@ int MainMenu::Startup() {
 
     while(manager->Running()) {
         manager->Clear();
-        manager->HandleEvents();
         manager->StartTimer();
 
         intro.Decode();
@@ -35,4 +35,16 @@ int MainMenu::Startup() {
     }
 
     return EXIT_SUCCESS;
+}
+
+void MainMenu::onEventReceive(Keyboard &event) {
+
+}
+
+void MainMenu::onEventReceive(Mouse &event) {
+    if(event.LmbDown()) {
+        if(introPlaying) {
+            
+        }
+    }
 }
