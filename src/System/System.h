@@ -7,6 +7,10 @@ namespace Sourcehold
 {
     namespace System
     {
+        /*
+         * Game startup options, modified via config file
+         * or command line arguments
+         */
         struct GameOptions
         {
             std::string config;

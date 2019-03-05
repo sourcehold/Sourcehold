@@ -9,13 +9,15 @@
 
 #include <Config.h>
 
-/* Parser super class
- * TODO: DO __NOT__ assume everyone is using little-endian
- */
 namespace Sourcehold
 {
     namespace Parsers
     {
+
+        /*
+        * Parser super class, provide an interface for file IO
+        * TODO: DO __NOT__ assume everyone is using little-endian
+        */
         class Parser : protected std::ifstream
         {
                 uint32_t length = 0;

@@ -35,17 +35,17 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     Parser::Close();
 
     /* Read image data */
-    ReadTgx(*this, buf, size, NULL);
+    Texture::LockTexture();
+    ReadTgx(static_cast<Texture&>(*this), buf, size, 0, 0, NULL);
 
     delete [] buf;
 
-    /* Copy image data to texture */
-    UpdateTexture();
+    Texture::UnlockTexture();
 
     return true;
 }
 
-void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t *pal) {
+void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
     uint32_t x = 0, y = 0;
     char *end = buf + size;
 
@@ -70,7 +70,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t *pal) {
                     }
                     uint8_t r,g,b;
                     ReadPixel(pixelColor, r, g, b);
-                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                    tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
                 }
             }break;
             case 0b100: {
@@ -91,7 +91,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t *pal) {
                 ReadPixel(pixelColor, r, g, b);
                 /* Put the same pixel into buffer */
                 for(uint8_t i = 0; i < len; ++i,++x) {
-                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                    tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
                 }
             }break;
             case 0b001: {

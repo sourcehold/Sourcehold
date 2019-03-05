@@ -10,6 +10,9 @@ namespace Sourcehold
 {
     namespace Events
     {
+        /*
+         * Keyboard event handler
+         */
         class Keyboard : public Event
         {
                 std::list<EventType> types;

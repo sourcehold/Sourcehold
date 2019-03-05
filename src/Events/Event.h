@@ -22,6 +22,9 @@ namespace Sourcehold
             MOUSE_WHEEL
         };
 
+        /*
+         * Abstract event class
+         */
         class Event
         {
             public:
@@ -53,6 +56,10 @@ namespace Sourcehold
                 bool handled = false;
         };
 
+        /*
+         * Event consumer class used to dispatch generic events
+         * to the front-end (callback driven event stack)
+         */
         template<class T>
         class EventConsumer
         {

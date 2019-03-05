@@ -46,4 +46,6 @@ bool GameManager::Running() {
 void GameManager::Update() {
     if(!eventHandler->FetchEvents() || !IsOpen()) running = false;
     AnimationHandler::Update();
+
+    time = SDL_GetTicks() / 1000.0;
 }

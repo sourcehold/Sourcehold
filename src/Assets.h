@@ -1,5 +1,3 @@
-/* A list of all the game's assets */
-
 #pragma once
 
 #include <Config.h>

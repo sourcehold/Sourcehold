@@ -14,14 +14,21 @@ namespace Sourcehold
 {
     namespace Rendering
     {
+        /*
+         * Texture wrapper class, able to create and modify
+         * streaming textures, external modification is possible
+         * by locking/unlocking the texture stream and obtaining
+         * a pointer to the raw pixel data
+         */
         class Renderer;
         class Texture
         {
                 std::shared_ptr<Renderer> renderer;
-                SDL_Texture *texture;
-                std::vector<uint32_t> pixels;
-                int width, height;
+                SDL_Texture *texture = nullptr;
+                int width, height, pitch = 0;
                 double angle;
+                bool locked = false;
+                Uint32* pixels = nullptr;
                 SDL_RendererFlip flip;
             public:
                 Texture(std::shared_ptr<Renderer> rend);
@@ -32,14 +39,19 @@ namespace Sourcehold
                 void UpdateTexture();
 
                 /* Texture manipulation */
+                void LockTexture();
+                void UnlockTexture();
                 void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
                 void Rotate(double angle);
                 void FlipHorizontal();
                 void FlipVertical();
                 void FlipNone();
+                void SetAlphaMod(Uint8 alpha);
+                void Copy(Texture &other, uint32_t x, uint32_t y);
 
+                uint32_t *GetData();
+                inline bool IsLocked() { return locked; }
                 inline SDL_Texture *GetTexture() { return texture; }
-                inline uint32_t *GetData() { return pixels.data(); }
                 inline int GetWidth() { return width; }
                 inline int GetHeight() { return height; }
                 inline double GetAngle() { return angle; }

@@ -9,6 +9,10 @@ namespace Sourcehold
 {
     namespace Events
     {
+        /*
+         * Handles getting events from the system and
+         * dispatching them to all event listeners
+         */
         class EventHandler
         {
             public:

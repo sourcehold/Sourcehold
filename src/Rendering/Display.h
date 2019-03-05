@@ -23,10 +23,14 @@ namespace Sourcehold
     {
         using namespace Events;
 
+        /*
+         * Handles everyting related to the game display,
+         * owns the renderer
+         */
         class Display :
             public Rendering::Renderer
         {
-                const int FRAMES_PER_SECOND = 30;
+                const int FRAMES_PER_SECOND = 60;
                 uint32_t timer = 0;
                 int frame = 0;
                 bool open = false;

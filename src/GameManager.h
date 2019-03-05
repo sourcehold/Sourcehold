@@ -25,12 +25,17 @@ namespace Sourcehold
         using Rendering::Display;
         using Events::EventHandler;
 
+        /*
+         * The game manager class, constructs/destructs
+         * and hands over access to core classes
+         */
         class GameManager :
             public AnimationHandler,
             public SoundManager,
             public Display
         {
                 bool running = false;
+                double time = 0.0;
                 GameOptions &opt;
                 std::shared_ptr<EventHandler> eventHandler;
             public:
@@ -41,6 +46,7 @@ namespace Sourcehold
                 bool Running();
                 void Update();
 
+                inline double GetTime() { return time; }
                 inline std::shared_ptr<EventHandler> GetHandler() { return eventHandler; }
             protected:
         };

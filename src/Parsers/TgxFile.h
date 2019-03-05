@@ -22,6 +22,10 @@ namespace Sourcehold
     {
         using Rendering::Texture;
 
+        /*
+         * File containing a single image, provides parsing functions
+         * for GM1 files too
+         */
         class TgxFile : private Parser, public Texture
         {
             public:
@@ -37,7 +41,7 @@ namespace Sourcehold
 
                 bool LoadFromDisk(const std::string &path);
 
-                static void ReadTgx(Texture &tex, char *buf, size_t size, uint16_t *pal);
+                static void ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal);
                 static void ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b);
             protected:
             private:

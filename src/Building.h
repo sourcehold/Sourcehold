@@ -9,7 +9,7 @@ namespace Sourcehold
 {
     namespace Game
     {
-        class Building : public Tileset
+        class Building
         {
             public:
                 Building();

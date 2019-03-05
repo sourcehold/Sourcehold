@@ -33,7 +33,7 @@ void Display::Open(const std::string &title, int width, int height, bool fullsce
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
-    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED);
+    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if(!Renderer::renderer) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     }

@@ -13,6 +13,9 @@ namespace Sourcehold
 {
     namespace Rendering
     {
+        /*
+         * Handles everything related to rendering
+         */
         class Texture;
         class Renderer
         {
@@ -30,7 +33,7 @@ namespace Sourcehold
                 void Render(Texture &texture, double x, double y);
                 void Render(Texture &texture, double x, double y, double w, double h);
                 /* Render a texture to the whole screen */
-                void RenderFullscreen(Texture &texture);
+                void Render(Texture &texture);
 
                 uint32_t GetWidth();
                 uint32_t GetHeight();

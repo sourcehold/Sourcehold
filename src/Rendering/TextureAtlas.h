@@ -12,6 +12,10 @@ namespace Sourcehold
 {
     namespace Rendering
     {
+        /* TODO
+         * Contains a single texture atlas image and is able
+         * to expose separate image parts to the renderer
+         */
         class TextureAtlas : protected std::vector<Texture>
         {
                 std::shared_ptr<Renderer> renderer;

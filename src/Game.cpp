@@ -16,13 +16,25 @@ Game::~Game() {
 }
 
 int Game::Start() {
-    MainMenu menu(shared_from_this());
-    int ret = menu.Startup();
-    if(ret != EXIT_SUCCESS) return ret;
+//    MainMenu menu(shared_from_this());
+//    int ret = menu.Startup();
+//    if(ret != EXIT_SUCCESS) return ret;
+    GameMap map(shared_from_this());
+
+    while(GameManager::Running()) {
+        GameManager::Clear();
+        GameManager::StartTimer();
+
+        map.Render();
+
+        GameManager::Flush();
+        GameManager::EndTimer();
+    }
 
     return EXIT_SUCCESS;
 }
 
+/* Common entry point across all platforms */
 int main(int argc, char **argv) {
     /* Parse commandline */
     cxxopts::Options options("Sourcehold", "Open source engine implementation of Stronghold");
@@ -76,6 +88,7 @@ int main(int argc, char **argv) {
 #include <string>
 #include <vector>
 
+/* Windows specific entry point */
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevIns, LPSTR lpszArgument, int iShow) {
     /* Convert argument list */
     int w_argc = 0;

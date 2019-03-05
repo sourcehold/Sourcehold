@@ -14,6 +14,10 @@ namespace Sourcehold
 {
     namespace Audio
     {
+        /*
+         * A single audio source, assumes that the audio context
+         * has been created already
+         */
         class AudioSource
         {
                 ALuint source; /* OpenAL audio source */

@@ -68,7 +68,7 @@ void Renderer::Render(Texture &texture, double x, double y, double w, double h) 
     Render(texture, ix, iy, sx, sy);
 }
 
-void Renderer::RenderFullscreen(Texture &texture) {
+void Renderer::Render(Texture &texture) {
     SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),

@@ -10,6 +10,10 @@ namespace Sourcehold
 {
     namespace System
     {
+        /*
+         * Logger class, redirects logging messages to a file,
+         * stdout or any ostream provider (TODO!)
+         */
         class Logger
         {
             public:

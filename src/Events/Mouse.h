@@ -8,6 +8,9 @@ namespace Sourcehold
 {
     namespace Events
     {
+        /*
+         * Mouse event handler
+         */
         class Mouse : public Event
         {
                 std::list<EventType> types;
