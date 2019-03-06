@@ -7,11 +7,13 @@
 #include <System/Logger.h>
 #include <Parsers/Parser.h>
 
-/* File containing scenario description */
 namespace Sourcehold
 {
     namespace Parsers
     {
+        /*
+         * The file containing all the text strings
+         */
         class MlbFile : public Parser
         {
                 /* Encoded in UTF-16LE */

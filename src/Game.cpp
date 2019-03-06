@@ -12,36 +12,29 @@ Game::Game(GameOptions &opt) :
 }
 
 Game::~Game() {
-    
+
 }
 
 int Game::Start() {
-    TgxFile tgx(renderer);
-    tgx.LoadFromDisk("data/gfx/frontend_combat2.tgx");
-
-    Gm1File gm1(renderer);
-    gm1.LoadFromDisk("data/gm/body_trebutchet.gm1", true);
-
-    enum class Trebutchet : uint16_t {
-        ANIMATION_1,
-        ANIMATION_2,
-        ANIMATION_3
-    };
+//    MainMenu menu(shared_from_this());
+//    int ret = menu.Startup();
+//    if(ret != EXIT_SUCCESS) return ret;
+    GameMap map(shared_from_this());
 
     while(GameManager::Running()) {
-        renderer->Clear();
-        renderer->HandleEvents();
-        renderer->StartTimer();
+        GameManager::Clear();
+        GameManager::StartTimer();
 
-        renderer->RenderTextureFullscreen(gm1.Get(0));
+        map.Render();
 
-        renderer->Flush();
-        renderer->EndTimer();
+        GameManager::Flush();
+        GameManager::EndTimer();
     }
 
     return EXIT_SUCCESS;
 }
 
+/* Common entry point across all platforms */
 int main(int argc, char **argv) {
     /* Parse commandline */
     cxxopts::Options options("Sourcehold", "Open source engine implementation of Stronghold");
@@ -79,8 +72,8 @@ int main(int argc, char **argv) {
             opt.nothread = true;
         }
 
-        Game game(opt);
-        return game.Start();
+        auto game = std::make_shared<Game>(opt);
+        return game->Start();
     }catch(cxxopts::OptionException ex) {
         std::cerr << ex.what() << std::endl;
         return EXIT_FAILURE;
@@ -95,6 +88,7 @@ int main(int argc, char **argv) {
 #include <string>
 #include <vector>
 
+/* Windows specific entry point */
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevIns, LPSTR lpszArgument, int iShow) {
     /* Convert argument list */
     int w_argc = 0;

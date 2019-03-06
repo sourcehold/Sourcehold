@@ -16,7 +16,10 @@ namespace Sourcehold
 {
     namespace Audio
     {
-        /* Sound super class */
+        /*
+         * Sound super class, initialize and destroy the
+         * audio context and handle platform API stuff
+         */
         class SoundManager
         {
                 /* OpenAL stuff */

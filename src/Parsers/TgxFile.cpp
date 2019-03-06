@@ -30,16 +30,22 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     /* Calculate size */
     size_t size = length - sizeof(TgxHeader);
 
-    /* Read image data */
-    //ReadTgx(*this, *this, size, header.width, header.height, NULL);
+    char *buf = new char[size];
+    Parser::GetData(buf, size);
+    Parser::Close();
 
-    /* Copy image data to texture */
-    UpdateTexture();
+    /* Read image data */
+    Texture::LockTexture();
+    ReadTgx(static_cast<Texture&>(*this), buf, size, 0, 0, NULL);
+
+    delete [] buf;
+
+    Texture::UnlockTexture();
 
     return true;
 }
 
-void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint16_t height, uint16_t *pal) {
+void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
     uint32_t x = 0, y = 0;
     char *end = buf + size;
 
@@ -59,11 +65,12 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint
                         buf++;
                         pixelColor = pal[256 + index];
                     }else {
-                        buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
+                        std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                        buf += 2;
                     }
                     uint8_t r,g,b;
                     ReadPixel(pixelColor, r, g, b);
-                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                    tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
                 }
             }break;
             case 0b100: {
@@ -77,13 +84,14 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t width, uint
                     buf++;
                     pixelColor = pal[256 + index];
                 }else {
-                    buf = std::copy(buf, buf + 2, reinterpret_cast<char*>(pixelColor));
+                    std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                    buf += 2;
                 }
                 uint8_t r,g,b;
                 ReadPixel(pixelColor, r, g, b);
                 /* Put the same pixel into buffer */
                 for(uint8_t i = 0; i < len; ++i,++x) {
-                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                    tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
                 }
             }break;
             case 0b001: {

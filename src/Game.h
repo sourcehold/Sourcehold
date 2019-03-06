@@ -7,6 +7,8 @@
 #include <cxxopts.hpp>
 
 #include <Config.h>
+#include <MainMenu.h>
+#include <GameMap.h>
 
 #include <Assets.h>
 #include <GameManager.h>
@@ -33,9 +35,13 @@ namespace Sourcehold
     {
         using System::GameOptions;
 
+        /*
+         * The main game class, owns the GameManager and
+         * is responsible for initializing and starting the game
+         */
         class Game :
             public GameManager,
-            public std::enable_shared_from_this<Renderer>
+            public std::enable_shared_from_this<GameManager>
         {
             public:
                 Game(GameOptions &opt);

@@ -13,6 +13,9 @@ namespace Sourcehold
 {
     namespace Audio
     {
+        /*
+         * An audio playlist class, used for songs only
+         */
         class Playlist
         {
                 std::vector<AudioSource> songs;

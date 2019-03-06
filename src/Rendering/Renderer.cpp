@@ -20,7 +20,7 @@ void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::RenderTexture(Texture &texture, int x, int y) {    
+void Renderer::Render(Texture &texture, int x, int y) {    
     SDL_Rect rect = {
         x, y,
         texture.GetWidth(),
@@ -37,7 +37,7 @@ void Renderer::RenderTexture(Texture &texture, int x, int y) {
     );
 }
 
-void Renderer::RenderTextureScale(Texture &texture, int x, int y, int w, int h) {
+void Renderer::Render(Texture &texture, int x, int y, int w, int h) {
     SDL_Rect rect = {
         x, y,
         w,
@@ -54,21 +54,21 @@ void Renderer::RenderTextureScale(Texture &texture, int x, int y, int w, int h) 
     );
 }
 
-void Renderer::RenderTexture(Texture &texture, double x, double y) {
+void Renderer::Render(Texture &texture, double x, double y) {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
-    RenderTexture(texture, ix, iy);
+    Render(texture, ix, iy);
 }
 
-void Renderer::RenderTextureScale(Texture &texture, double x, double y, double w, double h) {
+void Renderer::Render(Texture &texture, double x, double y, double w, double h) {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
     int sx = ToCoordX(w);
     int sy = ToCoordY(h);
-    RenderTextureScale(texture, ix, iy, sx, sy);
+    Render(texture, ix, iy, sx, sy);
 }
 
-void Renderer::RenderTextureFullscreen(Texture &texture) {
+void Renderer::Render(Texture &texture) {
     SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),

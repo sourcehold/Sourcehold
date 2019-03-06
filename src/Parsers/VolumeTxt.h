@@ -8,11 +8,13 @@
 #include <System/Logger.h>
 #include <Parsers/Parser.h>
 
-/* Text file containing audio volume data */
 namespace Sourcehold
 {
     namespace Parsers
     {
+        /*
+         * Text file containing audio volume data
+         */
         class VolumeTxt : private Parser
         {
                 std::map<std::string, uint8_t> volumes;

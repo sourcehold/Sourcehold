@@ -1,0 +1,56 @@
+#include <Events/Mouse.h>
+
+using namespace Sourcehold::Events;
+
+Mouse::Mouse(std::list<EventType> types) {
+
+}
+
+Mouse::~Mouse() {
+
+}
+
+bool Mouse::LmbDown() {
+    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_LEFT) return true;
+    return false;
+}
+
+bool Mouse::MmbDown() {
+    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_MIDDLE) return true;
+    return false;
+}
+
+bool Mouse::RmbDown() {
+    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_RIGHT) return true;
+    return false;
+}
+
+bool Mouse::LmbUp() {
+    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_LEFT) return true;
+    return false;
+}
+
+bool Mouse::MmbUp() {
+    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_MIDDLE) return true;
+    return false;
+}
+
+bool Mouse::RmbUp() {
+    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_RIGHT) return true;
+    return false;
+}
+
+void Mouse::eventCallback(SDL_Event &event) {
+    this->event = event;
+
+    Event::SetHandled(true);
+    EventType type = ConvertTypes(event.type);
+    if(
+        type == MOUSE_MOTION ||
+        type == MOUSE_BUTTONDOWN ||
+        type == MOUSE_BUTTONUP ||
+        type == MOUSE_WHEEL 
+    ) {
+        Event::SetHandled(false);
+    }
+}

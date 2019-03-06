@@ -17,15 +17,19 @@
 #include <Parsers/Parser.h>
 #include <Parsers/TgxFile.h>
 
-/* Gm1 container format for tiles/animations/images */
 namespace Sourcehold
 {
     namespace Parsers
     {
         using Rendering::TextureAtlas;
 
+        /*
+         * Container format for tiles/animations/images,
+         * members are accessed by TextureAtlas
+         */
         class Gm1File : private Parser, public TextureAtlas
         {
+            public:
                 struct Gm1Header {
                     /* Unknown */
                     uint32_t u0[3];
@@ -51,7 +55,7 @@ namespace Sourcehold
                     uint32_t len;
                     /* Unknown */
                     uint32_t u3;
-                } header;
+                };
 
                 struct ImageHeader {
                     /* Image dimensions */
@@ -85,6 +89,22 @@ namespace Sourcehold
                     uint32_t offset;
                 };
 
+                Gm1File(std::shared_ptr<Renderer> rend);
+                ~Gm1File();
+
+                bool LoadFromDisk(const std::string &path, bool threaded = true);
+                void DumpInformation();
+                void Free();
+
+                inline std::vector<Gm1Entry>& GetEntries() { return entries; }
+                inline Gm1Entry &GetEntry(uint32_t index) { return entries[index]; }
+                inline size_t GetNumEntries() { return entries.size(); }
+                inline Gm1Header::DataType GetType() { return header.type; }
+            protected:
+                const uint32_t max_num = 8192;
+                bool GetImage(uint32_t index);
+                void ReadPalette();
+            private:
                 std::string path;
                 uint16_t palette[2560];
 
@@ -96,19 +116,8 @@ namespace Sourcehold
 
                 /* All of the entries */
                 std::vector<Gm1Entry> entries;
-            public:
-                Gm1File(std::shared_ptr<Renderer> rend);
-                ~Gm1File();
 
-                bool LoadFromDisk(const std::string &path, bool threaded = true);
-                void DumpInformation();
-
-                inline std::vector<Gm1Entry>& GetEntries();
-                inline Gm1Entry &GetEntry(uint32_t index);
-            protected:
-                const uint32_t max_num = 8192;
-                bool GetImage(Rendering::Texture &tex, uint32_t index);
-                void ReadPalette();
+                Gm1Header header;
         };
     }
 }

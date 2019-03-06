@@ -1,5 +1,7 @@
 #pragma once
 
+#include <list>
+
 #include <SDL2/SDL.h>
 
 #include <Events/Event.h>
@@ -8,18 +10,22 @@ namespace Sourcehold
 {
     namespace Events
     {
+        /*
+         * Keyboard event handler
+         */
         class Keyboard : public Event
         {
-                enum EventType {
-                    KEYDOWN,
-                    KEYUP
-                } type;
+                std::list<EventType> types;
+                SDL_Event event;
             public:
-                Keyboard();
-                Keyboard(const Keyboard &key);
+                Keyboard(std::list<EventType> types);
+                Keyboard(const Keyboard &key) = delete;
                 ~Keyboard();
 
-                void Generate(SDL_Event &ev);
+                SDL_Keysym Key();
+            
+                void eventCallback(SDL_Event &event) override;
+            protected:
         };
     }
 }

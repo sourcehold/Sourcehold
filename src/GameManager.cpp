@@ -8,30 +8,44 @@ using namespace Sourcehold::Rendering;
 GameManager::GameManager(GameOptions &opt) :
     AnimationHandler(),
     SoundManager(),
-    opt(opt)
+    opt(opt),
+    Display()
 {
-    renderer = std::make_shared<Display>();
-    renderer->Open("Sourcehold version " SOURCEHOLD_VERSION_STRING, opt.width, opt.height, opt.fullscreen);
+    Open(
+        "Sourcehold version " SOURCEHOLD_VERSION_STRING,
+        opt.width,
+        opt.height,
+        opt.fullscreen,
+        opt.noborder
+    );
 
+    eventHandler = std::make_shared<EventHandler>();
     SoundManager::Init();
+
+    running = true;
 }
 
 GameManager::GameManager(const GameManager &manager) :
     AnimationHandler(manager),
     SoundManager(manager),
-    opt(manager.opt)
+    opt(manager.opt),
+    Display()
 {
-    
+    this->running = manager.running;
 }
 
 GameManager::~GameManager() {
 
 }
 
-void GameManager::Update() {
-    AnimationHandler::Update();
+bool GameManager::Running() {
+    Update();
+    return running;
 }
 
-bool GameManager::Running() {
-    return renderer->IsOpen();
+void GameManager::Update() {
+    if(!eventHandler->FetchEvents() || !IsOpen()) running = false;
+    AnimationHandler::Update();
+
+    time = SDL_GetTicks() / 1000.0;
 }
