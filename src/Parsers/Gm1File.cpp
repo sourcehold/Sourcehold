@@ -6,7 +6,7 @@ using namespace Sourcehold::System;
 
 Gm1File::Gm1File(std::shared_ptr<Renderer> rend) :
     Parser(),
-    TextureAtlas(rend)
+    renderer(rend)
 { }
 
 Gm1File::~Gm1File() {
@@ -35,8 +35,7 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
     }
 
     /* Reserve size in vectors to fit all entries */
-    entries.resize(header.num);
-    Resize(header.num);
+    entries.resize(header.num, renderer);
 
     /* Read Gm1 palette */
     ReadPalette();
@@ -102,34 +101,58 @@ void Gm1File::DumpInformation() {
 
 void Gm1File::Free() {
     entries.clear();
-    TextureAtlas::Clear();
+}
+
+void Gm1File::ReadTiles(Tileset &set) {
+    if(entries.size() == 0 || header.type != Gm1Header::TYPE_TILE) {
+        Logger::warning("PARSERS") << "Empty tileset requested from GM1 parser!" << std::endl;
+        return;
+    }
+
+    uint32_t nrow = (uint32_t)(std::sqrt((float)entries.size()) + 0.5f);
+
+    set.Allocate(nrow);
+
+    uint32_t x = 0, y = 0;
+    for(auto&e : entries) {
+        set.SetEntry(e.tile, x, y);
+        x++;
+        if(x >= nrow) {
+            x = 0;
+            y++;
+        }
+    }
 }
 
 bool Gm1File::GetImage(uint32_t index) {
     if(index >= header.num) return false;
 
-    Texture &tex = Get(index);
+    Texture &target = entries[index].image;
 
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
 
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
-            tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            tex.LockTexture();
-            TgxFile::ReadTgx(tex, position, entries[index].size, 0, 0, NULL);
-            tex.UnlockTexture();
+            target.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            target.LockTexture();
+            TgxFile::ReadTgx(target, position, entries[index].size, 0, 0, NULL);
+            target.UnlockTexture();
         }break;
         case Gm1Header::TYPE_ANIMATION: {
-            tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            tex.LockTexture();
-            TgxFile::ReadTgx(tex, position, entries[index].size, 0, 0, palette);
-            tex.UnlockTexture();
+            target.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            target.LockTexture();
+            TgxFile::ReadTgx(target, position, entries[index].size, 0, 0, palette);
+            target.UnlockTexture();
         }break;
         case Gm1Header::TYPE_TILE: {
-            /* Create texture */
-            tex.AllocNew(30*2, 16 + entries[index].header.dist, SDL_PIXELFORMAT_RGBA8888);
-            tex.LockTexture();
+            /* Create textures */
+            target.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            target.LockTexture();
+
+            Texture &tile = entries[index].tile;
+            tile.AllocNew(30, 16, SDL_PIXELFORMAT_RGBA8888);
+            tile.LockTexture();
 
             /* Extract pixel data */
             const uint8_t lines[16] = {
@@ -149,27 +172,20 @@ bool Gm1File::GetImage(uint32_t index) {
                     uint8_t r, g, b;
                     TgxFile::ReadPixel(pixel, r, g, b);
 
-                    std::cout << entries[index].header.offsetY << " " << entries[index].header.height + entries[index].header.dist << std::endl;
-
                     /* Add to texture */
-                    tex.SetPixel(
-                        entries[index].header.offsetY - i,
-                        l,
-                        r, g, b, 0xFF
-                    );
-                    //tex.SetPixel(, , r, g, b, 0xFF);
+                    tile.SetPixel(15 - lines[l] / 2 + i, l, r, g, b, 0xFF);
                 }
             }
 
-            /* TODO */
-            //TgxFile::ReadTgx(tex, position, entries[index].size - 512, entries[index].header.offsetX, 8, NULL);
+            TgxFile::ReadTgx(target, position, entries[index].size - 512, 0, 0, NULL);
 
-            tex.UnlockTexture();
+            target.UnlockTexture();
+            tile.UnlockTexture();
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
             /* Read miscellaneous entry */
-            tex.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
-            tex.LockTexture();
+            target.AllocNew(entries[index].header.width, entries[index].header.height, SDL_PIXELFORMAT_RGBA8888);
+            target.LockTexture();
 
             for(uint32_t x = 0; x < entries[index].header.width; x++) {
                 for(uint32_t y = 0; y < entries[index].header.height; y++) {
@@ -182,11 +198,11 @@ bool Gm1File::GetImage(uint32_t index) {
                     TgxFile::ReadPixel(pixel, r, g, b);
             
                     /* Add to texture */
-                    tex.SetPixel(x, y, r, g, b, 0xFF);
+                    target.SetPixel(x, y, r, g, b, 0xFF);
                 }
             }
             
-            tex.UnlockTexture();
+            target.UnlockTexture();
         }break;
         default: {
             Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "': " << header.type << std::endl;

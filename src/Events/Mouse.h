@@ -1,3 +1,5 @@
+#pragma once
+
 #include <list>
 
 #include <SDL2/SDL.h>

@@ -10,9 +10,9 @@
 #include <System/Logger.h>
 
 #include <Rendering/Texture.h>
+#include <Rendering/Tileset.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Rendering.h>
-#include <Rendering/TextureAtlas.h>
 
 #include <Parsers/Parser.h>
 #include <Parsers/TgxFile.h>
@@ -21,13 +21,10 @@ namespace Sourcehold
 {
     namespace Parsers
     {
-        using Rendering::TextureAtlas;
-
         /*
-         * Container format for tiles/animations/images,
-         * members are accessed by TextureAtlas
+         * Container format for tiles/animations/images
          */
-        class Gm1File : private Parser, public TextureAtlas
+        class Gm1File : private Parser
         {
             public:
                 struct Gm1Header {
@@ -84,7 +81,11 @@ namespace Sourcehold
                 };
 
                 struct Gm1Entry {
+                    Gm1Entry(std::shared_ptr<Renderer> rend) : image(rend), tile(rend) {};
+                    ~Gm1Entry() = default;
                     ImageHeader header;
+                    Texture image;
+                    Texture tile;
                     uint32_t size;
                     uint32_t offset;
                 };
@@ -95,6 +96,7 @@ namespace Sourcehold
                 bool LoadFromDisk(const std::string &path, bool threaded = true);
                 void DumpInformation();
                 void Free();
+                void ReadTiles(Tileset &set);
 
                 inline std::vector<Gm1Entry>& GetEntries() { return entries; }
                 inline Gm1Entry &GetEntry(uint32_t index) { return entries[index]; }
@@ -118,6 +120,7 @@ namespace Sourcehold
                 std::vector<Gm1Entry> entries;
 
                 Gm1Header header;
+                std::shared_ptr<Renderer> renderer;
         };
     }
 }

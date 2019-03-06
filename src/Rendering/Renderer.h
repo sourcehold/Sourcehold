@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cinttypes>
+#include <memory>
 
 #include <SDL2/SDL.h>
 
@@ -8,6 +9,7 @@
 
 #include <Rendering/Texture.h>
 #include <Rendering/Rendering.h>
+#include <Rendering/Camera.h>
 
 namespace Sourcehold
 {
@@ -17,7 +19,7 @@ namespace Sourcehold
          * Handles everything related to rendering
          */
         class Texture;
-        class Renderer
+        class Renderer : public Camera
         {
             public:
                 Renderer();

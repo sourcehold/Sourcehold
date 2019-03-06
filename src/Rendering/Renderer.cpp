@@ -3,7 +3,7 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Renderer::Renderer() {
+Renderer::Renderer() : Camera() {
 
 }
 

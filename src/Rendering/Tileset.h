@@ -5,8 +5,6 @@
 
 #include <System/Logger.h>
 
-#include <Parsers/Gm1File.h>
-
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>
 #include <Rendering/Renderer.h>
@@ -16,7 +14,6 @@ namespace Sourcehold
     namespace Rendering
     {
         using namespace Rendering;
-        using namespace Parsers;
 
         /*
          * Constructs a tileset from a GM1 container
@@ -27,9 +24,11 @@ namespace Sourcehold
                 Tileset(std::shared_ptr<Renderer> rend);
                 ~Tileset();
 
-                bool Convert(Gm1File &file);
+                void Allocate(uint32_t numRows);
+                void SetEntry(Texture &image, uint32_t x, uint32_t y);
             protected:
                 std::shared_ptr<Renderer> renderer;
+                uint32_t width, height;
         };
     }
 }

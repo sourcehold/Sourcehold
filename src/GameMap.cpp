@@ -2,15 +2,25 @@
 
 using namespace Sourcehold::Game;
 
-GameMap::GameMap(std::shared_ptr<Renderer> rend) :
-    renderer(rend),
-    gm1_tile(rend),
-    tileset(rend)
+GameMap::GameMap(std::shared_ptr<GameManager> man) :
+    EventConsumer<Keyboard>(man->GetHandler()),
+    EventConsumer<Mouse>(man->GetHandler()),
+    manager(man),
+    gm1_tile(man),
+    tileset(man)
 {
     gm1_tile.LoadFromDisk("data/gm/tile_land3.gm1", false);
-//    tileset.Convert(gm1_tile);
+    gm1_tile.ReadTiles(tileset);
 }
 
 void GameMap::Render() {
-    renderer->Render(gm1_tile.Get(171));
+    manager->Render(tileset);
+}
+
+void GameMap::onEventReceive(Keyboard &keyEvent) {
+
+}
+
+void GameMap::onEventReceive(Mouse &mouseEvent) {
+
 }
