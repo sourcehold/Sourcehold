@@ -73,7 +73,7 @@ if(WIN32)
 endif()
 
 target_link_libraries(
-	Stronghold 
+	Stronghold
 	${SDL2_LIBRARY}
 	${Boost_LIBRARIES}
 	${OPENAL_LIBRARY}

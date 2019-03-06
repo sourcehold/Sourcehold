@@ -36,6 +36,9 @@ int MainMenu::Startup() {
 
     startTime = manager->GetTime();
 
+	AniFile ani;
+	ani.LoadFromDisk("data/sword.ani");
+	
     while(manager->Running()) {
         manager->Clear();
         manager->StartTimer();
@@ -53,7 +56,7 @@ int MainMenu::Startup() {
         }else {
             manager->Render(tgx_logo);
         }
-
+		
         manager->Flush();
         manager->EndTimer();
     }

@@ -16,6 +16,7 @@
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
+#include <Parsers/AniFile.h>
 
 #include <Rendering/Texture.h>
 #include <Rendering/TextureAtlas.h>

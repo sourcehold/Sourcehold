@@ -26,6 +26,7 @@
 
 #include <Parsers/MlbFile.h>
 #include <Parsers/Gm1File.h>
+#include <Parsers/AniFile.h>
 #include <Parsers/TgxFile.h>
 #include <Parsers/VolumeTxt.h>
 
