@@ -2,7 +2,8 @@
 
 #include <memory>
 
-#include <Config.h>
+#include <SDL2/SDL.h>
+
 #include <AnimationHandler.h>
 
 #include <Events/EventHandler.h>
@@ -20,10 +21,11 @@ namespace Sourcehold
 {
     namespace Game
     {
+        using namespace Events;
+
         using System::GameOptions;
         using Audio::SoundManager;
         using Rendering::Display;
-        using Events::EventHandler;
 
         /*
          * The game manager class, constructs/destructs
@@ -34,10 +36,10 @@ namespace Sourcehold
             public SoundManager,
             public Display
         {
+                std::shared_ptr<EventHandler> eventHandler;
                 bool running = false;
                 double time = 0.0;
                 GameOptions &opt;
-                std::shared_ptr<EventHandler> eventHandler;
             public:
                 GameManager(GameOptions &opt);
                 GameManager(const GameManager &manager);

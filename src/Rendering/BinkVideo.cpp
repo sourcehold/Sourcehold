@@ -182,10 +182,12 @@ void BinkVideo::Decode() {
         uint8_t* slices[3] = {(uint8_t*)&dst[0], 0, 0};
         int strides[3] = {800*4, 0, 0};
 
+        Texture::LockTexture();
+
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
         memcpy(Texture::GetData(), dst, 800*600*4);
 
-        Texture::UpdateTexture();
+        Texture::UnlockTexture();
     }else if(packet.stream_index == audioStream && hasAudio) {
         /*ret = avcodec_send_packet(codecCtx, &packet);
         if(ret) {

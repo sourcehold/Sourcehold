@@ -16,20 +16,20 @@ Game::~Game() {
 }
 
 int Game::Start() {
-//    MainMenu menu(shared_from_this());
-//    int ret = menu.Startup();
-//    if(ret != EXIT_SUCCESS) return ret;
-    GameMap map(shared_from_this());
-
-    while(GameManager::Running()) {
-        GameManager::Clear();
-        GameManager::StartTimer();
-
-        map.Render();
-
-        GameManager::Flush();
-        GameManager::EndTimer();
-    }
+    MainMenu menu(shared_from_this());
+    int ret = menu.Startup();
+    if(ret != EXIT_SUCCESS) return ret;
+//    GameMap map(shared_from_this());
+//
+//    while(GameManager::Running()) {
+//        GameManager::Clear();
+//        GameManager::StartTimer();
+//
+//        map.Render();
+//
+//        GameManager::Flush();
+//        GameManager::EndTimer();
+//    }
 
 
     return EXIT_SUCCESS;

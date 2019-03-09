@@ -8,6 +8,7 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/Tileset.h>
+#include <Rendering/StaticElement.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
@@ -35,7 +36,9 @@ namespace Sourcehold
                 void onEventReceive(Keyboard &keyEvent) override;
                 void onEventReceive(Mouse &mouseEvent) override;
 
-                Gm1File gm1_tile;
+                Gm1File gm1_tile, gm1_scribe;
+                TgxFile edge_left, edge_right, middle;
+                Texture bar;
                 Tileset tileset;
                 std::shared_ptr<GameManager> manager;
         };

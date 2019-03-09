@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdio>
 
+#include <SDL2/SDL.h>
+
 #include <AL/al.h>
 #include <AL/alc.h>
 
@@ -24,8 +26,9 @@ namespace Sourcehold
                 ALuint buffer; /* OpenAL audio buffer */
                 uint8_t *ptr; /* Audio buffer */
                 size_t size; /* Buffer size */
-                bool repeat, valid; /* Properties */
+                bool repeat, valid, fading = false; /* Properties */
                 float gain; /* Current gain */
+                double fadeBase = 0.0, fadeAmount = 0.0;
                 const uint32_t SAMPLING_RATE = 44100;
             public:
                 AudioSource(const AudioSource &source);
@@ -40,6 +43,8 @@ namespace Sourcehold
                 void Pause();
                 void Resume();
                 void Stop();
+                void SetFadeOut(double amount = 1.0);
+                void UpdateFade();
 
                 bool IsValid();
                 bool IsPlaying();

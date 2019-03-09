@@ -3,8 +3,7 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Renderer::Renderer() : Camera() {
-
+Renderer::Renderer() : Camera(0, 0) {
 }
 
 Renderer::Renderer(const Renderer &rend) {
@@ -13,14 +12,17 @@ Renderer::Renderer(const Renderer &rend) {
 }
 
 Renderer::~Renderer() {
-    
+}
+
+void Renderer::Init() {
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
-void Renderer::Render(Texture &texture, int x, int y) {    
+void Renderer::Render(Texture &texture, int x, int y) {
     SDL_Rect rect = {
         x, y,
         texture.GetWidth(),

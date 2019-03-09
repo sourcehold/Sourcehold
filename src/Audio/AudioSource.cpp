@@ -10,6 +10,7 @@ AudioSource::AudioSource(const AudioSource &source) {
     this->size = source.size;
     this->repeat = source.repeat;
     this->valid = source.valid;
+    this->fading = source.fading;
 }
 
 AudioSource::AudioSource(const std::string &path, bool repeat) :
@@ -37,6 +38,7 @@ AudioSource::~AudioSource() {
 bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
+    this->gain = 1.0f;
     alGenSources((ALuint)1, &source);
     alSourcef(source, AL_PITCH, 1.0f);
     alSourcef(source, AL_GAIN, 1.0f);
@@ -111,6 +113,25 @@ void AudioSource::Stop() {
     alSourceStop(source);
 }
 
+void AudioSource::SetFadeOut(double amount) {
+    if(fading) return;
+    fadeAmount = amount;
+    fading = true;
+    fadeBase = (double)SDL_GetTicks() / 1000.0; 
+}
+
+void AudioSource::UpdateFade() {
+    if(!fading) return;
+
+    double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
+    if(t > fadeAmount) {
+        Stop();
+        fading = false;
+    }else {
+        alSourcef(source, AL_GAIN, gain * (1.0 - t / fadeAmount));
+    }
+}
+
 bool AudioSource::IsValid() {
     return valid;
 }
@@ -118,11 +139,6 @@ bool AudioSource::IsValid() {
 bool AudioSource::IsPlaying() {
     ALenum state;
     alGetSourcei(source, AL_SOURCE_STATE, &state);
-
-    if(state != AL_PLAYING) {
-        std::cout << state << std::endl;
-    }
-
     return state == AL_PLAYING;
 }
 

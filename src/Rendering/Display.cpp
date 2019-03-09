@@ -6,7 +6,9 @@ using namespace Sourcehold::Rendering;
 Display::Display() :
     Renderer()
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
+    if(SDL_Init(SDL_INIT_VIDEO) < 0) {
+        Logger::error("RENDERING") << SDL_GetError() << std::endl;
+    }
 }
 
 Display::Display(const Display &dp) :
@@ -23,28 +25,36 @@ Display::~Display() {
     SDL_Quit();
 }
 
-void Display::Open(const std::string &title, int width, int height, bool fullsceen, bool noborder) {
+void Display::Open(const std::string &title, int width, int height, bool fullscreen, bool noborder) {
     int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
-    if(fullsceen) param |= SDL_WINDOW_FULLSCREEN;
-    if(noborder) param |= SDL_WINDOW_BORDERLESS;
+
+    this->fullscreen = fullscreen;
+    if(fullscreen) {
+        param |= SDL_WINDOW_FULLSCREEN;
+    }
+    
+    if(noborder) {
+        param |= SDL_WINDOW_BORDERLESS;
+    }
 
     Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
     if(!Renderer::window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
-    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED);
     if(!Renderer::renderer) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     }
-
-    SDL_SetRenderDrawBlendMode(Renderer::renderer, SDL_BLENDMODE_BLEND);
+    Renderer::Init();
 
     open = true;
 }
 
-void Display::Fullscreen() {
-    int err = SDL_SetWindowFullscreen(Renderer::window, SDL_WINDOW_FULLSCREEN);
+void Display::ToggleFullscreen() {
+    fullscreen = !fullscreen;
+
+    int err = SDL_SetWindowFullscreen(Renderer::window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }

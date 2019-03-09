@@ -109,18 +109,10 @@ void Gm1File::ReadTiles(Tileset &set) {
         return;
     }
 
-    uint32_t nrow = (uint32_t)(std::sqrt((float)entries.size()) + 0.5f);
+    set.Allocate(entries.size());
 
-    set.Allocate(nrow);
-
-    uint32_t x = 0, y = 0;
-    for(auto&e : entries) {
-        set.SetEntry(e.tile, x, y);
-        x++;
-        if(x >= nrow) {
-            x = 0;
-            y++;
-        }
+    for(uint32_t i = 0; i < entries.size(); i++) {
+        set.SetEntry(entries[i].tile, i);
     }
 }
 

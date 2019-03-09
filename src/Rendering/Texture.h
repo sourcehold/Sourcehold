@@ -35,7 +35,7 @@ namespace Sourcehold
                 Texture(const Texture &tex);
                 ~Texture();
 
-                bool AllocNew(int width, int height, int format);
+                bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
                 void UpdateTexture();
 
                 /* Texture manipulation */

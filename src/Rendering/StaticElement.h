@@ -8,11 +8,14 @@
 
 namespace Sourcehold
 {
-    namespace Game
+    namespace Rendering
     {
-        using namespace Rendering;
-
-        class StaticElement : public Texture
+        /*
+         * Static visual element wrapper, handles positioning, scaling and
+         * rendering, template argument has to derive from Rendering/Texture
+         */
+        template <class T>
+        class StaticElement : public T
         {
                 std::shared_ptr<Renderer> renderer;
                 bool shown = true;
@@ -34,5 +37,8 @@ namespace Sourcehold
                 void Render();
             protected:
         };
+
+        /* Include definition into translation unit */
+        #include <Rendering/StaticElement.ipp>
     }
 }

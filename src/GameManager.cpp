@@ -20,6 +20,7 @@ GameManager::GameManager(GameOptions &opt) :
     );
 
     eventHandler = std::make_shared<EventHandler>();
+
     SoundManager::Init();
 
     running = true;
@@ -39,12 +40,13 @@ GameManager::~GameManager() {
 }
 
 bool GameManager::Running() {
-    Update();
+    GameManager::Update();
     return running;
 }
 
 void GameManager::Update() {
-    if(!eventHandler->FetchEvents() || !IsOpen()) running = false;
+    if(!IsOpen() || !eventHandler->FetchEvents()) running = false;
+
     AnimationHandler::Update();
 
     time = SDL_GetTicks() / 1000.0;

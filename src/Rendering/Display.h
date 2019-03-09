@@ -7,7 +7,8 @@
 #include <vector>
 #include <memory>
 
-#include <Config.h>
+#include <Events/Event.h>
+#include <Events/Keyboard.h>
 
 #include <System/Logger.h>
 
@@ -27,20 +28,19 @@ namespace Sourcehold
          * Handles everyting related to the game display,
          * owns the renderer
          */
-        class Display :
-            public Rendering::Renderer
+        class Display : public Rendering::Renderer
         {
                 const int FRAMES_PER_SECOND = 60;
                 uint32_t timer = 0;
                 int frame = 0;
-                bool open = false;
+                bool open = false, fullscreen = false;
             public:
                 Display();
                 Display(const Display &dp);
                 ~Display();
 
                 void Open(const std::string &title, int width, int height, bool fullscreen = false, bool noborder = false);
-                void Fullscreen();
+                void ToggleFullscreen();
                 void Close();
                 void StartTimer();
                 void EndTimer();
