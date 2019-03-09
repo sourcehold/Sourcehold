@@ -54,11 +54,11 @@ int MainMenu::Startup() {
         /* Logo fading */
         if(current < STARTUP_STRONGHOLD_LOGO && current != STARTUP_LOADING) {
             if(now < fadeBase + 1.0) {
-                alpha = (Uint8)std::clamp((now - fadeBase) * 1000.0, 0.0, 255.0);
+                alpha = Uint8(((now - fadeBase) * 255.0) / 1.0);
             }else if(now < fadeBase + 4.0) {
                 alpha = 255;
             }else if(now < fadeBase + 5.0) {
-                alpha = 255 - (Uint8)std::clamp((now - (fadeBase + 4.0)) * 1000.0, 0.0, 255.0);
+                alpha = 255 - Uint8(((now - (fadeBase + 4.0)) * 255.0) / 1.0);
             }else if(now > fadeBase + 5.0) {
                 alpha = 0;
                 fadeBase = now;
