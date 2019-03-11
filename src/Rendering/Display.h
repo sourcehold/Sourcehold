@@ -26,7 +26,7 @@ namespace Sourcehold
 
         /*
          * Handles everyting related to the game display,
-         * owns the renderer
+         * constructs and destroys the renderer
          */
         class Display : public Rendering::Renderer
         {
@@ -34,9 +34,10 @@ namespace Sourcehold
                 uint32_t timer = 0;
                 int frame = 0;
                 bool open = false, fullscreen = false;
+                SDL_Window *window;
             public:
                 Display();
-                Display(const Display &dp);
+                Display(const Display&) = delete;
                 ~Display();
 
                 void Open(const std::string &title, int width, int height, bool fullscreen = false, bool noborder = false);
@@ -44,12 +45,10 @@ namespace Sourcehold
                 void Close();
                 void StartTimer();
                 void EndTimer();
-                void Clear();
 
                 bool IsOpen();
                 uint32_t GetTicks();
                 uint32_t GetSeconds();
-            protected:
         };
     }
 }

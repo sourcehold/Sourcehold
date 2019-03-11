@@ -1,13 +1,16 @@
 #pragma once
 
+#include <cinttypes>
+#include <string>
+#include <vector>
+
 #include <Config.h>
 
 namespace Sourcehold
 {
     namespace Assets
     {
-        /* Asset types */
-        enum Asset {
+        enum AssetType : uint8_t {
             BINK_VIDEO, /* Bink video (.bik) file */
             WAVEFILE, /* Wav audio (.wav) file */
             RAWFILE, /* Raw PCM audio (.raw) */
@@ -16,10 +19,6 @@ namespace Sourcehold
             MAPFILE, /* Map file (.map) */
             MLBFILE, /* String container (.mlb) */
         };
-
-        namespace Units
-        {
-            
-        }
     }
 }
+

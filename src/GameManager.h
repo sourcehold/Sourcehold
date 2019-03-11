@@ -15,25 +15,18 @@
 #include <Rendering/Rendering.h>
 #include <Rendering/Renderer.h>
 
-#include <Audio/SoundManager.h>
+#include <Audio/Audio.h>
 
 namespace Sourcehold
 {
     namespace Game
     {
         using namespace Events;
+        using namespace System;
+        using namespace Rendering;
 
-        using System::GameOptions;
-        using Audio::SoundManager;
-        using Rendering::Display;
-
-        /*
-         * The game manager class, constructs/destructs
-         * and hands over access to core classes
-         */
         class GameManager :
             public AnimationHandler,
-            public SoundManager,
             public Display
         {
                 std::shared_ptr<EventHandler> eventHandler;
@@ -42,7 +35,7 @@ namespace Sourcehold
                 GameOptions &opt;
             public:
                 GameManager(GameOptions &opt);
-                GameManager(const GameManager &manager);
+                GameManager(const GameManager&) = delete;
                 ~GameManager();
 
                 bool Running();

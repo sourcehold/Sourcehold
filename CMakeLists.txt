@@ -50,6 +50,17 @@ else(NOT LIBSWRESAMPLE_FOUND)
 	include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
 endif(NOT LIBSWRESAMPLE_FOUND)
 
+# Find boost
+set(Boost_USE_STATIC_LIBS ON) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME ON) 
+find_package(Boost 1.45.0 COMPONENTS filesystem) 
+if(Boost_FOUND)
+	include_directories(${Boost_INCLUDE_DIRS}) 
+else(Boost_FOUND)
+	message(FATAL_ERROR "the following boost components need to be installed: fileystem")
+endif(Boost_FOUND)
+
 # Include sources
 file(GLOB_RECURSE SOURCES src/*.cpp)
 
@@ -62,7 +73,7 @@ endif()
 add_executable(Stronghold ${SOURCES})
 add_definitions(-Wno-reorder -pedantic-errors -Ofast)
 set_target_properties(Stronghold PROPERTIES
- 	CXX_STANDARD 17
+ 	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
@@ -81,6 +92,7 @@ target_link_libraries(
 	${SWSCALE_LIBRARIES}
 	${LIBSWRESAMPLE_LIBRARIES}
 	${CMAKE_THREAD_LIBS_INIT}
+	${Boost_LIBRARIES}
 )
 
 # cpack stuff

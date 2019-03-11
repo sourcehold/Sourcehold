@@ -7,9 +7,8 @@ using namespace Sourcehold::Rendering;
 
 GameManager::GameManager(GameOptions &opt) :
     AnimationHandler(),
-    SoundManager(),
-    opt(opt),
-    Display()
+    Display(),
+    opt(opt)
 {
     Open(
         "Sourcehold version " SOURCEHOLD_VERSION_STRING,
@@ -19,24 +18,15 @@ GameManager::GameManager(GameOptions &opt) :
         opt.noborder
     );
 
+    InitOpenAL();
+
     eventHandler = std::make_shared<EventHandler>();
-
-    SoundManager::Init();
-
+    
     running = true;
 }
 
-GameManager::GameManager(const GameManager &manager) :
-    AnimationHandler(manager),
-    SoundManager(manager),
-    opt(manager.opt),
-    Display()
-{
-    this->running = manager.running;
-}
-
 GameManager::~GameManager() {
-
+    DestroyOpenAL();
 }
 
 bool GameManager::Running() {
@@ -51,3 +41,4 @@ void GameManager::Update() {
 
     time = SDL_GetTicks() / 1000.0;
 }
+

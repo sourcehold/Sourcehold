@@ -15,32 +15,36 @@ namespace Sourcehold
 {
     namespace Rendering
     {
-        /*
-         * Handles everything related to rendering
-         */
         class Texture;
         class Renderer : public Camera
         {
+                SDL_Window *window;
+                SDL_Renderer *renderer;
             public:
                 Renderer();
-                Renderer(const Renderer &rend);
+                Renderer(const Renderer&) = delete;
                 ~Renderer();
 
-                void Init();
+                void Init(SDL_Window *window);
+                void Clear();
 
                 /* Render everything */
                 void Flush();
 
                 /* Render a texture (screen coordinates) */
-                void Render(Texture &texture, int x, int y);
-                void Render(Texture &texture, int x, int y, int w, int h);
+                void Render(Texture &texture, int x, int y, SDL_Rect *clip = nullptr);
+                void Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip = nullptr);
                 
                 /* Render a texture (normalized coordinates) */
-                void Render(Texture &texture, double x, double y);
-                void Render(Texture &texture, double x, double y, double w, double h);
+                void Render(Texture &texture, double x, double y, SDL_Rect *clip = nullptr);
+                void Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip = nullptr);
                 
                 /* Render a texture to the whole screen */
-                void Render(Texture &texture);
+                void Render(Texture &texture, SDL_Rect *clip = nullptr);
+
+                /* Render a rectangle */
+                void Render(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
+                void Render(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
                 uint32_t GetWidth();
                 uint32_t GetHeight();
@@ -52,9 +56,6 @@ namespace Sourcehold
                 
                 uint32_t ToCoordX(double c);
                 uint32_t ToCoordY(double c);
-            protected:
-                SDL_Window *window;
-                SDL_Renderer *renderer;
         };
     }
 }

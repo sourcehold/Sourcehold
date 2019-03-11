@@ -39,23 +39,23 @@ namespace Sourcehold
                 MainMenu(const MainMenu &) = delete;
                 ~MainMenu();
 
+                void PlayMusic();
                 int Startup();
             protected:
                 void onEventReceive(Mouse &event) override;
                 int EnterMainMenu();
 
-                double startTime = 0.0;
+                double startTime = 0.0, fadeBase = 0.0;
                 std::shared_ptr<GameManager> manager;
                 AudioSource aud_startup, aud_chantloop;
-                TgxFile tgx_loading, tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo;
+                TgxFile tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo;
                 enum StartupEvent : uint8_t {
-                    STARTUP_LOADING = 0,
-                    STARTUP_FIREFLY_LOGO = 1,
-                    STARTUP_TAKETWO_LOGO = 2,
-                    STARTUP_PRESENT = 3,
-                    STARTUP_STRONGHOLD_LOGO = 4,
-                    STARTUP_INTRO = 5,
-                    STARTUP_MAIN_MENU = 6
+                    STARTUP_FIREFLY_LOGO = 0,
+                    STARTUP_TAKETWO_LOGO = 1,
+                    STARTUP_PRESENT = 2,
+                    STARTUP_STRONGHOLD_LOGO = 3,
+                    STARTUP_INTRO = 4,
+                    STARTUP_MAIN_MENU = 5
                 };
                 uint8_t current = 0;
                 BinkVideo intro;

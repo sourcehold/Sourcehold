@@ -1,4 +1,20 @@
-#include <Game.h>
+#include <memory>
+#include <cstdlib>
+#include <string>
+#include <vector>
+
+#include <boost/filesystem.hpp>
+#include <boost/range/iterator_range.hpp>
+
+#include <cxxopts.hpp>
+
+#include <MainMenu.h>
+#include <GameMap.h>
+#include <GameManager.h>
+
+#include <System/System.h>
+#include <System/Logger.h>
+#include <System/FileUtil.h>
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
@@ -6,17 +22,59 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 
-Game::Game(GameOptions &opt) :
-    GameManager(opt)
-{
+/*
+ * Load a single asset
+ */
+#include <fstream>
+void LoadAsset(std::string &path) {
+    std::string ext = GetFileExtension(path);
+
+    std::ifstream str(path, std::ios::binary);
+    std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(str), {});
+    str.close();
 }
 
-Game::~Game() {
+int StartGame(GameOptions &opt) {
+    auto gameManager = std::make_shared<GameManager>(opt);
 
-}
+    /* Get the assets */
+    std::vector<std::string> files = GetDirectoryRecursive("data/");
+    if(files.empty()) {
+        Logger::error("GANE") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-int Game::Start() {
-    MainMenu menu(shared_from_this());
+    TgxFile tgx_loading(gameManager);
+    tgx_loading.LoadFromDisk("data/gfx/frontend_loading.tgx");
+
+    /* Init the menu */
+    MainMenu menu(gameManager);
+    menu.PlayMusic();
+
+    uint32_t index = 0;
+    while(gameManager->Running() && index < files.size()-1) {
+        gameManager->Clear();
+
+        /* Load a file */
+        //Logger::message("GAME") << "Loading '" << files.at(index).native() << "'" << std::endl;
+        LoadAsset(files.at(index));
+        index++;
+
+        /* Normalized loading progess */
+        double progress = (double)index / (double)files.size();
+
+        /* Render the background */
+        gameManager->Render(tgx_loading);
+
+        /* Render the loading bar */
+        gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
+        gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 255, false);
+        gameManager->Render(0.305, 0.755, 0.39 * progress, 0.03, 0, 0, 0, 255, true);
+
+        gameManager->Flush();
+    }
+
+    /* Start the intro sequence and the main menu */
     int ret = menu.Startup();
     if(ret != EXIT_SUCCESS) return ret;
 //    GameMap map(shared_from_this());
@@ -30,7 +88,6 @@ int Game::Start() {
 //        GameManager::Flush();
 //        GameManager::EndTimer();
 //    }
-
 
     return EXIT_SUCCESS;
 }
@@ -73,8 +130,7 @@ int main(int argc, char **argv) {
             opt.nothread = true;
         }
 
-        auto game = std::make_shared<Game>(opt);
-        return game->Start();
+        return StartGame(opt);
     }catch(cxxopts::OptionException ex) {
         std::cerr << ex.what() << std::endl;
         return EXIT_FAILURE;

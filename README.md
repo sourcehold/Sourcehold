@@ -10,6 +10,7 @@ Sourcehold depends on the following libraries:
 * SDL2
 * OpenAL
 * FFmpeg
+* Boost
 
 ## Running
 Copy the following files into the `data` folder:  

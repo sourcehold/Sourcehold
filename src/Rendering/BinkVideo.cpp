@@ -1,8 +1,17 @@
 #include <Rendering/BinkVideo.h>
 
-using namespace Sourcehold::System;
-using namespace Sourcehold::Audio;
-using namespace Sourcehold::Rendering;
+using namespace Sourcehold;
+using namespace System;
+using namespace Audio;
+using namespace Rendering;
+
+bool Rendering::InitAvcodec() {
+    return true;
+}
+
+void Rendering::DestroyAvcodec() {
+
+}
 
 BinkVideo::BinkVideo(std::shared_ptr<GameManager> man) :
     Texture(man),
@@ -210,7 +219,7 @@ void BinkVideo::Decode() {
 void BinkVideo::Close() {
     avformat_close_input(&ic);
     avformat_close_input(&sc);
-    av_frame_free(&frame);
-    decoder->close(codecCtx);
-    av_free(codecCtx);
+    //av_frame_free(&frame);
+    //decoder->close(codecCtx);
+    //av_free(codecCtx);
 }

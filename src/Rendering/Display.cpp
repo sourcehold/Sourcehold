@@ -11,16 +11,6 @@ Display::Display() :
     }
 }
 
-Display::Display(const Display &dp) :
-    Renderer(dp)
-{
-    timer = dp.timer;
-    frame = dp.frame;
-    open = dp.open;
-    Renderer::window = dp.window;
-    Renderer::renderer = dp.renderer;
-}
-
 Display::~Display() {
     SDL_Quit();
 }
@@ -37,16 +27,12 @@ void Display::Open(const std::string &title, int width, int height, bool fullscr
         param |= SDL_WINDOW_BORDERLESS;
     }
 
-    Renderer::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
-    if(!Renderer::window) {
+    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
+    if(!window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
-    Renderer::renderer = SDL_CreateRenderer(Renderer::window, -1, SDL_RENDERER_ACCELERATED);
-    if(!Renderer::renderer) {
-        Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
-    }
-    Renderer::Init();
+    Renderer::Init(window);
 
     open = true;
 }
@@ -54,14 +40,14 @@ void Display::Open(const std::string &title, int width, int height, bool fullscr
 void Display::ToggleFullscreen() {
     fullscreen = !fullscreen;
 
-    int err = SDL_SetWindowFullscreen(Renderer::window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+    int err = SDL_SetWindowFullscreen(window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
 }
 
 void Display::Close() {
-    SDL_DestroyWindow(Renderer::window);
+    SDL_DestroyWindow(window);
 }
 
 void Display::StartTimer() {
@@ -75,10 +61,6 @@ void Display::EndTimer() {
     if(delta < 1000 / FRAMES_PER_SECOND) {
         SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);
     }
-}
-
-void Display::Clear() {
-    SDL_RenderClear(Renderer::renderer);
 }
 
 bool Display::IsOpen() {

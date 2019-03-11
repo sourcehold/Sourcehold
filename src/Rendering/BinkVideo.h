@@ -32,6 +32,22 @@ namespace Sourcehold
         using Audio::AudioSource;
         using Game::GameManager;
 
+        /*
+         * Init the avcodec context needed by the BinkVideo class
+         */
+        bool InitAvcodec();
+
+        /*
+         * Destroy a previously created avcodec context and free
+         * associated resources 
+         */
+        void DestroyAvcodec();
+
+        /*
+         * A single bink video file, exposes a texture as a frame buffer
+         * and an AudioSource as an audio buffer. Expects a valid
+         * avcodec context
+         */
         class BinkVideo : public Texture, public AudioSource
         {
                 AVInputFormat *bink_input;
