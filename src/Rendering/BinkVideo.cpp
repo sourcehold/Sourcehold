@@ -5,7 +5,17 @@ using namespace System;
 using namespace Audio;
 using namespace Rendering;
 
+static AVInputFormat *bink_input;
+static AVCodec *bink_codec;
+
 bool Rendering::InitAvcodec() {
+    av_log_set_level(AV_LOG_DEBUG);
+    bink_input = av_find_input_format("bink");
+    if(!bink_input) {
+        Logger::error("RENDERING") << "Unable to find libavcodec input format 'bink'!" << std::endl;
+        return false;
+    }
+
     return true;
 }
 
@@ -17,15 +27,8 @@ BinkVideo::BinkVideo(std::shared_ptr<GameManager> man) :
     Texture(man),
     AudioSource()
 {
-    av_log_set_level(AV_LOG_ERROR);
-    bink_input = av_find_input_format("bink");
-    if(!bink_input) {
-        Logger::error("RENDERING") << "Unable to find libavcodec input format 'bink'!" << std::endl;
-    }
-
     ic = avformat_alloc_context();
-    sc = avformat_alloc_context();
-    if(!ic || !sc) {
+    if(!ic) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
     }
 }
@@ -34,7 +37,9 @@ BinkVideo::~BinkVideo() {
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(std::string path) {
+bool BinkVideo::LoadFromDisk(std::string path, bool looping) {
+    this->looping = looping;
+
     int out = avformat_open_input(
         &ic,
         path.c_str(),
@@ -46,37 +51,21 @@ bool BinkVideo::LoadFromDisk(std::string path) {
         return false;
     }
 
-    out = avformat_open_input(
-        &sc,
-        path.c_str(),
-        bink_input,
-        NULL
-    );
-    if(out < 0) {
-        Logger::error("RENDERING") << "Unable to open bink audio input stream: '" << path << "'!" << std::endl;
-        return false;
-    }
-
-    sc->max_analyze_duration = ic->max_analyze_duration = 10000000;
+    ic->max_analyze_duration = 10000000;
     if(avformat_find_stream_info(ic, NULL) < 0) {
         Logger::error("RENDERING") << "Unable to get bink video stream info!" << std::endl;
         return false;
     };
 
-    if(avformat_find_stream_info(sc, NULL) < 0) {
-        Logger::error("RENDERING") << "Unable to get bink audio stream info!" << std::endl;
-        return false;
-    };
-
     videoStream = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, &decoder, 0);
-    audioStream = av_find_best_stream(sc, AVMEDIA_TYPE_AUDIO, -1, -1, &audioDecoder, 0);
+    audioStream = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, &decoder, 0);
     if(videoStream < 0) {
         Logger::error("RENDERING") << "Unable to find bink video stream index!" << std::endl;
         return false;
     }
 
     if(audioStream >= 0) {
-        audioDecoder = avcodec_find_decoder(sc->streams[audioStream]->codecpar->codec_id);
+        audioDecoder = avcodec_find_decoder(AV_CODEC_ID_BINKAUDIO_RDFT);
         if(!audioDecoder) {
             Logger::error("RENDERING") << "Unable to find bink video decoder!" << std::endl;
             return false;
@@ -88,7 +77,7 @@ bool BinkVideo::LoadFromDisk(std::string path) {
             return false; 
         }
 
-        avcodec_parameters_to_context(audioCtx, sc->streams[audioStream]->codecpar);
+        avcodec_parameters_to_context(audioCtx, ic->streams[audioStream]->codecpar);
         int ca = avcodec_open2(audioCtx, audioDecoder, NULL);
         if(ca < 0) {
             Logger::error("RENDERING") << "Unable to initialize audio AVCodecContext!" << std::endl;
@@ -112,9 +101,9 @@ bool BinkVideo::LoadFromDisk(std::string path) {
         }
 
         hasAudio = true;
-    }
+    }else Logger::warning("RENDERING") << "No audio stream was found in '" << path << "'" << std::endl;
 
-    decoder = avcodec_find_decoder(ic->streams[videoStream]->codecpar->codec_id);
+    decoder = avcodec_find_decoder(AV_CODEC_ID_BINKVIDEO);
     if(!decoder) {
         Logger::error("RENDERING") << "Unable to find bink video decoder!" << std::endl;
         return false;
@@ -144,7 +133,7 @@ bool BinkVideo::LoadFromDisk(std::string path) {
 
     frame = av_frame_alloc();
     if(!frame) {
-        Logger::error("RENDERING") << "Unable to allocate libavcodec frame!" << std::endl;
+        Logger::error("RENDERING") << "Unable to allocate libavcodec video frame!" << std::endl;
         return false;
     }
 
@@ -165,6 +154,7 @@ bool BinkVideo::LoadFromDisk(std::string path) {
     }
 
     Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
+    running = true;
 
     return true;
 }
@@ -172,10 +162,11 @@ bool BinkVideo::LoadFromDisk(std::string path) {
 void BinkVideo::Decode() {
     int ret;
     if(av_read_frame(ic, &packet) < 0) return;
-    if(packet.stream_index == videoStream) {
+
+    if(packet.stream_index == videoStream && packet.size) {
         ret = avcodec_send_packet(codecCtx, &packet);
-        if(ret) {
-            Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
+        if(ret < 0) {
+            Logger::error("RENDERING") << "An error occured during bink video decoding!" << std::endl;
             return;;
         }
 
@@ -197,19 +188,16 @@ void BinkVideo::Decode() {
         memcpy(Texture::GetData(), dst, 800*600*4);
 
         Texture::UnlockTexture();
-    }else if(packet.stream_index == audioStream && hasAudio) {
-        /*ret = avcodec_send_packet(codecCtx, &packet);
-        if(ret) {
-            Logger::error("RENDERING") << "An error occured during bink decoding!" << std::endl;
+    }else if(packet.stream_index == audioStream && packet.size) {
+        /*ret = avcodec_send_packet(audioCtx, &packet);
+        if(ret < 0) {
+            Logger::error("RENDERING") << "An error occured during bink audio decoding!" << std::endl;
             return;;
         }
-        ret = avcodec_receive_frame(codecCtx, frame);
+
+        ret = avcodec_receive_frame(audioCtx, frame);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             return;
-        }
-        int gotFrame;
-        if(avcodec_decode_audio4(audioCtx, frame, &gotFrame, &packet) < 0) {
-            Logger::error("RENDERING") << "An error occured during bink audio decoding!" << std::endl;
         }*/
     }
 
@@ -218,8 +206,9 @@ void BinkVideo::Decode() {
 
 void BinkVideo::Close() {
     avformat_close_input(&ic);
-    avformat_close_input(&sc);
-    //av_frame_free(&frame);
-    //decoder->close(codecCtx);
-    //av_free(codecCtx);
+    av_frame_free(&frame);
+    decoder->close(codecCtx);
+    decoder->close(audioCtx);
+    av_free(codecCtx);
+    av_free(audioCtx);
 }

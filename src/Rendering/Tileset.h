@@ -29,15 +29,16 @@ namespace Sourcehold
                 ~Tileset();
 
                 void Allocate(uint32_t num);
-                void SetEntry(Texture &image, uint32_t index);
+                void SetTile(Texture &image, uint32_t index);
                 
-                SDL_Rect GetEntry(uint32_t index);
+                inline uint32_t GetNumTiles() { return num; }
+                SDL_Rect GetTile(uint32_t index);
             protected:
                 std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
 
                 std::shared_ptr<Renderer> renderer;
                 uint32_t width, height;
-                uint32_t numRows;
+                uint32_t numRows, num;
         };
     }
 }

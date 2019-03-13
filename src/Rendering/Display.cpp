@@ -57,6 +57,9 @@ void Display::StartTimer() {
 void Display::EndTimer() {
     int32_t ntimer = SDL_GetTicks();
     int32_t delta = ntimer - timer;
+
+    if(delta < 0) return;
+
     timer = ntimer;
     if(delta < 1000 / FRAMES_PER_SECOND) {
         SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);

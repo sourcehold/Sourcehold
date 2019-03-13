@@ -25,7 +25,7 @@ Texture::Texture(const Texture &tex) :
 }
 
 Texture::~Texture() {
-    if(texture) SDL_DestroyTexture(texture);
+    Destroy();
 }
 
 bool Texture::AllocNew(int width, int height, int format) {
@@ -50,6 +50,10 @@ bool Texture::AllocNew(int width, int height, int format) {
 
 void Texture::UpdateTexture() {
 
+}
+
+void Texture::Destroy() {
+    if(texture) SDL_DestroyTexture(texture);
 }
 
 void Texture::LockTexture() {

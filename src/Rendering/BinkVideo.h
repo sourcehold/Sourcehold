@@ -50,9 +50,7 @@ namespace Sourcehold
          */
         class BinkVideo : public Texture, public AudioSource
         {
-                AVInputFormat *bink_input;
-                AVCodec *bink_codec;
-                AVFormatContext *ic, *sc;
+                AVFormatContext *ic;
                 AVCodec *decoder, *audioDecoder;
                 AVPacket packet;
                 AVFrame *frame;
@@ -61,14 +59,16 @@ namespace Sourcehold
                 SwrContext *swr;
                 int videoStream, audioStream;
                 double timebase = 0.0;
-                bool hasAudio = false;
+                bool hasAudio = false, looping, running = false;
             public:
                 BinkVideo(std::shared_ptr<GameManager> man);
                 ~BinkVideo();
 
-                bool LoadFromDisk(std::string path);
+                bool LoadFromDisk(std::string path, bool looping = false);
                 void Close();
                 void Decode();
+
+                inline bool IsRunning() { return running; }
             private:
         };
     }

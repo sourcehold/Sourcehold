@@ -14,13 +14,15 @@ Tileset::~Tileset()  {
 }
 
 void Tileset::Allocate(uint32_t num) {
+    this->num = num;
+
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
     width = 30 * numRows;
     height = 16 * numRows;
     Texture::AllocNew(width, height, SDL_PIXELFORMAT_RGBA8888);
 }
 
-void Tileset::SetEntry(Texture &image, uint32_t index) {
+void Tileset::SetTile(Texture &image, uint32_t index) {
     auto coords = IndexToCoords(index);
 
     image.LockTexture();
@@ -30,7 +32,7 @@ void Tileset::SetEntry(Texture &image, uint32_t index) {
     Texture::UnlockTexture();
 }
 
-SDL_Rect Tileset::GetEntry(uint32_t index) {
+SDL_Rect Tileset::GetTile(uint32_t index) {
     auto coords = IndexToCoords(index);
 
     SDL_Rect rect;
