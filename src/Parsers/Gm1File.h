@@ -11,6 +11,7 @@
 
 #include <Rendering/Texture.h>
 #include <Rendering/Tileset.h>
+#include <Rendering/TextureAtlas.h>
 #include <Rendering/Renderer.h>
 #include <Rendering/Rendering.h>
 
@@ -21,12 +22,28 @@ namespace Sourcehold
 {
     namespace Parsers
     {
+        using namespace Rendering;
+
         /*
          * Container format for tiles/animations/images
+         *
+         * Creates a texture in TextureAtlas for every image collection (Building, unit, etc.)
          */
-        class Gm1File : private Parser
+        class Gm1File : private Parser, public TextureAtlas
         {
             public:
+                Gm1File(std::shared_ptr<Renderer> rend);
+                ~Gm1File();
+
+                bool LoadFromDisk(const std::string &path, bool threaded = false);
+                void DumpInformation();
+                void Free();
+            protected:
+                const uint32_t max_num = 8192;
+                bool GetCollections();
+                bool GetImage(uint32_t index);
+                void ReadPalette();
+            private:
                 struct Gm1Header {
                     /* Unknown */
                     uint32_t u0[3];
@@ -52,75 +69,21 @@ namespace Sourcehold
                     uint32_t len;
                     /* Unknown */
                     uint32_t u3;
-                };
+                } header;
+                struct ImageHeader;
+                struct Gm1Entry;
 
-                struct ImageHeader {
-                    /* Image dimensions */
-                    uint16_t width;
-                    uint16_t height;
-                    /* Image offsets */
-                    uint16_t offsetX;
-                    uint16_t offsetY;
-                    /* Unique image id */
-                    uint16_t id;
-                    /* Distance from top to bottom */
-                    uint16_t dist;
-                    /* Left/Right/Center */
-                    enum Direction : uint8_t {
-                        DIR_NONE =  0,
-                        DIR_DOWN =  1,
-                        DIR_RIGHT = 2,
-                        DIR_LEFT =  3,
-                    } direction;
-                    /* Horizontal offset */
-                    uint8_t horizOffset;
-                    /* Width of building part */
-                    uint8_t partWidth;
-                    /* Color */
-                    uint8_t color;
-                };
-
-                struct Gm1Entry {
-                    Gm1Entry(std::shared_ptr<Renderer> rend) : image(rend), tile(rend) {};
-                    ~Gm1Entry() = default;
-                    ImageHeader header;
-                    Texture image;
-                    Texture tile;
-                    uint32_t size;
-                    uint32_t offset;
-                };
-
-                Gm1File(std::shared_ptr<Renderer> rend);
-                ~Gm1File();
-
-                bool LoadFromDisk(const std::string &path, bool threaded = true);
-                void DumpInformation();
-                void Free();
-                void ReadTiles(Tileset &set);
-
-                inline std::vector<Gm1Entry>& GetEntries() { return entries; }
-                inline Gm1Entry &GetEntry(uint32_t index) { return entries[index]; }
-                inline size_t GetNumEntries() { return entries.size(); }
-                inline Gm1Header::DataType GetType() { return header.type; }
-            protected:
-                const uint32_t max_num = 8192;
-                bool GetImage(uint32_t index);
-                void ReadPalette();
-            private:
+                std::shared_ptr<Renderer> renderer;
                 std::string path;
+                /* Color palette for tgx image entries */
                 uint16_t palette[2560];
-
                 /* Offset of data section */
                 uint32_t offData;
-
+                uint32_t numCollections;
                 /* Raw image data */
                 char *imgdata = nullptr;
-
                 /* All of the entries */
                 std::vector<Gm1Entry> entries;
-
-                Gm1Header header;
-                std::shared_ptr<Renderer> renderer;
         };
     }
 }

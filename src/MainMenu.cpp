@@ -84,7 +84,9 @@ int MainMenu::Startup() {
             intro.Decode();
             manager->Render(intro, 0.0, 0.2, 1.0, 0.6);
         }else if(current == STARTUP_MAIN_MENU) {
-            return EnterMainMenu();
+            aud_startup.Stop();
+            return EXIT_SUCCESS;
+            //return EnterMainMenu();
         }
 		
         manager->Flush();

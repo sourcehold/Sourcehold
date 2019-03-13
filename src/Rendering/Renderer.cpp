@@ -20,6 +20,10 @@ void Renderer::Init(SDL_Window *window) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
+void Renderer::Update() {
+    SDL_GetWindowSize(window, &width, &height);
+}
+
 void Renderer::Clear() {
     SDL_RenderClear(renderer);
 }
@@ -39,6 +43,10 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
         rect.w = clip->w;
         rect.h = clip->h;
     }
+
+    if(rect.x + rect.w > width || rect.y + rect.h > height) {
+        
+    };
 
     SDL_RenderCopyEx(
         renderer,
@@ -60,6 +68,11 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *cl
         x, y,
         w, h
     };
+
+    if(rect.x + rect.w > width || rect.y + rect.h > height) {
+        
+    };
+
     SDL_RenderCopyEx(
         renderer,
         texture.GetTexture(),
@@ -107,6 +120,10 @@ void Renderer::Render(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uin
         x, y,
         w, h
     };
+
+    if(rect.x + rect.w > width || rect.y + rect.h > height) {
+        
+    };
     
     if(solid) {
         SDL_RenderFillRect(
@@ -127,18 +144,6 @@ void Renderer::Render(double x, double y, double w, double h, Uint8 r, Uint8 g, 
     int sx = ToCoordX(w);
     int sy = ToCoordY(h);
     Render(ix, iy, sx, sy, r, g, b, a, solid);
-}
-
-uint32_t Renderer::GetWidth() {
-    int s;
-    SDL_GetWindowSize(window, &s, NULL);
-    return s;
-}
-
-uint32_t Renderer::GetHeight() {
-    int s;
-    SDL_GetWindowSize(window, NULL, &s);
-    return s;
 }
 
 double Renderer::NormalizeX(uint32_t c) {

@@ -2,6 +2,7 @@
 
 #include <cinttypes>
 #include <memory>
+#include <vector>
 
 #include <GameManager.h>
 
@@ -26,6 +27,7 @@ namespace Sourcehold
 
         class GameMap : protected EventConsumer<Keyboard>, protected EventConsumer<Mouse>
         {
+                int mult = 1;
             public:
                 GameMap(std::shared_ptr<GameManager> man);
                 GameMap(const GameMap&) = delete;
@@ -36,11 +38,10 @@ namespace Sourcehold
                 void onEventReceive(Keyboard &keyEvent) override;
                 void onEventReceive(Mouse &mouseEvent) override;
 
-                Gm1File gm1_tile, gm1_scribe;
-                TgxFile edge_left, edge_right, middle;
-                Texture bar;
-                Tileset tileset;
+                uint16_t maypole;
+                Gm1File gm1_tile, gm1_maypole, gm1_churches;
                 std::shared_ptr<GameManager> manager;
+                std::vector<SDL_Rect> tiles;
         };
     }
 }

@@ -20,12 +20,14 @@ namespace Sourcehold
         {
                 SDL_Window *window;
                 SDL_Renderer *renderer;
+                int width, height;
             public:
                 Renderer();
                 Renderer(const Renderer&) = delete;
                 ~Renderer();
 
                 void Init(SDL_Window *window);
+                void Update();
                 void Clear();
 
                 /* Render everything */
@@ -46,8 +48,8 @@ namespace Sourcehold
                 void Render(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
                 void Render(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
-                uint32_t GetWidth();
-                uint32_t GetHeight();
+                inline int GetWidth() { return width; }
+                inline int GetHeight() { return height; }
                 inline SDL_Renderer *GetRenderer() { return renderer; }
 
                 /* Normalize based on window dimensions */

@@ -38,6 +38,7 @@ void GameManager::Update() {
     if(!IsOpen() || !eventHandler->FetchEvents()) running = false;
 
     AnimationHandler::Update();
+    Renderer::Update();
 
     time = SDL_GetTicks() / 1000.0;
 }

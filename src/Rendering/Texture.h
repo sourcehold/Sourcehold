@@ -37,6 +37,7 @@ namespace Sourcehold
 
                 bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
                 void UpdateTexture();
+                void Destroy();
 
                 /* Texture manipulation */
                 void LockTexture();

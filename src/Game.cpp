@@ -22,16 +22,23 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 
-/*
- * Load a single asset
- */
-#include <fstream>
+/* TODO */
 void LoadAsset(std::string &path) {
     std::string ext = GetFileExtension(path);
 
-    std::ifstream str(path, std::ios::binary);
-    std::vector<unsigned char> buffer(std::istreambuf_iterator<char>(str), {});
-    str.close();
+    if(ext == "txt") {
+
+    }else if(ext == "gm1") {
+
+    }else if(ext == "tgx") {
+
+    }else if(ext == "wav") {
+
+    }else if(ext == "raw") {
+
+    }else if(ext == "map") {
+
+    }
 }
 
 int StartGame(GameOptions &opt) {
@@ -77,17 +84,27 @@ int StartGame(GameOptions &opt) {
     /* Start the intro sequence and the main menu */
     int ret = menu.Startup();
     if(ret != EXIT_SUCCESS) return ret;
-//    GameMap map(shared_from_this());
+
+//    /* ------ Alpha testing ------ */
 //
-//    while(GameManager::Running()) {
-//        GameManager::Clear();
-//        GameManager::StartTimer();
+//    AudioSource aud("data/fx/music/Glory_06.raw");
+//    aud.Play();
+//
+//    GameMap map(gameManager);
+//
+//    while(gameManager->Running()) {
+//        gameManager->Clear();
+//        gameManager->StartTimer();
 //
 //        map.Render();
 //
-//        GameManager::Flush();
-//        GameManager::EndTimer();
+//        gameManager->Flush();
+//        gameManager->EndTimer();
 //    }
+//
+//    return EXIT_SUCCESS;
+
+    /* ------ Alpha testing ------ */
 
     return EXIT_SUCCESS;
 }

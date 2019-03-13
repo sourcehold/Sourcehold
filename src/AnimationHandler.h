@@ -29,14 +29,14 @@ namespace Sourcehold
                         flags = f;
                     }
                 };
-                Uint32 localTime;
+                double localTime;
                 std::map<uint16_t, AnimationSlot> slots;
             public:
                 AnimationHandler();
                 AnimationHandler(const AnimationHandler &ani);
                 ~AnimationHandler();
 
-                void AddSlot(uint16_t slot, const std::pair<uint16_t,uint16_t> range);
+                uint16_t AddSlot(const std::pair<uint16_t,uint16_t> range);
                 void RemoveSlot(uint16_t slot);
                 uint16_t GetFrame(uint16_t slot);
 
