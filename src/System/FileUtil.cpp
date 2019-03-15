@@ -8,7 +8,7 @@ using namespace System;
 
 std::string System::GetFileExtension(const std::string &path) {
     boost::filesystem::path p(path);
-    return p.extension().native();
+    return p.extension().string();
 }
 
 std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, const std::string &extension, bool recursive){
@@ -20,7 +20,7 @@ std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, 
             boost::filesystem::recursive_directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(boost::filesystem::is_regular_file(*it)) files.push_back(it->path().native());
+                    if(boost::filesystem::is_regular_file(*it)) files.push_back(it->path().string());
                 }
                 ++it;
             }
@@ -30,7 +30,7 @@ std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, 
             boost::filesystem::directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(boost::filesystem::is_regular_file(*it)) files.push_back(it->path().native());
+                    if(boost::filesystem::is_regular_file(*it)) files.push_back(it->path().string());
                 }
                 ++it;
             }
