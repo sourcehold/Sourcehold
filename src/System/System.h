@@ -14,6 +14,7 @@ namespace Sourcehold
         struct GameOptions
         {
             std::string config;
+            std::string dataDir;
             bool debug = false;
             bool noborder = false;
             bool fullscreen = false;

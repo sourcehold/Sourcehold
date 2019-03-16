@@ -5,15 +5,8 @@ using namespace Sourcehold::Rendering;
 
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
     EventConsumer<Mouse>(man->GetHandler()),
-    manager(man),
-    tgx_bg1(man),
-    tgx_firefly(man),
-    tgx_taketwo(man),
-    tgx_present(man),
-    tgx_logo(man),
-    intro(man)
+    manager(man)
 {
-
 }
 
 MainMenu::~MainMenu() {
@@ -28,12 +21,11 @@ void MainMenu::PlayMusic() {
 int MainMenu::Startup() {
     aud_chantloop.LoadSong("data/fx/music/chantloop1.raw", true);
 
-    tgx_bg1.LoadFromDisk("data/gfx/frontend_main.tgx");
-    tgx_firefly.LoadFromDisk("data/gfx/logo1.tgx");
-    tgx_taketwo.LoadFromDisk("data/gfx/logo2.tgx");
-    tgx_present.LoadFromDisk("data/gfx/logo3.tgx");
-    tgx_logo.LoadFromDisk("data/gfx/startup screen.tgx");
-    intro.LoadFromDisk("data/binks/intro.bik");
+    tgx_firefly = manager->GetTgx("campaign_map_england_03.tgx");
+    tgx_taketwo = manager->GetTgx("logo2.tgx");
+    tgx_present = manager->GetTgx("logo3.tgx");
+    tgx_logo = manager->GetTgx("startup screen.tgx");
+    intro = manager->GetBik("intro.bik");
 
     startTime = manager->GetTime();
 
@@ -45,7 +37,7 @@ int MainMenu::Startup() {
 
         /* Logo switching */
         double now = manager->GetTime();
-        double delta = now - startTime; 
+        double delta = now - startTime;
         if(current != STARTUP_MAIN_MENU && current != STARTUP_STRONGHOLD_LOGO && current != STARTUP_INTRO && delta > 5.0) {
             current++;
             startTime = now;
@@ -67,26 +59,25 @@ int MainMenu::Startup() {
 
         /* Rendering */
         if(current == STARTUP_FIREFLY_LOGO) {
-            tgx_firefly.SetAlphaMod(alpha);
-            manager->Render(tgx_firefly);
+            tgx_firefly->SetAlphaMod(alpha);
+            manager->Render(*tgx_firefly);
         }else if(current == STARTUP_TAKETWO_LOGO) {
-            tgx_taketwo.SetAlphaMod(alpha);
-            manager->Render(tgx_taketwo);
+            tgx_taketwo->SetAlphaMod(alpha);
+            manager->Render(*tgx_taketwo);
         }else if(current == STARTUP_PRESENT) {
-            tgx_present.SetAlphaMod(alpha);
-            manager->Render(tgx_present);
+            tgx_present->SetAlphaMod(alpha);
+            manager->Render(*tgx_present);
         }else if(current == STARTUP_STRONGHOLD_LOGO) {
-            tgx_logo.SetAlphaMod(alpha);
-            manager->Render(tgx_logo);
+            tgx_logo->SetAlphaMod(alpha);
+            manager->Render(*tgx_logo);
         }else if(current == STARTUP_INTRO) {
             aud_startup.SetFadeOut(1.0);
             aud_startup.UpdateFade();
-            intro.Decode();
-            manager->Render(intro, 0.0, 0.2, 1.0, 0.6);
+            intro->Decode();
+            manager->Render(*intro, 0.0, 0.2, 1.0, 0.6);
         }else if(current == STARTUP_MAIN_MENU) {
             aud_startup.Stop();
-            return EXIT_SUCCESS;
-            //return EnterMainMenu();
+            return EnterMainMenu();
         }
 		
         manager->Flush();
@@ -103,13 +94,15 @@ void MainMenu::onEventReceive(Mouse &event) {
 }
 
 int MainMenu::EnterMainMenu() {
+    tgx_bg1 = manager->GetTgx("frontend_main.tgx");
+
     aud_chantloop.Play();
 
     while(manager->Running()) {
         manager->Clear();
         manager->StartTimer();
 
-        manager->Render(tgx_bg1);
+        manager->Render(*tgx_bg1);
 
         manager->Flush();
         manager->EndTimer();

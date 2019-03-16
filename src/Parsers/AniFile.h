@@ -1,11 +1,12 @@
 #pragma once
 
 #include <cinttypes>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <System/Logger.h>
-
+#include <Rendering/Renderer.h>
 #include <Parsers/Parser.h>
 
 namespace Sourcehold
@@ -18,8 +19,9 @@ namespace Sourcehold
 		class AniFile : public Parser
 		{
 			public:
-				AniFile();
+				AniFile(std::shared_ptr<Rendering::Renderer> rend);
 				AniFile(const AniFile&);
+				AniFile(std::shared_ptr<Rendering::Renderer> rend, const std::string &path);
 				~AniFile();
 				
 				bool LoadFromDisk(const std::string &path);

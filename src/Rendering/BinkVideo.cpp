@@ -23,9 +23,7 @@ void Rendering::DestroyAvcodec() {
 
 }
 
-BinkVideo::BinkVideo(std::shared_ptr<GameManager> man) :
-    Texture(man),
-    AudioSource()
+BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man), AudioSource()
 {
     ic = avformat_alloc_context();
     if(!ic) {
@@ -33,11 +31,20 @@ BinkVideo::BinkVideo(std::shared_ptr<GameManager> man) :
     }
 }
 
+BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping) : Texture(man), AudioSource() {
+    ic = avformat_alloc_context();
+    if(!ic) {
+        Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
+    }
+
+    LoadFromDisk(path, looping);
+}
+
 BinkVideo::~BinkVideo() {
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(std::string path, bool looping) {
+bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
     this->looping = looping;
 
     int out = avformat_open_input(
@@ -101,7 +108,7 @@ bool BinkVideo::LoadFromDisk(std::string path, bool looping) {
         }
 
         hasAudio = true;
-    }else Logger::warning("RENDERING") << "No audio stream was found in '" << path << "'" << std::endl;
+    }
 
     decoder = avcodec_find_decoder(AV_CODEC_ID_BINKVIDEO);
     if(!decoder) {
@@ -154,14 +161,17 @@ bool BinkVideo::LoadFromDisk(std::string path, bool looping) {
     }
 
     Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
-    running = true;
+    valid = true;
 
     return true;
 }
 
 void BinkVideo::Decode() {
     int ret;
-    if(av_read_frame(ic, &packet) < 0) return;
+    if(av_read_frame(ic, &packet) < 0) {
+        running = false;
+        return;   
+    }else running = true;
 
     if(packet.stream_index == videoStream && packet.size) {
         ret = avcodec_send_packet(codecCtx, &packet);
@@ -205,10 +215,12 @@ void BinkVideo::Decode() {
 }
 
 void BinkVideo::Close() {
-    avformat_close_input(&ic);
-    av_frame_free(&frame);
-    decoder->close(codecCtx);
-    decoder->close(audioCtx);
-    av_free(codecCtx);
-    av_free(audioCtx);
+    if(valid) {
+        avformat_close_input(&ic);
+        av_frame_free(&frame);
+        decoder->close(codecCtx);
+        decoder->close(audioCtx);
+        av_free(codecCtx);
+        av_free(audioCtx);
+    }
 }

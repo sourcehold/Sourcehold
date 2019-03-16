@@ -35,11 +35,15 @@ struct Gm1File::Gm1Entry {
     uint32_t offset;
 };
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend) :
-    Parser(),
-    TextureAtlas(rend)
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser(), TextureAtlas(rend)
 {
     this->renderer = rend;
+}
+
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend, const std::string &path) : Parser(), TextureAtlas(rend)
+{
+    this->renderer = rend;
+    this->LoadFromDisk(path, false);
 }
 
 Gm1File::~Gm1File() {
@@ -102,6 +106,8 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
 
     /* Close file */
     Parser::Close();
+
+    return true;
 
     /* Allocate images */
     if(header.type == Gm1Header::TYPE_TILE) {

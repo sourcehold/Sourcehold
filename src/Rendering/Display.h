@@ -24,7 +24,7 @@ namespace Sourcehold
     {
         using namespace Events;
 
-        /*
+        /**
          * Handles everyting related to the game display,
          * constructs and destroys the renderer
          */

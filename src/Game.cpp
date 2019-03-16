@@ -4,48 +4,29 @@
 #include <vector>
 
 #include <boost/filesystem.hpp>
-#include <boost/range/iterator_range.hpp>
 
 #include <cxxopts.hpp>
 
+#include <Assets.h>
 #include <MainMenu.h>
 #include <GameMap.h>
 #include <GameManager.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
-#include <System/FileUtil.h>
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
+using namespace Sourcehold::Assets;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
-
-/* TODO */
-void LoadAsset(std::string &path) {
-    std::string ext = GetFileExtension(path);
-
-    if(ext == "txt") {
-
-    }else if(ext == "gm1") {
-
-    }else if(ext == "tgx") {
-
-    }else if(ext == "wav") {
-
-    }else if(ext == "raw") {
-
-    }else if(ext == "map") {
-
-    }
-}
 
 int StartGame(GameOptions &opt) {
     auto gameManager = std::make_shared<GameManager>(opt);
 
     /* Get the assets */
-    std::vector<std::string> files = GetDirectoryRecursive("data/");
+    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir);
     if(files.empty()) {
         Logger::error("GANE") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
@@ -63,8 +44,7 @@ int StartGame(GameOptions &opt) {
         gameManager->Clear();
 
         /* Load a file */
-        //Logger::message("GAME") << "Loading '" << files.at(index).native() << "'" << std::endl;
-        LoadAsset(files.at(index));
+        gameManager->Cache(files.at(index));
         index++;
 
         /* Normalized loading progess */
@@ -80,6 +60,8 @@ int StartGame(GameOptions &opt) {
 
         gameManager->Flush();
     }
+
+    tgx_loading.Unload();
 
     /* Start the intro sequence and the main menu */
     int ret = menu.Startup();
@@ -116,6 +98,7 @@ int main(int argc, char **argv) {
     options.add_options()
     ("h,help", "Print this info")
     ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
+    ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("data/"))
     ("d,debug", "Print debug info")
     ("noborder", "Remove window border")
     ("f,fullscreen", "Run in fullscreen mode")
@@ -132,6 +115,7 @@ int main(int argc, char **argv) {
             return EXIT_SUCCESS;
         }
         opt.config = result["config-file"].as<std::string>();
+        opt.dataDir = result["path"].as<std::string>();
         if(result["debug"].as<bool>()) {
             opt.debug = true;
         }

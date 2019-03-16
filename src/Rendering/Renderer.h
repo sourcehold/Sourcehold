@@ -29,22 +29,28 @@ namespace Sourcehold
                 void Init(SDL_Window *window);
                 void Update();
                 void Clear();
-
-                /* Render everything */
                 void Flush();
 
-                /* Render a texture (screen coordinates) */
+                /**
+                 * Render a texture (screen coordinates)
+                 */
                 void Render(Texture &texture, int x, int y, SDL_Rect *clip = nullptr);
                 void Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip = nullptr);
                 
-                /* Render a texture (normalized coordinates) */
+                /**
+                 * Render a texture (normalized coordinates)
+                 */
                 void Render(Texture &texture, double x, double y, SDL_Rect *clip = nullptr);
                 void Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip = nullptr);
                 
-                /* Render a texture to the whole screen */
+                /**
+                 * Render a texture to the whole screen
+                 */
                 void Render(Texture &texture, SDL_Rect *clip = nullptr);
 
-                /* Render a rectangle */
+                /**
+                 * Render a rectangle
+                 */
                 void Render(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
                 void Render(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
@@ -52,7 +58,9 @@ namespace Sourcehold
                 inline int GetHeight() { return height; }
                 inline SDL_Renderer *GetRenderer() { return renderer; }
 
-                /* Normalize based on window dimensions */
+                /**
+                 * Normalize based on window dimensions
+                 */
                 double NormalizeX(uint32_t c);
                 double NormalizeY(uint32_t c);
                 

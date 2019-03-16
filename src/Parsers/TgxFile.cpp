@@ -3,8 +3,19 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
+struct TgxFile::TgxHeader {
+    uint16_t width;
+    uint16_t u0;
+    uint16_t height;
+    uint16_t u1;
+};
+
 TgxFile::TgxFile(std::shared_ptr<Renderer> rend) : Parser(), Texture(rend) {
 
+}
+
+TgxFile::TgxFile(std::shared_ptr<Renderer> rend, const std::string &path) : Parser(), Texture(rend) {
+    this->LoadFromDisk(path);
 }
 
 TgxFile::~TgxFile() {
@@ -17,18 +28,17 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
         return false;
     }
 
+    TgxHeader header;
     if(!Parser::GetData(&header, sizeof(TgxHeader))) {
         Logger::error("PARSERS") << "Unable to load Tgx file header from '" << path << "'!" << std::endl;
         return false;
     }
 
-    length = Parser::GetLength();
-
     /* Allocate image */
     AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Calculate size */
-    size_t size = length - sizeof(TgxHeader);
+    size_t size = Parser::GetLength() - Parser::Tell();
 
     char *buf = new char[size];
     Parser::GetData(buf, size);
@@ -36,13 +46,15 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
 
     /* Read image data */
     Texture::LockTexture();
-    ReadTgx(static_cast<Texture&>(*this), buf, size, 0, 0, NULL);
-
-    delete [] buf;
-
+    ReadTgx(static_cast<Texture&>(*this), buf, size, 0, 0, nullptr);
     Texture::UnlockTexture();
 
+    delete [] buf;
     return true;
+}
+
+void TgxFile::Unload() {
+    Texture::Destroy();
 }
 
 void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
@@ -89,7 +101,6 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
                 }
                 uint8_t r,g,b;
                 ReadPixel(pixelColor, r, g, b);
-                /* Put the same pixel into buffer */
                 for(uint8_t i = 0; i < len; ++i,++x) {
                     tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
                 }
@@ -100,7 +111,8 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
                 }
             }break;
             default: {
-                Logger::error("PARSERS") << "Unknown token in gm1!" << std::endl;
+                Logger::error("PARSERS") << "Unknown token in tgx!" << std::endl;
+                return;
             }break;
         }
     }

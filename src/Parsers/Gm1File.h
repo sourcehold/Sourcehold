@@ -33,6 +33,7 @@ namespace Sourcehold
         {
             public:
                 Gm1File(std::shared_ptr<Renderer> rend);
+                Gm1File(std::shared_ptr<Renderer> rend, const std::string &path);
                 ~Gm1File();
 
                 bool LoadFromDisk(const std::string &path, bool threaded = false);

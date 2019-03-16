@@ -60,7 +60,7 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
 }
 
 void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip) {
-    /*
+    /**
      * Source texture, specified by SDL_Rect, will
      * be stretched to fit the destination rect
      */

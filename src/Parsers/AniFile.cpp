@@ -16,10 +16,14 @@ struct AniFile::RiffChunk {
 	uint32_t size;
 };
 
-AniFile::AniFile() : Parser() {
+AniFile::AniFile(std::shared_ptr<Rendering::Renderer> rend) : Parser() {
 }
 
 AniFile::AniFile(const AniFile &other) {
+}
+
+AniFile::AniFile(std::shared_ptr<Rendering::Renderer> rend, const std::string &path) : Parser() {
+	this->LoadFromDisk(path);
 }
 
 AniFile::~AniFile() {

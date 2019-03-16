@@ -16,11 +16,10 @@ extern "C" {
 #include <memory>
 
 #include <Config.h>
-#include <GameManager.h>
 
 #include <System/Logger.h>
 
-#include <Rendering/Rendering.h>
+#include <Rendering/Renderer.h>
 #include <Rendering/Texture.h>
 
 #include <Audio/AudioSource.h>
@@ -30,7 +29,6 @@ namespace Sourcehold
     namespace Rendering
     {
         using Audio::AudioSource;
-        using Game::GameManager;
 
         /*
          * Init the avcodec context needed by the BinkVideo class
@@ -59,12 +57,13 @@ namespace Sourcehold
                 SwrContext *swr;
                 int videoStream, audioStream;
                 double timebase = 0.0;
-                bool hasAudio = false, looping, running = false;
+                bool hasAudio = false, looping, running = false, valid = false;
             public:
-                BinkVideo(std::shared_ptr<GameManager> man);
+                BinkVideo(std::shared_ptr<Renderer> man);
+                BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping = false);
                 ~BinkVideo();
 
-                bool LoadFromDisk(std::string path, bool looping = false);
+                bool LoadFromDisk(const std::string &path, bool looping = false);
                 void Close();
                 void Decode();
 

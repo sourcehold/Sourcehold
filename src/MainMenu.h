@@ -29,8 +29,8 @@ namespace Sourcehold
         using namespace Parsers;
         using namespace Rendering;
 
-        /*
-         * Handles the main menu and preceding intro sequence.
+        /**
+         * Handles the main menu and preceding intro sequence
          */
         class MainMenu : protected EventConsumer<Mouse>
         {
@@ -46,9 +46,12 @@ namespace Sourcehold
                 int EnterMainMenu();
 
                 double startTime = 0.0, fadeBase = 0.0;
-                std::shared_ptr<GameManager> manager;
                 AudioSource aud_startup, aud_chantloop;
-                TgxFile tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo;
+
+                std::shared_ptr<GameManager> manager;
+                std::shared_ptr<TgxFile>  tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo;
+                std::shared_ptr<BinkVideo> intro;
+
                 enum StartupEvent : uint8_t {
                     STARTUP_FIREFLY_LOGO = 0,
                     STARTUP_TAKETWO_LOGO = 1,
@@ -58,7 +61,6 @@ namespace Sourcehold
                     STARTUP_MAIN_MENU = 5
                 };
                 uint8_t current = 0;
-                BinkVideo intro;
         };
     }
 }
