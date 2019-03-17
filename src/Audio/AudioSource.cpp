@@ -1,4 +1,5 @@
 #include <Audio/AudioSource.h>
+#include <Audio/Audio.h>
 
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
@@ -41,7 +42,7 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     this->gain = 1.0f;
     alGenSources((ALuint)1, &source);
     alSourcef(source, AL_PITCH, 1.0f);
-    alSourcef(source, AL_GAIN, 1.0f);
+    alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain);
     alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
     alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
@@ -75,7 +76,7 @@ bool AudioSource::LoadEffect(const std::string &path, bool repeat) {
     this->gain = 1.0f;
     alGenSources((ALuint)1, &source);
     alSourcef(source, AL_PITCH, 1.0f);
-    alSourcef(source, AL_GAIN, gain);
+    alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain);
     alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
     alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
     alSourcei(source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
@@ -128,7 +129,7 @@ void AudioSource::UpdateFade() {
         Stop();
         fading = false;
     }else {
-        alSourcef(source, AL_GAIN, gain * (1.0 - t / fadeAmount));
+        alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (1.0 - t / fadeAmount));
     }
 }
 

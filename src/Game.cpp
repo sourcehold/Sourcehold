@@ -104,6 +104,8 @@ int main(int argc, char **argv) {
     ("f,fullscreen", "Run in fullscreen mode")
     ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
     ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
+    ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
+    ("nosound", "Disable sound entirely")
     ("nothread", "Disable threading");
 
     try {
@@ -127,6 +129,10 @@ int main(int argc, char **argv) {
         }
         opt.width = result["width"].as<uint16_t>();
         opt.height = result["height"].as<uint16_t>();
+        opt.ndisp = result["disp"].as<uint16_t>();
+        if(result["nosound"].as<bool>()) {
+            opt.nosound = true;
+        }
         if(result["nothread"].as<bool>()) {
             opt.nothread = true;
         }

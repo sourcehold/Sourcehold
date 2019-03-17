@@ -9,7 +9,6 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-#include <Config.h>
 #include <System/Logger.h>
 
 namespace Sourcehold

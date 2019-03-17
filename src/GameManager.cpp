@@ -27,11 +27,15 @@ GameManager::GameManager(GameOptions &opt) : AnimationHandler(), Display(), opt(
         "Sourcehold version " SOURCEHOLD_VERSION_STRING,
         opt.width,
         opt.height,
+        opt.ndisp,
         opt.fullscreen,
         opt.noborder
     );
 
     InitOpenAL();
+    if(opt.nosound) {
+        MuteOpenAL();
+    }
 
     eventHandler = std::make_shared<EventHandler>();
     running = true;

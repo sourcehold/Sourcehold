@@ -15,7 +15,7 @@ Display::~Display() {
     SDL_Quit();
 }
 
-void Display::Open(const std::string &title, int width, int height, bool fullscreen, bool noborder) {
+void Display::Open(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder) {
     int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
 
     this->fullscreen = fullscreen;
@@ -27,7 +27,25 @@ void Display::Open(const std::string &title, int width, int height, bool fullscr
         param |= SDL_WINDOW_BORDERLESS;
     }
 
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, param);
+    /* Select display */
+    int displays = SDL_GetNumVideoDisplays();
+    if(index >= displays) index = 0;
+
+    SDL_Rect *displayBounds = new SDL_Rect[displays];
+    for(int i = 0; i < displays; i++) {
+        displayBounds[i] = SDL_Rect();
+        SDL_GetDisplayBounds(i, &displayBounds[i]);
+    }
+    delete [] displayBounds;
+
+    window = SDL_CreateWindow(
+        title.c_str(),
+        displayBounds[index].x + (displayBounds[index].w / 2) - width / 2,
+        displayBounds[index].y + (displayBounds[index].h / 2) - height / 2,
+        width,
+        height,
+        param
+    );
     if(!window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }

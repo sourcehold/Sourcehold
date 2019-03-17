@@ -58,8 +58,6 @@ bool AniFile::ParseChunks() {
 		
 		std::string id((const char*)&header.id, sizeof(uint32_t));
 		size_t bytes = header.size % 2 == 0 ? header.size : header.size + 1;
-		
-		std::cout << id << std::endl;
 
 		if(id == "anih") {
 			/* TODO */

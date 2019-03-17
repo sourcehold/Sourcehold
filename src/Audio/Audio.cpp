@@ -8,24 +8,7 @@ using namespace System;
 
 static ALCdevice *_device;
 static ALCcontext *_context;
-
-void Audio::PrintError() {
-    ALCenum err = alGetError();
-    std::string str;
-
-    if(err == AL_NO_ERROR) return;
-    switch (err) {
-        case ALC_NO_ERROR: str = "AL_NO_ERROR"; break;
-        case ALC_INVALID_DEVICE: str = "AL_INVALID_DEVICE"; break;
-        case ALC_INVALID_CONTEXT: str = "AL_INVALID_CONTEXT"; break;
-        case ALC_INVALID_ENUM: str = "AL_INVALID_ENUM"; break;
-        case ALC_INVALID_VALUE: str = "AL_INVALID_VALUE"; break;
-        case ALC_OUT_OF_MEMORY: str = "AL_OUT_OF_MEMORY"; break;
-        default: str = "Unknown error"; break;
-    }
-
-    Logger::error("AUDIO") << str << std::endl;
-}
+static bool _muted = false;
 
 bool Audio::InitOpenAL() {
     _device = alcOpenDevice(NULL);
@@ -48,4 +31,34 @@ void Audio::DestroyOpenAL() {
     alcMakeContextCurrent(NULL);
     alcDestroyContext(_context);
     alcCloseDevice(_device);
+}
+
+void Audio::MuteOpenAL() {
+    _muted = true;
+}
+
+void Audio::UnmuteOpenAL() {
+    _muted = false;
+}
+
+bool Audio::IsOpenALMuted() {
+    return _muted;
+}
+
+void Audio::PrintError() {
+    ALCenum err = alGetError();
+    std::string str;
+
+    if(err == AL_NO_ERROR) return;
+    switch (err) {
+        case ALC_NO_ERROR: str = "AL_NO_ERROR"; break;
+        case ALC_INVALID_DEVICE: str = "AL_INVALID_DEVICE"; break;
+        case ALC_INVALID_CONTEXT: str = "AL_INVALID_CONTEXT"; break;
+        case ALC_INVALID_ENUM: str = "AL_INVALID_ENUM"; break;
+        case ALC_INVALID_VALUE: str = "AL_INVALID_VALUE"; break;
+        case ALC_OUT_OF_MEMORY: str = "AL_OUT_OF_MEMORY"; break;
+        default: str = "Unknown error"; break;
+    }
+
+    Logger::error("AUDIO") << str << std::endl;
 }
