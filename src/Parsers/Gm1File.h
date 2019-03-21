@@ -24,23 +24,25 @@ namespace Sourcehold
     {
         using namespace Rendering;
 
-        /*
+        /**
          * Container format for tiles/animations/images
-         *
          * Creates a texture in TextureAtlas for every image collection (Building, unit, etc.)
+         * and a Tileset depending on the stored type
          */
-        class Gm1File : private Parser, public TextureAtlas
+        class Gm1File : private Parser, public TextureAtlas, public Tileset
         {
             public:
                 Gm1File(std::shared_ptr<Renderer> rend);
                 Gm1File(std::shared_ptr<Renderer> rend, const std::string &path);
+                Gm1File(const Gm1File&) = delete;
+                Gm1File& operator=(const Gm1File&)= delete;
                 ~Gm1File();
 
                 bool LoadFromDisk(const std::string &path, bool threaded = false);
                 void DumpInformation();
                 void Free();
             protected:
-                const uint32_t max_num = 8192;
+                const uint32_t max_num = 2048;
                 bool GetCollections();
                 bool GetImage(uint32_t index);
                 void ReadPalette();

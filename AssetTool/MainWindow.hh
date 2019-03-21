@@ -1,8 +1,12 @@
+#include <iostream>
+#include <algorithm>
+
 #include <QtCore>
 #include <QVector>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QAction>
+#include <QDebug>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMainWindow>
@@ -41,7 +45,7 @@ class MainWindow : public QMainWindow
         void createActions();
         void createMenus();
         void loadAsset(const QString &fileName);
-        void ReadPixel(qint16 pixel, qint8 &r, qint8 &g, qint8 &b);
+        void ReadPixel(quint16 pixel, quint8 &r, quint8 &g, quint8 &b);
 
         void closeEvent(QCloseEvent *event) override;
     private slots:
@@ -58,4 +62,3 @@ class MainWindow : public QMainWindow
         QAction *exitAction;
         QAction *aboutAction;
 };
-

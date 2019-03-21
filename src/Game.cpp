@@ -7,13 +7,14 @@
 
 #include <cxxopts.hpp>
 
-#include <Assets.h>
 #include <MainMenu.h>
 #include <GameMap.h>
 #include <GameManager.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
+
+#include <Assets/Assets.h>
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
@@ -26,14 +27,14 @@ int StartGame(GameOptions &opt) {
     auto gameManager = std::make_shared<GameManager>(opt);
 
     /* Get the assets */
-    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir);
+    gameManager->SetDirectory(opt.dataDir);
+    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
-        Logger::error("GANE") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
+        Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
     }
 
-    TgxFile tgx_loading(gameManager);
-    tgx_loading.LoadFromDisk("data/gfx/frontend_loading.tgx");
+    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() + "gfx/frontend_loading.tgx");
 
     /* Init the menu */
     MainMenu menu(gameManager);
@@ -44,14 +45,15 @@ int StartGame(GameOptions &opt) {
         gameManager->Clear();
 
         /* Load a file */
-        gameManager->Cache(files.at(index));
+        std::string path = files.at(index);
+        gameManager->Cache(path);
         index++;
 
         /* Normalized loading progess */
         double progress = (double)index / (double)files.size();
 
         /* Render the background */
-        gameManager->Render(tgx_loading);
+        gameManager->Render(*tgx_loading);
 
         /* Render the loading bar */
         gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
@@ -61,30 +63,28 @@ int StartGame(GameOptions &opt) {
         gameManager->Flush();
     }
 
-    tgx_loading.Unload();
+    tgx_loading->Unload();
 
     /* Start the intro sequence and the main menu */
     int ret = menu.Startup();
     if(ret != EXIT_SUCCESS) return ret;
 
-//    /* ------ Alpha testing ------ */
-//
-//    AudioSource aud("data/fx/music/Glory_06.raw");
-//    aud.Play();
-//
-//    GameMap map(gameManager);
-//
-//    while(gameManager->Running()) {
-//        gameManager->Clear();
-//        gameManager->StartTimer();
-//
-//        map.Render();
-//
-//        gameManager->Flush();
-//        gameManager->EndTimer();
-//    }
-//
-//    return EXIT_SUCCESS;
+    /* ------ Alpha testing ------ */
+
+    AudioSource aud("data/fx/music/Glory_06.raw", true);
+    aud.Play();
+
+    GameMap map(gameManager);
+
+    while(gameManager->Running()) {
+        gameManager->Clear();
+        gameManager->StartTimer();
+
+        map.Render();
+
+        gameManager->Flush();
+        gameManager->EndTimer();
+    }
 
     /* ------ Alpha testing ------ */
 

@@ -1,4 +1,5 @@
 #include <Rendering/Renderer.h>
+#include <Rendering/Texture.h>
 
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
@@ -18,10 +19,13 @@ void Renderer::Init(SDL_Window *window) {
     }
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
+    /* Window size */
+    SDL_AddEventWatch(ResizeEventWatcher, static_cast<void*>(this));
+    SDL_GetWindowSize(window, &width, &height);
 }
 
 void Renderer::Update() {
-    SDL_GetWindowSize(window, &width, &height);
 }
 
 void Renderer::Clear() {
@@ -160,4 +164,16 @@ uint32_t Renderer::ToCoordX(double c) {
 
 uint32_t Renderer::ToCoordY(double c) {
     return (int)(c * GetHeight());
+}
+
+int Renderer::ResizeEventWatcher(void *data, SDL_Event *event) {
+    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED) {
+        SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
+        Renderer *rend = static_cast<Renderer*>(data);
+        if (win == rend->window) {
+            SDL_GetWindowSize(win, &rend->width, &rend->height);
+        }
+    }
+
+    return 0;
 }

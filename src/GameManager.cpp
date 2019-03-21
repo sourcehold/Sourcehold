@@ -1,7 +1,6 @@
 #include <SDL2/SDL.h>
 
 #include <GameManager.h>
-#include <Assets.h>
 
 #include <Events/EventHandler.h>
 
@@ -70,16 +69,16 @@ void GameManager::Cache(const std::string &filename) {
 
     switch(ExtToType(ext)) {
         case TGXFILE: {
-            _tgxFiles.emplace(GetFilename(filename), std::make_shared<TgxFile>(shared_from_this(), filename));
+            _tgxFiles.emplace(filename, std::make_shared<TgxFile>(shared_from_this(), filename));
         }break;
         case GM1FILE: {
-            _gm1Files.emplace(GetFilename(filename), std::make_shared<Gm1File>(shared_from_this(), filename));
+            _gm1Files.emplace(filename, std::make_shared<Gm1File>(shared_from_this(), filename));
         }break;
         case ANIFILE: {
-            _aniFiles.emplace(GetFilename(filename), std::make_shared<AniFile>(shared_from_this(), filename));
+            _aniFiles.emplace(filename, std::make_shared<AniFile>(shared_from_this(), filename));
         }break;
         case BINK_VIDEO: {
-            _bikFiles.emplace(GetFilename(filename), std::make_shared<BinkVideo>(shared_from_this(), filename));
+            _bikFiles.emplace(filename, std::make_shared<BinkVideo>(shared_from_this(), filename));
         }break;
         case UNKNOWN: {
             Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;

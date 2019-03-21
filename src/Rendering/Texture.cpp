@@ -1,4 +1,5 @@
 #include <Rendering/Texture.h>
+#include <Rendering/Renderer.h>
 
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;

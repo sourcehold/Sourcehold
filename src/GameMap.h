@@ -7,9 +7,6 @@
 #include <GameManager.h>
 
 #include <Rendering/Renderer.h>
-#include <Rendering/TextureAtlas.h>
-#include <Rendering/Tileset.h>
-#include <Rendering/StaticElement.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
@@ -25,6 +22,10 @@ namespace Sourcehold
         using namespace Parsers;
         using namespace Events;
 
+        struct MapTile {
+            uint16_t tileset;
+        };
+
         class GameMap : protected EventConsumer<Keyboard>, protected EventConsumer<Mouse>
         {
                 int mult = 1;
@@ -39,7 +40,7 @@ namespace Sourcehold
                 void onEventReceive(Mouse &mouseEvent) override;
 
                 uint16_t maypole;
-                Gm1File gm1_tile, gm1_maypole, gm1_churches;
+                std::shared_ptr<Gm1File> gm1_tile, gm1_maypole, gm1_churches;
                 std::shared_ptr<GameManager> manager;
                 std::vector<SDL_Rect> tiles;
         };

@@ -5,7 +5,7 @@
 #include <System/System.h>
 
 #include <AnimationHandler.h>
-#include <Assets.h>
+#include <Assets/Assets.h>
 
 #include <Rendering/Display.h>
 #include <Rendering/Renderer.h>
@@ -77,8 +77,10 @@ namespace Sourcehold
                 std::shared_ptr<AniFile> GetAni(const std::string &filename);
                 std::shared_ptr<BinkVideo> GetBik(const std::string &filename);
 
+
                 inline double GetTime() { return time; }
                 inline std::shared_ptr<EventHandler> GetHandler() { return eventHandler; }
+                inline std::string GetDirectory() { return _dataFolder; }
             protected:
                 void Update();
                 AssetType ExtToType(const std::string &ext);

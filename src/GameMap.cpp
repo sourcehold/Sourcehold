@@ -1,4 +1,7 @@
 #include <GameMap.h>
+#include <Rendering/TextureAtlas.h>
+#include <Rendering/Tileset.h>
+#include <Rendering/StaticElement.h>
 
 using namespace Sourcehold::Game;
 
@@ -7,19 +10,16 @@ using namespace Sourcehold::Game;
 GameMap::GameMap(std::shared_ptr<GameManager> man) :
     EventConsumer<Keyboard>(man->GetHandler()),
     EventConsumer<Mouse>(man->GetHandler()),
-    manager(man),
-    gm1_tile(man),
-    gm1_maypole(man),
-    gm1_churches(man)
+    manager(man)
 {
-    gm1_maypole.LoadFromDisk("data/gm/anim_maypole.gm1");
-    gm1_tile.LoadFromDisk("data/gm/tile_land8.gm1");
-    //gm1_churches.LoadFromDisk("data/gm/tile_churches.gm1");
+    gm1_maypole = man->GetGm1(man->GetDirectory() + "gm/anim_maypole.gm1");
+    gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1");
+    gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1");
 
-//    tiles.resize(DIM * DIM * 2);
-//    for(uint32_t i = 0; i < tiles.size(); i++) {
-//        tiles[i] = gm1_tile.GetTile(i % gm1_tile.GetNumTiles());
-//    }
+    tiles.resize(DIM * DIM * 2);
+    for(uint32_t i = 0; i < tiles.size(); i++) {
+        tiles[i] = gm1_tile->GetTile(i % gm1_tile->GetNumTiles());
+    }
 
     maypole = manager->AddSlot({ 0, 31 });
 }
@@ -35,38 +35,31 @@ void GameMap::Render() {
 //        int x = (30 * ix) + (iy % 2 == 0 ? 15 : 0);
 //
 //        manager->Render(
-//            gm1_tile,
+//            *gm1_tile,
 //            mult * x - manager->CamX(), mult * y - manager->CamY(),
 //            mult * 30, mult * 16,
 //            &clip
 //        );
 //    }
-
-    //Texture & tex = gm1_maypole.Get(/*manager->GetFrame(maypole)*/0);
-    //manager->Render(
-    //    tex,
-    //    mult * 100 - manager->CamX(), mult * 10 - manager->CamY(),
-    //    mult * tex.GetWidth(), mult * tex.GetHeight()
-    //);
-
-    //manager->Render(
-    //    tex,
-    //    mult * 1 - manager->CamX(), mult * 1 - manager->CamY(),
-    //    mult * tex.GetWidth(), mult * tex.GetHeight()
-    //);
-
-    //manager->Render(
-    //    tex,
-    //    mult * 200 - manager->CamX(), mult * 20 - manager->CamY(),
-    //    mult * tex.GetWidth(), mult * tex.GetHeight()
-    //);
-
-    //Texture &tex1 = gm1_churches.Get(0);
-    //manager->Render(
-    //    tex1,
-    //    mult * 100 - manager->CamX(), mult * 100 - manager->CamY(),
-    //    mult * tex.GetWidth(), mult * tex.GetHeight()
-    //);
+//
+//    Texture & tex = gm1_maypole->Get(manager->GetFrame(maypole));
+//    manager->Render(
+//        tex,
+//        mult * 100 - manager->CamX(), mult * 10 - manager->CamY(),
+//        mult * tex.GetWidth(), mult * tex.GetHeight()
+//    );
+//
+//    manager->Render(
+//        tex,
+//        mult * 1 - manager->CamX(), mult * 1 - manager->CamY(),
+//        mult * tex.GetWidth(), mult * tex.GetHeight()
+//    );
+//
+//    manager->Render(
+//        tex,
+//        mult * 200 - manager->CamX(), mult * 20 - manager->CamY(),
+//        mult * tex.GetWidth(), mult * tex.GetHeight()
+//    );
 }
 
 void GameMap::onEventReceive(Keyboard &keyEvent) {

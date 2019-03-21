@@ -77,7 +77,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
                         buf++;
                         pixelColor = pal[256 + index];
                     }else {
-                        std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                        pixelColor = *reinterpret_cast<uint16_t*>(buf);
                         buf += 2;
                     }
                     uint8_t r,g,b;
@@ -96,7 +96,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
                     buf++;
                     pixelColor = pal[256 + index];
                 }else {
-                    std::copy(buf, buf + 2, reinterpret_cast<char*>(&pixelColor));
+                    pixelColor = *reinterpret_cast<uint16_t*>(buf);
                     buf += 2;
                 }
                 uint8_t r,g,b;
@@ -111,7 +111,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
                 }
             }break;
             default: {
-                Logger::error("PARSERS") << "Unknown token in tgx!" << std::endl;
+                Logger::warning("PARSERS") << "Unknown token in tgx!" << std::endl;
                 return;
             }break;
         }

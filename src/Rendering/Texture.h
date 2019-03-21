@@ -7,7 +7,6 @@
 #include <Config.h>
 #include <System/Logger.h>
 
-#include <Rendering/Renderer.h>
 #include <Rendering/Rendering.h>
 
 namespace Sourcehold

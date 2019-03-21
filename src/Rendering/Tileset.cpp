@@ -1,4 +1,8 @@
 #include <Rendering/Tileset.h>
+#include <System/Logger.h>
+
+#include <cmath>
+#include <utility>
 
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
@@ -17,9 +21,7 @@ void Tileset::Allocate(uint32_t num) {
     this->num = num;
 
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-    width = 30 * numRows;
-    height = 16 * numRows;
-    Texture::AllocNew(width, height, SDL_PIXELFORMAT_RGBA8888);
+    Texture::AllocNew(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA8888);
 }
 
 void Tileset::SetTile(Texture &image, uint32_t index) {
@@ -42,6 +44,10 @@ SDL_Rect Tileset::GetTile(uint32_t index) {
     rect.h = 16;
 
     return rect;
+}
+
+void Tileset::Clear() {
+    Texture::Destroy();
 }
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {

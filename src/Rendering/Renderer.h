@@ -7,7 +7,6 @@
 
 #include <System/Logger.h>
 
-#include <Rendering/Texture.h>
 #include <Rendering/Rendering.h>
 #include <Rendering/Camera.h>
 
@@ -66,6 +65,8 @@ namespace Sourcehold
                 
                 uint32_t ToCoordX(double c);
                 uint32_t ToCoordY(double c);
+            protected:
+                static int ResizeEventWatcher(void *data, SDL_Event *event);
         };
     }
 }

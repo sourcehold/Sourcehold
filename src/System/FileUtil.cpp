@@ -27,7 +27,7 @@ bool System::IsFileHidden(const std::string &path) {
     return false;
 }
 
-std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, bool recursive){
+std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, const std::string &ext, bool recursive){
     std::vector<std::string> files;
     boost::filesystem::path dir(path);
     if(boost::filesystem::exists(path) && boost::filesystem::is_directory(dir)) {
@@ -35,7 +35,7 @@ std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, 
             boost::filesystem::recursive_directory_iterator it(dir);
             boost::filesystem::recursive_directory_iterator endit;
             while (it != endit) {
-                if(boost::filesystem::is_regular_file(*it) && !IsFileHidden(it->path().string())) {
+                if(boost::filesystem::is_regular_file(*it) && !IsFileHidden(it->path().string()) && it->path().extension().string() == ext) {
                     files.push_back(it->path().string());
                 }
                 ++it;
@@ -45,7 +45,7 @@ std::vector<std::string> System::GetDirectoryRecursive(const std::string &path, 
             boost::filesystem::directory_iterator it(dir);
             boost::filesystem::directory_iterator endit;
             while (it != endit) {
-                if(boost::filesystem::is_regular_file(*it) && !IsFileHidden(it->path().string())) {
+                if(boost::filesystem::is_regular_file(*it) && !IsFileHidden(it->path().string()) && it->path().extension().string() == ext) {
                     files.push_back(it->path().string());
                 }
                 ++it;

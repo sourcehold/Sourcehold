@@ -1,13 +1,9 @@
 #pragma once
 
-#include <cmath>
+#include <cinttypes>
 #include <memory>
 
-#include <utility>
-
 #include <SDL2/SDL.h>
-
-#include <System/Logger.h>
 
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>
@@ -30,6 +26,7 @@ namespace Sourcehold
 
                 void Allocate(uint32_t num);
                 void SetTile(Texture &image, uint32_t index);
+                void Clear();
                 
                 inline uint32_t GetNumTiles() { return num; }
                 SDL_Rect GetTile(uint32_t index);
@@ -37,7 +34,6 @@ namespace Sourcehold
                 std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
 
                 std::shared_ptr<Renderer> renderer;
-                uint32_t width, height;
                 uint32_t numRows, num;
         };
     }

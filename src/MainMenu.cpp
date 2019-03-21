@@ -21,11 +21,11 @@ void MainMenu::PlayMusic() {
 int MainMenu::Startup() {
     aud_chantloop.LoadSong("data/fx/music/chantloop1.raw", true);
 
-    tgx_firefly = manager->GetTgx("campaign_map_england_03.tgx");
-    tgx_taketwo = manager->GetTgx("logo2.tgx");
-    tgx_present = manager->GetTgx("logo3.tgx");
-    tgx_logo = manager->GetTgx("startup screen.tgx");
-    intro = manager->GetBik("intro.bik");
+    tgx_firefly = manager->GetTgx(manager->GetDirectory() + "gfx/logo1.tgx");
+    tgx_taketwo = manager->GetTgx(manager->GetDirectory() + "gfx/logo2.tgx");
+    tgx_present = manager->GetTgx(manager->GetDirectory() + "gfx/logo3.tgx");
+    tgx_logo = manager->GetTgx(manager->GetDirectory() + "gfx/startup screen.tgx");
+    intro = manager->GetBik(manager->GetDirectory() + "binks/intro.bik");
 
     startTime = manager->GetTime();
 
@@ -77,6 +77,7 @@ int MainMenu::Startup() {
             manager->Render(*intro, 0.0, 0.2, 1.0, 0.6);
         }else if(current == STARTUP_MAIN_MENU) {
             aud_startup.Stop();
+            return EXIT_SUCCESS;
             return EnterMainMenu();
         }
 		
