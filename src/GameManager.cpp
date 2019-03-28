@@ -126,10 +126,10 @@ std::shared_ptr<BinkVideo> GameManager::GetBik(const std::string &filename) {
 void GameManager::Update() {
     if(!IsOpen() || !eventHandler->FetchEvents()) running = false;
 
+    time = SDL_GetTicks() / 1000.0;
+    Camera::Update();
     AnimationHandler::Update();
     Renderer::Update();
-
-    time = SDL_GetTicks() / 1000.0;
 }
 
 AssetType GameManager::ExtToType(const std::string &ext) {

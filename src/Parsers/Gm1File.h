@@ -1,13 +1,7 @@
 #pragma once
 
 #include <cinttypes>
-#include <algorithm>
-#include <vector>
-#include <thread>
-#include <atomic>
 #include <memory>
-
-#include <System/Logger.h>
 
 #include <Rendering/Texture.h>
 #include <Rendering/Tileset.h>
@@ -16,7 +10,6 @@
 #include <Rendering/Rendering.h>
 
 #include <Parsers/Parser.h>
-#include <Parsers/TgxFile.h>
 
 namespace Sourcehold
 {
@@ -26,10 +19,10 @@ namespace Sourcehold
 
         /**
          * Container format for tiles/animations/images
-         * Creates a texture in TextureAtlas for every image collection (Building, unit, etc.)
+         * Creates an entry in TextureAtlas for every image collection (Building, unit, etc.)
          * and a Tileset depending on the stored type
          */
-        class Gm1File : private Parser, public TextureAtlas, public Tileset
+        class Gm1File : private Parser
         {
             public:
                 Gm1File(std::shared_ptr<Renderer> rend);
@@ -41,12 +34,17 @@ namespace Sourcehold
                 bool LoadFromDisk(const std::string &path, bool threaded = false);
                 void DumpInformation();
                 void Free();
+
+                inline std::shared_ptr<Tileset> GetTileset() { return tileset; }
+                inline std::shared_ptr<TextureAtlas> GetTextureAtlas() { return textureAtlas; }
             protected:
                 const uint32_t max_num = 2048;
                 bool GetCollections();
                 bool GetImage(uint32_t index);
                 void ReadPalette();
             private:
+                struct ImageHeader;
+                struct Gm1Entry;
                 struct Gm1Header {
                     /* Unknown */
                     uint32_t u0[3];
@@ -73,8 +71,9 @@ namespace Sourcehold
                     /* Unknown */
                     uint32_t u3;
                 } header;
-                struct ImageHeader;
-                struct Gm1Entry;
+
+                std::shared_ptr<TextureAtlas> textureAtlas;
+                std::shared_ptr<Tileset> tileset;
 
                 std::shared_ptr<Renderer> renderer;
                 std::string path;

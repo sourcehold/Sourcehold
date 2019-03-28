@@ -1,4 +1,11 @@
+#include <algorithm>
+#include <vector>
+#include <thread>
+#include <atomic>
+
 #include <Parsers/Gm1File.h>
+#include <Parsers/TgxFile.h>
+#include <System/Logger.h>
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
@@ -35,14 +42,21 @@ struct Gm1File::Gm1Entry {
     uint32_t offset;
 };
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser(), TextureAtlas(rend), Tileset(rend)
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser()
 {
     this->renderer = rend;
+
+    textureAtlas = std::make_shared<TextureAtlas>(rend);
+    tileset = std::make_shared<Tileset>(rend);
 }
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend, const std::string &path) : Parser(), TextureAtlas(rend), Tileset(rend)
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend, const std::string &path) : Parser()
 {
     this->renderer = rend;
+
+    textureAtlas = std::make_shared<TextureAtlas>(rend);
+    tileset = std::make_shared<Tileset>(rend);
+
     this->LoadFromDisk(path, false);
 }
 
@@ -108,22 +122,28 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
     Parser::Close();
 
     /* Allocate images */
+    std::vector<uint32_t> entryDims(header.num);
+    for(n = 0; n < header.num; n++) {
+        uint32_t dim = ((uint32_t)entries[n].header.width << 16) | (uint16_t)entries[n].header.height;
+        entryDims[n] = dim;
+    }
+    textureAtlas->Allocate(entryDims);
+    textureAtlas->LockTexture();
+
     if(header.type == Gm1Header::TYPE_TILE) {
         /* One collection -> one texture */
-        //TextureAtlas::Resize(header.num);
-        //Tileset::Allocate(header.num);
-        //Tileset::LockTexture();
-        //GetCollections();
-        //Tileset::UnlockTexture();
+        tileset->Allocate(header.num);
+        tileset->LockTexture();
+        GetCollections();
+        tileset->UnlockTexture();
     }else {
         /* One entry -> one texture */
-        TextureAtlas::Allocate(entries.size(), entries[0].header.width, entries[0].header.height);
         for(n = 0; n < entries.size(); n++) {
-            //tex.LockTexture();
-            //GetImage(n);
-            //tex.UnlockTexture();
+            GetImage(n);
         }
     }
+
+    textureAtlas->UnlockTexture();
 
     delete [] imgdata;
     entries.clear();
@@ -137,8 +157,8 @@ void Gm1File::DumpInformation() {
 
 void Gm1File::Free() {
     entries.clear();
-    TextureAtlas::Clear();
-    Tileset::Clear();
+    textureAtlas->Clear();
+    tileset->Clear();
 }
 
 bool Gm1File::GetCollections() {
@@ -154,14 +174,14 @@ bool Gm1File::GetImage(uint32_t index) {
 
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
-            //TgxFile::ReadTgx(static_cast<Texture>(this->TextureAtlas), position, entries[index].size, 0, 0, nullptr);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, 0, 0, nullptr);
         }break;
         case Gm1Header::TYPE_ANIMATION: {
-            //TgxFile::ReadTgx(TextureAtlas::Get(index), position, entries[index].size, 0, 0, palette);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, 0, 0, palette);
         }break;
         case Gm1Header::TYPE_TILE: {
             /* Read tile */
-            SDL_Rect tile = Tileset::GetTile(index);
+            SDL_Rect tile = tileset->GetTile(index);
 
             /* Extract pixel data */
             const static uint8_t lines[16] = {
@@ -181,16 +201,18 @@ bool Gm1File::GetImage(uint32_t index) {
                     TgxFile::ReadPixel(pixel, r, g, b);
 
                     /* Add to tileset texture */
-                    Tileset::SetPixel(
+                    tileset->SetPixel(
                         tile.x + (15 - lines[l] / 2 + i),
                         tile.y + l,
                         r, g, b, 0xFF
                     );
                 }
             }
+
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, 0, 0, nullptr);
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
-//            Texture &target = TextureAtlas::Get(index);
+//            Texture &target = textureAtlas.Get(index);
 //
 //            for(uint32_t x = 0; x < entries[index].header.width; x++) {
 //                for(uint32_t y = 0; y < entries[index].header.height; y++) {

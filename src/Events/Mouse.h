@@ -17,6 +17,7 @@ namespace Sourcehold
         {
                 std::list<EventType> types;
                 SDL_Event event;
+                EventType type;
             public:
                 Mouse(std::list<EventType> types);
                 Mouse(const Mouse &mouse) = delete;
@@ -30,6 +31,11 @@ namespace Sourcehold
                 bool MmbUp();
                 bool RmbUp();
 
+                /* Mouse position */
+                uint32_t GetPosX();
+                uint32_t GetPosY();
+
+                EventType GetType();
                 void eventCallback(SDL_Event &event) override;
         };
     }
