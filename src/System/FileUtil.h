@@ -28,6 +28,6 @@ namespace Sourcehold
          * Get all the files in a directory and its
          * sub directories
          */
-        std::vector<std::string> GetDirectoryRecursive(const std::string &path, const std::string &ext = "", bool recursive = true);
+        std::vector<std::string> GetDirectoryRecursive(const std::string &path, const std::string &extension = "", bool recursive = true);
     }
 }

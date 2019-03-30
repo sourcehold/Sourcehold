@@ -75,6 +75,7 @@ int MainMenu::Startup() {
             aud_startup.UpdateFade();
             intro->Decode();
             manager->Render(*intro, 0.0, 0.2, 1.0, 0.6);
+            if(!intro->IsRunning()) current++;
         }else if(current == STARTUP_MAIN_MENU) {
             aud_startup.Stop();
             return EXIT_SUCCESS;

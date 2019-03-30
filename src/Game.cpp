@@ -28,7 +28,7 @@ int StartGame(GameOptions &opt) {
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
-    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
+    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir);
     if(files.empty()) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;

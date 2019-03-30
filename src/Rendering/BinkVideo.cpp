@@ -170,7 +170,7 @@ void BinkVideo::Decode() {
     int ret;
     if(av_read_frame(ic, &packet) < 0) {
         running = false;
-        return;   
+        return;
     }else running = true;
 
     if(packet.stream_index == videoStream && packet.size) {

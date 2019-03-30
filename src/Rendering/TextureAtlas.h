@@ -35,6 +35,8 @@ namespace Sourcehold
 
                 inline uint32_t GetNumTextures() { return num; }
             protected:
+                inline static uint16_t UnpackWidth(uint32_t e) { return e >> 16; }
+                inline static uint16_t UnpackHeight(uint32_t e) { return e & (uint16_t)0xFF; } 
                 std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
         };
     }

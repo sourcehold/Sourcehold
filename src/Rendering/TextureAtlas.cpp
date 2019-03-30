@@ -1,5 +1,7 @@
 #include <Rendering/TextureAtlas.h>
+
 #include <cmath>
+#include <algorithm>
 #include <utility>
 
 using namespace Sourcehold::Rendering;
@@ -20,12 +22,34 @@ TextureAtlas::~TextureAtlas() {
 }
 
 void TextureAtlas::Allocate(std::vector<uint32_t> entries) {
-    for(uint32_t e : entries) {
-        uint16_t w = e >> 16;
-        uint16_t h = e & (uint16_t)0xFF;
+    if(!entries.size()) {
+        return;   
     }
 
-    Texture::AllocNew(300, 300, SDL_PIXELFORMAT_RGBA8888);
+    /* Sort by amount of pixels */
+    std::sort(
+        entries.begin(),
+        entries.begin() + entries.size(), 
+        [](uint32_t e1, uint32_t e2) -> bool {
+            return 
+                (UnpackWidth(e1) * UnpackHeight(e1)) <
+                (UnpackWidth(e2) * UnpackHeight(e2));
+        }
+    );
+
+    for(uint32_t i = 0; i < entries.size(); i++) {
+        uint32_t e = entries[i];
+
+        SDL_Rect rect;
+        rect.x = 0;
+        rect.y = 0;
+        rect.w = UnpackWidth(e);
+        rect.h = UnpackHeight(e);
+
+        this->entries.push_back(rect);
+    }
+
+    Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGBA8888);
 }
 
 void TextureAtlas::Allocate(uint32_t num, uint16_t width, uint16_t height) {

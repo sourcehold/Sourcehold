@@ -182,6 +182,7 @@ bool Gm1File::GetImage(uint32_t index) {
         case Gm1Header::TYPE_TILE: {
             /* Read tile */
             SDL_Rect tile = tileset->GetTile(index);
+            SDL_Rect part = textureAtlas->Get(index);
 
             /* Extract pixel data */
             const static uint8_t lines[16] = {
@@ -209,7 +210,7 @@ bool Gm1File::GetImage(uint32_t index) {
                 }
             }
 
-            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, 0, 0, nullptr);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, part.x, part.y, nullptr);
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
 //            Texture &target = textureAtlas.Get(index);
