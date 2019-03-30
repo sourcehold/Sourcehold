@@ -13,6 +13,9 @@ extern "C" {
 #endif
 }
 
+#include <AL/al.h>
+#include <AL/alc.h>
+
 #include <memory>
 
 #include <Config.h>
@@ -22,14 +25,10 @@ extern "C" {
 #include <Rendering/Renderer.h>
 #include <Rendering/Texture.h>
 
-#include <Audio/AudioSource.h>
-
 namespace Sourcehold
 {
     namespace Rendering
     {
-        using Audio::AudioSource;
-
         /*
          * Init the avcodec context needed by the BinkVideo class
          */
@@ -43,21 +42,28 @@ namespace Sourcehold
 
         /*
          * A single bink video file, exposes a texture as a frame buffer
-         * and an AudioSource as an audio buffer. Expects a valid
-         * avcodec context
          */
-        class BinkVideo : public Texture, public AudioSource
+        class BinkVideo : public Texture
         {
                 AVFormatContext *ic;
                 AVCodec *decoder, *audioDecoder;
                 AVPacket packet;
-                AVFrame *frame;
+                AVFrame *frame, *audioFrame;
                 AVCodecContext *codecCtx, *audioCtx;
                 SwsContext *sws;
                 SwrContext *swr;
+                ALuint alSource;
+                ALuint alFreeBuffers[4];
+                ALuint alBuffers[4];
+                ALuint alNumFreeBuffers = 4;
+                ALuint alNumChannels;
+                ALuint alFormat;
+                ALuint alSampleRate;
+                char *audioBuffer;
                 int videoStream, audioStream;
-                double timebase = 0.0;
-                bool hasAudio = false, looping, running = false, valid = false;
+                uint32_t lastTicks;
+                float fps;
+                bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
             public:
                 BinkVideo(std::shared_ptr<Renderer> man);
                 BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping = false);
@@ -65,10 +71,11 @@ namespace Sourcehold
 
                 bool LoadFromDisk(const std::string &path, bool looping = false);
                 void Close();
-                void Decode();
+                void Update();
 
                 inline bool IsRunning() { return running; }
-            private:
+            protected:
+                void Decode();
         };
     }
 }

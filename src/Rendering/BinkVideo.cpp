@@ -1,4 +1,9 @@
+#include <cstring>
+
+#include <SDL2/SDL.h>
+
 #include <Rendering/BinkVideo.h>
+#include <Audio/Audio.h>
 
 using namespace Sourcehold;
 using namespace System;
@@ -23,7 +28,7 @@ void Rendering::DestroyAvcodec() {
 
 }
 
-BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man), AudioSource()
+BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man)
 {
     ic = avformat_alloc_context();
     if(!ic) {
@@ -31,7 +36,7 @@ BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man), AudioSource(
     }
 }
 
-BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping) : Texture(man), AudioSource() {
+BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping) : Texture(man) {
     ic = avformat_alloc_context();
     if(!ic) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
@@ -58,7 +63,7 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         return false;
     }
 
-    ic->max_analyze_duration = 10000000;
+    ic->max_analyze_duration = 10000;
     if(avformat_find_stream_info(ic, NULL) < 0) {
         Logger::error("RENDERING") << "Unable to get bink video stream info!" << std::endl;
         return false;
@@ -70,6 +75,8 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         Logger::error("RENDERING") << "Unable to find bink video stream index!" << std::endl;
         return false;
     }
+
+    fps = (float)ic->streams[videoStream]->avg_frame_rate.num / (float)ic->streams[videoStream]->avg_frame_rate.den;
 
     if(audioStream >= 0) {
         audioDecoder = avcodec_find_decoder(AV_CODEC_ID_BINKAUDIO_RDFT);
@@ -107,6 +114,8 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
             return false;
         }
 
+        audioFrame = av_frame_alloc();
+
         hasAudio = true;
     }
 
@@ -124,8 +133,6 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
 
     avcodec_parameters_to_context(codecCtx, ic->streams[videoStream]->codecpar);
 
-    timebase = av_q2d(ic->streams[videoStream]->time_base);
-
     uint8_t bink_extradata[4] = { 0 } ;
     codecCtx->extradata = bink_extradata;
     codecCtx->extradata_size = sizeof(bink_extradata);
@@ -136,11 +143,9 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         return false;
     }
 
-    av_init_packet(&packet);
-
     frame = av_frame_alloc();
     if(!frame) {
-        Logger::error("RENDERING") << "Unable to allocate libavcodec video frame!" << std::endl;
+        Logger::error("RENDERING") << "Unable to allocate libavcodec frame!" << std::endl;
         return false;
     }
 
@@ -162,31 +167,62 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
 
     Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
     valid = true;
+    running = true;
+
+    lastTicks = SDL_GetTicks();
 
     return true;
 }
 
+void BinkVideo::Close() {
+    if(valid) {
+        avformat_close_input(&ic);
+        av_frame_free(&frame);
+        decoder->close(codecCtx);
+        av_free(codecCtx);
+        
+        if(hasAudio) {
+            decoder->close(audioCtx);
+            av_free(audioCtx);
+            av_frame_free(&audioFrame);
+            alSourceStop(alSource);
+            free(audioBuffer);
+            alDeleteSources(1, &alSource);
+            alDeleteBuffers(4, alBuffers);
+        }
+    }
+}
+
+void BinkVideo::Update() {
+    if(!running || !valid) return;
+
+    Decode();
+}
+
 void BinkVideo::Decode() {
+    av_init_packet(&packet);
+
     int ret;
     if(av_read_frame(ic, &packet) < 0) {
-        running = false;
-        return;
-    }else running = true;
-
-    if(packet.stream_index == videoStream && packet.size) {
-        ret = avcodec_send_packet(codecCtx, &packet);
-        if(ret < 0) {
-            Logger::error("RENDERING") << "An error occured during bink video decoding!" << std::endl;
-            return;;
+        if(looping) {
+            av_seek_frame(ic, -1, 0, 0);
+            if(av_read_frame(ic, &packet) < 0) {
+                return;
+            }
+        }else {
+            return;
         }
+    }
+
+    if(packet.stream_index == videoStream) {
+        if(avcodec_send_packet(codecCtx, &packet) < 0) return;
 
         ret = avcodec_receive_frame(codecCtx, frame);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             return;
         }
 
-        long wait_until = packet.pts * timebase;
-        //SDL_Delay(wait_until);
+        /* TODO */
 
         uint32_t dst[800 * 600];
         uint8_t* slices[3] = {(uint8_t*)&dst[0], 0, 0};
@@ -195,32 +231,112 @@ void BinkVideo::Decode() {
         Texture::LockTexture();
 
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-        memcpy(Texture::GetData(), dst, 800*600*4);
+        std::memcpy(Texture::GetData(), dst, 800*600*4);
 
         Texture::UnlockTexture();
-    }else if(packet.stream_index == audioStream && packet.size) {
-        /*ret = avcodec_send_packet(audioCtx, &packet);
-        if(ret < 0) {
-            Logger::error("RENDERING") << "An error occured during bink audio decoding!" << std::endl;
-            return;;
+    }else if(packet.stream_index == audioStream && !IsOpenALMuted()) {
+        av_frame_unref(audioFrame);
+
+        ret = avcodec_send_packet(audioCtx, &packet);
+        if(ret < 0) return;
+
+        while(ret >= 0) {
+            ret = avcodec_receive_frame(audioCtx, audioFrame);
+            if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+                return;
+            }
+
+            if(!audioInit) {
+                /* Init OpenAL stuff */
+                alGenSources(1, &alSource);
+                Audio::PrintError();
+                alGenBuffers(4, alBuffers);
+                Audio::PrintError();
+
+                alSource3f(alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
+                alSource3f(alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+                alSourcef(alSource, AL_PITCH, 1.0f);
+                alSourcef(alSource, AL_GAIN, 1.0f);
+
+                /* Determine number of channels and format */
+                if(audioFrame->channel_layout == AV_CH_LAYOUT_MONO) {
+                    alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
+                    alNumChannels = 1;
+                }else if(audioFrame->channel_layout == AV_CH_LAYOUT_STEREO) {
+                    alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
+                    alNumChannels = 2;
+                }else {
+                    Logger::error("RENDERING") << "Bink audio channel layout is wrong!" << std::endl;
+                    return;
+                }
+
+                /* Setup audio queue */
+                for(int i = 0; i < 4; i++) {
+                    alFreeBuffers[i] = alBuffers[i];
+                }
+
+                alSampleRate = audioFrame->sample_rate;
+                audioBuffer = (char*)std::malloc(alNumChannels * audioFrame->nb_samples * 4);
+
+                audioInit = true;
+            }
+
+            std::memset(audioBuffer, 0, alNumChannels * audioFrame->nb_samples * 4);
+
+            int buffersFinished = 0;
+            alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &buffersFinished);
+            Audio::PrintError();
+
+            if(buffersFinished > 0) {
+                alSourceStop(alSource);
+
+                for(;buffersFinished > 0; buffersFinished--) {
+                    ALuint buffer = 0;
+                    alSourceUnqueueBuffers(alSource, 1, &buffer);
+                    Audio::PrintError();
+
+                    if(buffer > 0) {
+                        alFreeBuffers[alNumFreeBuffers] = buffer;
+                        alNumFreeBuffers++;
+                    }
+                }
+
+                alSourcePlay(alSource);
+            }
+
+            if(alNumFreeBuffers > 0) {
+                /**
+                 * TODO: Other versions of Stronghold might include
+                 * different audio formats (investigate!)
+                 */
+                if(audioFrame->format != AV_SAMPLE_FMT_FLT) return;
+
+                ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
+                uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
+                uint32_t dataSize = numSamples * 2;
+
+                /* Convert samples */
+                float *src = (float*)audioFrame->extended_data[0];
+                short *dst = (short*)audioBuffer;
+                for(int i = 0; i < numSamples; i++) {
+                    float v = src[i] * 32768.0f;
+                    if(v > 32767) v = 32767;
+                    if(v < -32768) v = 32768;
+                    dst[i] = (short)v;
+                }
+
+                alSourceStop(alSource);
+
+                alBufferData(alBuffer, alFormat, audioBuffer, dataSize-16, alSampleRate);
+                Audio::PrintError();
+                alSourceQueueBuffers(alSource, 1, &alBuffer);
+                Audio::PrintError();
+
+                alSourcePlay(alSource);
+
+                alNumFreeBuffers--;
+                alFreeBuffers[alNumFreeBuffers] = 0;
+            }
         }
-
-        ret = avcodec_receive_frame(audioCtx, frame);
-        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-            return;
-        }*/
-    }
-
-    av_packet_unref(&packet);
-}
-
-void BinkVideo::Close() {
-    if(valid) {
-        avformat_close_input(&ic);
-        av_frame_free(&frame);
-        decoder->close(codecCtx);
-        decoder->close(audioCtx);
-        av_free(codecCtx);
-        av_free(audioCtx);
     }
 }
