@@ -19,7 +19,7 @@ TgxFile::TgxFile(std::shared_ptr<Renderer> rend, const std::string &path) : Pars
 }
 
 TgxFile::~TgxFile() {
-
+    Unload();
 }
 
 bool TgxFile::LoadFromDisk(const std::string &path) {
@@ -54,7 +54,6 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
 }
 
 void TgxFile::Unload() {
-    Texture::Destroy();
 }
 
 void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {

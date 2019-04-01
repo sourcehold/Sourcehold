@@ -122,9 +122,9 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
     Parser::Close();
 
     /* Allocate images */
-    std::vector<uint32_t> entryDims(header.num);
+    std::vector<std::pair<uint32_t, uint32_t>> entryDims(header.num);
     for(n = 0; n < header.num; n++) {
-        uint32_t dim = ((uint32_t)entries[n].header.width << 16) | (uint16_t)entries[n].header.height;
+        std::pair<uint32_t, uint32_t> dim(entries[n].header.width, entries[n].header.height);
         entryDims[n] = dim;
     }
     textureAtlas->Allocate(entryDims);
@@ -168,16 +168,18 @@ bool Gm1File::GetCollections() {
     return true;
 }
 
-bool Gm1File::GetImage(uint32_t index) {    
+bool Gm1File::GetImage(uint32_t index) {
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
 
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
-            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, 0, 0, nullptr);
+            SDL_Rect part = textureAtlas->Get(index);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, part.x, part.y, nullptr);
         }break;
         case Gm1Header::TYPE_ANIMATION: {
-            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, 0, 0, palette);
+            SDL_Rect part = textureAtlas->Get(index);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size, part.x, part.y, palette);
         }break;
         case Gm1Header::TYPE_TILE: {
             /* Read tile */

@@ -8,6 +8,7 @@ Renderer::Renderer() : Camera(0, 0) {
 }
 
 Renderer::~Renderer() {
+    if(renderer) SDL_DestroyRenderer(renderer);
 }
 
 void Renderer::Init(SDL_Window *window) {

@@ -12,9 +12,9 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
     EventConsumer<Mouse>(man->GetHandler()),
     manager(man)
 {
-    gm1_maypole = man->GetGm1(man->GetDirectory() + "gm/anim_maypole.gm1");
-    gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1");
-    gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1");
+    gm1_maypole = man->GetGm1(man->GetDirectory() + "gm/anim_maypole.gm1").lock();
+    gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1").lock();
+    gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1").lock();
 
     tileset = gm1_tile->GetTileset();
 

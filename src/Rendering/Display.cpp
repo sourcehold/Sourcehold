@@ -12,6 +12,7 @@ Display::Display() :
 }
 
 Display::~Display() {
+    SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
@@ -62,10 +63,6 @@ void Display::ToggleFullscreen() {
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
-}
-
-void Display::Close() {
-    SDL_DestroyWindow(window);
 }
 
 void Display::StartTimer() {

@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <algorithm>
-#include <utility>
 
 using namespace Sourcehold::Rendering;
 
@@ -18,33 +17,32 @@ TextureAtlas::TextureAtlas(const TextureAtlas &atlas) : Texture(atlas.renderer)
 }
 
 TextureAtlas::~TextureAtlas() {
-    Clear();
 }
 
-void TextureAtlas::Allocate(std::vector<uint32_t> entries) {
+void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>> entries) {
     if(!entries.size()) {
-        return;   
+        return;
     }
 
     /* Sort by amount of pixels */
     std::sort(
         entries.begin(),
-        entries.begin() + entries.size(), 
-        [](uint32_t e1, uint32_t e2) -> bool {
-            return 
-                (UnpackWidth(e1) * UnpackHeight(e1)) <
-                (UnpackWidth(e2) * UnpackHeight(e2));
+        entries.begin() + entries.size(),
+        [](std::pair<uint32_t, uint32_t> e1, std::pair<uint32_t, uint32_t> e2) -> bool {
+            return
+                (e1.first * e1.second) <
+                (e2.first * e2.second);
         }
     );
 
     for(uint32_t i = 0; i < entries.size(); i++) {
-        uint32_t e = entries[i];
+        auto e = entries[i];
 
         SDL_Rect rect;
         rect.x = 0;
         rect.y = 0;
-        rect.w = UnpackWidth(e);
-        rect.h = UnpackHeight(e);
+        rect.w = e.first;
+        rect.h = e.second;
 
         this->entries.push_back(rect);
     }

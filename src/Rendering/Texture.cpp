@@ -26,7 +26,7 @@ Texture::Texture(const Texture &tex) :
 }
 
 Texture::~Texture() {
-    Destroy();
+    if(valid) SDL_DestroyTexture(texture);
 }
 
 bool Texture::AllocNew(int width, int height, int format) {
@@ -46,6 +46,7 @@ bool Texture::AllocNew(int width, int height, int format) {
     /* Enable transparency */
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
+    valid = true;
     return true;
 }
 
@@ -54,7 +55,7 @@ void Texture::UpdateTexture() {
 }
 
 void Texture::Destroy() {
-    if(texture) SDL_DestroyTexture(texture);
+
 }
 
 void Texture::LockTexture() {

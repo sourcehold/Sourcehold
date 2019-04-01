@@ -21,11 +21,11 @@ void MainMenu::PlayMusic() {
 int MainMenu::Startup() {
     aud_chantloop.LoadSong("data/fx/music/chantloop1.raw", true);
 
-    tgx_firefly = manager->GetTgx(manager->GetDirectory() + "gfx/logo1.tgx");
-    tgx_taketwo = manager->GetTgx(manager->GetDirectory() + "gfx/logo2.tgx");
-    tgx_present = manager->GetTgx(manager->GetDirectory() + "gfx/logo3.tgx");
-    tgx_logo = manager->GetTgx(manager->GetDirectory() + "gfx/startup screen.tgx");
-    intro = manager->GetBik(manager->GetDirectory() + "binks/intro.bik");
+    tgx_firefly = manager->GetTgx(manager->GetDirectory() + "gfx/logo1.tgx").lock();
+    tgx_taketwo = manager->GetTgx(manager->GetDirectory() + "gfx/logo2.tgx").lock();
+    tgx_present = manager->GetTgx(manager->GetDirectory() + "gfx/logo3.tgx").lock();
+    tgx_logo = manager->GetTgx(manager->GetDirectory() + "gfx/startup screen.tgx").lock();
+    intro = manager->GetBik(manager->GetDirectory() + "binks/intro.bik").lock();
 
     startTime = manager->GetTime();
 
@@ -38,13 +38,13 @@ int MainMenu::Startup() {
         /* Logo switching */
         double now = manager->GetTime();
         double delta = now - startTime;
-        if(current != STARTUP_MAIN_MENU && current != STARTUP_STRONGHOLD_LOGO && current != STARTUP_INTRO && delta > 5.0) {
-            current++;
-            startTime = now;
-        }
 
         /* Logo fading */
         if(current < STARTUP_STRONGHOLD_LOGO) {
+            if(delta > 5.0) {
+                current++;
+                startTime = now;
+            }
             if(now < fadeBase + 1.0) {
                 alpha = Uint8(((now - fadeBase) * 255.0) / 1.0);
             }else if(now < fadeBase + 4.0) {
@@ -81,7 +81,7 @@ int MainMenu::Startup() {
             return EXIT_SUCCESS;
             return EnterMainMenu();
         }
-		
+
         manager->Flush();
         manager->EndTimer();
     }
@@ -96,7 +96,7 @@ void MainMenu::onEventReceive(Mouse &event) {
 }
 
 int MainMenu::EnterMainMenu() {
-    tgx_bg1 = manager->GetTgx("frontend_main.tgx");
+    tgx_bg1 = manager->GetTgx("frontend_main.tgx").lock();
 
     aud_chantloop.Play();
 

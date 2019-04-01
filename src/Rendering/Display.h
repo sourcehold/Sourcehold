@@ -42,7 +42,6 @@ namespace Sourcehold
 
                 void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false);
                 void ToggleFullscreen();
-                void Close();
                 void StartTimer();
                 void EndTimer();
 

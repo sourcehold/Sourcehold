@@ -34,7 +34,7 @@ namespace Sourcehold
         using namespace Assets;
         using namespace Rendering;
 
-        class GameManager : public AnimationHandler, public Display, public std::enable_shared_from_this<Renderer>
+        class GameManager : public AnimationHandler, public Display, public std::enable_shared_from_this<GameManager>
         {
                 std::shared_ptr<EventHandler> eventHandler;
                 bool running = false;
@@ -72,11 +72,10 @@ namespace Sourcehold
                 /**
                  * Asset getter functions
                  */
-                std::shared_ptr<TgxFile> GetTgx(const std::string &filename);
-                std::shared_ptr<Gm1File> GetGm1(const std::string &filename);
-                std::shared_ptr<AniFile> GetAni(const std::string &filename);
-                std::shared_ptr<BinkVideo> GetBik(const std::string &filename);
-
+                std::weak_ptr<TgxFile> GetTgx(const std::string &filename);
+                std::weak_ptr<Gm1File> GetGm1(const std::string &filename);
+                std::weak_ptr<AniFile> GetAni(const std::string &filename);
+                std::weak_ptr<BinkVideo> GetBik(const std::string &filename);
 
                 inline double GetTime() { return time; }
                 inline std::shared_ptr<EventHandler> GetHandler() { return eventHandler; }

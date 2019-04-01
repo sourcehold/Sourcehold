@@ -32,8 +32,10 @@ AudioSource::AudioSource(uint8_t *ptr, size_t size, bool repeat) :
 { }
 
 AudioSource::~AudioSource() {
-    //alDeleteSources(1, &source);
-    //alDeleteBuffers(1, &buffer);
+    alDeleteSources(1, &source);
+    Audio::PrintError();
+    alDeleteBuffers(1, &buffer);
+    Audio::PrintError();
 }
 
 bool AudioSource::LoadSong(const std::string &path, bool repeat) {
@@ -48,6 +50,7 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     alSourcei(source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
 
     alGenBuffers((ALuint)1, &buffer);
+    Audio::PrintError();
 
     /* Read raw file into buffer */
     FILE *fp = std::fopen(path.c_str(), "rb");
@@ -64,7 +67,9 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     fclose(fp);
 
     alBufferData(buffer, AL_FORMAT_MONO16, (const ALvoid*)ptr, size, SAMPLING_RATE);
+    Audio::PrintError();
     alSourcei(source, AL_BUFFER, buffer);
+    Audio::PrintError();
 
     valid = true;
     return true;
@@ -82,6 +87,7 @@ bool AudioSource::LoadEffect(const std::string &path, bool repeat) {
     alSourcei(source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
 
     alGenBuffers((ALuint)1, &buffer);
+    Audio::PrintError();
 
     valid = true;
     return true;
@@ -98,20 +104,25 @@ bool AudioSource::Create(void *buffer, size_t size, bool repeat) {
 
 bool AudioSource::Play() {
     alSourceRewind(source);
+    Audio::PrintError();
     alSourcePlay(source);
+    Audio::PrintError();
     return true;
 }
 
 void AudioSource::Pause() {
     alSourcePause(source);
+    Audio::PrintError();
 }
 
 void AudioSource::Resume() {
     alSourcePlay(source);
+    Audio::PrintError();
 }
 
 void AudioSource::Stop() {
     alSourceStop(source);
+    Audio::PrintError();
 }
 
 void AudioSource::SetFadeOut(double amount) {

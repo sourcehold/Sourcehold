@@ -26,7 +26,7 @@ namespace Sourcehold
                 SDL_Texture *texture = nullptr;
                 int width, height, pitch = 0;
                 double angle;
-                bool locked = false;
+            bool locked = false, valid = false;
                 Uint32* pixels = nullptr;
                 SDL_RendererFlip flip;
             public:

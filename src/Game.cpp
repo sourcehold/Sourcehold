@@ -34,7 +34,7 @@ int StartGame(GameOptions &opt) {
         return EXIT_FAILURE;
     }
 
-    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() + "gfx/frontend_loading.tgx");
+    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() + "gfx/frontend_loading.tgx").lock();
 
     /* Init the menu */
     MainMenu menu(gameManager);
@@ -63,30 +63,27 @@ int StartGame(GameOptions &opt) {
         gameManager->Flush();
     }
 
-    tgx_loading->Unload();
+    if(gameManager->Running()) {
+        /* Start the intro sequence and the main menu */
+        int ret = menu.Startup();
+        if(ret != EXIT_SUCCESS) return ret;
 
-    /* Start the intro sequence and the main menu */
-    int ret = menu.Startup();
-    if(ret != EXIT_SUCCESS) return ret;
+        /* ------ Alpha testing ------ */
 
-    /* ------ Alpha testing ------ */
+        GameMap map(gameManager);
 
-    AudioSource aud("data/fx/music/Glory_06.raw", true);
-    aud.Play();
+        while(gameManager->Running()) {
+            gameManager->Clear();
+            gameManager->StartTimer();
 
-    GameMap map(gameManager);
+            map.Render();
 
-    while(gameManager->Running()) {
-        gameManager->Clear();
-        gameManager->StartTimer();
+            gameManager->Flush();
+            gameManager->EndTimer();
+        }
 
-        map.Render();
-
-        gameManager->Flush();
-        gameManager->EndTimer();
+        /* ------ Alpha testing ------ */
     }
-
-    /* ------ Alpha testing ------ */
 
     return EXIT_SUCCESS;
 }

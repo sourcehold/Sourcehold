@@ -186,7 +186,6 @@ void BinkVideo::Close() {
             av_free(audioCtx);
             av_frame_free(&audioFrame);
             alSourceStop(alSource);
-            free(audioBuffer);
             alDeleteSources(1, &alSource);
             alDeleteBuffers(4, alBuffers);
         }

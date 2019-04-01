@@ -58,7 +58,7 @@ void Playlist::Play(uint32_t index) {
 
     playing = true;
     current = index;
-    
+
     songs.at(index).Play();
 }
 
@@ -125,9 +125,5 @@ bool Playlist::IsRepeating() {
 }
 
 AudioSource& Playlist::GetCurrent() {
-    if(songs.empty() || current >= songs.size()) {
-        AudioSource dummy;
-        return dummy;
-    }
     return songs.at(current);
 }
