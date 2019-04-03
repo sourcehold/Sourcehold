@@ -104,13 +104,17 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
     }
 
     /* Read image headers */
-    numCollections = 0;
+    numCollections = header.num;
     for(n = 0; n < header.num; n++) {
         Parser::GetData(&entries[n].header, sizeof(ImageHeader));
-        if(entries[n].header.part == 0) numCollections++;
+        /**
+         * For tilesets, find out when a new set of
+         * tile/image combinations begins
+         */
+        if(entries[n].header.part == 0 && header.type == Gm1Header::TYPE_TILE) numCollections++;
     }
 
-    /* Get offset of data start */
+     /* Get offset of data start */
     offData = Parser::Tell();
 
     /* Read compressed images into buffer */

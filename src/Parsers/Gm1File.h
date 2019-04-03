@@ -35,8 +35,8 @@ namespace Sourcehold
                 void DumpInformation();
                 void Free();
 
-                inline std::shared_ptr<Tileset> GetTileset() { return tileset; }
-                inline std::shared_ptr<TextureAtlas> GetTextureAtlas() { return textureAtlas; }
+            inline std::weak_ptr<Tileset> GetTileset() { return tileset; }
+            inline std::weak_ptr<TextureAtlas> GetTextureAtlas() { return textureAtlas; }
             protected:
                 const uint32_t max_num = 2048;
                 bool GetCollections();
@@ -74,7 +74,6 @@ namespace Sourcehold
 
                 std::shared_ptr<TextureAtlas> textureAtlas;
                 std::shared_ptr<Tileset> tileset;
-
                 std::shared_ptr<Renderer> renderer;
                 std::string path;
                 /* Color palette for tgx image entries */

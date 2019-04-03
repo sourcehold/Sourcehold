@@ -20,7 +20,7 @@ void Renderer::Init(SDL_Window *window) {
     }
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
     /* Window size */
     SDL_AddEventWatch(ResizeEventWatcher, static_cast<void*>(this));

@@ -28,7 +28,7 @@ int StartGame(GameOptions &opt) {
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
-    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir);
+    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
@@ -64,11 +64,14 @@ int StartGame(GameOptions &opt) {
     }
 
     if(gameManager->Running()) {
-        /* Start the intro sequence and the main menu */
+/* Start the intro sequence and the main menu */
         int ret = menu.Startup();
         if(ret != EXIT_SUCCESS) return ret;
 
         /* ------ Alpha testing ------ */
+
+        AudioSource aud("data/fx/music/underanoldtree.raw", true);
+        aud.Play();
 
         GameMap map(gameManager);
 
@@ -85,6 +88,7 @@ int StartGame(GameOptions &opt) {
         /* ------ Alpha testing ------ */
     }
 
+    gameManager->ClearFileCache();
     return EXIT_SUCCESS;
 }
 
@@ -132,6 +136,7 @@ int main(int argc, char **argv) {
         }
         if(result["nothread"].as<bool>()) {
             opt.nothread = true;
+
         }
 
         return StartGame(opt);

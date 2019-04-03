@@ -16,11 +16,11 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
     gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1").lock();
     gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1").lock();
 
-    tileset = gm1_tile->GetTileset();
+    tileset = gm1_tile->GetTileset().lock();
 
     tiles.resize(DIM * DIM * 2);
     for(uint32_t i = 0; i < tiles.size(); i++) {
-        tiles[i] = tileset->GetTile(i % tileset->GetNumTiles());
+        tiles[i] = tileset->GetTile(i % tileset->GetNumTiles()/2);
     }
 
     maypole = manager->AddSlot({ 0, 31 });
@@ -44,16 +44,9 @@ void GameMap::Render() {
         );
     }
 
-    /*SDL_Rect rect = gm1_maypole->GetTextureAtlas()->Get(manager->GetFrame(maypole));
-    manager->Render(
-        *gm1_maypole->GetTextureAtlas(),
-        mult * 100 - manager->CamX(), mult * 10 - manager->CamY(),
-        mult * gm1_maypole->GetTextureAtlas()->GetWidth(), mult * gm1_maypole->GetTextureAtlas()->GetHeight(),
-        &rect
-    );*/
-
-    Texture &map = *gm1_churches->GetTextureAtlas();
-    manager->Render(map, 0.0, 0.0, 0.5, 0.5);
+    Texture &map = *gm1_maypole->GetTextureAtlas().lock();
+    SDL_Rect rect = gm1_maypole->GetTextureAtlas().lock()->Get(manager->GetFrame(maypole));
+    manager->Render(map, mult * 20 - manager->CamX(), mult * 20 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
 //    manager->Render(
 //        tex,
