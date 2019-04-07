@@ -106,7 +106,7 @@ void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint1
             }break;
             case 0b001: {
                 for(uint8_t i = 0; i < len; i++, x++) {
-                    tex.SetPixel(x, y, 0, 0, 0, 0);
+                    tex.SetPixel(x+offX, y+offY, 0, 0, 0, 0);
                 }
             }break;
             default: {

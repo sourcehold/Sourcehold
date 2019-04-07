@@ -64,7 +64,7 @@ int StartGame(GameOptions &opt) {
     }
 
     if(gameManager->Running()) {
-/* Start the intro sequence and the main menu */
+        /* Start the intro sequence and the main menu */
         int ret = menu.Startup();
         if(ret != EXIT_SUCCESS) return ret;
 

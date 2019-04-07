@@ -98,22 +98,38 @@ void Texture::SetAlphaMod(Uint8 alpha) {
     SDL_SetTextureAlphaMod(texture, alpha);
 }
 
-void Texture::Copy(Texture &other, uint32_t x, uint32_t y) {
-    if(!locked || !other.IsLocked() || x > width || y > height) return;
-    if( other.GetWidth() > width ||
-        other.GetHeight() > height ||
-        x + other.GetWidth() > width ||
-        y + other.GetHeight() > height
+void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect) {
+    if(!locked || !other.IsLocked()) {
+        Logger::error("RENDERING") << "Lock the texture before copying from or to it!" << std::endl;
+        return;
+    }
+
+    uint32_t offX = 0, offY = 0, ow = other.GetWidth(), oh = other.GetHeight();
+    if(rect) {
+        offX = rect->x;
+        offY = rect->y;
+        ow = rect->w;
+        oh = rect->h;
+    }
+
+    if( ow > width ||
+        oh > height ||
+        x + ow > width ||
+        y + oh > height
     ) {
         Logger::error("RENDERING") << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
         return;
     }
 
-    for(uint32_t ix = 0; ix < other.GetWidth(); ix++) {
-        for(uint32_t iy = 0; iy < other.GetHeight(); iy++) {
-            uint32_t index = ix + iy * other.GetWidth();
-            Uint32 value = other.GetData()[index];
-            pixels[(x+ix) + (y+iy) * width] = value;
+    for(uint32_t ix = 0; ix < ow; ix++) {
+        for(uint32_t iy = 0; iy < oh; iy++) {
+            uint32_t index1 = (ix+offX) + (iy+offY) * other.GetWidth();
+            uint32_t index2 = (x+ix) + (y+iy) * width;
+
+            Uint8 r, g, b, a;
+            FromPixel(other.GetData()[index1], &r, &g, &b, &a);
+
+            if(a != 0) pixels[index2] = ToPixel(r, g, b, a);
         }
     }
 }
@@ -125,4 +141,11 @@ uint32_t *Texture::GetData() {
 
 Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
    return r << 24 | g << 16 | b << 8 | a;
+}
+
+void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a) {
+    *r = value >> 24;
+    *g = (value >> 16) & 0b11111111;
+    *b = (value >> 8) & 0b1111111111111111;
+    *a = value & 0b111111111111111111111111;
 }

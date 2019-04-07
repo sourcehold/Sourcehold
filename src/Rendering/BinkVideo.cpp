@@ -124,11 +124,11 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         Logger::error("RENDERING") << "Unable to find bink video decoder!" << std::endl;
         return false;
     }
-    
+
     codecCtx = avcodec_alloc_context3(decoder);
     if(!codecCtx) {
         Logger::error("RENDERING") << "Unable to allocate codec context!" << std::endl;
-        return false; 
+        return false;
     }
 
     avcodec_parameters_to_context(codecCtx, ic->streams[videoStream]->codecpar);
@@ -180,7 +180,7 @@ void BinkVideo::Close() {
         av_frame_free(&frame);
         decoder->close(codecCtx);
         av_free(codecCtx);
-        
+
         if(hasAudio) {
             decoder->close(audioCtx);
             av_free(audioCtx);
@@ -195,6 +195,7 @@ void BinkVideo::Close() {
 void BinkVideo::Update() {
     if(!running || !valid) return;
 
+    /* Update according to fps */
     Decode();
 }
 

@@ -1,3 +1,5 @@
+#include <random>
+
 #include <GameMap.h>
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/Tileset.h>
@@ -5,22 +7,69 @@
 
 using namespace Sourcehold::Game;
 
-#define DIM 23
+#define DIM 160
 
 GameMap::GameMap(std::shared_ptr<GameManager> man) :
     EventConsumer<Keyboard>(man->GetHandler()),
     EventConsumer<Mouse>(man->GetHandler()),
+    menubar(man),
     manager(man)
 {
     gm1_maypole = man->GetGm1(man->GetDirectory() + "gm/anim_maypole.gm1").lock();
     gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1").lock();
     gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1").lock();
+    gm1_anim = man->GetGm1(man->GetDirectory() + "gm/body_archer.gm1").lock();
+
+    /* The repeating, wooden background of the menu bar */
+    tgx_bar_bg = man->GetTgx(man->GetDirectory() + "gfx/1280r.tgx").lock();
+    /* The right side of the scribe/book */
+    tgx_right = man->GetTgx(man->GetDirectory() + "gfx/edge1280r.tgx").lock();
+    /* The scribe's facial animation */
+    gm1_scribe = man->GetGm1(man->GetDirectory() + "gm/scribe.gm1").lock();
+    /* The menu faces */
+    gm1_face = man->GetGm1(man->GetDirectory() + "gm/face800-blank.gm1").lock();
+
+    /* Menu bar (alpha testing) */
+
+    menubar.AllocNew(240+800+240, 300);
+    menubar.LockTexture();
+
+    /* Left side */
+    tgx_bar_bg->LockTexture();
+    menubar.Copy(*tgx_bar_bg, 0, 100);
+    tgx_bar_bg->UnlockTexture();
+
+    /* Menu face */
+    auto face = gm1_face->GetTextureAtlas().lock();
+    SDL_Rect offset = face->Get(0);
+    face->LockTexture();
+    menubar.Copy(*face, 240, 300-144, &offset);
+    face->UnlockTexture();
+
+    /* Scribe */
+    auto scribe = gm1_scribe->GetTextureAtlas().lock();
+    offset = scribe->Get(0);
+    scribe->LockTexture();
+    menubar.Copy(*scribe, 240+705, 100, &offset);
+    scribe->UnlockTexture();
+
+    /* Right side */
+    tgx_right->LockTexture();
+    menubar.Copy(*tgx_right, 240+800, 100);
+    tgx_right->UnlockTexture();
+
+    menubar.UnlockTexture();
 
     tileset = gm1_tile->GetTileset().lock();
+    tiles.resize(DIM * DIM);
 
-    tiles.resize(DIM * DIM * 2);
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 8);
+
     for(uint32_t i = 0; i < tiles.size(); i++) {
-        tiles[i] = tileset->GetTile(i % tileset->GetNumTiles()/2);
+        int tile = dist(rng);
+        tiles[i] = tileset->GetTile(tile);
     }
 
     maypole = manager->AddSlot({ 0, 31 });
@@ -44,37 +93,53 @@ void GameMap::Render() {
         );
     }
 
-    Texture &map = *gm1_maypole->GetTextureAtlas().lock();
+    Texture &pole = *gm1_maypole->GetTextureAtlas().lock();
     SDL_Rect rect = gm1_maypole->GetTextureAtlas().lock()->Get(manager->GetFrame(maypole));
-    manager->Render(map, mult * 20 - manager->CamX(), mult * 20 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    manager->Render(pole, mult * rect.w - manager->CamX(), mult * rect.h - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
-//    manager->Render(
-//        tex,
-//        mult * 1 - manager->CamX(), mult * 1 - manager->CamY(),
-//        mult * tex.GetWidth(), mult * tex.GetHeight()
-//    );
+    Texture &anim = *gm1_anim->GetTextureAtlas().lock();
+    rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
+    manager->Render(anim, mult * 250 - manager->CamX(), mult * 250 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
-//    manager->Render(
-//        tex,
-//        mult * 200 - manager->CamX(), mult * 20 - manager->CamY(),
-//        mult * tex.GetWidth(), mult * tex.GetHeight()
-//    );
+    Texture &church = *gm1_churches->GetTextureAtlas().lock();
+    rect = gm1_churches->GetTextureAtlas().lock()->Get(0);
+    manager->Render(church, mult * 40 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+
+    /* Menu bar */
+    manager->Render(menubar, 0.0, 0.7, 1.0, 0.3);
+
+    UpdateCamera();
+}
+
+void GameMap::UpdateCamera() {
+    if(ml) manager->MoveLeft();
+    if(mr) manager->MoveRight();
+    if(mu) manager->MoveUp();
+    if(md) manager->MoveDown();
 }
 
 void GameMap::onEventReceive(Keyboard &keyEvent) {
     if(keyEvent.GetType() == KEYBOARD_KEYDOWN) {
         switch(keyEvent.Key().sym) {
-            case SDLK_LEFT: manager->MoveLeft(); break;
-            case SDLK_RIGHT: manager->MoveRight(); break;
-            case SDLK_UP: manager->MoveUp(); break;
-            case SDLK_DOWN: manager->MoveDown(); break;
-            case SDLK_SPACE: {
-                if(mult == 1) mult = 2;
-                else mult = 1;
-            }break;
-            default: break;
+        case SDLK_LEFT: ml = true; break;
+        case SDLK_RIGHT: mr = true; break;
+        case SDLK_UP: mu = true; break;
+        case SDLK_DOWN: md = true; break;
+        case SDLK_SPACE: {
+            if(mult == 1) mult = 2;
+            else mult = 1;
+        }break;
+        default: break;
         }
     }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
+        switch(keyEvent.Key().sym) {
+        case SDLK_LEFT: ml = false; break;
+        case SDLK_RIGHT: mr = false; break;
+        case SDLK_UP: mu = false; break;
+        case SDLK_DOWN: md = false; break;
+        default: break;
+        }
+
         manager->ResetMomentum();
     }
 }
