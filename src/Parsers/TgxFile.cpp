@@ -35,7 +35,7 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     }
 
     /* Allocate image */
-    AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
+    AllocNewStreaming(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Calculate size */
     size_t size = Parser::GetLength() - Parser::Tell();

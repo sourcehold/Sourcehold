@@ -5,21 +5,21 @@
 #include <memory>
 
 #include <Config.h>
-#include <System/Logger.h>
 
-#include <Rendering/Rendering.h>
+#include <SDL2/SDL.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
-        /*
+        /**
          * Texture wrapper class, able to create and modify
-         * streaming textures, external modification is possible
+         * textures, external modification is possible
          * by locking/unlocking the texture stream and obtaining
          * a pointer to the raw pixel data
          */
         class Renderer;
+        class Surface;
         class Texture
         {
             std::shared_ptr<Renderer> renderer;
@@ -29,12 +29,25 @@ namespace Sourcehold
             bool locked = false, valid = false;
             Uint32* pixels = nullptr;
             SDL_RendererFlip flip;
+            SDL_TextureAccess access;
         public:
             Texture(std::shared_ptr<Renderer> rend);
             Texture(const Texture &tex);
             ~Texture();
 
-            bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+            /**
+             * Allocate a new texture. This will turn the class into
+             * a streaming texture.
+             * Use LockTexture / UnlockTexture to access the pixel data
+             */
+            bool AllocNewStreaming(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+
+            /**
+             * Allocate a new texture using an existing surface. The texture
+             * is static and has no read/write support
+             */
+            bool AllocFromSurface(Surface &surface);
+
             void UpdateTexture();
             void Destroy();
 

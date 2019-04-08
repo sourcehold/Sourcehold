@@ -56,12 +56,12 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
         this->entries.push_back(rect);
     }
 
-    Texture::AllocNew(width, height, SDL_PIXELFORMAT_RGBA8888);
+    Texture::AllocNewStreaming(width, height, SDL_PIXELFORMAT_RGBA8888);
 }
 
 void TextureAtlas::Allocate(uint32_t num, uint16_t width, uint16_t height) {
     this->num = num;
-    Texture::AllocNew(width, height, SDL_PIXELFORMAT_RGBA8888);
+    Texture::AllocNewStreaming(width, height, SDL_PIXELFORMAT_RGBA8888);
     entries.resize(num);
 }
 

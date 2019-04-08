@@ -21,7 +21,7 @@ void Tileset::Allocate(uint32_t num) {
     this->num = num;
 
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-    Texture::AllocNew(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA8888);
+    Texture::AllocNewStreaming(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA8888);
 }
 
 void Tileset::SetTile(Texture &image, uint32_t index) {

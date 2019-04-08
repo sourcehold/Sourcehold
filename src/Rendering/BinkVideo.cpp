@@ -165,7 +165,7 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         return false;
     }
 
-    Texture::AllocNew(800, 600, SDL_PIXELFORMAT_RGB888);
+    Texture::AllocNewStreaming(800, 600, SDL_PIXELFORMAT_RGB888);
     valid = true;
     running = true;
 

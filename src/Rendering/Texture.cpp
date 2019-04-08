@@ -1,5 +1,8 @@
 #include <Rendering/Texture.h>
+#include <Rendering/Surface.h>
 #include <Rendering/Renderer.h>
+
+#include <System/Logger.h>
 
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
@@ -29,7 +32,7 @@ Texture::~Texture() {
     if(valid) SDL_DestroyTexture(texture);
 }
 
-bool Texture::AllocNew(int width, int height, int format) {
+bool Texture::AllocNewStreaming(int width, int height, int format) {
     this->width = width;
     this->height = height;
     texture = SDL_CreateTexture(
@@ -44,6 +47,19 @@ bool Texture::AllocNew(int width, int height, int format) {
     }
 
     /* Enable transparency */
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+    valid = true;
+    return true;
+}
+
+bool Texture::AllocFromSurface(Surface &surface) {
+    texture = SDL_CreateTextureFromSurface(renderer->GetRenderer(), surface.GetSurface());
+    if(!texture) {
+        Logger::error("RENDERING") << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
     valid = true;

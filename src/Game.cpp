@@ -70,7 +70,7 @@ int StartGame(GameOptions &opt) {
 
         /* ------ Alpha testing ------ */
 
-        AudioSource aud("data/fx/music/underanoldtree.raw", true);
+        AudioSource aud("data/fx/music/the maidenB.raw", true);
         aud.Play();
 
         GameMap map(gameManager);

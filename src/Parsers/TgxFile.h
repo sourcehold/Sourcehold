@@ -13,6 +13,7 @@
 
 #include <Rendering/Renderer.h>
 #include <Rendering/Texture.h>
+#include <Rendering/Surface.h>
 
 using namespace Sourcehold::Rendering;
 

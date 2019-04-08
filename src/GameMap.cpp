@@ -31,7 +31,7 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
 
     /* Menu bar (alpha testing) */
 
-    menubar.AllocNew(240+800+240, 300);
+    menubar.AllocNewStreaming(240+800+240, 300);
     menubar.LockTexture();
 
     /* Left side */
