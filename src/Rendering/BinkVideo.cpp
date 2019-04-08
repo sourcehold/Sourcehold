@@ -170,7 +170,6 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
     running = true;
 
     lastTicks = SDL_GetTicks();
-
     return true;
 }
 
@@ -187,7 +186,7 @@ void BinkVideo::Close() {
             av_frame_free(&audioFrame);
             alSourceStop(alSource);
             alDeleteSources(1, &alSource);
-            alDeleteBuffers(4, alBuffers);
+            alDeleteBuffers(NUM_AUDIO_BUFFERS, alBuffers);
         }
     }
 }
@@ -250,7 +249,7 @@ void BinkVideo::Decode() {
                 /* Init OpenAL stuff */
                 alGenSources(1, &alSource);
                 Audio::PrintError();
-                alGenBuffers(4, alBuffers);
+                alGenBuffers(NUM_AUDIO_BUFFERS, alBuffers);
                 Audio::PrintError();
 
                 alSource3f(alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
@@ -271,7 +270,8 @@ void BinkVideo::Decode() {
                 }
 
                 /* Setup audio queue */
-                for(int i = 0; i < 4; i++) {
+                alNumFreeBuffers = NUM_AUDIO_BUFFERS;
+                for(int i = 0; i < NUM_AUDIO_BUFFERS; i++) {
                     alFreeBuffers[i] = alBuffers[i];
                 }
 
@@ -297,6 +297,7 @@ void BinkVideo::Decode() {
 
                     if(buffer > 0) {
                         alFreeBuffers[alNumFreeBuffers] = buffer;
+                        Audio::PrintError();
                         alNumFreeBuffers++;
                     }
                 }
@@ -309,9 +310,11 @@ void BinkVideo::Decode() {
                  * TODO: Other versions of Stronghold might include
                  * different audio formats (investigate!)
                  */
-                if(audioFrame->format != AV_SAMPLE_FMT_FLT) return;
+                if(audioFrame->format != AV_SAMPLE_FMT_FLT) {
+                    return;
+                }
 
-                ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
+                ALuint alBuffer = alFreeBuffers[alNumFreeBuffers-1];
                 uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
                 uint32_t dataSize = numSamples * 2;
 
@@ -320,8 +323,8 @@ void BinkVideo::Decode() {
                 short *dst = (short*)audioBuffer;
                 for(int i = 0; i < numSamples; i++) {
                     float v = src[i] * 32768.0f;
-                    if(v > 32767) v = 32767;
-                    if(v < -32768) v = 32768;
+                    if(v > 32767.0f) v = 32767.0f;
+                    if(v < -32768.0f) v = 32768.0f;
                     dst[i] = (short)v;
                 }
 

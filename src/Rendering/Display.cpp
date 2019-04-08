@@ -23,7 +23,7 @@ void Display::Open(const std::string &title, int width, int height, int index, b
     if(fullscreen) {
         param |= SDL_WINDOW_FULLSCREEN;
     }
-    
+
     if(noborder) {
         param |= SDL_WINDOW_BORDERLESS;
     }
@@ -34,10 +34,9 @@ void Display::Open(const std::string &title, int width, int height, int index, b
 
     SDL_Rect *displayBounds = new SDL_Rect[displays];
     for(int i = 0; i < displays; i++) {
-        displayBounds[i] = SDL_Rect();
+        displayBounds[i] = { 0, 0, 0, 0 };
         SDL_GetDisplayBounds(i, &displayBounds[i]);
     }
-    delete [] displayBounds;
 
     window = SDL_CreateWindow(
         title.c_str(),
@@ -50,6 +49,8 @@ void Display::Open(const std::string &title, int width, int height, int index, b
     if(!window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
+
+    delete [] displayBounds;
 
     Renderer::Init(window);
 

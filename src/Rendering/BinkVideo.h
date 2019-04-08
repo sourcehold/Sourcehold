@@ -36,7 +36,7 @@ namespace Sourcehold
 
         /*
          * Destroy a previously created avcodec context and free
-         * associated resources 
+         * associated resources
          */
         void DestroyAvcodec();
 
@@ -45,37 +45,38 @@ namespace Sourcehold
          */
         class BinkVideo : public Texture
         {
-                AVFormatContext *ic;
-                AVCodec *decoder, *audioDecoder;
-                AVPacket packet;
-                AVFrame *frame, *audioFrame;
-                AVCodecContext *codecCtx, *audioCtx;
-                SwsContext *sws;
-                SwrContext *swr;
-                ALuint alSource;
-                ALuint alFreeBuffers[4];
-                ALuint alBuffers[4];
-                ALuint alNumFreeBuffers = 4;
-                ALuint alNumChannels;
-                ALuint alFormat;
-                ALuint alSampleRate;
-                char *audioBuffer;
-                int videoStream, audioStream;
-                uint32_t lastTicks;
-                float fps;
-                bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
-            public:
-                BinkVideo(std::shared_ptr<Renderer> man);
-                BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping = false);
-                ~BinkVideo();
+            AVFormatContext *ic;
+            AVCodec *decoder, *audioDecoder;
+            AVPacket packet;
+            AVFrame *frame, *audioFrame;
+            AVCodecContext *codecCtx, *audioCtx;
+            SwsContext *sws;
+            SwrContext *swr;
+            const static uint32_t NUM_AUDIO_BUFFERS = 4;
+            ALuint alSource;
+            ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
+            ALuint alBuffers[NUM_AUDIO_BUFFERS];
+            ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
+            ALuint alNumChannels;
+            ALuint alFormat;
+            ALuint alSampleRate;
+            char *audioBuffer;
+            int videoStream, audioStream;
+            uint32_t lastTicks;
+            float fps;
+            bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
+        public:
+            BinkVideo(std::shared_ptr<Renderer> man);
+            BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping = false);
+            ~BinkVideo();
 
-                bool LoadFromDisk(const std::string &path, bool looping = false);
-                void Close();
-                void Update();
+            bool LoadFromDisk(const std::string &path, bool looping = false);
+            void Close();
+            void Update();
 
-                inline bool IsRunning() { return running; }
-            protected:
-                void Decode();
+            inline bool IsRunning() { return running; }
+        protected:
+            void Decode();
         };
     }
 }

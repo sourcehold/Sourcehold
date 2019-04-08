@@ -99,14 +99,20 @@ void GameMap::Render() {
 
     Texture &anim = *gm1_anim->GetTextureAtlas().lock();
     rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
-    manager->Render(anim, mult * 250 - manager->CamX(), mult * 250 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    manager->Render(anim, mult * 240 - manager->CamX(), mult * 240 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+
+    rect = gm1_anim->GetTextureAtlas().lock()->Get(12);
+    manager->Render(anim, mult * 280 - manager->CamX(), mult * 260 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+
+    rect = gm1_anim->GetTextureAtlas().lock()->Get(13);
+    manager->Render(anim, mult * 250 - manager->CamX(), mult * 275 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     Texture &church = *gm1_churches->GetTextureAtlas().lock();
     rect = gm1_churches->GetTextureAtlas().lock()->Get(0);
-    manager->Render(church, mult * 40 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    manager->Render(church, mult * 340 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     /* Menu bar */
-    manager->Render(menubar, 0.0, 0.7, 1.0, 0.3);
+    manager->Render(menubar, 0.0, 0.6, 1.0, 0.4);
 
     UpdateCamera();
 }

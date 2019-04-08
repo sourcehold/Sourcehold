@@ -19,12 +19,12 @@ TextureAtlas::TextureAtlas(const TextureAtlas &atlas) : Texture(atlas.renderer)
 TextureAtlas::~TextureAtlas() {
 }
 
-void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>> entries) {
+void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries) {
     if(!entries.size()) {
         return;
     }
 
-    /* Sort by height in pixels */
+    /* Sort by height in pixels (TODO: crashes when sorted largest -> smallest, which is what we want) */
     std::sort(
         entries.begin(),
         entries.begin() + entries.size(),
@@ -35,7 +35,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>> entries) 
 
     uint32_t width = 0, height = 0;
     uint32_t px = 0, py = 0;
-    for(uint32_t i = 0; i < entries.size(); i++) {
+    for(size_t i = 0; i < entries.size(); i++) {
         auto e = entries[i];
 
         SDL_Rect rect;
@@ -45,7 +45,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>> entries) 
         rect.h = e.second;
 
         px += e.first;
-        if(px > 2048) {
+        if(px > MAX_Y_RESOLUTION) {
             px = 0;
             py += e.second;
         }

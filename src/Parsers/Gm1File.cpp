@@ -20,8 +20,9 @@ struct Gm1File::ImageHeader {
     uint16_t offsetX;
     uint16_t offsetY;
     /* Image part */
-    uint16_t part;
-    uint16_t parts;
+    uint8_t part;
+    uint8_t parts;
+    uint16_t tileOffsetY;
     /* Left/Right/Center */
     enum Direction : uint8_t {
         DIR_NONE =  0,
@@ -42,6 +43,7 @@ struct Gm1File::Gm1Entry {
     uint32_t size;
     uint32_t offset;
     uint16_t collection;
+    uint16_t offX, offY;
 };
 
 Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser()
@@ -137,24 +139,32 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
     if(header.type == Gm1Header::TYPE_TILE) {
         /* Allocate collections */
         std::vector<std::pair<uint32_t, uint32_t>> entryDims(numCollections);
-        /* Go through every entry and find the image bounds */
-        int32_t currentCol = 0, top = INT_MAX, left = INT_MAX, bottom = 0, right = 0;
-        for(n = 0; n < header.num; n++) {
-            int32_t x = entries[n].header.offsetX;
-            int32_t y = entries[n].header.offsetY;
-            int32_t w = entries[n].header.width;
-            int32_t h = entries[n].header.height;
+        uint32_t currentEntry = 0;
+        for(n = 0; n < numCollections; n++) {
+            int32_t top = INT_MAX, left = INT_MAX, bottom = 0, right = 0;
+            uint32_t cnt = uint32_t(entries[currentEntry].header.parts);
 
-            left = std::min(left, x);
-            top = std::min(top, y);
-            right = std::max(right, x+w);
-            bottom = std::max(bottom, y+h);
+            /* Go through every entry and find the image bounds */
+            for(int i = currentEntry; i < currentEntry + cnt; i++) {
+                int32_t x = int32_t(entries[i].header.offsetX);
+                int32_t y = int32_t(entries[i].header.offsetY);
+                int32_t w = int32_t(entries[i].header.width);
+                int32_t h = int32_t(entries[i].header.height);
 
-            if(entries[n].header.part == 0) {
-                entryDims[currentCol] = std::make_pair<uint32_t, uint32_t>(right-left, bottom-top);
-                top = left = INT_MAX;
-                bottom = right = 0;
-                currentCol++;
+                left = std::min(left, x);
+                top = std::min(top, y);
+                right = std::max(right, x+w);
+                bottom = std::max(bottom, y+h);
+            }
+
+            /* Hand the width/height to the texture atlas  */
+            entryDims[n] = std::make_pair<uint32_t, uint32_t>(uint32_t(right-left), uint32_t(bottom-top));
+
+            /* Calculate the offset relative to the texture atlas rectangle for every entry */
+            for(uint32_t d = currentEntry + cnt; currentEntry < d; currentEntry++) {
+                entries[currentEntry].collection = n;
+                entries[currentEntry].offX = uint16_t(entries[currentEntry].header.offsetX + uint16_t(entries[n].header.horizOffset)) - left;
+                entries[currentEntry].offY = uint16_t(entries[currentEntry].header.offsetY) - top;
             }
         }
         /* One collection -> one texture */
@@ -241,7 +251,7 @@ bool Gm1File::GetImage(uint32_t index) {
                 }
             }
 
-            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, part.x, part.y, nullptr);
+            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, part.x + entries[index].offX, part.y + entries[index].offY, nullptr);
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
             SDL_Rect part = textureAtlas->Get(index);

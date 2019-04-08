@@ -97,17 +97,18 @@ int main(int argc, char **argv) {
     /* Parse commandline */
     cxxopts::Options options("Sourcehold", "Open source engine implementation of Stronghold");
     options.add_options()
-    ("h,help", "Print this info")
-    ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
-    ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("data/"))
-    ("d,debug", "Print debug info")
-    ("noborder", "Remove window border")
-    ("f,fullscreen", "Run in fullscreen mode")
-    ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
-    ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
-    ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
-    ("nosound", "Disable sound entirely")
-    ("nothread", "Disable threading");
+        ("h,help", "Print this info")
+        ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
+        ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("./data/"))
+        ("d,debug", "Print debug info")
+        ("noborder", "Remove window border")
+        ("f,fullscreen", "Run in fullscreen mode")
+        ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
+        ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
+        ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
+        ("nosound", "Disable sound entirely")
+        ("nothread", "Disable threading")
+        ("color", "Force color output");
 
     try {
         GameOptions opt;
@@ -138,6 +139,9 @@ int main(int argc, char **argv) {
             opt.nothread = true;
 
         }
+
+        if(result.count("color") > 0) opt.color = result["color"].as<bool>();
+        else opt.color = -1;
 
         return StartGame(opt);
     }catch(cxxopts::OptionException ex) {

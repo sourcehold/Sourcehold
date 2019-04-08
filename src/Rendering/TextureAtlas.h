@@ -15,20 +15,21 @@ namespace Sourcehold
     {
         /**
          * Merge multiple textures
-         * 
+         *
          * TODO: Better space usage
          */
         class TextureAtlas : public Texture
         {
             std::shared_ptr<Renderer> renderer;
             uint32_t num;
+            const uint32_t MAX_Y_RESOLUTION = 2048;
             std::vector<SDL_Rect> entries;
         public:
             TextureAtlas(std::shared_ptr<Renderer> rend);
             TextureAtlas(const TextureAtlas &atlas);
             ~TextureAtlas();
 
-            void Allocate(std::vector<std::pair<uint32_t, uint32_t>> entries);
+            void Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries);
             void Allocate(uint32_t num, uint16_t width, uint16_t height);
             void Set(Texture &image, uint32_t index);
             SDL_Rect Get(uint32_t index);

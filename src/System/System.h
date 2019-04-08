@@ -20,6 +20,7 @@ namespace Sourcehold
             bool fullscreen = false;
             bool nothread = false;
             bool nosound = false;
+            int color = -1;
             uint16_t width,height;
             uint16_t ndisp;
         };

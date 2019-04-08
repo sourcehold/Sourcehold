@@ -2,12 +2,13 @@
 
 using namespace Sourcehold::System;
 
+static bool coloredOutput;
+
 Logger::Logger() {
 
 }
 
 Logger::~Logger() {
-
 }
 
 std::ostream &Logger::log(LogType type, const std::string subsystem) {
@@ -44,4 +45,12 @@ std::ostream &Logger::message(const std::string subsystem) {
 
 std::ostream &Logger::success(const std::string subsystem) {
     return log(SUCCESS, subsystem);
+}
+
+void Logger::SetColorOutput(bool a) {
+    coloredOutput = a;
+}
+
+bool Logger::GetColorOutput() {
+    return coloredOutput;
 }

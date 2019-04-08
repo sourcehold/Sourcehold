@@ -22,6 +22,14 @@ using namespace Sourcehold::Rendering;
 
 GameManager::GameManager(GameOptions &opt) : AnimationHandler(), Display(), opt(opt)
 {
+#if SOURCEHOLD_UNIX == 1
+    Logger::SetColorOutput(true);
+#else
+    Logger::SetColorOutput(false);
+#endif
+
+    if(opt.color >= 0) Logger::SetColorOutput(opt.color == 1);
+
     Open(
         "Sourcehold version " SOURCEHOLD_VERSION_STRING,
         opt.width,
