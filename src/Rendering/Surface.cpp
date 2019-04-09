@@ -4,7 +4,7 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Surface::Surface(std::shared_ptr<Renderer> rend) {
+Surface::Surface(std::shared_ptr<Renderer> rend) : Renderable() {
     this->renderer = rend;
 }
 

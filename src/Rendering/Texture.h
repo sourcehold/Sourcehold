@@ -4,9 +4,11 @@
 #include <vector>
 #include <memory>
 
+#include <SDL2/SDL.h>
+
 #include <Config.h>
 
-#include <SDL2/SDL.h>
+#include <Rendering/Renderable.h>
 
 namespace Sourcehold
 {
@@ -20,7 +22,7 @@ namespace Sourcehold
          */
         class Renderer;
         class Surface;
-        class Texture
+        class Texture : public Renderable
         {
             std::shared_ptr<Renderer> renderer;
             SDL_Texture *texture = nullptr;

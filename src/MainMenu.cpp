@@ -5,7 +5,12 @@ using namespace Sourcehold::Rendering;
 
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
     EventConsumer<Mouse>(man->GetHandler()),
-    manager(man)
+    manager(man),
+    /* UI stuff */
+    ui_exit(man),
+    ui_firefly(man),
+    ui_tutorial(man),
+    ui_load(man)
 {
 }
 
@@ -25,7 +30,11 @@ int MainMenu::Startup() {
     tgx_taketwo = manager->GetTgx(manager->GetDirectory() + "gfx/logo2.tgx").lock();
     tgx_present = manager->GetTgx(manager->GetDirectory() + "gfx/logo3.tgx").lock();
     tgx_logo = manager->GetTgx(manager->GetDirectory() + "gfx/startup screen.tgx").lock();
+    tgx_firefly_front = manager->GetTgx(manager->GetDirectory() + "gfx/front_firefly_logo.tgx").lock();
+
     intro = manager->GetBik(manager->GetDirectory() + "binks/intro.bik").lock();
+
+    gm1_icons_front = manager->GetGm1(manager->GetDirectory() + "gm/icons_front_end.gm1").lock();
 
     startTime = manager->GetTime();
 
@@ -96,7 +105,10 @@ void MainMenu::onEventReceive(Mouse &event) {
 }
 
 int MainMenu::EnterMainMenu() {
-    tgx_bg1 = manager->GetTgx("frontend_main.tgx").lock();
+    tgx_bg1 = manager->GetTgx(manager->GetDirectory() + "gfx/frontend_main.tgx").lock();
+
+    /* Init user interface */
+    InitUI();
 
     aud_chantloop.Play();
 
@@ -106,9 +118,50 @@ int MainMenu::EnterMainMenu() {
 
         manager->Render(*tgx_bg1);
 
+        /* Render user interface */
+        auto icons_front = gm1_icons_front->GetTextureAtlas().lock();
+        ui_exit.Render(
+            [&]() -> Texture& {
+                icons_front->SetRect(icons_front->Get(68));
+                return *icons_front;
+            });
+
+        ui_tutorial.Render(
+            [&]() -> Texture& {
+                icons_front->SetRect(icons_front->Get(72));
+                return *icons_front;
+            });
+
+        ui_load.Render(
+            [&]() -> Texture& {
+                icons_front->SetRect(icons_front->Get(51));
+                return *icons_front;
+            });
+
+//        ui_firefly.Render(*tgx_firefly_front, true);
+
         manager->Flush();
         manager->EndTimer();
     }
 
     return EXIT_SUCCESS;
 }
+
+void MainMenu::InitUI() {
+    /* Exit button */
+    ui_exit.Translate(0.15, 0.8);
+    ui_exit.Scale(0.15, 0.2);
+
+    /* 'Start credits' button */
+    ui_firefly.Translate(0.4, 0.8);
+    ui_firefly.Scale(0.2, 0.2);
+
+    /* 'Start tutorial' button */
+    ui_tutorial.Translate(0.65, 0.78);
+    ui_tutorial.Scale(0.2, 0.24);
+
+    /* Loading button */
+    ui_load.Translate(0.643, 0.278);
+    ui_load.Scale(0.185, 0.232);
+}
+

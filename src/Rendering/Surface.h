@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Rendering/Renderer.h>
-
 #include <memory>
 #include <SDL2/SDL.h>
+
+#include <Rendering/Renderer.h>
+#include <Rendering/Renderable.h>
 
 namespace Sourcehold
 {
@@ -13,7 +14,7 @@ namespace Sourcehold
          * An SDL_Surface wrapper class. This is primarily used
          * to create static textures.
          */
-        class Surface
+        class Surface : public Renderable
         {
             SDL_Surface *surface;
             std::shared_ptr<Renderer> renderer;

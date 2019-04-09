@@ -3,7 +3,6 @@
 #include <GameMap.h>
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/Tileset.h>
-#include <Rendering/StaticElement.h>
 
 using namespace Sourcehold::Game;
 
@@ -28,6 +27,7 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
     gm1_scribe = man->GetGm1(man->GetDirectory() + "gm/scribe.gm1").lock();
     /* The menu faces */
     gm1_face = man->GetGm1(man->GetDirectory() + "gm/face800-blank.gm1").lock();
+    gm1_icons = man->GetGm1(man->GetDirectory() + "gm/interface_buttons.gm1").lock();
 
     /* Menu bar (alpha testing) */
 
@@ -93,12 +93,14 @@ void GameMap::Render() {
         );
     }
 
+    /*
     Texture &pole = *gm1_maypole->GetTextureAtlas().lock();
     SDL_Rect rect = gm1_maypole->GetTextureAtlas().lock()->Get(manager->GetFrame(maypole));
     manager->Render(pole, mult * rect.w - manager->CamX(), mult * rect.h - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    */
 
     Texture &anim = *gm1_anim->GetTextureAtlas().lock();
-    rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
+    SDL_Rect rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
     manager->Render(anim, mult * 240 - manager->CamX(), mult * 240 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     rect = gm1_anim->GetTextureAtlas().lock()->Get(12);
@@ -109,7 +111,7 @@ void GameMap::Render() {
 
     Texture &church = *gm1_churches->GetTextureAtlas().lock();
     rect = gm1_churches->GetTextureAtlas().lock()->Get(0);
-    manager->Render(church, mult * 340 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    manager->Render(church, mult * 450 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     /* Menu bar */
     manager->Render(menubar, 0.0, 0.6, 1.0, 0.4);

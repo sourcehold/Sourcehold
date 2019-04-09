@@ -22,7 +22,7 @@ namespace Sourcehold
         {
             std::shared_ptr<Renderer> renderer;
             uint32_t num;
-            const uint32_t MAX_Y_RESOLUTION = 2048;
+            const uint32_t MAX_X_RESOLUTION = 2048;
             std::vector<SDL_Rect> entries;
         public:
             TextureAtlas(std::shared_ptr<Renderer> rend);
