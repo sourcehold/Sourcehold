@@ -58,6 +58,34 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
     menubar.Copy(*tgx_right, 240+800, 100);
     tgx_right->UnlockTexture();
 
+    auto icon = gm1_icons->GetTextureAtlas().lock();
+    icon->LockTexture();
+
+    offset = icon->Get(7);
+    menubar.Copy(*icon, 264, 265, &offset);
+    offset = icon->Get(10);
+    menubar.Copy(*icon, 300, 265, &offset);
+    offset = icon->Get(13);
+    menubar.Copy(*icon, 336, 265, &offset);
+    offset = icon->Get(16);
+    menubar.Copy(*icon, 372, 265, &offset);
+    offset = icon->Get(19);
+    menubar.Copy(*icon, 408, 265, &offset);
+    offset = icon->Get(22);
+    menubar.Copy(*icon, 444, 265, &offset);
+
+    offset = icon->Get(25);
+    menubar.Copy(*icon, 753, 172, &offset);
+    offset = icon->Get(27);
+    menubar.Copy(*icon, 753, 210, &offset);
+    offset = icon->Get(29);
+    menubar.Copy(*icon, 753, 242, &offset);
+    offset = icon->Get(68);
+    menubar.Copy(*icon, 753, 268, &offset);
+
+
+    icon->UnlockTexture();
+
     menubar.UnlockTexture();
 
     tileset = gm1_tile->GetTileset().lock();
@@ -93,14 +121,12 @@ void GameMap::Render() {
         );
     }
 
-    /*
     Texture &pole = *gm1_maypole->GetTextureAtlas().lock();
     SDL_Rect rect = gm1_maypole->GetTextureAtlas().lock()->Get(manager->GetFrame(maypole));
     manager->Render(pole, mult * rect.w - manager->CamX(), mult * rect.h - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
-    */
 
     Texture &anim = *gm1_anim->GetTextureAtlas().lock();
-    SDL_Rect rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
+    rect = gm1_anim->GetTextureAtlas().lock()->Get(10);
     manager->Render(anim, mult * 240 - manager->CamX(), mult * 240 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     rect = gm1_anim->GetTextureAtlas().lock()->Get(12);
@@ -111,7 +137,7 @@ void GameMap::Render() {
 
     Texture &church = *gm1_churches->GetTextureAtlas().lock();
     rect = gm1_churches->GetTextureAtlas().lock()->Get(0);
-    manager->Render(church, mult * 450 - manager->CamX(), mult * 180 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
+    manager->Render(church, mult * 550 - manager->CamX(), mult * 90 - manager->CamY(), mult * rect.w, mult * rect.h, &rect);
 
     /* Menu bar */
     manager->Render(menubar, 0.0, 0.6, 1.0, 0.4);

@@ -43,7 +43,7 @@ struct Gm1File::Gm1Entry {
     uint32_t size;
     uint32_t offset;
     uint16_t collection;
-    uint16_t offX, offY;
+    uint16_t offX, offY, tileX, tileY;
 };
 
 Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser()
@@ -141,15 +141,15 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
         std::vector<std::pair<uint32_t, uint32_t>> entryDims(numCollections);
         uint32_t currentEntry = 0;
         for(n = 0; n < numCollections; n++) {
-            int32_t top = INT_MAX, left = INT_MAX, bottom = 0, right = 0;
+            uint32_t top = UINT_MAX, left = UINT_MAX, bottom = 0, right = 0;
             uint32_t cnt = uint32_t(entries[currentEntry].header.parts);
 
             /* Go through every entry and find the image bounds */
             for(int i = currentEntry; i < currentEntry + cnt; i++) {
-                int32_t x = int32_t(entries[i].header.offsetX);
-                int32_t y = int32_t(entries[i].header.offsetY);
-                int32_t w = int32_t(entries[i].header.width);
-                int32_t h = int32_t(entries[i].header.height);
+                uint32_t x = entries[i].header.offsetX;
+                uint32_t y = entries[i].header.offsetY;
+                uint32_t w = entries[i].header.width;
+                uint32_t h = entries[i].header.height;
 
                 left = std::min(left, x);
                 top = std::min(top, y);
@@ -157,15 +157,17 @@ bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
                 bottom = std::max(bottom, y+h);
             }
 
-            /* Hand the width/height to the texture atlas  */
-            entryDims[n] = std::make_pair<uint32_t, uint32_t>(uint32_t(right-left), uint32_t(bottom-top));
-
             /* Calculate the offset relative to the texture atlas rectangle for every entry */
             for(uint32_t d = currentEntry + cnt; currentEntry < d; currentEntry++) {
                 entries[currentEntry].collection = n;
-                entries[currentEntry].offX = uint16_t(entries[currentEntry].header.offsetX + uint16_t(entries[n].header.horizOffset)) - left;
-                entries[currentEntry].offY = uint16_t(entries[currentEntry].header.offsetY) - top;
+                entries[currentEntry].offX = int(entries[currentEntry].header.offsetX + entries[n].header.horizOffset) - left;
+                entries[currentEntry].offY = int(entries[currentEntry].header.offsetY) - top;
+                entries[currentEntry].tileX = int(entries[currentEntry].header.offsetX) - left;
+                entries[currentEntry].tileY = int(entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
             }
+
+            /* Hand the width/height to the texture atlas  */
+            entryDims[n] = std::make_pair<uint32_t, uint32_t>(uint32_t(right-left), uint32_t(bottom-top));
         }
         /* One collection -> one texture */
         textureAtlas->Allocate(entryDims);
@@ -225,6 +227,9 @@ bool Gm1File::GetImage(uint32_t index) {
             SDL_Rect tile = tileset->GetTile(index);
             SDL_Rect part = textureAtlas->Get(entries[index].collection);
 
+            char *p = position+512;
+            TgxFile::ReadTgx(*textureAtlas, p, entries[index].size-512, part.x + entries[index].offX, part.y +entries[index].offY, nullptr);
+
             /* Extract pixel data */
             const static uint8_t lines[16] = {
                 2, 6, 10, 14, 18, 22, 26, 30,
@@ -248,10 +253,16 @@ bool Gm1File::GetImage(uint32_t index) {
                         tile.y + l,
                         r, g, b, 0xFF
                     );
+
+                    textureAtlas->SetPixel(
+                        part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
+                        part.y + entries[index].tileY + l,
+                        r, g, b, 0xFF
+                        );
                 }
             }
 
-            TgxFile::ReadTgx(*textureAtlas, position, entries[index].size - 512, part.x + entries[index].offX, part.y + entries[index].offY, nullptr);
+            position += entries[index].size-512;
         }break;
         case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
             SDL_Rect part = textureAtlas->Get(index);

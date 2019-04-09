@@ -18,7 +18,7 @@ TextureAtlas::TextureAtlas(const TextureAtlas &atlas) : Texture(atlas.renderer)
 
 TextureAtlas::~TextureAtlas() {
 }
-
+#include<iostream>
 void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries) {
     if(!entries.size()) {
         return;
@@ -41,7 +41,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
         sorted.begin(),
         sorted.begin() + sorted.size(),
         [](Elem& e1, Elem& e2) -> bool {
-            return e1.dim.second > e2.dim.second;
+            return e1.dim.first > e2.dim.first;
         }
     );
 
@@ -52,6 +52,11 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
     for(size_t i = 0; i < sorted.size(); i++) {
         Elem e = sorted[i];
 
+        if(px > MAX_X_RESOLUTION) {
+            px = 0;
+            py = height;
+        }
+
         SDL_Rect rect;
         rect.x = px;
         rect.y = py;
@@ -59,12 +64,8 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
         rect.h = e.dim.second;
 
         px += e.dim.first;
-        if(px > MAX_X_RESOLUTION) {
-            px = 0;
-            py = height;
-        }
 
-        if(py == 0) width = px;
+        width = std::max(width, px);
         height = std::max(height, py + e.dim.second);
 
         this->entries[e.index] = rect;

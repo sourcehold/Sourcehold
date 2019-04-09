@@ -20,21 +20,20 @@ namespace Sourcehold
          */
         class Tileset : public Texture
         {
-            public:
-                Tileset(std::shared_ptr<Renderer> rend);
-                ~Tileset();
+            std::shared_ptr<Renderer> renderer;
+            uint32_t numRows, num;
+        public:
+            Tileset(std::shared_ptr<Renderer> rend);
+            ~Tileset();
 
-                void Allocate(uint32_t num);
-                void SetTile(Texture &image, uint32_t index);
-                void Clear();
-                
-                inline uint32_t GetNumTiles() { return num; }
-                SDL_Rect GetTile(uint32_t index);
-            protected:
-                std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
+            void Allocate(uint32_t num);
+            void SetTile(Texture &image, uint32_t index);
+            void Clear();
 
-                std::shared_ptr<Renderer> renderer;
-                uint32_t numRows, num;
+            inline uint32_t GetNumTiles() { return num; }
+            SDL_Rect GetTile(uint32_t index);
+        protected:
+            std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
         };
     }
 }
