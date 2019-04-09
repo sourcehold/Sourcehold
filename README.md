@@ -1,8 +1,11 @@
 Sourcehold [![Build Status](https://travis-ci.org/metalvoidzz/Sourcehold.svg?branch=master)](https://travis-ci.org/metalvoidzz/Sourcehold)
-============
+======
 
-Open source engine implementation of Stronghold by Firefly Studios.  
-This project is currently in an early stage of developement.
+Open source engine implementation of Stronghold by Firefly Studios. This project is currently in an early stage of development. Once completed, it should be able to replace all editions of classic Stronghold, including the HD remaster.
+
+---
+
+![Imgur](https://i.imgur.com/jWMp8Qx.png)
 
 ##  Building
 Run `cmake` in the build directory.  
