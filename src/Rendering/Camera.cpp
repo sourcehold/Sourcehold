@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include <Rendering/Camera.h>
 
 using namespace Sourcehold::Rendering;
@@ -12,7 +14,24 @@ Camera::Camera(int32_t x, int32_t y) {
 }
 
 Camera::~Camera() {
+}
 
+SDL_Rect Camera::GetVisibleArea() {
+    SDL_Rect rect;
+
+    /* TODO */
+    int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);
+
+    rect.x = zoomFactor * positionX;
+    rect.y = zoomFactor * positionY;
+    rect.w = positionX;
+    rect.h = positionY;
+
+    return rect;
+}
+
+void Camera::SetBounds(SDL_Rect bounds) {
+    this->bounds = bounds;
 }
 
 void Camera::MoveLeft() {
@@ -32,5 +51,10 @@ void Camera::MoveDown() {
 }
 
 void Camera::Update() {
-    TranslateCam(speed * momentumX, speed * momentumY);
+    /* TODO */
+    int32_t px = speed * momentumX, py = speed * momentumY;
+    TranslateCam(px, py);
+
+    SDL_Rect area = GetVisibleArea();
 }
+

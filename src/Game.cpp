@@ -8,7 +8,7 @@
 #include <cxxopts.hpp>
 
 #include <MainMenu.h>
-#include <GameMap.h>
+#include <World.h>
 #include <GameManager.h>
 
 #include <System/System.h>
@@ -73,18 +73,8 @@ int StartGame(GameOptions &opt) {
         AudioSource aud("data/fx/music/the maidenB.raw", true);
         aud.Play();
 
-        GameMap map(gameManager);
-
-        while(gameManager->Running()) {
-            gameManager->Clear();
-            gameManager->StartTimer();
-
-            map.Render();
-
-            gameManager->Flush();
-            gameManager->EndTimer();
-        }
-
+        World world(gameManager);
+        world.Play();
         /* ------ Alpha testing ------ */
     }
 

@@ -129,7 +129,7 @@ void AudioSource::SetFadeOut(double amount) {
     if(fading) return;
     fadeAmount = amount;
     fading = true;
-    fadeBase = (double)SDL_GetTicks() / 1000.0; 
+    fadeBase = (double)SDL_GetTicks() / 1000.0;
 }
 
 void AudioSource::UpdateFade() {
