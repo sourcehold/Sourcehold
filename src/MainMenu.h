@@ -57,7 +57,7 @@ namespace Sourcehold
             std::shared_ptr<BinkVideo> intro;
 
             /* User interface */
-            StaticElement ui_exit, ui_firefly, ui_tutorial, ui_load;
+            StaticElement ui_exit, ui_firefly, ui_tutorial, ui_combat, ui_economic, ui_mapedit, ui_load;
 
             enum StartupEvent : uint8_t {
                 STARTUP_FIREFLY_LOGO = 0,

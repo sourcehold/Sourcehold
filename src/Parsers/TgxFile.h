@@ -29,7 +29,8 @@ namespace Sourcehold
          */
         class TgxFile : private Parser, public Texture
         {
-            public:
+            std::shared_ptr<Renderer> renderer;
+        public:
                 TgxFile(std::shared_ptr<Renderer> rend);
                 TgxFile(std::shared_ptr<Renderer> rend, const std::string &path);
                 ~TgxFile();
@@ -37,7 +38,7 @@ namespace Sourcehold
                 bool LoadFromDisk(const std::string &path);
                 void Unload();
 
-                static void ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal);
+                static void ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal);
                 static void ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b);
             protected:
                 struct TgxHeader;

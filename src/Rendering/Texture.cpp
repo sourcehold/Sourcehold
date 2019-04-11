@@ -31,12 +31,13 @@ Texture::Texture(const Texture &tex) :
 }
 
 Texture::~Texture() {
-    if(valid) SDL_DestroyTexture(texture);
+    Destroy();
 }
 
 bool Texture::AllocNewStreaming(int width, int height, int format) {
     this->width = width;
     this->height = height;
+    access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
         renderer->GetRenderer(),
         format,
@@ -73,11 +74,13 @@ void Texture::UpdateTexture() {
 }
 
 void Texture::Destroy() {
-
+    if(!valid) return;
+    SDL_DestroyTexture(texture);
+    valid = false;
 }
 
 void Texture::LockTexture() {
-    if(locked) return;
+    if(locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     if(SDL_LockTexture(texture, nullptr, (void**)&pixels, &pitch)) {
         Logger::error("RENDERING") << "Unable to lock texture: " << SDL_GetError() << std::endl;
         locked = false;
@@ -85,7 +88,7 @@ void Texture::LockTexture() {
 }
 
 void Texture::UnlockTexture() {
-    if(!locked) return;
+    if(!locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     SDL_UnlockTexture(texture);
     locked = false;
 }

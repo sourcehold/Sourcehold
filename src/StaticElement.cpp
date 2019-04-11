@@ -19,8 +19,8 @@ StaticElement::StaticElement(const StaticElement &elem) :
     this->shown = elem.shown;
     this->nx = elem.nx;
     this->ny = elem.ny;
-    this->nw = elem.nh;
-    this->nh = elem.nw;
+    this->nw = elem.nw;
+    this->nh = elem.nh;
 }
 
 StaticElement::~StaticElement() {
@@ -70,7 +70,26 @@ void StaticElement::Render(Texture &elem, bool whole) {
     manager->Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
 }
 
-void StaticElement::onEventReceive(Mouse &event) {
+bool StaticElement::IsMouseOver() {
+    int rx = manager->ToCoordX(nx);
+    int ry = manager->ToCoordY(ny);
+    int rw = manager->ToCoordX(nw);
+    int rh = manager->ToCoordY(nh);
 
+    if(mouseX > rx &&
+       mouseY > ry &&
+       mouseX < rx+rw &&
+       mouseY < ry+rh
+        ) return true;
+    return false;
+}
+
+void StaticElement::onEventReceive(Mouse &event) {
+    EventType type = event.GetType();
+
+    if(type == MOUSE_MOTION) {
+        mouseX = event.GetPosX();
+        mouseY = event.GetPosY();
+    }
 }
 

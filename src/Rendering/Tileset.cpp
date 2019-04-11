@@ -9,7 +9,8 @@ using namespace Sourcehold::System;
 
 Tileset::Tileset(std::shared_ptr<Renderer> rend) :
     renderer(rend),
-    Texture(rend)
+    Texture(rend),
+    surf(rend)
 {
 }
 
@@ -21,7 +22,12 @@ void Tileset::Allocate(uint32_t num) {
     this->num = num;
 
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-    Texture::AllocNewStreaming(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA8888);
+    surf.AllocNew(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA8888);
+}
+
+void Tileset::Create() {
+    Texture::AllocFromSurface(surf);
+    surf.Destroy();
 }
 
 void Tileset::SetTile(Texture &image, uint32_t index) {
@@ -48,6 +54,18 @@ SDL_Rect Tileset::GetTile(uint32_t index) {
 
 void Tileset::Clear() {
     Texture::Destroy();
+}
+
+Uint32 *Tileset::GetData() {
+    return surf.GetData();
+}
+
+void Tileset::Lock() {
+    surf.LockSurface();
+}
+
+void Tileset::Unlock() {
+    surf.UnlockSurface();
 }
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {

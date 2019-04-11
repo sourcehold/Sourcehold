@@ -10,6 +10,9 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
     ui_exit(man),
     ui_firefly(man),
     ui_tutorial(man),
+    ui_combat(man),
+    ui_economic(man),
+    ui_mapedit(man),
     ui_load(man)
 {
 }
@@ -105,7 +108,7 @@ void MainMenu::onEventReceive(Mouse &event) {
 }
 
 int MainMenu::EnterMainMenu() {
-    tgx_bg1 = manager->GetTgx(manager->GetDirectory() + "gfx/frontend_main.tgx").lock();
+    tgx_bg1 = manager->GetTgx(manager->GetDirectory() + "gfx/frontend_main2.tgx").lock();
 
     /* Init user interface */
     InitUI();
@@ -122,19 +125,63 @@ int MainMenu::EnterMainMenu() {
         auto icons_front = gm1_icons_front->GetTextureAtlas().lock();
         ui_exit.Render(
             [&]() -> Texture& {
-                icons_front->SetRect(icons_front->Get(68));
+                if(ui_exit.IsMouseOver()) icons_front->SetRect(icons_front->Get(69));
+                else icons_front->SetRect(icons_front->Get(68));
                 return *icons_front;
             });
 
         ui_tutorial.Render(
             [&]() -> Texture& {
-                icons_front->SetRect(icons_front->Get(72));
+                if(ui_tutorial.IsMouseOver()) icons_front->SetRect(icons_front->Get(73));
+                else icons_front->SetRect(icons_front->Get(72));
+                return *icons_front;
+            });
+
+        ui_combat.Render(
+            [&]() -> Texture& {
+                if(ui_combat.IsMouseOver()) {
+                    icons_front->SetRect(icons_front->Get(16));
+                    ui_combat.Translate(0.178, 0.279);
+                } else {
+                    icons_front->SetRect(icons_front->Get(0));
+                    ui_combat.Translate(0.178, 0.278);
+                }
+                return *icons_front;
+            });
+
+        ui_economic.Render(
+            [&]() -> Texture& {
+                if(ui_economic.IsMouseOver()) {
+                    icons_front->SetRect(icons_front->Get(33));
+                    ui_economic.Translate(0.333, 0.279);
+                } else {
+                    icons_front->SetRect(icons_front->Get(17));
+                    ui_economic.Translate(0.333, 0.278);
+                }
+                return *icons_front;
+            });
+
+        ui_mapedit.Render(
+            [&]() -> Texture& {
+                if(ui_mapedit.IsMouseOver()) {
+                    icons_front->SetRect(icons_front->Get(50));
+                    ui_mapedit.Translate(0.485, 0.279);
+                } else {
+                    icons_front->SetRect(icons_front->Get(34));
+                    ui_mapedit.Translate(0.485, 0.278);
+                }
                 return *icons_front;
             });
 
         ui_load.Render(
             [&]() -> Texture& {
-                icons_front->SetRect(icons_front->Get(51));
+                if(ui_load.IsMouseOver()) {
+                    icons_front->SetRect(icons_front->Get(67));
+                    ui_load.Translate(0.643, 0.279);
+                } else {
+                    icons_front->SetRect(icons_front->Get(51));
+                    ui_load.Translate(0.643, 0.278);
+                }
                 return *icons_front;
             });
 
@@ -160,8 +207,9 @@ void MainMenu::InitUI() {
     ui_tutorial.Translate(0.65, 0.78);
     ui_tutorial.Scale(0.2, 0.24);
 
-    /* Loading button */
-    ui_load.Translate(0.643, 0.278);
+    ui_combat.Scale(0.185, 0.232);
+    ui_economic.Scale(0.185, 0.232);
+    ui_mapedit.Scale(0.185, 0.232);
     ui_load.Scale(0.185, 0.232);
 }
 

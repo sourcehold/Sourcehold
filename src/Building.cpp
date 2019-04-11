@@ -19,7 +19,7 @@ Building::~Building() {
 }
 
 void Building::Preview(uint32_t x, uint32_t y) {
-
+    
 }
 
 void Building::PlaceAt(uint32_t x, uint32_t y) {

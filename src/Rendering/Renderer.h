@@ -53,6 +53,9 @@ namespace Sourcehold
             void Render(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
             void Render(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
+            void DrawLine(int x1, int y1, int x2, int y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+            void DrawLine(double x1, double y1, double x2, double y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+
             inline int GetWidth() { return width; }
             inline int GetHeight() { return height; }
             inline SDL_Renderer *GetRenderer() { return renderer; }

@@ -35,6 +35,8 @@ GameMap::GameMap(std::shared_ptr<GameManager> man) :
 }
 
 void GameMap::Render() {
+    mult = manager->GetZoomLevel() == Camera::ZOOM_NEAR ? 2 : 1;
+
     for(uint32_t i = 0; i < tiles.size(); i++) {
         SDL_Rect clip = tiles[i];
 

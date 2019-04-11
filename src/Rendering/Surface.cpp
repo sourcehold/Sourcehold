@@ -20,17 +20,10 @@ bool Surface::AllocNew(int width, int height, int format) {
         width,
         height,
         32,
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
         Uint32(0xFF000000), // r
         Uint32(0x00FF0000), // g
         Uint32(0x0000FF00), // b
         Uint32(0x000000FF)  // a
-#else
-        Uint32(0x000000FF), // r
-        Uint32(0x0000FF00), // g
-        Uint32(0x00FF0000), // b
-        Uint32(0xFF000000)  // a
-#endif
         );
     if(!surface) {
         Logger::error("RENDERING") << "Unable to create surface: " << SDL_GetError() << std::endl;
@@ -38,19 +31,22 @@ bool Surface::AllocNew(int width, int height, int format) {
         return false;
     }
 
+    SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
+
     valid = true;
     return true;
 }
 
 void Surface::Destroy() {
+    if(!valid) return;
     SDL_FreeSurface(surface);
     valid = false;
 }
 
 void Surface::LockSurface() {
     if(locked) return;
-    if(SDL_LockSurface(surface) < 0 ) locked = true;
-    else locked = false;
+    SDL_LockSurface(surface);
+    locked = true;
 }
 
 void Surface::UnlockSurface() {
@@ -60,8 +56,7 @@ void Surface::UnlockSurface() {
 
 void Surface::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     if(!locked) return;
-    Uint32 *target_pixel = (Uint32*)surface->pixels + y * surface->pitch + x * sizeof *target_pixel;
-    *target_pixel = ToPixel(r, g, b, a);
+    ((Uint32*)surface->pixels)[(y * surface->w) + x] = ToPixel(r, g, b, a);
 }
 
 void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect) {

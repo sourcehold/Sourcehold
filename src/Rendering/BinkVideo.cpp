@@ -209,6 +209,7 @@ void BinkVideo::Decode() {
                 return;
             }
         }else {
+            running = false;
             return;
         }
     }

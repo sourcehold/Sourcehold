@@ -50,6 +50,8 @@ namespace Sourcehold
 
             inline ZoomLevel GetZoomLevel() { return zoomLevel; }
             inline Rotation GetRotation() { return rotation; }
+            inline void ZoomOut() { zoomLevel = ZOOM_FAR; }
+            inline void ZoomIn() { zoomLevel = ZOOM_NEAR; }
             inline int32_t CamX() { return positionX; }
             inline int32_t CamY() { return positionY; }
             inline void SetCamX(int32_t pos) { positionX = pos; }

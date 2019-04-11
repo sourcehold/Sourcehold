@@ -25,10 +25,9 @@ AudioSource::AudioSource(const std::string &path, bool repeat) :
 }
 
 AudioSource::AudioSource(uint8_t *ptr, size_t size, bool repeat) :
-    repeat(repeat),
-    size(size),
     ptr(ptr),
-    valid(false)
+    size(size),
+    repeat(repeat)
 { }
 
 AudioSource::~AudioSource() {
@@ -42,6 +41,7 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     this->gain = 1.0f;
+    this->path = path;
     alGenSources((ALuint)1, &source);
     alSourcef(source, AL_PITCH, 1.0f);
     alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain);
@@ -79,6 +79,7 @@ bool AudioSource::LoadEffect(const std::string &path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     this->gain = 1.0f;
+    this->path = path;
     alGenSources((ALuint)1, &source);
     alSourcef(source, AL_PITCH, 1.0f);
     alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain);

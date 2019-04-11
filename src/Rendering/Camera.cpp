@@ -22,11 +22,6 @@ SDL_Rect Camera::GetVisibleArea() {
     /* TODO */
     int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);
 
-    rect.x = zoomFactor * positionX;
-    rect.y = zoomFactor * positionY;
-    rect.w = positionX;
-    rect.h = positionY;
-
     return rect;
 }
 

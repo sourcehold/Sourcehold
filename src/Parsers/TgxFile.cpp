@@ -11,10 +11,11 @@ struct TgxFile::TgxHeader {
 };
 
 TgxFile::TgxFile(std::shared_ptr<Renderer> rend) : Parser(), Texture(rend) {
-
+    renderer = rend;
 }
 
 TgxFile::TgxFile(std::shared_ptr<Renderer> rend, const std::string &path) : Parser(), Texture(rend) {
+    renderer = rend;
     this->LoadFromDisk(path);
 }
 
@@ -35,7 +36,8 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     }
 
     /* Allocate image */
-    AllocNewStreaming(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
+    Surface surf(renderer);
+    surf.AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
 
     /* Calculate size */
     size_t size = Parser::GetLength() - Parser::Tell();
@@ -45,9 +47,12 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
     Parser::Close();
 
     /* Read image data */
-    Texture::LockTexture();
-    ReadTgx(static_cast<Texture&>(*this), buf, size, 0, 0, nullptr);
-    Texture::UnlockTexture();
+    surf.LockSurface();
+    ReadTgx(surf, buf, size, 0, 0, nullptr);
+    surf.UnlockSurface();
+
+    /* Convert to texture */
+    Texture::AllocFromSurface(surf);
 
     delete [] buf;
     return true;
@@ -56,7 +61,7 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
 void TgxFile::Unload() {
 }
 
-void TgxFile::ReadTgx(Texture &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
+void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
     uint32_t x = 0, y = 0;
     char *end = buf + size;
 

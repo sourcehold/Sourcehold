@@ -31,6 +31,7 @@ void Renderer::Update() {
 }
 
 void Renderer::Clear() {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 }
 
@@ -51,7 +52,6 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     }
 
     if(rect.x + rect.w > width || rect.y + rect.h > height) {
-        
     };
 
     SDL_RenderCopyEx(
@@ -76,7 +76,6 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *cl
     };
 
     if(rect.x + rect.w > width || rect.y + rect.h > height) {
-        
     };
 
     SDL_RenderCopyEx(
@@ -128,9 +127,8 @@ void Renderer::Render(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uin
     };
 
     if(rect.x + rect.w > width || rect.y + rect.h > height) {
-        
     };
-    
+
     if(solid) {
         SDL_RenderFillRect(
             renderer,
@@ -150,6 +148,21 @@ void Renderer::Render(double x, double y, double w, double h, Uint8 r, Uint8 g, 
     int sx = ToCoordX(w);
     int sy = ToCoordY(h);
     Render(ix, iy, sx, sy, r, g, b, a, solid);
+}
+
+void Renderer::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b) {
+    SDL_SetRenderDrawColor(renderer, r, b, g, SDL_ALPHA_OPAQUE);
+    int err = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+}
+
+void Renderer::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b) {
+    DrawLine(
+        (int)ToCoordX(x1),
+        (int)ToCoordY(y1),
+        (int)ToCoordX(x2),
+        (int)ToCoordY(y2),
+        r,g,b
+        );
 }
 
 double Renderer::NormalizeX(uint32_t c) {
