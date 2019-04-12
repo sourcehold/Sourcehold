@@ -71,21 +71,29 @@ void StaticElement::Render(Texture &elem, bool whole) {
 }
 
 bool StaticElement::IsMouseOver() {
+    manager->PushTarget();
+
+    /* TODO: Convert to screen coordinates */
+    manager->SetTarget();
     int rx = manager->ToCoordX(nx);
     int ry = manager->ToCoordY(ny);
     int rw = manager->ToCoordX(nw);
     int rh = manager->ToCoordY(nh);
 
-    if(mouseX > rx &&
-       mouseY > ry &&
-       mouseX < rx+rw &&
-       mouseY < ry+rh
-        ) return true;
+    manager->PopTarget();
+
+    if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
     return false;
 }
 
 void StaticElement::onEventReceive(Mouse &event) {
     EventType type = event.GetType();
+
+    int tw = manager->GetTargetWidth();
+    int th = manager->GetTargetHeight();
+
+    int w = manager->GetWidth();
+    int h = manager->GetHeight();
 
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();

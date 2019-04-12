@@ -28,7 +28,7 @@ namespace Sourcehold
             SDL_Texture *texture = nullptr;
             int width, height, pitch = 0;
             double angle;
-            bool locked = false, valid = false;
+            bool locked = false, target = false, valid = false;
             Uint32* pixels = nullptr;
             SDL_RendererFlip flip;
             SDL_TextureAccess access;
@@ -50,12 +50,22 @@ namespace Sourcehold
              */
             bool AllocFromSurface(Surface &surface);
 
+            /**
+             * Allocate a new texture in target mode. The pixel
+             * data is manipulated via SDL functions, after calling
+             * SetTarget. Reset the render target by calling ResetTarget
+             * afterwards.
+             */
+            bool AllocNewTarget(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+
             void UpdateTexture();
             void Destroy();
 
             /* Texture manipulation */
             void LockTexture();
             void UnlockTexture();
+            void SetTarget();
+            void ResetTarget();
             void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
             void Rotate(double angle);
             void FlipHorizontal();

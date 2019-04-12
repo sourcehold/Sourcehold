@@ -45,7 +45,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
         width, height
     );
     if(!texture) {
-        Logger::error("RENDERING") << "Unable to create texture: " << SDL_GetError() << std::endl;
+        Logger::error("RENDERING") << "Unable to create streaming texture: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -57,9 +57,32 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
 }
 
 bool Texture::AllocFromSurface(Surface &surface) {
+    width = surface.GetWidth();
+    height = surface.GetHeight();
     texture = SDL_CreateTextureFromSurface(renderer->GetRenderer(), surface.GetSurface());
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
+        return false;
+    }
+
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
+    valid = true;
+    return true;
+}
+
+bool Texture::AllocNewTarget(int width, int height, int format) {
+    this->width = width;
+    this->height = height;
+    access = SDL_TEXTUREACCESS_TARGET;
+    texture = SDL_CreateTexture(
+        renderer->GetRenderer(),
+        format,
+        SDL_TEXTUREACCESS_TARGET,
+        width, height
+        );
+    if(!texture) {
+        Logger::error("RENDERING") << "Unable to create target texture: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -91,6 +114,18 @@ void Texture::UnlockTexture() {
     if(!locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     SDL_UnlockTexture(texture);
     locked = false;
+}
+
+void Texture::SetTarget() {
+    if(target || access != SDL_TEXTUREACCESS_TARGET) return;
+    SDL_SetRenderTarget(renderer->GetRenderer(), texture);
+    target = true;
+}
+
+void Texture::ResetTarget() {
+    if(!target || access != SDL_TEXTUREACCESS_TARGET) return;
+    SDL_SetRenderTarget(renderer->GetRenderer(), NULL);
+    target = false;
 }
 
 void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {

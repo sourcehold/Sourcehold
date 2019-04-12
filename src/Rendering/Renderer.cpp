@@ -41,6 +41,18 @@ void Renderer::Flush() {
     SDL_RenderPresent(renderer);
 }
 
+void Renderer::PushTarget() {
+    targetCache = SDL_GetRenderTarget(renderer);
+}
+
+void Renderer::PopTarget() {
+    SDL_SetRenderTarget(renderer, targetCache);
+}
+
+void Renderer::SetTarget() {
+    SDL_SetRenderTarget(renderer, NULL);
+}
+
 void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     SDL_Rect rect = {
         x, y,
@@ -52,9 +64,6 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
         rect.w = clip->w;
         rect.h = clip->h;
     }
-
-    if(rect.x + rect.w > width || rect.y + rect.h > height) {
-    };
 
     SDL_RenderCopyEx(
         renderer,
@@ -75,9 +84,6 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *cl
     SDL_Rect rect = {
         x, y,
         w, h
-    };
-
-    if(rect.x + rect.w > width || rect.y + rect.h > height) {
     };
 
     SDL_RenderCopyEx(
@@ -128,9 +134,6 @@ void Renderer::Render(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uin
         w, h
     };
 
-    if(rect.x + rect.w > width || rect.y + rect.h > height) {
-    };
-
     if(solid) {
         SDL_RenderFillRect(
             renderer,
@@ -168,19 +171,62 @@ void Renderer::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uin
 }
 
 double Renderer::NormalizeX(uint32_t c) {
-    return (double)c / (double)GetWidth();
+    int w = width, h = height;
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target != NULL) {
+        SDL_QueryTexture(target, NULL, NULL, &w, &h);
+    }
+
+    return (double)c / (double)w;
 }
 
 double Renderer::NormalizeY(uint32_t c) {
-    return (double)c / (double)GetHeight();
+    int w = width, h = height;
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target != NULL) {
+        SDL_QueryTexture(target, NULL, NULL, &w, &h);
+    }
+
+
+    return (double)c / (double)h;
 }
 
 uint32_t Renderer::ToCoordX(double c) {
-    return (int)(c * GetWidth());
+    int w = width, h = height;
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target != NULL) {
+        SDL_QueryTexture(target, NULL, NULL, &w, &h);
+    }
+
+    return (int)(c * w);
 }
 
 uint32_t Renderer::ToCoordY(double c) {
-    return (int)(c * GetHeight());
+    int w = width, h = height;
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target != NULL) {
+        SDL_QueryTexture(target, NULL, NULL, &w, &h);
+    }
+
+    return (int)(c * h);
+}
+
+int Renderer::GetTargetWidth() {
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target) {
+        int w;
+        SDL_QueryTexture(target, NULL, NULL, &w, NULL);
+        return w;
+    }else return 0;
+}
+
+int Renderer::GetTargetHeight() {
+    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+    if(target) {
+        int h;
+        SDL_QueryTexture(target, NULL, NULL, NULL, &h);
+        return h;
+    }else return 0;
 }
 
 int Renderer::ResizeEventWatcher(void *data, SDL_Event *event) {
