@@ -19,6 +19,24 @@ namespace Sourcehold
     }
     namespace Game
     {
+        class Scroll {
+        public:
+            bool shouldScroll = false;
+            bool setByKeyboard = false;
+            bool setByMouse = false;
+
+            explicit operator bool() {
+                return shouldScroll;
+            }
+        };
+
+        struct ScrollInformation {
+            Scroll up;
+            Scroll down;
+            Scroll right;
+            Scroll left;
+        };
+
         /**
          * Handles everything related to the game world, including
          * loading, rendering and moving the camera
@@ -30,7 +48,7 @@ namespace Sourcehold
             std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_right, tgx_bar_bg;
             std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons;
-            bool ml = false, mr = false, mu = false, md = false;
+            ScrollInformation scroll;
             StaticElement ui_disk, ui_info, ui_delete, ui_revert;
         public:
             World(std::shared_ptr<GameManager> mgr);

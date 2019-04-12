@@ -54,19 +54,19 @@ void World::RenderMenubar() {
 }
 
 void World::UpdateCamera() {
-    if(ml) manager->MoveLeft();
-    if(mr) manager->MoveRight();
-    if(mu) manager->MoveUp();
-    if(md) manager->MoveDown();
+    if(scroll.left) manager->MoveLeft();
+    if(scroll.right) manager->MoveRight();
+    if(scroll.up) manager->MoveUp();
+    if(scroll.down) manager->MoveDown();
 }
 
 void World::onEventReceive(Keyboard &keyEvent) {
     if(keyEvent.GetType() == KEYBOARD_KEYDOWN) {
         switch(keyEvent.Key().sym) {
-        case SDLK_LEFT: ml = true; break;
-        case SDLK_RIGHT: mr = true; break;
-        case SDLK_UP: mu = true; break;
-        case SDLK_DOWN: md = true; break;
+        case SDLK_LEFT: scroll.left.shouldScroll = true; scroll.left.setByKeyboard = true; break;
+        case SDLK_RIGHT: scroll.right.shouldScroll = true; scroll.right.setByKeyboard = true; break;
+        case SDLK_UP: scroll.up.shouldScroll = true; scroll.up.setByKeyboard = true; break;
+        case SDLK_DOWN: scroll.down.shouldScroll = true; scroll.down.setByKeyboard = true; break;
         case SDLK_SPACE:
             if(manager->GetZoomLevel() == Camera::ZOOM_NEAR) manager->ZoomOut();
             else manager->ZoomIn();
@@ -75,10 +75,10 @@ void World::onEventReceive(Keyboard &keyEvent) {
         }
     }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
         switch(keyEvent.Key().sym) {
-        case SDLK_LEFT: ml = false; break;
-        case SDLK_RIGHT: mr = false; break;
-        case SDLK_UP: mu = false; break;
-        case SDLK_DOWN: md = false; break;
+        case SDLK_LEFT: scroll.left.shouldScroll = false; scroll.left.setByKeyboard = false; break;
+        case SDLK_RIGHT: scroll.right.shouldScroll = false; scroll.right.setByKeyboard = false;  break;
+        case SDLK_UP: scroll.up.shouldScroll = false; scroll.up.setByKeyboard = false;  break;
+        case SDLK_DOWN: scroll.down.shouldScroll = false; scroll.down.setByKeyboard = false;  break;
         default: break;
         }
 
@@ -90,6 +90,58 @@ void World::onEventReceive(Mouse &mouseEvent) {
     if(mouseEvent.GetType() == MOUSE_BUTTONDOWN) {
         int64_t px = (mouseEvent.GetPosX() + manager->CamX()) / 30;
         int64_t py = (mouseEvent.GetPosY() + manager->CamY()) / 16;
+    }
+    else if(mouseEvent.GetType() == MOUSE_MOTION) {
+        auto scrollThreshold = 2;
+
+        auto x = mouseEvent.GetPosX();
+        auto y = mouseEvent.GetPosY();
+
+        auto shouldReset = false;
+
+        if(x < scrollThreshold) {
+            scroll.left.shouldScroll = true;
+            scroll.left.setByMouse = true;
+        }
+        else if(scroll.left.setByMouse) {
+            scroll.left.shouldScroll = false;
+            scroll.left.setByMouse = false;
+            shouldReset = true;
+        }
+
+        if(x > manager->GetWidth() - scrollThreshold) {
+            scroll.right.shouldScroll = true;
+            scroll.right.setByMouse = true;
+        }
+        else if(scroll.right.setByMouse) {
+            scroll.right.shouldScroll = false;
+            scroll.right.setByMouse = false;
+            shouldReset = true;
+        }
+
+        if(y < scrollThreshold) {
+            scroll.up.shouldScroll = true;
+            scroll.up.setByMouse = true;
+        }
+        else if(scroll.up.setByMouse) {
+            scroll.up.shouldScroll = false;
+            scroll.up.setByMouse = false;
+            shouldReset = true;
+        }
+
+        if(y > manager->GetHeight() - scrollThreshold) {
+            scroll.down.shouldScroll = true;
+            scroll.down.setByMouse = true;
+        }
+        else if(scroll.down.setByMouse) {
+            scroll.down.shouldScroll = false;
+            scroll.down.setByMouse = false;
+            shouldReset = true;
+        }
+
+        if(shouldReset) {
+            manager->ResetMomentum();
+        }
     }
 }
 
