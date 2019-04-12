@@ -39,7 +39,7 @@ void StaticElement::Destroy() {
 
 }
 
-void StaticElement::Translate(uint32_t x, uint32_t y) {
+void StaticElement::Translate(int x, int y) {
     nx = manager->NormalizeX(x);
     ny = manager->NormalizeY(y);
 }
@@ -49,7 +49,7 @@ void StaticElement::Translate(double x, double y) {
     ny = y;
 }
 
-void StaticElement::Scale(uint32_t w, uint32_t h) {
+void StaticElement::Scale(int w, int h) {
     nw = manager->NormalizeX(w);
     nh = manager->NormalizeY(h);
 }

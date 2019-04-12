@@ -47,10 +47,16 @@ namespace Sourcehold
         {
             std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_right, tgx_bar_bg;
-            std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons;
+            std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats;
             ScrollInformation scroll;
+            /* Menu bar */
+            bool menubarShown = true;
             Texture menubar;
             StaticElement ui_disk, ui_info, ui_delete, ui_revert, ui_tabs[6];
+            /* Quick menu */
+            StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
+            bool rmbHolding = false;
+            Uint32 rmbPressed, rmbHeld, mouseX, mouseY;
         public:
             World(std::shared_ptr<GameManager> mgr);
             World(const World&) = delete;
@@ -58,6 +64,7 @@ namespace Sourcehold
 
             int Play();
         protected:
+            void RenderQuickMenu();
             void RenderMenubar();
             void UpdateMenubar();
             void UpdateCamera();

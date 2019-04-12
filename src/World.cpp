@@ -19,7 +19,11 @@ World::World(std::shared_ptr<GameManager> mgr) :
     ui_info(mgr),
     ui_delete(mgr),
     ui_revert(mgr),
-    ui_tabs { mgr, mgr, mgr, mgr, mgr, mgr }
+    ui_tabs { mgr, mgr, mgr, mgr, mgr, mgr },
+    ui_compass(mgr),
+    ui_magnify(mgr),
+    ui_lower(mgr),
+    ui_hide(mgr)
 {
     /* The repeating, wooden background of the menu bar */
     tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() + "gfx/1280r.tgx").lock();
@@ -30,6 +34,7 @@ World::World(std::shared_ptr<GameManager> mgr) :
     /* The menu faces */
     gm1_face = mgr->GetGm1(mgr->GetDirectory() + "gm/face800-blank.gm1").lock();
     gm1_icons = mgr->GetGm1(mgr->GetDirectory() + "gm/interface_buttons.gm1").lock();
+    gm1_floats = mgr->GetGm1(mgr->GetDirectory() + "gm/floats.gm1").lock();
 
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
@@ -49,8 +54,17 @@ int World::Play() {
 
         GameMap::Render();
 
-        UpdateMenubar();
-        RenderMenubar();
+        if(rmbHolding) {
+            rmbHeld = SDL_GetTicks() - rmbPressed;
+            if(rmbHeld > 90) {
+                RenderQuickMenu();
+            }
+        }
+
+        if(menubarShown) {
+            UpdateMenubar();
+            RenderMenubar();
+        }
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
@@ -59,6 +73,61 @@ int World::Play() {
     }
 
     return 0;
+}
+
+void World::RenderQuickMenu() {
+    auto atlas = gm1_floats->GetTextureAtlas().lock();
+
+    SDL_Rect rect = atlas->Get(37);
+    ui_compass.Translate(int(mouseX - (rect.w / 2)), int(mouseY - rect.h - 25));
+    ui_compass.Scale(rect.w, rect.h);
+
+    rect = atlas->Get(124);
+    ui_hide.Translate(int(mouseX - rect.w - 45), int(mouseY - (rect.h / 2)));
+    ui_hide.Scale(rect.w, rect.h);
+
+    rect = atlas->Get(45);
+    ui_magnify.Translate(int(mouseX + 45), int(mouseY - (rect.h / 2)));
+    ui_magnify.Scale(rect.w, rect.h);
+
+    rect = atlas->Get(35);
+    ui_lower.Translate(int(mouseX - (rect.w/2)), int(mouseY + 25));
+    ui_lower.Scale(rect.w, rect.h);
+
+    ui_compass.Render(
+        [&]() -> Texture& {
+            if(ui_compass.IsMouseOver()) {
+                Camera::Rotation rota = manager->GetRotation();
+            }
+            atlas->SetRect(atlas->Get(37));
+            return *atlas;
+        });
+
+    ui_hide.Render(
+        [&]() -> Texture& {
+            if(ui_hide.IsMouseOver()) {
+                atlas->SetRect(atlas->Get(125));
+                menubarShown = false;
+            } else {
+                atlas->SetRect(atlas->Get(124));
+                menubarShown = true;
+            }
+            return *atlas;
+        });
+
+    ui_magnify.Render(
+        [&]() -> Texture& {
+            atlas->SetRect(atlas->Get(45));
+            return *atlas;
+        });
+
+    ui_lower.Render(
+        [&]() -> Texture& {
+            if(ui_lower.IsMouseOver()) {
+                atlas->SetRect(atlas->Get(36));
+            }else atlas->SetRect(atlas->Get(35));
+            return *atlas;
+        });
 }
 
 void World::RenderMenubar() {
@@ -85,38 +154,30 @@ void World::UpdateMenubar() {
     atlas = gm1_icons->GetTextureAtlas().lock();
 
     rect = atlas->Get(25);
-    ui_disk.Translate(manager->NormalizeX(753), manager->NormalizeY(72));
-    ui_disk.Scale(manager->NormalizeX(rect.w), manager->NormalizeY(rect.h));
-
+    ui_disk.Translate(753, 72);
+    ui_disk.Scale(rect.w, rect.h);
     rect = atlas->Get(27);
-    ui_info.Translate(manager->NormalizeX(753), manager->NormalizeY(110));
-    ui_info.Scale(manager->NormalizeX(rect.w), manager->NormalizeY(rect.h));
-
+    ui_info.Translate(753, 110);
+    ui_info.Scale(rect.w, rect.h);
     rect = atlas->Get(29);
-    ui_delete.Translate(manager->NormalizeX(753), manager->NormalizeY(142));
-    ui_delete.Scale(manager->NormalizeX(rect.w), manager->NormalizeY(rect.h));
-
+    ui_delete.Translate(753, 142);
+    ui_delete.Scale(rect.w, rect.h);
     rect = atlas->Get(68);
-    ui_revert.Translate(manager->NormalizeX(753), manager->NormalizeY(168));
-    ui_revert.Scale(manager->NormalizeX(rect.w), manager->NormalizeY(rect.h));
+    ui_revert.Translate(753, 168);
+    ui_revert.Scale(rect.w, rect.h);
 
-    ui_tabs[0].Translate(manager->NormalizeX(264), manager->NormalizeY(165));
-    ui_tabs[0].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
-
-    ui_tabs[1].Translate(manager->NormalizeX(300), manager->NormalizeY(165));
-    ui_tabs[1].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
-
-    ui_tabs[2].Translate(manager->NormalizeX(336), manager->NormalizeY(165));
-    ui_tabs[2].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
-
-    ui_tabs[3].Translate(manager->NormalizeX(372), manager->NormalizeY(165));
-    ui_tabs[3].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
-
-    ui_tabs[4].Translate(manager->NormalizeX(408), manager->NormalizeY(165));
-    ui_tabs[4].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
-
-    ui_tabs[5].Translate(manager->NormalizeX(444), manager->NormalizeY(165));
-    ui_tabs[5].Scale(manager->NormalizeX(30), manager->NormalizeY(35));
+    ui_tabs[0].Translate(264, 165);
+    ui_tabs[0].Scale(30, 35);
+    ui_tabs[1].Translate(300, 165);
+    ui_tabs[1].Scale(30, 35);
+    ui_tabs[2].Translate(336, 165);
+    ui_tabs[2].Scale(30, 35);
+    ui_tabs[3].Translate(372, 165);
+    ui_tabs[3].Scale(30, 35);
+    ui_tabs[4].Translate(408, 165);
+    ui_tabs[4].Scale(30, 35);
+    ui_tabs[5].Translate(444, 165);
+    ui_tabs[5].Scale(30, 35);
 
     ui_disk.Render(
         [&]() -> Texture& {
@@ -209,6 +270,7 @@ void World::onEventReceive(Keyboard &keyEvent) {
             if(manager->GetZoomLevel() == Camera::ZOOM_NEAR) manager->ZoomOut();
             else manager->ZoomIn();
             break;
+        case SDLK_TAB: menubarShown = !menubarShown; break;
         default: break;
         }
     }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
@@ -228,6 +290,18 @@ void World::onEventReceive(Mouse &mouseEvent) {
     if(mouseEvent.GetType() == MOUSE_BUTTONDOWN) {
         int64_t px = (mouseEvent.GetPosX() + manager->CamX()) / 30;
         int64_t py = (mouseEvent.GetPosY() + manager->CamY()) / 16;
+
+        if(mouseEvent.RmbDown()) {
+            rmbHolding = true;
+            rmbPressed = SDL_GetTicks();
+            mouseX = mouseEvent.GetPosX();
+            mouseY = mouseEvent.GetPosY();
+        }
+    }else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
+        if(mouseEvent.RmbUp()) {
+            rmbHolding = false;
+            rmbHeld = 0;
+        }
     }
     else if(mouseEvent.GetType() == MOUSE_MOTION) {
         auto scrollThreshold = 2;
@@ -282,4 +356,3 @@ void World::onEventReceive(Mouse &mouseEvent) {
         }
     }
 }
-

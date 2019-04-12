@@ -42,9 +42,9 @@ namespace Sourcehold
             void Show();
             void Destroy();
 
-            void Translate(uint32_t x, uint32_t y);
+            void Translate(int x, int y);
             void Translate(double x, double y);
-            void Scale(uint32_t w, uint32_t h);
+            void Scale(int w, int h);
             void Scale(double w, double h);
 
             /**
