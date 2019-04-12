@@ -31,17 +31,17 @@ namespace Sourcehold
         {
             std::shared_ptr<Renderer> renderer;
         public:
-                TgxFile(std::shared_ptr<Renderer> rend);
-                TgxFile(std::shared_ptr<Renderer> rend, const std::string &path);
-                ~TgxFile();
+            TgxFile(std::shared_ptr<Renderer> rend);
+            TgxFile(std::shared_ptr<Renderer> rend, const std::string &path);
+            ~TgxFile();
 
-                bool LoadFromDisk(const std::string &path);
-                void Unload();
+            bool LoadFromDisk(const std::string &path);
+            void Unload();
 
-                static void ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal);
-                static void ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b);
-            protected:
-                struct TgxHeader;
+            static void ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t width, uint16_t height, uint16_t *pal);
+            static void ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b);
+        protected:
+            struct TgxHeader;
         };
     }
 }

@@ -1,7 +1,11 @@
 #include <Building.h>
 #include <World.h>
+#include <Config.h>
+
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
+
+#include <Rendering/Font.h>
 
 using namespace Sourcehold::Game;
 
@@ -42,6 +46,8 @@ int World::Play() {
         GameMap::Render();
 
         RenderMenubar();
+
+        RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
         manager->EndTimer();
         manager->Flush();

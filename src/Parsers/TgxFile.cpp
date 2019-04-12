@@ -48,7 +48,7 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
 
     /* Read image data */
     surf.LockSurface();
-    ReadTgx(surf, buf, size, 0, 0, nullptr);
+    ReadTgx(surf, buf, size, 0, 0, header.width, header.height, nullptr);
     surf.UnlockSurface();
 
     /* Convert to texture */
@@ -61,9 +61,10 @@ bool TgxFile::LoadFromDisk(const std::string &path) {
 void TgxFile::Unload() {
 }
 
-void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal) {
-    uint32_t x = 0, y = 0;
+void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t width, uint16_t height, uint16_t *pal) {
+    int32_t x = 0, y = 0;
     char *end = buf + size;
+    char *begin = buf;
 
     while(buf < end) {
         /* Read token byte */

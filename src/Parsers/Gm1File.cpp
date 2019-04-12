@@ -219,18 +219,25 @@ bool Gm1File::GetImage(uint32_t index) {
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
             SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, nullptr);
+            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr);
         }break;
         case Gm1Header::TYPE_ANIMATION: {
             SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, palette);
+            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette);
         }break;
         case Gm1Header::TYPE_TILE: {
             /* Read tile */
             SDL_Rect tile = tileset->GetTile(index);
             SDL_Rect part = textureAtlas->Get(entries[index].collection);
 
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position+512, entries[index].size-512, part.x + entries[index].offX, part.y + entries[index].offY, nullptr);
+            TgxFile::ReadTgx(textureAtlas->GetSurface(),
+                             position+512,
+                             entries[index].size-512,
+                             part.x + entries[index].offX,
+                             part.y + entries[index].offY,
+                             part.w,
+                             part.h,
+                             nullptr);
 
             /* Extract pixel data */
             const static uint8_t lines[16] = {

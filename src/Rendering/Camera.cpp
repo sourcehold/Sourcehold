@@ -50,6 +50,9 @@ void Camera::Update() {
     int32_t px = speed * momentumX, py = speed * momentumY;
     TranslateCam(px, py);
 
+    if(positionX < bounds.x) positionX = bounds.x;
+    if(positionY < bounds.y) positionY = bounds.y;
+
     SDL_Rect area = GetVisibleArea();
 }
 

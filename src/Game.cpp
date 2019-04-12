@@ -16,6 +16,8 @@
 
 #include <Assets/Assets.h>
 
+#include <Rendering/Font.h>
+
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
@@ -33,6 +35,8 @@ int StartGame(GameOptions &opt) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
     }
+
+    if(!LoadFonts(gameManager)) return EXIT_FAILURE;
 
     std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() + "gfx/frontend_loading.tgx").lock();
 
@@ -79,6 +83,7 @@ int StartGame(GameOptions &opt) {
     }
 
     gameManager->ClearFileCache();
+    UnloadFonts();
     return EXIT_SUCCESS;
 }
 
