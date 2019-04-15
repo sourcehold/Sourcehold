@@ -16,7 +16,7 @@ Display::~Display() {
     SDL_Quit();
 }
 
-void Display::Open(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder) {
+void Display::Open(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb) {
     int param = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
 
     this->fullscreen = fullscreen;
@@ -51,6 +51,10 @@ void Display::Open(const std::string &title, int width, int height, int index, b
     }
 
     delete [] displayBounds;
+
+    if(!nograb) {
+        SDL_SetWindowGrab(window, SDL_TRUE);
+    }
 
     Renderer::Init(window);
 

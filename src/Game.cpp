@@ -96,14 +96,15 @@ int main(int argc, char **argv) {
         ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
         ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("./data/"))
         ("d,debug", "Print debug info")
-        ("noborder", "Remove window border")
+        ("color", "Force color output")
         ("f,fullscreen", "Run in fullscreen mode")
         ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
         ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
         ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
+        ("noborder", "Remove window border")
+        ("nograb", "Don't grab the mouse")
         ("nosound", "Disable sound entirely")
-        ("nothread", "Disable threading")
-        ("color", "Force color output");
+        ("nothread", "Disable threading");
 
     try {
         GameOptions opt;
@@ -113,30 +114,37 @@ int main(int argc, char **argv) {
             std::cout << options.help(options.groups()) << std::endl;
             return EXIT_SUCCESS;
         }
+
         opt.config = result["config-file"].as<std::string>();
         opt.dataDir = result["path"].as<std::string>();
+
         if(result["debug"].as<bool>()) {
             opt.debug = true;
         }
-        if(result["noborder"].as<bool>()) {
-            opt.noborder = true;
-        }
+
+        if(result.count("color") > 0) opt.color = result["color"].as<bool>();
+        else opt.color = -1;
+
         if(result["fullscreen"].as<bool>()) {
             opt.fullscreen = true;
         }
+
         opt.width = result["width"].as<uint16_t>();
         opt.height = result["height"].as<uint16_t>();
         opt.ndisp = result["disp"].as<uint16_t>();
+
+        if(result["noborder"].as<bool>()) {
+            opt.noborder = true;
+        }
+        if(result["nograb"].as<bool>()) {
+            opt.nograb = true;
+        }
         if(result["nosound"].as<bool>()) {
             opt.nosound = true;
         }
         if(result["nothread"].as<bool>()) {
             opt.nothread = true;
-
         }
-
-        if(result.count("color") > 0) opt.color = result["color"].as<bool>();
-        else opt.color = -1;
 
         return StartGame(opt);
     }catch(cxxopts::OptionException ex) {

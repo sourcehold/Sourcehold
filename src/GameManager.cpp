@@ -36,7 +36,8 @@ GameManager::GameManager(GameOptions &opt) : AnimationHandler(), Display(), opt(
         opt.height,
         opt.ndisp,
         opt.fullscreen,
-        opt.noborder
+        opt.noborder,
+        opt.nograb
     );
 
     InitOpenAL();

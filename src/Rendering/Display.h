@@ -40,7 +40,7 @@ namespace Sourcehold
                 Display(const Display&) = delete;
                 ~Display();
 
-                void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false);
+            void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false);
                 void ToggleFullscreen();
                 void StartTimer();
                 void EndTimer();
