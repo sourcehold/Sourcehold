@@ -6,8 +6,10 @@ sudo: required
 dist: xenial
 
 script:
-  - cmake .
-  - make
+  - mkdir build/
+  - cd build/
+  - cmake ..
+  - make -j8
 
 compiler:
   - gcc
