@@ -1,11 +1,14 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.0)
 
-set(CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build type")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 # Project
 project(Stronghold)
 set(Stronghold_VERSION, 0.1.0)
+
+if(${PROJECT_SOURCE_DIR} MATCHES ${PROJECT_BINARY_DIR})
+    message(FATAL_ERROR "Please run cmake from a separate directory!")
+endif()
 
 include_directories(src)
 
