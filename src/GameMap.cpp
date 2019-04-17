@@ -14,10 +14,10 @@ using namespace Sourcehold::Game;
 GameMap::GameMap(std::shared_ptr<GameManager> man) :
     manager(man)
 {
-    gm1_maypole = man->GetGm1(man->GetDirectory() + "gm/anim_maypole.gm1").lock();
-    gm1_tile = man->GetGm1(man->GetDirectory() + "gm/tile_land8.gm1").lock();
-    gm1_churches = man->GetGm1(man->GetDirectory() + "gm/tile_churches.gm1").lock();
-    gm1_anim = man->GetGm1(man->GetDirectory() + "gm/body_archer.gm1").lock();
+    gm1_maypole = man->GetGm1(man->GetDirectory() / "gm/anim_maypole.gm1").lock();
+    gm1_tile = man->GetGm1(man->GetDirectory() / "gm/tile_land8.gm1").lock();
+    gm1_churches = man->GetGm1(man->GetDirectory() / "gm/tile_churches.gm1").lock();
+    gm1_anim = man->GetGm1(man->GetDirectory() / "gm/body_archer.gm1").lock();
 
     tileset = gm1_tile->GetTileset().lock();
     tiles.resize(DIM * DIM);

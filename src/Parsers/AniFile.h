@@ -9,6 +9,8 @@
 #include <Rendering/Renderer.h>
 #include <Parsers/Parser.h>
 
+#include <boost/filesystem.hpp>
+
 namespace Sourcehold
 {
 	namespace Parsers
@@ -21,10 +23,10 @@ namespace Sourcehold
 			public:
 				AniFile(std::shared_ptr<Rendering::Renderer> rend);
 				AniFile(const AniFile&);
-				AniFile(std::shared_ptr<Rendering::Renderer> rend, const std::string &path);
+				AniFile(std::shared_ptr<Rendering::Renderer> rend, boost::filesystem::path path);
 				~AniFile();
-				
-				bool LoadFromDisk(const std::string &path);
+
+				bool LoadFromDisk(boost::filesystem::path path);
 			protected:
 				bool ParseChunks();
 				struct RiffHeader;

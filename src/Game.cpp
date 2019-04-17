@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/filesystem.hpp>
-
 #include <cxxopts.hpp>
 
 #include <MainMenu.h>
@@ -13,8 +11,6 @@
 
 #include <System/System.h>
 #include <System/Logger.h>
-
-#include <Assets/Assets.h>
 
 #include <Rendering/Font.h>
 
@@ -30,7 +26,7 @@ int StartGame(GameOptions &opt) {
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
-    std::vector<std::string> files = GetDirectoryRecursive(opt.dataDir);
+    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir);
     if(files.empty()) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
@@ -38,7 +34,7 @@ int StartGame(GameOptions &opt) {
 
     if(!LoadFonts(gameManager)) return EXIT_FAILURE;
 
-    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() + "gfx/frontend_loading.tgx").lock();
+    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() / "gfx/frontend_loading.tgx").lock();
 
     /* Init the menu */
     MainMenu menu(gameManager);
@@ -49,7 +45,7 @@ int StartGame(GameOptions &opt) {
         gameManager->Clear();
 
         /* Load a file */
-        std::string path = files.at(index);
+        boost::filesystem::path path = files.at(index);
         gameManager->Cache(path);
         index++;
 
@@ -74,7 +70,7 @@ int StartGame(GameOptions &opt) {
 
         /* ------ Alpha testing ------ */
 
-        AudioSource aud("data/fx/music/sadtimesa.raw", true);
+        AudioSource aud(gameManager->GetDirectory() / "fx/music/sadtimesa.raw", true);
         aud.Play();
 
         World world(gameManager);

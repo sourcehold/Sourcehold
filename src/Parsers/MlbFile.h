@@ -7,6 +7,8 @@
 #include <System/Logger.h>
 #include <Parsers/Parser.h>
 
+#include <boost/filesystem.hpp>
+
 namespace Sourcehold
 {
     namespace Parsers
@@ -16,15 +18,15 @@ namespace Sourcehold
          */
         class MlbFile : public Parser
         {
-                /* Encoded in UTF-16LE */
-                std::vector<std::u16string> field;
-            public:
-                MlbFile();
-                ~MlbFile();
+            /* Encoded in UTF-16LE */
+            std::vector<std::u16string> field;
+        public:
+            MlbFile();
+            ~MlbFile();
 
-                bool LoadFromDisk(const std::string &path);
-                void Clear();
-            protected:
+            bool LoadFromDisk(boost::filesystem::path path);
+            void Clear();
+        protected:
         };
     }
 }

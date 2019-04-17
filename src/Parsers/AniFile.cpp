@@ -22,7 +22,7 @@ AniFile::AniFile(std::shared_ptr<Rendering::Renderer> rend) : Parser() {
 AniFile::AniFile(const AniFile &other) {
 }
 
-AniFile::AniFile(std::shared_ptr<Rendering::Renderer> rend, const std::string &path) : Parser() {
+AniFile::AniFile(std::shared_ptr<Rendering::Renderer> rend, boost::filesystem::path path) : Parser() {
 	this->LoadFromDisk(path);
 }
 
@@ -30,9 +30,9 @@ AniFile::~AniFile() {
 	
 }
 
-bool AniFile::LoadFromDisk(const std::string &path) {
-	if(!Parser::Open(path, std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to load ani file '" << path << "' from data folder!" << std::endl;
+bool AniFile::LoadFromDisk(boost::filesystem::path path) {
+    if(!Parser::Open(path.string(), std::ios::binary)) {
+        Logger::error("PARSERS")  << "Unable to load ani file '" << path.string() << "' from data folder!" << std::endl;
         return false;
     }
 	

@@ -15,6 +15,8 @@
 #include <Rendering/Texture.h>
 #include <Rendering/Surface.h>
 
+#include <boost/filesystem.hpp>
+
 using namespace Sourcehold::Rendering;
 
 namespace Sourcehold
@@ -32,10 +34,10 @@ namespace Sourcehold
             std::shared_ptr<Renderer> renderer;
         public:
             TgxFile(std::shared_ptr<Renderer> rend);
-            TgxFile(std::shared_ptr<Renderer> rend, const std::string &path);
+            TgxFile(std::shared_ptr<Renderer> rend, boost::filesystem::path path);
             ~TgxFile();
 
-            bool LoadFromDisk(const std::string &path);
+            bool LoadFromDisk(boost::filesystem::path path);
             void Unload();
 
             static void ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t width, uint16_t height, uint16_t *pal);

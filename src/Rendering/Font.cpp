@@ -19,9 +19,9 @@ static std::pair<uint8_t, uint8_t> _table_width_height[3] = {
 bool Rendering::LoadFonts(std::shared_ptr<GameManager> mgr) {
     _mgr = mgr;
 
-    _fonts[0] = mgr->GetGm1(mgr->GetDirectory() + "gm/font_slanted.gm1").lock();
-    _fonts[1] = mgr->GetGm1(mgr->GetDirectory() + "gm/font_stronghold.gm1").lock();
-    _fonts[2] = mgr->GetGm1(mgr->GetDirectory() + "gm/font_stronghold_aa.gm1").lock();
+    _fonts[0] = mgr->GetGm1(mgr->GetDirectory() / "gm/font_slanted.gm1").lock();
+    _fonts[1] = mgr->GetGm1(mgr->GetDirectory() / "gm/font_stronghold.gm1").lock();
+    _fonts[2] = mgr->GetGm1(mgr->GetDirectory() / "gm/font_stronghold_aa.gm1").lock();
 
     return true;
 }

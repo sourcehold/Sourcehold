@@ -14,7 +14,7 @@ AudioSource::AudioSource(const AudioSource &source) {
     this->fading = source.fading;
 }
 
-AudioSource::AudioSource(const std::string &path, bool repeat) :
+AudioSource::AudioSource(boost::filesystem::path path, bool repeat) :
     repeat(repeat),
     valid(false)
 {
@@ -37,7 +37,7 @@ AudioSource::~AudioSource() {
     Audio::PrintError();
 }
 
-bool AudioSource::LoadSong(const std::string &path, bool repeat) {
+bool AudioSource::LoadSong(boost::filesystem::path path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     this->gain = 1.0f;
@@ -53,7 +53,7 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     Audio::PrintError();
 
     /* Read raw file into buffer */
-    FILE *fp = std::fopen(path.c_str(), "rb");
+    FILE *fp = std::fopen(path.string().c_str(), "rb");
     if(!fp) {
         Logger::error("AUDIO") << "Unable to open song '" << path << "'!" << std::endl;
         return false;
@@ -75,7 +75,7 @@ bool AudioSource::LoadSong(const std::string &path, bool repeat) {
     return true;
 }
 
-bool AudioSource::LoadEffect(const std::string &path, bool repeat) {
+bool AudioSource::LoadEffect(boost::filesystem::path path, bool repeat) {
     /* Parameters */
     this->repeat = repeat;
     this->gain = 1.0f;

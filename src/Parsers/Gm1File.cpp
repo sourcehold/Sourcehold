@@ -54,7 +54,7 @@ Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser()
     tileset = std::make_shared<Tileset>(rend);
 }
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend, const std::string &path) : Parser()
+Gm1File::Gm1File(std::shared_ptr<Renderer> rend, boost::filesystem::path path) : Parser()
 {
     this->renderer = rend;
 
@@ -68,23 +68,23 @@ Gm1File::~Gm1File() {
 
 }
 
-bool Gm1File::LoadFromDisk(const std::string &path, bool threaded) {
+bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
     this->path = path;
 
-    if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path << "'!" << std::endl;
+    if(!Parser::Open(path.string(), std::fstream::in | std::ios::binary)) {
+        Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;
         return false;
     }
 
     if(!Parser::GetData(&header, sizeof(Gm1Header))) {
-        Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path << "'!" << std::endl;
+        Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path.string() << "'!" << std::endl;
         Parser::Close();
         return false;
     }
 
     /* Boundary check */
     if(header.num > max_num) {
-        Logger::error("PARSERS") << "Gm1 file header from '" << path << "' contains too many images!" << std::endl;
+        Logger::error("PARSERS") << "Gm1 file header from '" << path.string() << "' contains too many images!" << std::endl;
         Parser::Close();
         return false;
     }
@@ -291,7 +291,7 @@ bool Gm1File::GetImage(uint32_t index) {
             }
         }break;
         default: {
-            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path << "': " << header.type << std::endl;
+            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
             return false;
         }
     }

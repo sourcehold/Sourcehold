@@ -22,22 +22,22 @@ MainMenu::~MainMenu() {
 }
 
 void MainMenu::PlayMusic() {
-    aud_startup.LoadSong("data/fx/music/stainedglass1.raw");
+    aud_startup.LoadSong(manager->GetDirectory() / "/fx/music/stainedglass1.raw");
     aud_startup.Play();
 }
 
 int MainMenu::Startup() {
-    aud_chantloop.LoadSong("data/fx/music/chantloop1.raw", true);
+    aud_chantloop.LoadSong(manager->GetDirectory() / "fx/music/chantloop1.raw", true);
 
-    tgx_firefly = manager->GetTgx(manager->GetDirectory() + "gfx/logo1.tgx").lock();
-    tgx_taketwo = manager->GetTgx(manager->GetDirectory() + "gfx/logo2.tgx").lock();
-    tgx_present = manager->GetTgx(manager->GetDirectory() + "gfx/logo3.tgx").lock();
-    tgx_logo = manager->GetTgx(manager->GetDirectory() + "gfx/startup screen.tgx").lock();
-    tgx_firefly_front = manager->GetTgx(manager->GetDirectory() + "gfx/front_firefly_logo.tgx").lock();
+    tgx_firefly = manager->GetTgx(manager->GetDirectory() / "gfx/logo1.tgx").lock();
+    tgx_taketwo = manager->GetTgx(manager->GetDirectory() / "gfx/logo2.tgx").lock();
+    tgx_present = manager->GetTgx(manager->GetDirectory() / "gfx/logo3.tgx").lock();
+    tgx_logo = manager->GetTgx(manager->GetDirectory() / "gfx/startup screen.tgx").lock();
+    tgx_firefly_front = manager->GetTgx(manager->GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
 
-    intro = manager->GetBik(manager->GetDirectory() + "binks/intro.bik").lock();
+    intro = manager->GetBik(manager->GetDirectory() / "binks/intro.bik").lock();
 
-    gm1_icons_front = manager->GetGm1(manager->GetDirectory() + "gm/icons_front_end.gm1").lock();
+    gm1_icons_front = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end.gm1").lock();
 
     startTime = manager->GetTime();
 
@@ -108,7 +108,7 @@ void MainMenu::onEventReceive(Mouse &event) {
 }
 
 int MainMenu::EnterMainMenu() {
-    tgx_bg1 = manager->GetTgx(manager->GetDirectory() + "gfx/frontend_main2.tgx").lock();
+    tgx_bg1 = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_main2.tgx").lock();
 
     /* Init user interface */
     InitUI();

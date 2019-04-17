@@ -36,7 +36,7 @@ BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man)
     }
 }
 
-BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, const std::string &path, bool looping) : Texture(man) {
+BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, boost::filesystem::path path, bool looping) : Texture(man) {
     ic = avformat_alloc_context();
     if(!ic) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
@@ -49,17 +49,17 @@ BinkVideo::~BinkVideo() {
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
+bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
     this->looping = looping;
 
     int out = avformat_open_input(
         &ic,
-        path.c_str(),
+        path.string().c_str(),
         bink_input,
         NULL
     );
     if(out < 0) {
-        Logger::error("RENDERING") << "Unable to open bink video input stream: '" << path << "'!" << std::endl;
+        Logger::error("RENDERING") << "Unable to open bink video input stream: '" << path.string() << "'!" << std::endl;
         return false;
     }
 
@@ -88,7 +88,7 @@ bool BinkVideo::LoadFromDisk(const std::string &path, bool looping) {
         audioCtx = avcodec_alloc_context3(audioDecoder);
         if(!audioCtx) {
             Logger::error("RENDERING") << "Unable to allocate audio codec context!" << std::endl;
-            return false; 
+            return false;
         }
 
         avcodec_parameters_to_context(audioCtx, ic->streams[audioStream]->codecpar);

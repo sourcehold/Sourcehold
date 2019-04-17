@@ -58,7 +58,7 @@ bool GameManager::Running() {
     return running;
 }
 
-void GameManager::SetDirectory(const std::string &dir) {
+void GameManager::SetDirectory(boost::filesystem::path dir) {
     _dataFolder = dir;
 }
 
@@ -69,7 +69,7 @@ void GameManager::ClearFileCache() {
     _bikFiles.clear();
 }
 
-void GameManager::Cache(const std::string &filename) {
+void GameManager::Cache(boost::filesystem::path filename) {
     std::string ext = GetFileExtension(filename);
     if(filename.empty() || ext.empty()) {
         Logger::warning("ASSETS") << "Unable to cache asset: '" << filename << "'" << std::endl;
@@ -78,16 +78,16 @@ void GameManager::Cache(const std::string &filename) {
 
     switch(ExtToType(ext)) {
         case TGXFILE: {
-            _tgxFiles.emplace(filename, std::make_unique<TgxFile>(shared_from_this(), filename));
+            _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(shared_from_this(), filename));
         }break;
         case GM1FILE: {
-            _gm1Files.emplace(filename, std::make_unique<Gm1File>(shared_from_this(), filename));
+            _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(shared_from_this(), filename));
         }break;
         case ANIFILE: {
-            _aniFiles.emplace(filename, std::make_unique<AniFile>(shared_from_this(), filename));
+            _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(shared_from_this(), filename));
         }break;
         case BINK_VIDEO: {
-            _bikFiles.emplace(filename, std::make_unique<BinkVideo>(shared_from_this(), filename));
+            _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(shared_from_this(), filename));
         }break;
         case UNKNOWN: {
             Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;
@@ -96,39 +96,39 @@ void GameManager::Cache(const std::string &filename) {
     }
 }
 
-std::weak_ptr<TgxFile> GameManager::GetTgx(const std::string &filename) {
-    if(_tgxFiles.count(filename)) {
-        return _tgxFiles.at(filename);
+std::weak_ptr<TgxFile> GameManager::GetTgx(boost::filesystem::path filename) {
+    if(_tgxFiles.count(filename.string())) {
+        return _tgxFiles.at(filename.string());
     }
 
-    auto iter = _tgxFiles.emplace(filename, std::make_unique<TgxFile>(shared_from_this(), filename));
+    auto iter = _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(shared_from_this(), filename));
     return iter.first->second;
 }
 
-std::weak_ptr<Gm1File> GameManager::GetGm1(const std::string &filename) {
-    if(_gm1Files.count(filename)) {
-        return _gm1Files.at(filename);
+std::weak_ptr<Gm1File> GameManager::GetGm1(boost::filesystem::path filename) {
+    if(_gm1Files.count(filename.string())) {
+        return _gm1Files.at(filename.string());
     }
 
-    auto iter = _gm1Files.emplace(filename, std::make_unique<Gm1File>(shared_from_this(), filename));
+    auto iter = _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(shared_from_this(), filename));
     return iter.first->second;
 }
 
-std::weak_ptr<AniFile> GameManager::GetAni(const std::string &filename) {
-    if(_aniFiles.count(filename)) {
-        return _aniFiles.at(filename);
+std::weak_ptr<AniFile> GameManager::GetAni(boost::filesystem::path filename) {
+    if(_aniFiles.count(filename.string())) {
+        return _aniFiles.at(filename.string());
     }
 
-    auto iter = _aniFiles.emplace(filename, std::make_unique<AniFile>(shared_from_this(), filename));
+    auto iter = _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(shared_from_this(), filename));
     return iter.first->second;
 }
 
-std::weak_ptr<BinkVideo> GameManager::GetBik(const std::string &filename) {
-    if(_bikFiles.count(filename)) {
-        return _bikFiles.at(filename);
+std::weak_ptr<BinkVideo> GameManager::GetBik(boost::filesystem::path filename) {
+    if(_bikFiles.count(filename.string())) {
+        return _bikFiles.at(filename.string());
     }
 
-    auto iter = _bikFiles.emplace(filename, std::make_unique<BinkVideo>(shared_from_this(), filename));
+    auto iter = _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(shared_from_this(), filename));
     return iter.first->second;
 }
 

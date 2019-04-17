@@ -26,15 +26,15 @@ World::World(std::shared_ptr<GameManager> mgr) :
     ui_hide(mgr)
 {
     /* The repeating, wooden background of the menu bar */
-    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() + "gfx/1280r.tgx").lock();
+    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/1280r.tgx").lock();
     /* The right side of the scribe/book */
-    tgx_right = mgr->GetTgx(mgr->GetDirectory() + "gfx/edge1280r.tgx").lock();
+    tgx_right = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1280r.tgx").lock();
     /* The scribe's facial animation */
-    gm1_scribe = mgr->GetGm1(mgr->GetDirectory() + "gm/scribe.gm1").lock();
+    gm1_scribe = mgr->GetGm1(mgr->GetDirectory() / "gm/scribe.gm1").lock();
     /* The menu faces */
-    gm1_face = mgr->GetGm1(mgr->GetDirectory() + "gm/face800-blank.gm1").lock();
-    gm1_icons = mgr->GetGm1(mgr->GetDirectory() + "gm/interface_buttons.gm1").lock();
-    gm1_floats = mgr->GetGm1(mgr->GetDirectory() + "gm/floats.gm1").lock();
+    gm1_face = mgr->GetGm1(mgr->GetDirectory() / "gm/face800-blank.gm1").lock();
+    gm1_icons = mgr->GetGm1(mgr->GetDirectory() / "gm/interface_buttons.gm1").lock();
+    gm1_floats = mgr->GetGm1(mgr->GetDirectory() / "gm/floats.gm1").lock();
 
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 

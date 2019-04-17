@@ -14,7 +14,7 @@ TgxFile::TgxFile(std::shared_ptr<Renderer> rend) : Parser(), Texture(rend) {
     renderer = rend;
 }
 
-TgxFile::TgxFile(std::shared_ptr<Renderer> rend, const std::string &path) : Parser(), Texture(rend) {
+TgxFile::TgxFile(std::shared_ptr<Renderer> rend, boost::filesystem::path path) : Parser(), Texture(rend) {
     renderer = rend;
     this->LoadFromDisk(path);
 }
@@ -23,8 +23,8 @@ TgxFile::~TgxFile() {
     Unload();
 }
 
-bool TgxFile::LoadFromDisk(const std::string &path) {
-    if(!Parser::Open(path, std::fstream::in | std::ios::binary)) {
+bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
+    if(!Parser::Open(path.string(), std::fstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
     }

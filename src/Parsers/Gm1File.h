@@ -11,6 +11,8 @@
 
 #include <Parsers/Parser.h>
 
+#include <boost/filesystem.hpp>
+
 namespace Sourcehold
 {
     namespace Parsers
@@ -26,12 +28,12 @@ namespace Sourcehold
         {
         public:
             Gm1File(std::shared_ptr<Renderer> rend);
-            Gm1File(std::shared_ptr<Renderer> rend, const std::string &path);
+            Gm1File(std::shared_ptr<Renderer> rend, boost::filesystem::path path);
             Gm1File(const Gm1File&) = delete;
             Gm1File& operator=(const Gm1File&)= delete;
             ~Gm1File();
 
-            bool LoadFromDisk(const std::string &path, bool threaded = false);
+            bool LoadFromDisk(boost::filesystem::path path, bool threaded = false);
             void DumpInformation();
             void Free();
 
@@ -74,7 +76,7 @@ namespace Sourcehold
             std::shared_ptr<TextureAtlas> textureAtlas;
             std::shared_ptr<Tileset> tileset;
             std::shared_ptr<Renderer> renderer;
-            std::string path;
+            boost::filesystem::path path;
             /* Color palette for tgx image entries */
             uint16_t palette[2560];
             /* Offset of data section */
