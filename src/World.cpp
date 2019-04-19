@@ -271,6 +271,7 @@ void World::onEventReceive(Keyboard &keyEvent) {
             else manager->ZoomIn();
             break;
         case SDLK_TAB: menubarShown = !menubarShown; break;
+        case SDLK_ESCAPE: manager->ReleaseMouse(); break;
         default: break;
         }
     }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
@@ -296,6 +297,10 @@ void World::onEventReceive(Mouse &mouseEvent) {
             rmbPressed = SDL_GetTicks();
             mouseX = mouseEvent.GetPosX();
             mouseY = mouseEvent.GetPosY();
+        }
+
+        if(mouseEvent.LmbDown()) {
+            manager->GrabMouse();
         }
     }else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
         if(mouseEvent.RmbUp()) {
