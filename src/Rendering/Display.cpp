@@ -52,6 +52,7 @@ void Display::Open(const std::string &title, int width, int height, int index, b
 
     delete [] displayBounds;
 
+    this->nograb = nograb;
     if(!nograb) {
         SDL_SetWindowGrab(window, SDL_TRUE);
     }
@@ -83,6 +84,18 @@ void Display::EndTimer() {
     timer = ntimer;
     if(delta < 1000 / FRAMES_PER_SECOND) {
         SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);
+    }
+}
+
+void Display::GrabMouse() {
+    if(!nograb && SDL_GetWindowGrab(window) == SDL_FALSE) {
+        SDL_SetWindowGrab(window, SDL_TRUE);
+    }
+}
+
+void Display::ReleaseMouse() {
+    if(SDL_GetWindowGrab(window) == SDL_TRUE) {
+        SDL_SetWindowGrab(window, SDL_FALSE);
     }
 }
 
