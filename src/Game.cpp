@@ -26,7 +26,7 @@ int StartGame(GameOptions &opt) {
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
-    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir);
+    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
         return EXIT_FAILURE;
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
     options.add_options()
         ("h,help", "Print this info")
         ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
-        ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("./data/"))
+        ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("../data/"))
         ("d,debug", "Print debug info")
         ("color", "Force color output")
         ("f,fullscreen", "Run in fullscreen mode")
