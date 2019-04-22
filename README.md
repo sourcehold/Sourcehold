@@ -10,7 +10,9 @@ Open source engine implementation of Stronghold by Firefly Studios. This project
 ##  Building
 After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts).
 
-Run `cmake` in the build directory.  
+Run `cmake` in your build directory. If you're building on Windows or don't have the libraries in your `pkg-config`,
+use the `-DCMAKE_PREFIX_PATH=/custom/path/` option on the command line.
+
 Sourcehold depends on the following libraries:
 * SDL2
 * OpenAL
