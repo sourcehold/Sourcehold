@@ -1,4 +1,5 @@
 #include <Building.h>
+#include <Entity.h>
 #include <World.h>
 #include <Config.h>
 
@@ -8,6 +9,22 @@
 #include <Rendering/Font.h>
 
 using namespace Sourcehold::Game;
+
+/**
+ * Indices into the texture atlas for every user interface tab.
+ * Contains indices for:
+ * 1. Not selected
+ * 2. Mouse over
+ * 3. Selected
+ */
+static uint16_t _ui_tabs_indices[6][3] = {
+    { 7, 8, 9 },
+    { 10, 11, 12 },
+    { 13, 14, 15 },
+    { 16, 17, 18 },
+    { 19, 20, 21 },
+    { 22, 23, 24 },
+};
 
 World::World(std::shared_ptr<GameManager> mgr) :
     GameMap(mgr),
@@ -35,7 +52,6 @@ World::World(std::shared_ptr<GameManager> mgr) :
     gm1_face = mgr->GetGm1(mgr->GetDirectory() / "gm/face800-blank.gm1").lock();
     gm1_icons = mgr->GetGm1(mgr->GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_floats = mgr->GetGm1(mgr->GetDirectory() / "gm/floats.gm1").lock();
-    test = mgr->GetGm1(mgr->GetDirectory() / "gm/anim_armourer.gm1").lock();
 
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
@@ -146,6 +162,13 @@ void World::UpdateMenubar() {
     SDL_Rect rect = atlas->Get(0);
     manager->Render(*atlas, width - 800 - 240, height - rect.h, &rect);
 
+    /**
+     * Render the menu background
+     * TODO: Change depending on the window size, since Stronghold HD
+     * supports multiple resolutions and does not scale menu elements at all,
+     * and will instead fill the sides of the actual menu with the same, repeating
+     * background image, but flipped every second time
+     */
     atlas = gm1_scribe->GetTextureAtlas().lock();
     rect = atlas->Get(0);
     manager->Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);
@@ -154,6 +177,7 @@ void World::UpdateMenubar() {
 
     atlas = gm1_icons->GetTextureAtlas().lock();
 
+    /* Init menu buttons */
     rect = atlas->Get(25);
     ui_disk.Translate(753, 72);
     ui_disk.Scale(rect.w, rect.h);
@@ -180,6 +204,7 @@ void World::UpdateMenubar() {
     ui_tabs[5].Translate(444, 165);
     ui_tabs[5].Scale(30, 35);
 
+    /* Render the menu buttons */
     ui_disk.Render(
         [&]() -> Texture& {
             if(ui_disk.IsMouseOver()) atlas->SetRect(atlas->Get(26));
@@ -208,47 +233,36 @@ void World::UpdateMenubar() {
             return *atlas;
         });
 
-    ui_tabs[0].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[0].IsMouseOver()) atlas->SetRect(atlas->Get(8));
-            else atlas->SetRect(atlas->Get(7));
-            return *atlas;
-        });
+    for(size_t i = 0; i < 6; i++) {
+        ui_tabs[i].Render(
+            [&]() -> Texture& {
+                if(ui_tabs[i].IsMouseOver()) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][1]));
+                else atlas->SetRect(atlas->Get(_ui_tabs_indices[i][0]));
+                if(ui_tabs[i].IsClicked()) {
+                    currentTab = static_cast<MenuPage>(i);
+                }
+                /* Highlight the selected tab */
+                if(currentTab == i) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][2]));
+                return *atlas;
+            });
+    }
 
-    ui_tabs[1].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[1].IsMouseOver()) atlas->SetRect(atlas->Get(11));
-            else atlas->SetRect(atlas->Get(10));
-            return *atlas;
-        });
-
-    ui_tabs[2].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[2].IsMouseOver()) atlas->SetRect(atlas->Get(14));
-            else atlas->SetRect(atlas->Get(13));
-            return *atlas;
-        });
-
-    ui_tabs[3].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[3].IsMouseOver()) atlas->SetRect(atlas->Get(17));
-            else atlas->SetRect(atlas->Get(16));
-            return *atlas;
-        });
-
-    ui_tabs[4].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[4].IsMouseOver()) atlas->SetRect(atlas->Get(20));
-            else atlas->SetRect(atlas->Get(19));
-            return *atlas;
-        });
-
-    ui_tabs[5].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[5].IsMouseOver()) atlas->SetRect(atlas->Get(23));
-            else atlas->SetRect(atlas->Get(22));
-            return *atlas;
-        });
+    /* Render the current pages content, TODO: may change when different building selected, etc. */
+    switch(currentTab) {
+    case MENU_CASTLE: {
+    }break;
+    case MENU_INDUSTRY: {
+    }break;
+    case MENU_FARM: {
+    }break;
+    case MENU_TOWN: {
+    }break;
+    case MENU_WEAPONS: {
+    }break;
+    case MENU_FOOD_PROCESSING: {
+    }break;
+    default: break;
+    }
 
     menubar.ResetTarget();
 }

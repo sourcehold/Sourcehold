@@ -1,8 +1,10 @@
 #include <random>
 
 #include <GameMap.h>
+#include <GameManager.h>
 
 #include <Parsers/Gm1File.h>
+#include <Parsers/TgxFile.h>
 
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/Tileset.h>

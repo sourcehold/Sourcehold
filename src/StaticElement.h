@@ -31,6 +31,7 @@ namespace Sourcehold
             std::shared_ptr<GameManager> manager;
             SDL_Rect rect;
             bool shown = true;
+            bool clicked = false;
             double nx, ny, nw, nh;
             int mouseX, mouseY;
         public:
@@ -59,6 +60,7 @@ namespace Sourcehold
              */
             void Render(Texture &elem, bool whole = false);
             bool IsMouseOver();
+            bool IsClicked();
 
             inline bool IsHidden() { return !shown; }
         protected:

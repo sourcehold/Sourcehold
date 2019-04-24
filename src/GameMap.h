@@ -3,24 +3,40 @@
 #include <cinttypes>
 #include <memory>
 #include <vector>
-
-#include <GameManager.h>
+#include <map>
 
 #include <Rendering/Tileset.h>
 #include <Rendering/Renderer.h>
 
+#include <Assets/Assets.h>
+
 namespace Sourcehold
 {
+    namespace Parsers
+    {
+        class Gm1File;
+        class TgxFile;
+    }
     namespace Game
     {
-        using namespace Rendering;
-        using namespace Parsers;
-        using namespace Events;
+        struct WorldInformation {
+            enum Dimensions : uint8_t {
+                WORLD_160,
+                WORLD_200,
+                WORLD_300,
+                WORLD_400
+            } type;
+            std::map<uint16_t, bool> unlockedAssets;
+        };
 
         struct MapTile {
             uint16_t tileset;
         };
 
+        using namespace Rendering;
+        using namespace Parsers;
+
+        class GameManager;
         class GameMap
         {
             int mult = 1;
@@ -35,6 +51,8 @@ namespace Sourcehold
             ~GameMap() = default;
 
             void Render();
+        protected:
+            WorldInformation _worldInfo;
         };
     }
 }

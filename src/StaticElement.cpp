@@ -86,6 +86,13 @@ bool StaticElement::IsMouseOver() {
     return false;
 }
 
+bool StaticElement::IsClicked() {
+    if(clicked) {
+        clicked = false;
+        return true;
+    } else return false;
+}
+
 void StaticElement::onEventReceive(Mouse &event) {
     EventType type = event.GetType();
 
@@ -98,6 +105,8 @@ void StaticElement::onEventReceive(Mouse &event) {
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();
         mouseY = event.GetPosY();
+    }else if(type == MOUSE_BUTTONDOWN) {
+        if(IsMouseOver()) clicked = true;
     }
 }
 
