@@ -47,7 +47,7 @@ namespace Sourcehold
         {
             std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_right, tgx_bar_bg;
-            std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats;
+            std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats, test;
             ScrollInformation scroll;
             /* Menu bar */
             bool menubarShown = true;

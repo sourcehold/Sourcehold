@@ -35,6 +35,7 @@ World::World(std::shared_ptr<GameManager> mgr) :
     gm1_face = mgr->GetGm1(mgr->GetDirectory() / "gm/face800-blank.gm1").lock();
     gm1_icons = mgr->GetGm1(mgr->GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_floats = mgr->GetGm1(mgr->GetDirectory() / "gm/floats.gm1").lock();
+    test = mgr->GetGm1(mgr->GetDirectory() / "gm/anim_armourer.gm1").lock();
 
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
@@ -309,12 +310,12 @@ void World::onEventReceive(Mouse &mouseEvent) {
         }
     }
     else if(mouseEvent.GetType() == MOUSE_MOTION) {
-        auto scrollThreshold = 2;
+        const int scrollThreshold = 2;
 
-        auto x = mouseEvent.GetPosX();
-        auto y = mouseEvent.GetPosY();
+        int x = mouseEvent.GetPosX();
+        int y = mouseEvent.GetPosY();
 
-        auto shouldReset = false;
+        bool shouldReset = false;
 
         if(x < scrollThreshold) {
             scroll.left.shouldScroll = true;

@@ -219,11 +219,11 @@ bool Gm1File::GetImage(uint32_t index) {
     switch(header.type) {
         case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
             SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr);
+            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr, 0);
         }break;
         case Gm1Header::TYPE_ANIMATION: {
             SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette);
+            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette, entries[index].header.color % 10);
         }break;
         case Gm1Header::TYPE_TILE: {
             /* Read tile */
@@ -237,7 +237,8 @@ bool Gm1File::GetImage(uint32_t index) {
                              part.y + entries[index].offY,
                              part.w,
                              part.h,
-                             nullptr);
+                             nullptr,
+                             0);
 
             /* Extract pixel data */
             const static uint8_t lines[16] = {
@@ -253,8 +254,8 @@ bool Gm1File::GetImage(uint32_t index) {
                     position += 2;
 
                     /* Read RGB */
-                    uint8_t r, g, b;
-                    TgxFile::ReadPixel(pixel, r, g, b);
+                    uint8_t r,g,b,a;
+                    TgxFile::ReadPixel(pixel, r, g, b, a);
 
                     /* Add to tileset texture */
                     tileset->GetSurface().SetPixel(
@@ -266,7 +267,7 @@ bool Gm1File::GetImage(uint32_t index) {
                     textureAtlas->GetSurface().SetPixel(
                         part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
                         part.y + entries[index].tileY + l,
-                        r, g, b, 0xFF
+                        r, g, b, a
                         );
                 }
             }
@@ -282,11 +283,11 @@ bool Gm1File::GetImage(uint32_t index) {
                     position += 2;
 
                     /* Read RGB */
-                    uint8_t r, g, b;
-                    TgxFile::ReadPixel(pixel, r, g, b);
+                    uint8_t r,g,b,a;
+                    TgxFile::ReadPixel(pixel, r, g, b, a);
 
                     /* Add to texture */
-                    textureAtlas->GetSurface().SetPixel(x+part.x, y+part.y, r, g, b, 0xFF);
+                    textureAtlas->GetSurface().SetPixel(x+part.x, y+part.y, r, g, b, a);
                 }
             }
         }break;

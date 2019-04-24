@@ -30,26 +30,26 @@ namespace Sourcehold
          */
         class Display : public Rendering::Renderer
         {
-                const int FRAMES_PER_SECOND = 60;
-                uint32_t timer = 0;
-                int frame = 0;
-                bool open = false, fullscreen = false, nograb = false;
-                SDL_Window *window;
-            public:
-                Display();
-                Display(const Display&) = delete;
-                ~Display();
+            const int FRAMES_PER_SECOND = 60;
+            uint32_t timer = 0;
+            int frame = 0;
+            bool open = false, fullscreen = false, nograb = false;
+            SDL_Window *window;
+        public:
+            Display();
+            Display(const Display&) = delete;
+            ~Display();
 
-                void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false);
-                void ToggleFullscreen();
-                void StartTimer();
-                void EndTimer();
-                void GrabMouse();
-                void ReleaseMouse();
+            void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false);
+            void ToggleFullscreen();
+            void StartTimer();
+            void EndTimer();
+            void GrabMouse();
+            void ReleaseMouse();
 
-                bool IsOpen();
-                uint32_t GetTicks();
-                uint32_t GetSeconds();
+            bool IsOpen();
+            uint32_t GetTicks();
+            uint32_t GetSeconds();
         };
     }
 }
