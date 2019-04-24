@@ -160,7 +160,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
             /* Calculate the offset relative to the texture atlas rectangle for every entry */
             for(uint32_t d = currentEntry + cnt; currentEntry < d; currentEntry++) {
                 entries[currentEntry].collection = n;
-                entries[currentEntry].offX = int(entries[currentEntry].header.offsetX + entries[n].header.horizOffset) - left;
+                entries[currentEntry].offX = int(entries[currentEntry].header.offsetX + entries[currentEntry].header.horizOffset) - left;
                 entries[currentEntry].offY = int(entries[currentEntry].header.offsetY) - top;
                 entries[currentEntry].tileX = int(entries[currentEntry].header.offsetX) - left;
                 entries[currentEntry].tileY = int(entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
