@@ -8,11 +8,11 @@
 #include <MainMenu.h>
 #include <World.h>
 #include <GameManager.h>
+#include <Rendering/Font.h>
+#include <Parsers/MlbFile.h>
 
 #include <System/System.h>
 #include <System/Logger.h>
-
-#include <Rendering/Font.h>
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
@@ -33,6 +33,9 @@ int StartGame(GameOptions &opt) {
     }
 
     if(!LoadFonts(gameManager)) return EXIT_FAILURE;
+
+    MlbFile mlb;
+    mlb.LoadFromDisk(gameManager->GetDirectory() / "stronghold.mlb");
 
     std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() / "gfx/frontend_loading.tgx").lock();
 

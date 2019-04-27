@@ -3,7 +3,7 @@
 using namespace Sourcehold::Parsers;
 
 Parser::Parser() : std::ifstream() {
-    
+
 }
 
 bool Parser::Open(const std::string &path, std::ios_base::openmode mode) {
@@ -50,17 +50,16 @@ uint32_t Parser::Tell() {
 std::string Parser::GetUTF16() {
     std::wstring ws;
 
-    std::stringstream ss;
-    ss << rdbuf();
-    std::string bytes = ss.str();
+    while(Ok()) {
+        uint16_t word = GetWord();
 
-    size_t len = bytes.size();
-    if(len % 2 != 0) len--;
+        uint8_t lo = word & 0xFF;
+        uint8_t hi = word >> 8;
 
-    for(size_t i = 0; i < len;) {
-        int lo = bytes[i++] & 0xFF;
-        int hi = bytes[i++] & 0xFF;
-        ws.push_back(hi << 8| lo);
+        int byte = hi << 8 | lo;
+        if(byte == 0) break;
+
+        ws.push_back(byte);
     }
 
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
@@ -79,6 +78,12 @@ uint8_t Parser::GetByte() {
 
 uint16_t Parser::GetWord() {
     uint16_t w;
+    read(reinterpret_cast<char *>(&w), sizeof(w));
+    return w;
+}
+
+uint32_t Parser::GetDWord() {
+    uint32_t w;
     read(reinterpret_cast<char *>(&w), sizeof(w));
     return w;
 }

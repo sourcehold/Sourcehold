@@ -19,7 +19,8 @@ namespace Sourcehold
         class MlbFile : public Parser
         {
             /* Encoded in UTF-16LE */
-            std::vector<std::u16string> field;
+            std::vector<std::string> field;
+            uint32_t num = 0;
         public:
             MlbFile();
             ~MlbFile();
@@ -27,6 +28,7 @@ namespace Sourcehold
             bool LoadFromDisk(boost::filesystem::path path);
             void Clear();
         protected:
+            struct SectionHeader;
         };
     }
 }

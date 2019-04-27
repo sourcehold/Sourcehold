@@ -20,26 +20,27 @@ namespace Sourcehold
         */
         class Parser : protected std::ifstream
         {
-                uint32_t length = 0;
-            public:
-                Parser(); 
-                virtual ~Parser() = default;
-            
-                bool Open(const std::string &path, std::ios_base::openmode mode);
-                void Close();
-                bool Ok();
-                bool GetData(void *buf, size_t bufsize);
-                bool GetWhole(void *buf);
-                void Seek(uint32_t pos);
-                uint32_t Tell();
+            uint32_t length = 0;
+        public:
+            Parser();
+            virtual ~Parser() = default;
 
-                std::string GetUTF16();
-                std::string GetLine();
-                uint8_t GetByte();
-                uint16_t GetWord();
-                uint32_t GetOffset();
+            bool Open(const std::string &path, std::ios_base::openmode mode);
+            void Close();
+            bool Ok();
+            bool GetData(void *buf, size_t bufsize);
+            bool GetWhole(void *buf);
+            void Seek(uint32_t pos);
+            uint32_t Tell();
 
-                inline uint32_t GetLength() { return length; }
+            std::string GetUTF16();
+            std::string GetLine();
+            uint8_t GetByte();
+            uint16_t GetWord();
+            uint32_t GetDWord();
+            uint32_t GetOffset();
+
+            inline uint32_t GetLength() { return length; }
         };
     }
 }

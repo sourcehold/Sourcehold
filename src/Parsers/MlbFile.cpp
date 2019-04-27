@@ -3,6 +3,15 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
+struct MlbFile::SectionHeader {
+    uint32_t f1;
+    uint32_t f2;
+    /* Unknown (Either 1 or 0, flag?) */
+    uint32_t f3;
+    /* Length of the following string (in characters) */
+    uint32_t length;
+};
+
 MlbFile::MlbFile() : Parser() {
 
 }
@@ -17,17 +26,20 @@ bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
         return false;
     }
 
-    /* Parse header - 0x13 bytes */
-    char header[0x13];
-    if(!Parser::GetData(header, 0x13)) {
-        Logger::error("PARSERS")  << "Unable to parse Mlb header '" << path << "'!" << std::endl;
-        return false;
+    num = Parser::GetDWord();
+
+    for(int i = 0; i < 6; i++) {
+        SectionHeader header;
+        if(!Parser::GetData(&header, 16)) {
+            Logger::error("PARSERS")  << "Unable to parse Mlb subheader '" << path << "'!" << std::endl;
+            return false;
+        }
+
+        std::string s = Parser::GetUTF16();
+        if(!s.empty()) field.push_back(s);
     }
 
-    std::string s = Parser::GetUTF16();
-
     Parser::Close();
-
     return true;
 }
 
