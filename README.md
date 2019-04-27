@@ -7,6 +7,11 @@ Open source engine implementation of Stronghold by Firefly Studios. This project
 
 ![Imgur](https://i.imgur.com/rkk3kAt.png)
 
+## About
+Stronghold is a castle sim created by Firefly Studios in 2001. It was released for Windows and supports MacOS since
+its HD remaster.
+The purpose of this project is to make Stronghold playable on platforms it didn't support originally. It is not intended to be a 100% accurate source port, so there will be differences.
+
 ##  Building
 After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts).
 
