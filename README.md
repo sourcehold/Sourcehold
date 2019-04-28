@@ -16,7 +16,7 @@ The purpose of this project is to make Stronghold playable on platforms it didn'
 After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts).
 
 Run `cmake` in your build directory. If you're building on Windows or don't have the libraries in your `pkg-config`,
-use the `-DCMAKE_PREFIX_PATH=/custom/path/` option on the command line.
+use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths. 
 
 Sourcehold depends on the following libraries:
 * SDL2
