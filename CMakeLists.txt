@@ -70,21 +70,17 @@ file(GLOB_RECURSE SOURCES src/*.cpp)
 # Fixes legacy stuff (i.e. strcmp)
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+else()
+	add_definitions(-Wno-reorder -pedantic-errors -Ofast)
 endif()
 
 # Link our exe
 add_executable(Stronghold ${SOURCES})
-add_definitions(-Wno-reorder -pedantic-errors -Ofast)
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
-
-# Defaults to win32 app
-if(WIN32)
-	target_compile_options(Stronghold PRIVATE -Wl,-subsystem,console)
-endif()
 
 target_link_libraries(
 	Stronghold
@@ -95,20 +91,4 @@ target_link_libraries(
 	${SWSCALE_LIBRARIES}
 	${LIBSWRESAMPLE_LIBRARIES}
 	${CMAKE_THREAD_LIBS_INIT}
-	${Boost_LIBRARIES}
 )
-
-# cpack stuff
-#SET(CPACK_GENERATOR "DEB")
-#SET(CPACK_DEBIAN_PACKAGE_MAINTAINER "Julian Offenhäuser")
-
-#SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Open source engine implementation of Stronghold by Firefly Studios")
-#SET(CPACK_PACKAGE_VENDOR "Julian Offenhäuser")
-#SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-#SET(CPACK_PACKAGE_VERSION_MAJOR "0")
-#SET(CPACK_PACKAGE_VERSION_MINOR "1")
-#SET(CPACK_PACKAGE_VERSION_PATCH "0")
-#SET(CPACK_PACKAGE_INSTALL_DIRECTORY "Sourcehold ${Stronghold_VERSION}")
-
-#INCLUDE(CPack)
-
