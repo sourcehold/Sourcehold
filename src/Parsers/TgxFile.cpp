@@ -105,6 +105,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
                     buf += 2;
                 }
                 uint8_t r,g,b,a;
+
                 ReadPixel(pixelColor, r, g, b,a );
                 for(uint8_t i = 0; i < len; ++i,++x) {
                     tex.SetPixel(x+offX, y+offY, r, g, b, 0xFF);
@@ -124,8 +125,8 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
 }
 
 void TgxFile::ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b, uint8_t &a) {
+    a = 0xFF;
     r = ((pixel >> 10) & 0x1F) << 3;
     g = ((pixel >> 5) & 0x1F) << 3;
     b = (pixel & 0x1F) << 3;
-    a = 0xFF;
 }

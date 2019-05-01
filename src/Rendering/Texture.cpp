@@ -116,18 +116,6 @@ void Texture::UnlockTexture() {
     locked = false;
 }
 
-void Texture::SetTarget() {
-    if(target || access != SDL_TEXTUREACCESS_TARGET) return;
-    SDL_SetRenderTarget(renderer->GetRenderer(), texture);
-    target = true;
-}
-
-void Texture::ResetTarget() {
-    if(!target || access != SDL_TEXTUREACCESS_TARGET) return;
-    SDL_SetRenderTarget(renderer->GetRenderer(), NULL);
-    target = false;
-}
-
 void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     if(!locked) return;
     uint32_t index = x + y * width;

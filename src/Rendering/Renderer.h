@@ -19,8 +19,9 @@ namespace Sourcehold
         {
             SDL_Window *window;
             SDL_Renderer *renderer;
-            SDL_Texture *targetCache;
             int width, height;
+            double tx,ty,tw,th;
+            Texture *target = nullptr;
         public:
             Renderer();
             Renderer(const Renderer&) = delete;
@@ -30,9 +31,8 @@ namespace Sourcehold
             void Update();
             void Clear();
             void Flush();
-            void PushTarget();
-            void PopTarget();
-            void SetTarget();
+            void SetTarget(Texture *target, double x, double y, double w, double h);
+            void ResetTarget();
 
             /**
              * Render a texture (screen coordinates)
@@ -70,12 +70,20 @@ namespace Sourcehold
              */
             double NormalizeX(uint32_t c);
             double NormalizeY(uint32_t c);
-
             uint32_t ToCoordX(double c);
             uint32_t ToCoordY(double c);
+            double NormalizeTargetX(uint32_t c);
+            double NormalizeTargetY(uint32_t c);
+            uint32_t ToTargetCoordX(double c);
+            uint32_t ToTargetCoordY(double c);
 
-            int GetTargetWidth();
-            int GetTargetHeight();
+            double GetTargetWidth();
+            double GetTargetHeight();
+            double GetTargetX();
+            double GetTargetY();
+
+            int GetMouseX();
+            int GetMouseY();
         protected:
             static int ResizeEventWatcher(void *data, SDL_Event *event);
         };

@@ -32,7 +32,7 @@ namespace Sourcehold
             SDL_Rect rect;
             bool shown = true;
             bool clicked = false;
-            double nx, ny, nw, nh;
+            double nx, ny, nw, nh, tx, ty, tw, th;
             int mouseX, mouseY;
         public:
             StaticElement(std::shared_ptr<GameManager> mgr, double x = 0.0, double y = 0.0, SDL_Rect r = { 0,0,0,0 });

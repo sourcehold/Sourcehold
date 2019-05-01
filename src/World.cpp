@@ -79,8 +79,8 @@ int World::Play() {
         }
 
         if(menubarShown) {
-            UpdateMenubar();
             RenderMenubar();
+            UpdateMenubar();
         }
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
@@ -148,16 +148,15 @@ void World::RenderQuickMenu() {
 }
 
 void World::RenderMenubar() {
-    manager->Render(menubar, 0.0, 0.74, 1.0, 0.261);
+    manager->Render(menubar, menuX, menuY, menuW, menuH);
 }
 
 void World::UpdateMenubar() {
-    menubar.SetTarget();
+    manager->SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
 
     /* TODO: Less hardcoding */
-
     auto atlas = gm1_face->GetTextureAtlas().lock();
     SDL_Rect rect = atlas->Get(0);
     manager->Render(*atlas, width - 800 - 240, height - rect.h, &rect);
@@ -233,7 +232,7 @@ void World::UpdateMenubar() {
             return *atlas;
         });
 
-    for(size_t i = 0; i < 6; i++) {
+    for(uint8_t i = 0; i < 6; i++) {
         ui_tabs[i].Render(
             [&]() -> Texture& {
                 if(ui_tabs[i].IsMouseOver()) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][1]));
@@ -264,7 +263,7 @@ void World::UpdateMenubar() {
     default: break;
     }
 
-    menubar.ResetTarget();
+    manager->ResetTarget();
 }
 
 void World::UpdateCamera() {

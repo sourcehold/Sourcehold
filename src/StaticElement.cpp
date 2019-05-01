@@ -42,21 +42,25 @@ void StaticElement::Destroy() {
 void StaticElement::Translate(int x, int y) {
     nx = manager->NormalizeX(x);
     ny = manager->NormalizeY(y);
+    tx = manager->NormalizeTargetX(x);
+    ty = manager->NormalizeTargetY(y);
 }
 
 void StaticElement::Translate(double x, double y) {
-    nx = x;
-    ny = y;
+    nx = tx = x;
+    ny = ty = y;
 }
 
 void StaticElement::Scale(int w, int h) {
     nw = manager->NormalizeX(w);
     nh = manager->NormalizeY(h);
+    tw = manager->NormalizeTargetX(w);
+    th = manager->NormalizeTargetY(h);
 }
 
 void StaticElement::Scale(double w, double h) {
-    nw = w;
-    nh = h;
+    nw = tw = w;
+    nh = tw = h;
 }
 
 void StaticElement::Render(std::function<Texture&()> render_fn) {
@@ -71,16 +75,10 @@ void StaticElement::Render(Texture &elem, bool whole) {
 }
 
 bool StaticElement::IsMouseOver() {
-    manager->PushTarget();
-
-    /* TODO: Convert to screen coordinates */
-    manager->SetTarget();
-    int rx = manager->ToCoordX(nx);
-    int ry = manager->ToCoordY(ny);
-    int rw = manager->ToCoordX(nw);
-    int rh = manager->ToCoordY(nh);
-
-    manager->PopTarget();
+    int rw = manager->ToCoordX(tw) * manager->GetTargetWidth();
+    int rh = manager->ToCoordY(th) * manager->GetTargetHeight();
+    int rx = manager->ToCoordX(manager->GetTargetX()) + tx * (double)manager->ToCoordX(manager->GetTargetWidth());
+    int ry = manager->ToCoordY(manager->GetTargetY()) + ty * (double)manager->ToCoordY(manager->GetTargetHeight());
 
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
     return false;
@@ -95,12 +93,6 @@ bool StaticElement::IsClicked() {
 
 void StaticElement::onEventReceive(Mouse &event) {
     EventType type = event.GetType();
-
-    int tw = manager->GetTargetWidth();
-    int th = manager->GetTargetHeight();
-
-    int w = manager->GetWidth();
-    int h = manager->GetHeight();
 
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();

@@ -52,6 +52,7 @@ namespace Sourcehold
             /* Menu bar */
             bool menubarShown = true;
             Texture menubar;
+            const double menuX = 0.0, menuY = 0.74, menuW = 1.0, menuH = 0.261;
             enum MenuPage : uint8_t {
                 MENU_CASTLE = 0,
                 MENU_INDUSTRY = 1,
