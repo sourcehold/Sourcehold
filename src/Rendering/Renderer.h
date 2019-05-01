@@ -68,14 +68,14 @@ namespace Sourcehold
              * Normalize based on the dimensions of
              * the current render target
              */
-            double NormalizeX(uint32_t c);
-            double NormalizeY(uint32_t c);
-            uint32_t ToCoordX(double c);
-            uint32_t ToCoordY(double c);
-            double NormalizeTargetX(uint32_t c);
-            double NormalizeTargetY(uint32_t c);
-            uint32_t ToTargetCoordX(double c);
-            uint32_t ToTargetCoordY(double c);
+            double NormalizeX(int32_t c);
+            double NormalizeY(int32_t c);
+            int32_t ToCoordX(double c);
+            int32_t ToCoordY(double c);
+            double NormalizeTargetX(int32_t c);
+            double NormalizeTargetY(int32_t c);
+            int32_t ToTargetCoordX(double c);
+            int32_t ToTargetCoordY(double c);
 
             double GetTargetWidth();
             double GetTargetHeight();

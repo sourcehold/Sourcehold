@@ -170,23 +170,23 @@ void Renderer::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uin
         );
 }
 
-double Renderer::NormalizeX(uint32_t c) {
+double Renderer::NormalizeX(int32_t c) {
     return (double)c / (double)GetWidth();
 }
 
-double Renderer::NormalizeY(uint32_t c) {
+double Renderer::NormalizeY(int32_t c) {
     return (double)c / (double)GetHeight();
 }
 
-uint32_t Renderer::ToCoordX(double c) {
+int32_t Renderer::ToCoordX(double c) {
     return (int)(c * (double)GetWidth());
 }
 
-uint32_t Renderer::ToCoordY(double c) {
+int32_t Renderer::ToCoordY(double c) {
     return (int)(c * (double)GetHeight());
 }
 
-double Renderer::NormalizeTargetX(uint32_t c) {
+double Renderer::NormalizeTargetX(int32_t c) {
     int w = width, h = height;
     SDL_Texture *target = SDL_GetRenderTarget(renderer);
     if(target != NULL) {
@@ -196,7 +196,7 @@ double Renderer::NormalizeTargetX(uint32_t c) {
     return (double)c / (double)w;
 }
 
-double Renderer::NormalizeTargetY(uint32_t c) {
+double Renderer::NormalizeTargetY(int32_t c) {
     int w = width, h = height;
     SDL_Texture *target = SDL_GetRenderTarget(renderer);
     if(target != NULL) {
@@ -206,12 +206,12 @@ double Renderer::NormalizeTargetY(uint32_t c) {
     return (double)c / (double)h;
 }
 
-uint32_t Renderer::ToTargetCoordX(double c) {
+int32_t Renderer::ToTargetCoordX(double c) {
     if(!target) return ToCoordX(c);
     return (int)(c * (double)GetTargetWidth());
 }
 
-uint32_t Renderer::ToTargetCoordY(double c) {
+int32_t Renderer::ToTargetCoordY(double c) {
     if(!target) return ToCoordY(c);
     return (int)(c * (double)GetTargetHeight());
 }
