@@ -22,14 +22,14 @@ find_package (Threads)
 find_package(SDL2 REQUIRED)
 if(NOT SDL2_FOUND)
     message(FATAL_ERROR "SDL2 has to be installed!")
-endif(NOT SDL2_FOUND)
+endif()
 include_directories(${SDL2_INCLUDE_DIR})
 
 # Find OpenAL
 find_package(OpenAL REQUIRED)
 if(NOT OPENAL_FOUND)
     message(FATAL_ERROR "OpenAL has to be installed!")
-endif(NOT OPENAL_FOUND)
+endif()
 include_directories(${OPENAL_INCLUDE_DIR})
 
 # Find FFMPEG
@@ -41,41 +41,45 @@ if(NOT SWSCALE_FOUND)
 else()
 	include_directories(${SWSCALE_INCLUDE_DIRS})
 endif()
-else(FFMPEG_FOUND)
+else()
 	message(FATAL_ERROR "FFMPEG has to be installed!")
-endif(FFMPEG_FOUND)
+endif()
 
 # Find swresample
 find_package(Libswresample REQUIRED)
-if(NOT LIBSWRESAMPLE_FOUND)
+if()
 	message(FATAL_ERROR "libswresample has to be installed (provided by FFmpeg)!")
-else(NOT LIBSWRESAMPLE_FOUND)
+else()
 	include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
-endif(NOT LIBSWRESAMPLE_FOUND)
+endif()
 
 # Find boost
-set(Boost_USE_STATIC_LIBS ON) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME ON) 
-find_package(Boost 1.45.0 COMPONENTS filesystem) 
+set(Boost_USE_STATIC_LIBS ON)
+add_definitions(-DBOOST_ALL_NO_LIB)
+find_package(Boost COMPONENTS filesystem REQUIRED)
 if(Boost_FOUND)
-	include_directories(${Boost_INCLUDE_DIRS}) 
-else(Boost_FOUND)
+	include_directories(${Boost_INCLUDE_DIRS})
+else()
 	message(FATAL_ERROR "the following boost components need to be installed: fileystem")
-endif(Boost_FOUND)
+endif()
 
-# Include sources
+# Include sources / headers
 file(GLOB_RECURSE SOURCES src/*.cpp)
+file(GLOB_RECURSE HEADERS src/*.h)
 
-# Fixes legacy stuff (i.e. strcmp)
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+		set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+		set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
 	add_definitions(-Wno-reorder -pedantic-errors -Ofast)
 endif()
 
-# Link our exe
-add_executable(Stronghold ${SOURCES})
+add_executable(Stronghold ${SOURCES} ${HEADERS})
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 14
 	CXX_STANDARD_REQUIRED YES

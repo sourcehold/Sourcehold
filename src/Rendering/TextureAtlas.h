@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <Rendering/Texture.h>
 #include <Rendering/Surface.h>

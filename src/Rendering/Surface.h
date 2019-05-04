@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <Rendering/Renderer.h>
 #include <Rendering/Renderable.h>

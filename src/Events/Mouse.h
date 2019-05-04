@@ -2,7 +2,7 @@
 
 #include <list>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <Events/Event.h>
 

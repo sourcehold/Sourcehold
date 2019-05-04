@@ -4,7 +4,7 @@
 #include <functional>
 #include <memory>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <GameManager.h>
 

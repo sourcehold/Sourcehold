@@ -2,7 +2,7 @@
 
 #include <cinttypes>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 namespace Sourcehold
 {

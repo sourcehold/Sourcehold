@@ -3,7 +3,7 @@
 #include <cinttypes>
 #include <memory>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 #include <Rendering/Rendering.h>
 #include <Rendering/Texture.h>

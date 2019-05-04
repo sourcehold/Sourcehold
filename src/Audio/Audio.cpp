@@ -1,5 +1,8 @@
 #include <string>
 
+#include <al.h>
+#include <alc.h>
+
 #include <Audio/Audio.h>
 #include <System/Logger.h>
 

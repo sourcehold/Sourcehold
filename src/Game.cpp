@@ -86,6 +86,8 @@ int StartGame(GameOptions &opt) {
     return EXIT_SUCCESS;
 }
 
+#undef main
+
 /* Common entry point across all platforms */
 int main(int argc, char **argv) {
     /* Parse commandline */
@@ -154,7 +156,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
 }
 
-#if SOURCEHOLD_WINDOWS == 1
+#if SOURCEHOLD_MINGW == 1
 
 #include <windows.h>
 #include <string>

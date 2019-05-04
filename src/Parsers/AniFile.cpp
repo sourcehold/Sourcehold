@@ -1,5 +1,6 @@
 #include <Parsers/AniFile.h>
 
+using namespace Sourcehold;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 

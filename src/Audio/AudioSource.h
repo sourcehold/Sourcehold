@@ -4,10 +4,10 @@
 #include <string>
 #include <cstdio>
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <al.h>
+#include <alc.h>
 
 #include <System/Logger.h>
 

@@ -17,7 +17,7 @@ Camera::~Camera() {
 }
 
 SDL_Rect Camera::GetVisibleArea() {
-    SDL_Rect rect;
+	SDL_Rect rect = { };
 
     /* TODO */
     int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);

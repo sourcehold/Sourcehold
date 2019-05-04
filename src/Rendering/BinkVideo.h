@@ -13,8 +13,8 @@ extern "C" {
 #endif
 }
 
-#include <AL/al.h>
-#include <AL/alc.h>
+#include <al.h>
+#include <alc.h>
 
 #include <memory>
 
@@ -66,6 +66,7 @@ namespace Sourcehold
             int videoStream, audioStream;
             uint32_t lastTicks;
             float fps;
+			uint32_t *framebuf;
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
             BinkVideo(std::shared_ptr<Renderer> man);
@@ -78,7 +79,7 @@ namespace Sourcehold
 
             inline bool IsRunning() { return running; }
         protected:
-            void Decode();
+			void test();
         };
     }
 }

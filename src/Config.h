@@ -5,8 +5,13 @@
 #define SOURCEHOLD_VERSION_STRING "0.1"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(win32)
+#if defined(__GNUC__) || defined(__MINGW32__)
+#define SOURCEHOLD_BUILD "MinGW"
+#define SOURCEHOLD_MINGW 1
+#else
 #define SOURCEHOLD_BUILD "Windows"
 #define SOURCEHOLD_WINDOWS 1
+#endif
 #elif defined(linux) || defined(__linux)
 #define SOURCEHOLD_BUILD "Linux"
 #define SOURCEHOLD_LINUX 1
