@@ -60,7 +60,7 @@ void StaticElement::Scale(int w, int h) {
 
 void StaticElement::Scale(double w, double h) {
     nw = tw = w;
-    nh = tw = h;
+    nh = th = h;
 }
 
 void StaticElement::Render(std::function<Texture&()> render_fn) {
