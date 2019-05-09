@@ -29,6 +29,7 @@ StaticElement::~StaticElement() {
 
 void StaticElement::Hide() {
     shown = false;
+    clicked = false;
 }
 
 void StaticElement::Show() {
@@ -93,6 +94,7 @@ bool StaticElement::IsClicked() {
 
 void StaticElement::onEventReceive(Mouse &event) {
     EventType type = event.GetType();
+    if(!shown) return;
 
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();

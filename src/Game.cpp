@@ -5,7 +5,7 @@
 
 #include <cxxopts.hpp>
 
-#include <MainMenu.h>
+#include <GUI.h>
 #include <World.h>
 #include <GameManager.h>
 #include <Rendering/Font.h>
@@ -40,7 +40,7 @@ int StartGame(GameOptions &opt) {
     std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() / "gfx/frontend_loading.tgx").lock();
 
     /* Init the menu */
-    MainMenu menu(gameManager);
+    GUI menu(gameManager);
     menu.PlayMusic();
 
     uint32_t index = 0;
@@ -99,8 +99,8 @@ int main(int argc, char **argv) {
         ("d,debug", "Print debug info")
         ("color", "Force color output")
         ("f,fullscreen", "Run in fullscreen mode")
-        ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("800"))
-        ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("600"))
+        ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("1024"))
+        ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("768"))
         ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
         ("noborder", "Remove window border")
         ("nograb", "Don't grab the mouse")
@@ -184,7 +184,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevIns, LPSTR lpszArgument,
         argv.reserve(argv_buf.size());
         for (std::vector<std::string>::iterator i = argv_buf.begin(); i != argv_buf.end(); ++i)
             argv.push_back((char*)i->c_str());
-        
+
         int code = main(argv.size(), &argv[0]);
 
         LocalFree(w_argv);
