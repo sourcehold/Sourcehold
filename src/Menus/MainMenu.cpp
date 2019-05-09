@@ -58,6 +58,7 @@ UIState MainMenu::EnterMenu() {
     ui_settings.Show();
 
     UIState currentState = MAIN_MENU;
+    int32_t glareCounter = 265;
 
     while(manager->Running()) {
         manager->Clear();
@@ -65,7 +66,7 @@ UIState MainMenu::EnterMenu() {
 
         manager->Render(*tgx_bg1);
 
-        Draw();
+        Draw(glareCounter);
 
         if(ui_exit.IsClicked()) {
             currentState = EXIT_GAME;
@@ -98,6 +99,8 @@ UIState MainMenu::EnterMenu() {
             return currentState;
         }
 
+        glareCounter = (glareCounter+1)%360;
+
         manager->Flush();
         manager->EndTimer();
     }
@@ -105,7 +108,7 @@ UIState MainMenu::EnterMenu() {
     return EXIT_GAME;
 }
 
-void MainMenu::Draw()
+void MainMenu::Draw(const int32_t glareCounter)
 {
     manager->Render(*tgx_bg1);
 
@@ -132,7 +135,23 @@ void MainMenu::Draw()
                 icons_main->SetRect(icons_main->Get(16));
                 ui_combat.Translate(0.183, 0.276);
             } else {
-                icons_main->SetRect(icons_main->Get(0));
+                if(glareCounter >= 90) icons_main->SetRect(icons_main->Get(0));
+                else if(glareCounter < 6) icons_main->SetRect(icons_main->Get(1));
+                else if(glareCounter < 12) icons_main->SetRect(icons_main->Get(2));
+                else if(glareCounter < 18) icons_main->SetRect(icons_main->Get(3));
+                else if(glareCounter < 24) icons_main->SetRect(icons_main->Get(4));
+                else if(glareCounter < 30) icons_main->SetRect(icons_main->Get(5));
+                else if(glareCounter < 36) icons_main->SetRect(icons_main->Get(6));
+                else if(glareCounter < 42) icons_main->SetRect(icons_main->Get(7));
+                else if(glareCounter < 48) icons_main->SetRect(icons_main->Get(8));
+                else if(glareCounter < 54) icons_main->SetRect(icons_main->Get(9));
+                else if(glareCounter < 60) icons_main->SetRect(icons_main->Get(10));
+                else if(glareCounter < 66) icons_main->SetRect(icons_main->Get(11));
+                else if(glareCounter < 72) icons_main->SetRect(icons_main->Get(12));
+                else if(glareCounter < 78) icons_main->SetRect(icons_main->Get(13));
+                else if(glareCounter < 84) icons_main->SetRect(icons_main->Get(14));
+                else if(glareCounter < 90) icons_main->SetRect(icons_main->Get(15));
+
                 ui_combat.Translate(0.182, 0.277);
             }
             return *icons_main;
@@ -144,7 +163,22 @@ void MainMenu::Draw()
                 icons_main->SetRect(icons_main->Get(33));
                 ui_economic.Translate(0.336, 0.276);
             } else {
-                icons_main->SetRect(icons_main->Get(17));
+                if(glareCounter < 91 || glareCounter >= 180) icons_main->SetRect(icons_main->Get(17));
+                else if(glareCounter < 96) icons_main->SetRect(icons_main->Get(18));
+                else if(glareCounter < 102) icons_main->SetRect(icons_main->Get(19));
+                else if(glareCounter < 114) icons_main->SetRect(icons_main->Get(21));
+                else if(glareCounter < 108) icons_main->SetRect(icons_main->Get(20));
+                else if(glareCounter < 120) icons_main->SetRect(icons_main->Get(22));
+                else if(glareCounter < 126) icons_main->SetRect(icons_main->Get(23));
+                else if(glareCounter < 132) icons_main->SetRect(icons_main->Get(24));
+                else if(glareCounter < 138) icons_main->SetRect(icons_main->Get(25));
+                else if(glareCounter < 144) icons_main->SetRect(icons_main->Get(26));
+                else if(glareCounter < 150) icons_main->SetRect(icons_main->Get(27));
+                else if(glareCounter < 156) icons_main->SetRect(icons_main->Get(28));
+                else if(glareCounter < 162) icons_main->SetRect(icons_main->Get(29));
+                else if(glareCounter < 168) icons_main->SetRect(icons_main->Get(30));
+                else if(glareCounter < 174) icons_main->SetRect(icons_main->Get(31));
+                else if(glareCounter < 180) icons_main->SetRect(icons_main->Get(32));
                 ui_economic.Translate(0.337, 0.275);
             }
             return *icons_main;
@@ -156,7 +190,23 @@ void MainMenu::Draw()
                 icons_main->SetRect(icons_main->Get(50));
                 ui_builder.Translate(0.492, 0.276);
             } else {
-                icons_main->SetRect(icons_main->Get(34));
+                if(glareCounter < 181 || glareCounter >= 240) icons_main->SetRect(icons_main->Get(34));
+                else if(glareCounter < 186) icons_main->SetRect(icons_main->Get(35));
+                else if(glareCounter < 192) icons_main->SetRect(icons_main->Get(36));
+                else if(glareCounter < 198) icons_main->SetRect(icons_main->Get(37));
+                else if(glareCounter < 204) icons_main->SetRect(icons_main->Get(38));
+                else if(glareCounter < 210) icons_main->SetRect(icons_main->Get(39));
+                else if(glareCounter < 216) icons_main->SetRect(icons_main->Get(40));
+                else if(glareCounter < 222) icons_main->SetRect(icons_main->Get(41));
+                else if(glareCounter < 228) icons_main->SetRect(icons_main->Get(42));
+                else if(glareCounter < 234) icons_main->SetRect(icons_main->Get(43));
+                else if(glareCounter < 240) icons_main->SetRect(icons_main->Get(44));
+                else if(glareCounter < 246) icons_main->SetRect(icons_main->Get(45));
+                else if(glareCounter < 252) icons_main->SetRect(icons_main->Get(46));
+                else if(glareCounter < 258) icons_main->SetRect(icons_main->Get(47));
+                else if(glareCounter < 264) icons_main->SetRect(icons_main->Get(48));
+                else if(glareCounter < 270) icons_main->SetRect(icons_main->Get(49));
+
                 ui_builder.Translate(0.492, 0.275);
             }
             return *icons_main;
@@ -168,7 +218,22 @@ void MainMenu::Draw()
                 icons_main->SetRect(icons_main->Get(67));
                 ui_load.Translate(0.648, 0.278);
             } else {
-                icons_main->SetRect(icons_main->Get(51));
+                if(glareCounter < 271) icons_main->SetRect(icons_main->Get(51));
+                else if(glareCounter < 276) icons_main->SetRect(icons_main->Get(52));
+                else if(glareCounter < 282) icons_main->SetRect(icons_main->Get(53));
+                else if(glareCounter < 288) icons_main->SetRect(icons_main->Get(54));
+                else if(glareCounter < 294) icons_main->SetRect(icons_main->Get(55));
+                else if(glareCounter < 300) icons_main->SetRect(icons_main->Get(56));
+                else if(glareCounter < 306) icons_main->SetRect(icons_main->Get(57));
+                else if(glareCounter < 312) icons_main->SetRect(icons_main->Get(58));
+                else if(glareCounter < 318) icons_main->SetRect(icons_main->Get(59));
+                else if(glareCounter < 324) icons_main->SetRect(icons_main->Get(60));
+                else if(glareCounter < 330) icons_main->SetRect(icons_main->Get(61));
+                else if(glareCounter < 336) icons_main->SetRect(icons_main->Get(62));
+                else if(glareCounter < 342) icons_main->SetRect(icons_main->Get(63));
+                else if(glareCounter < 348) icons_main->SetRect(icons_main->Get(64));
+                else if(glareCounter < 354) icons_main->SetRect(icons_main->Get(65));
+                else if(glareCounter < 360) icons_main->SetRect(icons_main->Get(66));
                 ui_load.Translate(0.648, 0.276);
 
             }

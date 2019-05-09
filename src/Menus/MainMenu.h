@@ -36,7 +36,7 @@ namespace Sourcehold
 
             UIState EnterMenu();
         protected:
-            void Draw();
+            void Draw(const int32_t glareCounter);
             /* Resources */
             std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo, tgx_firefly_front;
