@@ -1,6 +1,6 @@
 #include <Menus/CombatMenu.h>
 
-using namespace Sourcehold::Game;
+using namespace Sourcehold::Menus;
 using namespace Sourcehold::Rendering;
 
 CombatMenu::CombatMenu(std::shared_ptr<GameManager> man) :
@@ -82,7 +82,10 @@ void CombatMenu::Draw(const int32_t glareCounter)
     auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) icons_combat->SetRect(icons_combat->Get(69));
+            if(ui_back_to_main.IsMouseOver()){
+                RenderMenuText(L"Back to Main Menu");
+                icons_combat->SetRect(icons_combat->Get(69));
+            }
             else icons_combat->SetRect(icons_combat->Get(68));
             return *icons_combat;
         });
@@ -90,6 +93,7 @@ void CombatMenu::Draw(const int32_t glareCounter)
     ui_combat_campaign.Render(
         [&]() -> Texture& {
             if(ui_combat_campaign.IsMouseOver()) {
+                RenderMenuText(L"Play the Military Campaign");
                 icons_combat->SetRect(icons_combat->Get(16));//
                 ui_combat_campaign.Translate(0.183, 0.276);
             } else {
@@ -117,6 +121,7 @@ void CombatMenu::Draw(const int32_t glareCounter)
     ui_combat_siege.Render(
         [&]() -> Texture& {
             if(ui_combat_siege.IsMouseOver()) {
+                RenderMenuText(L"Play a Siege");
                 icons_combat->SetRect(icons_combat->Get(33));
                 ui_combat_siege.Translate(0.336, 0.276);
             } else {
@@ -144,6 +149,7 @@ void CombatMenu::Draw(const int32_t glareCounter)
     ui_combat_invasion.Render(
         [&]() -> Texture& {
             if(ui_combat_invasion.IsMouseOver()) {
+                RenderMenuText(L"Play an Invasion");
                 icons_combat->SetRect(icons_combat->Get(50));
                 ui_combat_invasion.Translate(0.492, 0.276);
             } else {
@@ -171,6 +177,7 @@ void CombatMenu::Draw(const int32_t glareCounter)
     ui_combat_multiplayer.Render(
         [&]() -> Texture& {
             if(ui_combat_multiplayer.IsMouseOver()) {
+                RenderMenuText(L"Play a Multiplayer Game");
                 icons_combat->SetRect(icons_combat->Get(67));
                 ui_combat_multiplayer.Translate(0.648, 0.278);
             } else {

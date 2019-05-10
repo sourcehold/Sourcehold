@@ -20,6 +20,7 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Assets;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
+using namespace Sourcehold::Menus;
 
 int StartGame(GameOptions &opt) {
     auto gameManager = std::make_shared<GameManager>(opt);
@@ -33,6 +34,7 @@ int StartGame(GameOptions &opt) {
     }
 
     if(!LoadFonts(gameManager)) return EXIT_FAILURE;
+    if(!InitializeUtils(gameManager)) return EXIT_FAILURE;
 
     MlbFile mlb;
     mlb.LoadFromDisk(gameManager->GetDirectory() / "stronghold.mlb");
