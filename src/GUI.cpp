@@ -86,10 +86,10 @@ int GUI::Startup() {
                 intro->Update();
                 manager->Render(*intro, 0.0, 0.2, 1.0, 0.6);
                 if(!intro->IsRunning()) {
-                    aud_startup.Stop();
                     currentUIState = MAIN_MENU;
                 }
             }else{
+				aud_startup.Stop();
                 currentUIState = MAIN_MENU;
             }
         } else if(currentUIState == MAIN_MENU) {
@@ -125,7 +125,10 @@ int GUI::Startup() {
 
         } else if(currentUIState == SETTINGS_MENU) {
 
-        } else {
+		} else if (currentUIState == EXIT_GAME) {
+			return EXIT_FAILURE;
+		}
+		else {
             return EXIT_SUCCESS;
         }
         manager->Flush();
