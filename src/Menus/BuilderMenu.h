@@ -10,6 +10,8 @@
 #include <StaticElement.h>
 #include <UIState.h>
 
+#include <Menus/MenuUtils.h>
+
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
 
@@ -18,7 +20,7 @@
 
 namespace Sourcehold
 {
-    namespace Game
+    namespace Menus
     {
         using namespace Events;
         using namespace Parsers;

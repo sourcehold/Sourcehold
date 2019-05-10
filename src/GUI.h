@@ -33,6 +33,7 @@ namespace Sourcehold
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
+        using namespace Menus;
 
         /**
          * Handles non game states - menus and intro sequence

@@ -16,9 +16,11 @@
 #include <Rendering/Texture.h>
 #include <Rendering/TextureAtlas.h>
 
+#include <Menus/MenuUtils.h>
+
 namespace Sourcehold
 {
-    namespace Game
+    namespace Menus
     {
         using namespace Events;
         using namespace Parsers;

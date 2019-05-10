@@ -1,6 +1,6 @@
 #include <Menus/BuilderMenu.h>
 
-using namespace Sourcehold::Game;
+using namespace Sourcehold::Menus;
 using namespace Sourcehold::Rendering;
 
 BuilderMenu::BuilderMenu(std::shared_ptr<GameManager> man) :
@@ -84,7 +84,10 @@ void BuilderMenu::Draw(const int32_t glareCounter)
     auto icons_builder = gm1_icons_builder->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) icons_builder->SetRect(icons_builder->Get(71));
+            if(ui_back_to_main.IsMouseOver()) {
+                RenderMenuText(L"Back to Main Menu");
+                icons_builder->SetRect(icons_builder->Get(71));
+            }
             else icons_builder->SetRect(icons_builder->Get(70));
             return *icons_builder;
         });
@@ -92,6 +95,7 @@ void BuilderMenu::Draw(const int32_t glareCounter)
     ui_builder_working_map.Render(
         [&]() -> Texture& {
             if(ui_builder_working_map.IsMouseOver()) {
+                RenderMenuText(L"Load a Working Map");
                 icons_builder->SetRect(icons_builder->Get(16));
                 ui_builder_working_map.Translate(0.183, 0.276);
             } else {
@@ -119,6 +123,7 @@ void BuilderMenu::Draw(const int32_t glareCounter)
     ui_builder_stand_alone_mission.Render(
         [&]() -> Texture& {
             if(ui_builder_stand_alone_mission.IsMouseOver()) {
+                RenderMenuText(L"New Stand-Alone Mission");
                 icons_builder->SetRect(icons_builder->Get(33));
                 ui_builder_stand_alone_mission.Translate(0.336, 0.276);
             } else {
@@ -146,6 +151,7 @@ void BuilderMenu::Draw(const int32_t glareCounter)
     ui_builder_siege_that.Render(
         [&]() -> Texture& {
             if(ui_builder_siege_that.IsMouseOver()) {
+                RenderMenuText(L"New 'Siege That' Mission");
                 icons_builder->SetRect(icons_builder->Get(50));
                 ui_builder_siege_that.Translate(0.492, 0.276);
             } else {
@@ -173,6 +179,7 @@ void BuilderMenu::Draw(const int32_t glareCounter)
     ui_builder_multiplayer_map.Render(
         [&]() -> Texture& {
             if(ui_builder_multiplayer_map.IsMouseOver()) {
+                RenderMenuText(L"New Multiplayer Map");
                 icons_builder->SetRect(icons_builder->Get(67));
                 ui_builder_multiplayer_map.Translate(0.648, 0.278);
             } else {

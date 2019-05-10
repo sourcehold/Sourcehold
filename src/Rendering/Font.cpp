@@ -33,8 +33,11 @@ void Rendering::UnloadFonts() {
     _fonts[2].reset();
 }
 
-void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, double scaleFactor, Font type) {
+void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, double scaleFactor, Font type, bool illumination) {
     auto font = _fonts[type];
+    if (illumination && text.size() != 1) {
+        return;
+    }
 
     SDL_Rect glyph;
     for(wchar_t c : text) {
@@ -43,38 +46,52 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
         if(c == 0x20) {
             x += _table_width_height[type].first;
         }else {
+            int8_t lowercaseOffset = 0;
+            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 2); /*g p q y*/
+            if(c == 0x6A) lowercaseOffset = _table_width_height[type].second / 2; /*j*/
+            if(c == 0x2D) lowercaseOffset = FONT_SMALL ? -8 : -12;
+            if(c == 0x27) lowercaseOffset = FONT_SMALL ? -12 : -17;
             glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
             _mgr->Render(*font->GetTextureAtlas().lock(),
-                         x,
-                         y + _table_width_height[type].second - glyph.h,
+                         illumination ? (x + (13 - glyph.w)/2) : x,
+                         y + _table_width_height[type].second - glyph.h + lowercaseOffset,
                          glyph.w,
                          glyph.h,
                          &glyph);
 
-            x += glyph.w;
+            x += glyph.w +1;
         }
     }
 }
 
-void Rendering::RenderText(const std::wstring& text, double x, double y, double scaleFactor, Font type) {
+void Rendering::RenderText(const std::wstring& text, double x, double y, double scaleFactor, Font type, bool illumination) {
     auto font = _fonts[type];
+    if (illumination && text.size() != 1) {
+        return;
+    }
 
     SDL_Rect glyph;
     for(wchar_t c : text) {
         if(c < 0x20 || (c-0x20) > font->GetTextureAtlas().lock()->GetNumTextures()) continue;
         /* Space */
         if(c == 0x20) {
-            x += _table_width_height[type].first;
+            x += _mgr->NormalizeX(_table_width_height[type].first);
         }else {
             glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
+            /* TODO possibly a table of some sort*/
+            int8_t lowercaseOffset = 0;
+            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 2); /* g p q y */
+            if(c == 0x6A) lowercaseOffset = _table_width_height[type].second / 2; /* j */
+            if(c == 0x2D) lowercaseOffset = FONT_SMALL ? -8 : -12; /* - */
+            if(c == 0x27) lowercaseOffset = FONT_SMALL ? -12 : -17; /* ' */
             _mgr->Render(*font->GetTextureAtlas().lock(),
-                         x,
-                         double(_mgr->NormalizeY(_mgr->ToCoordY(y) + _table_width_height[type].second - glyph.h)),
+                         illumination ? (x + _mgr->NormalizeX((13 - glyph.w)/2)) : x,
+                         double(_mgr->NormalizeY(_mgr->ToCoordY(y) + _table_width_height[type].second - glyph.h + lowercaseOffset)),
                          double(_mgr->NormalizeX(glyph.w)),
-                         double(_mgr->NormalizeX(glyph.h)),
+                         double(_mgr->NormalizeY(glyph.h)),
                          &glyph);
 
-            x += glyph.w;
+            x += _mgr->NormalizeX(glyph.w+1);
         }
     }
 }

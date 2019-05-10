@@ -1,6 +1,8 @@
 #include <Menus/MainMenu.h>
 
-using namespace Sourcehold::Game;
+#include <Rendering/Font.h>
+
+using namespace Sourcehold::Menus;
 using namespace Sourcehold::Rendering;
 
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
@@ -65,7 +67,6 @@ UIState MainMenu::EnterMenu() {
         manager->StartTimer();
 
         manager->Render(*tgx_bg1);
-
         Draw(glareCounter);
 
         if(ui_exit.IsClicked()) {
@@ -117,14 +118,20 @@ void MainMenu::Draw(const int32_t glareCounter)
     auto icons_additional = gm1_icons_additional->GetTextureAtlas().lock();
     ui_exit.Render(
         [&]() -> Texture& {
-            if(ui_exit.IsMouseOver()) icons_main->SetRect(icons_main->Get(69));
+            if(ui_exit.IsMouseOver()) {
+                RenderMenuText(L"Exit Stronghold");
+                icons_main->SetRect(icons_main->Get(69));
+            }
             else icons_main->SetRect(icons_main->Get(68));
             return *icons_main;
         });
 
     ui_tutorial.Render(
         [&]() -> Texture& {
-            if(ui_tutorial.IsMouseOver()) icons_main->SetRect(icons_main->Get(73));
+            if(ui_tutorial.IsMouseOver()) {
+                RenderMenuText(L"Tutorial");
+                icons_main->SetRect(icons_main->Get(73));
+            }
             else icons_main->SetRect(icons_main->Get(72));
             return *icons_main;
         });
@@ -132,6 +139,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_combat.Render(
         [&]() -> Texture& {
             if(ui_combat.IsMouseOver()) {
+                RenderMenuText(L"Combat-based games");
                 icons_main->SetRect(icons_main->Get(16));
                 ui_combat.Translate(0.183, 0.276);
             } else {
@@ -160,6 +168,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_economic.Render(
         [&]() -> Texture& {
             if(ui_economic.IsMouseOver()) {
+                RenderMenuText(L"Economic-based games");
                 icons_main->SetRect(icons_main->Get(33));
                 ui_economic.Translate(0.336, 0.276);
             } else {
@@ -187,6 +196,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_builder.Render(
         [&]() -> Texture& {
             if(ui_builder.IsMouseOver()) {
+                RenderMenuText(L"Map Editor");
                 icons_main->SetRect(icons_main->Get(50));
                 ui_builder.Translate(0.492, 0.276);
             } else {
@@ -215,6 +225,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_load.Render(
         [&]() -> Texture& {
             if(ui_load.IsMouseOver()) {
+                RenderMenuText(L"Load a Saved Game");
                 icons_main->SetRect(icons_main->Get(67));
                 ui_load.Translate(0.648, 0.278);
             } else {
@@ -234,8 +245,8 @@ void MainMenu::Draw(const int32_t glareCounter)
                 else if(glareCounter < 348) icons_main->SetRect(icons_main->Get(64));
                 else if(glareCounter < 354) icons_main->SetRect(icons_main->Get(65));
                 else if(glareCounter < 360) icons_main->SetRect(icons_main->Get(66));
-                ui_load.Translate(0.648, 0.276);
 
+                ui_load.Translate(0.648, 0.276);
             }
             return *icons_main;
         });
@@ -243,6 +254,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_firefly.Render(
             [&]() -> Texture& {
                 if(ui_firefly.IsMouseOver()) {
+                    RenderMenuText(L"Credits");
                     icons_additional->SetRect(icons_additional->Get(77));
                 } else {
                     icons_additional->SetRect(icons_additional->Get(78));
@@ -252,6 +264,7 @@ void MainMenu::Draw(const int32_t glareCounter)
     ui_settings.Render(
             [&]() -> Texture& {
                 if(ui_settings.IsMouseOver()) {
+                    RenderMenuText(L"Options");
                     icons_additional->SetRect(icons_additional->Get(88));
                 } else {
                     icons_additional->SetRect(icons_additional->Get(89));

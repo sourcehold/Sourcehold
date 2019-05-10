@@ -1,6 +1,6 @@
 #include <Menus/EconomicsMenu.h>
 
-using namespace Sourcehold::Game;
+using namespace Sourcehold::Menus;
 using namespace Sourcehold::Rendering;
 
 EconomicsMenu::EconomicsMenu(std::shared_ptr<GameManager> man) :
@@ -85,7 +85,10 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
     auto icons_economics = gm1_icons_economics->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) icons_economics->SetRect(icons_economics->Get(52));
+            if(ui_back_to_main.IsMouseOver()) {
+                RenderMenuText(L"Back to Main Menu");
+                icons_economics->SetRect(icons_economics->Get(52));
+            }
             else icons_economics->SetRect(icons_economics->Get(51));
             return *icons_economics;
         });
@@ -93,6 +96,7 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
     ui_economic_campaign.Render(
         [&]() -> Texture& {
             if(ui_economic_campaign.IsMouseOver()) {
+                RenderMenuText(L"Play the Economics Campaign");
                 icons_economics->SetRect(icons_economics->Get(16));
                 ui_economic_campaign.Translate(0.262, 0.276);
             } else {
@@ -120,6 +124,7 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
     ui_economic_mission.Render(
         [&]() -> Texture& {
             if(ui_economic_mission.IsMouseOver()) {
+                RenderMenuText(L"Play an Economics Mission");
                 icons_economics->SetRect(icons_economics->Get(33));
                 ui_economic_mission.Translate(0.416, 0.277);
             } else {
@@ -147,6 +152,7 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
     ui_economic_free_build.Render(
         [&]() -> Texture& {
             if(ui_economic_free_build.IsMouseOver()) {
+                RenderMenuText(L"Free Build");
                 icons_economics->SetRect(icons_economics->Get(50));
                 ui_economic_free_build.Translate(0.571, 0.277);
             } else {
