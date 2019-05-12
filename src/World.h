@@ -71,6 +71,7 @@ namespace Sourcehold
             World(const World&) = delete;
             ~World();
 
+            
             int Play();
         protected:
             void RenderQuickMenu();

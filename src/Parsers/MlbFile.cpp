@@ -28,14 +28,15 @@ bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
 
     num = Parser::GetDWord();
 
-    for(int i = 0; i < 6; i++) {
+    for(int i = 0; i < num; i++) {
         SectionHeader header;
         if(!Parser::GetData(&header, 16)) {
-            Logger::error("PARSERS")  << "Unable to parse Mlb subheader '" << path << "'!" << std::endl;
+            Logger::error("PARSERS")  << "Unable to parse Mlb subheader " << i << " from " << "'" << path << "'!" << std::endl;
+            Parser::Close();
             return false;
         }
 
-        std::string s = Parser::GetUTF16();
+        std::wstring s = Parser::GetUTF16();
         if(!s.empty()) field.push_back(s);
     }
 

@@ -49,6 +49,12 @@ namespace Sourcehold
             BMPFILE,
             UNKNOWN,
         };
+
+        enum LocalizedMissionDescription : uint16_t {
+        };
+
+        enum LocalizedTextString : uint16_t {
+        };
     }
 }
 

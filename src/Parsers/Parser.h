@@ -33,7 +33,7 @@ namespace Sourcehold
             void Seek(uint32_t pos);
             uint32_t Tell();
 
-            std::string GetUTF16();
+            std::wstring GetUTF16();
             std::string GetLine();
             uint8_t GetByte();
             uint16_t GetWord();

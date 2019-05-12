@@ -8,7 +8,7 @@
 #include <Rendering/Tileset.h>
 #include <Rendering/Renderer.h>
 
-#include <Assets/Assets.h>
+#include <Assets.h>
 
 namespace Sourcehold
 {

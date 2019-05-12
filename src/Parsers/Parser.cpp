@@ -47,7 +47,7 @@ uint32_t Parser::Tell() {
     return tellg();
 }
 
-std::string Parser::GetUTF16() {
+std::wstring Parser::GetUTF16() {
     std::wstring ws;
 
     while(Ok()) {
@@ -62,8 +62,7 @@ std::string Parser::GetUTF16() {
         ws.push_back(byte);
     }
 
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> convert;
-    return convert.to_bytes(ws);
+    return ws;
 }
 
 std::string Parser::GetLine() {

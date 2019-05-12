@@ -89,7 +89,7 @@ int GUI::Startup() {
                     currentUIState = MAIN_MENU;
                 }
             }else{
-				aud_startup.Stop();
+                aud_startup.Stop();
                 currentUIState = MAIN_MENU;
             }
         } else if(currentUIState == MAIN_MENU) {
@@ -125,10 +125,9 @@ int GUI::Startup() {
 
         } else if(currentUIState == SETTINGS_MENU) {
 
-		} else if (currentUIState == EXIT_GAME) {
-			return EXIT_FAILURE;
-		}
-		else {
+        } else if (currentUIState == EXIT_GAME) {
+            return EXIT_FAILURE;
+        } else {
             return EXIT_SUCCESS;
         }
         manager->Flush();

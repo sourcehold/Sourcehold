@@ -1,16 +1,16 @@
 #pragma once
 
 #include <memory>
+#include <boost/filesystem.hpp>
 
-#include <System/System.h>
-
+#include <Assets.h>
 #include <AnimationHandler.h>
-#include <Assets/Assets.h>
+
+#include <Parsers/MlbFile.h>
+#include <System/System.h>
 
 #include <Rendering/Display.h>
 #include <Rendering/Renderer.h>
-
-#include <boost/filesystem.hpp>
 
 namespace Sourcehold
 {
@@ -60,6 +60,13 @@ namespace Sourcehold
             void SetDirectory(boost::filesystem::path dir);
 
             /**
+             * Load all of the files which will remain in memory
+             * for the entirety of the game from the current
+             * data path.
+             */
+            bool LoadGameData();
+
+            /**
              * Clear all the file caches, every call to the
              * getter functions will lead to a reload
              */
@@ -70,6 +77,21 @@ namespace Sourcehold
              * path relative to the data directory
              */
             void Cache(boost::filesystem::path filename);
+
+            /**
+             * Delete a given entry from the file cache.
+             * This will ensure that an asset will be freed once
+             * every shared_ptr is destructed.
+             */
+            void DeleteCacheEntry(boost::filesystem::path filename);
+
+            /**
+             * Localization functions. These will get
+             * a text string from the 'stronghold.mlb'
+             * and 'sh.tex' files.
+             */
+            std::wstring GetLocalizedDescription(LocalizedMissionDescription index);
+            std::wstring GetLocalizedString(LocalizedTextString index);
 
             /**
              * Asset getter functions
@@ -86,6 +108,7 @@ namespace Sourcehold
             void Update();
             AssetType ExtToType(const std::string &ext);
 
+            MlbFile _mlb;
             boost::filesystem::path _dataFolder;
             std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
             std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;

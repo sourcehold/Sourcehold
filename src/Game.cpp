@@ -27,6 +27,7 @@ int StartGame(GameOptions &opt) {
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
+    gameManager->LoadGameData();
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
         Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;

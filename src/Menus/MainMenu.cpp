@@ -47,8 +47,8 @@ UIState MainMenu::EnterMenu() {
     ui_builder.Scale(0.17578125, 0.234375);
     ui_load.Scale(0.17578125, 0.234375);
 
-    ui_settings.Scale(0.113, 0.152);
-    ui_settings.Translate(0.6, 0.6);
+    ui_settings.Scale(0.1, 0.16);
+    ui_settings.Translate(0.726, 0.511);
 
     ui_exit.Show();
     ui_firefly.Show();
@@ -100,7 +100,7 @@ UIState MainMenu::EnterMenu() {
             return currentState;
         }
 
-        glareCounter = (glareCounter+1)%360;
+        glareCounter = (glareCounter+1) % 360;
 
         manager->Flush();
         manager->EndTimer();
@@ -111,7 +111,7 @@ UIState MainMenu::EnterMenu() {
 
 void MainMenu::Draw(const int32_t glareCounter)
 {
-    manager->Render(*tgx_bg1);
+    manager->SetTarget(tgx_bg1.get(), 0.0, 0.0, 1.0, 1.0);
 
     /* Render user interface */
     auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
@@ -255,21 +255,24 @@ void MainMenu::Draw(const int32_t glareCounter)
             [&]() -> Texture& {
                 if(ui_firefly.IsMouseOver()) {
                     RenderMenuText(L"Credits");
-                    icons_additional->SetRect(icons_additional->Get(77));
-                } else {
                     icons_additional->SetRect(icons_additional->Get(78));
+                } else {
+                    icons_additional->SetRect(icons_additional->Get(77));
                 }
                 return *icons_additional;
             });
+
     ui_settings.Render(
             [&]() -> Texture& {
                 if(ui_settings.IsMouseOver()) {
                     RenderMenuText(L"Options");
-                    icons_additional->SetRect(icons_additional->Get(88));
-                } else {
                     icons_additional->SetRect(icons_additional->Get(89));
+                } else {
+                    icons_additional->SetRect(icons_additional->Get(88));
                 }
                 return *icons_additional;
             });
+
+    manager->ResetTarget();
 }
 

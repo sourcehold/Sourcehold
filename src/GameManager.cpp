@@ -62,6 +62,11 @@ void GameManager::SetDirectory(boost::filesystem::path dir) {
     _dataFolder = dir;
 }
 
+bool GameManager::LoadGameData() {
+    if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
+    return true;
+}
+
 void GameManager::ClearFileCache() {
     _tgxFiles.clear();
     _gm1Files.clear();
@@ -77,23 +82,56 @@ void GameManager::Cache(boost::filesystem::path filename) {
     }
 
     switch(ExtToType(ext)) {
-        case TGXFILE: {
-            _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(shared_from_this(), filename));
-        }break;
-        case GM1FILE: {
-            _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(shared_from_this(), filename));
-        }break;
-        case ANIFILE: {
-            _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(shared_from_this(), filename));
-        }break;
-        case BINK_VIDEO: {
-            _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(shared_from_this(), filename));
-        }break;
-        case UNKNOWN: {
-            Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;
-        }break;
-        default: break;
+    case TGXFILE: {
+        _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(shared_from_this(), filename));
+    }break;
+    case GM1FILE: {
+        _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(shared_from_this(), filename));
+    }break;
+    case ANIFILE: {
+        _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(shared_from_this(), filename));
+    }break;
+    case BINK_VIDEO: {
+        _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(shared_from_this(), filename));
+    }break;
+    case UNKNOWN: {
+        Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;
+    }break;
+    default: break;
     }
+}
+
+void GameManager::DeleteCacheEntry(boost::filesystem::path filename) {
+    AssetType t = ExtToType(GetFileExtension(filename));
+    switch(t) {
+    case TGXFILE: {
+        auto iter = _tgxFiles.find(filename.string());
+        if(iter != _tgxFiles.end()) _tgxFiles.erase(iter);
+    }break;
+    case GM1FILE: {
+        auto iter = _gm1Files.find(filename.string());
+        if(iter != _gm1Files.end()) _gm1Files.erase(iter);
+    }break;
+    case ANIFILE: {
+        auto iter = _aniFiles.find(filename.string());
+        if(iter != _aniFiles.end()) _aniFiles.erase(iter);
+    }break;
+    case BINK_VIDEO: {
+        auto iter = _bikFiles.find(filename.string());
+        if(iter != _bikFiles.end()) _bikFiles.erase(iter);
+    }break;
+    default: break;
+    }
+}
+
+std::wstring GameManager::GetLocalizedDescription(LocalizedMissionDescription index) {
+    std::wstring& str = _mlb.GetString(index);
+    return str;
+}
+
+std::wstring GameManager::GetLocalizedString(LocalizedTextString index) {
+    std::wstring str;
+    return str;
 }
 
 std::weak_ptr<TgxFile> GameManager::GetTgx(boost::filesystem::path filename) {

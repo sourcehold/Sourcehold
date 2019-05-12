@@ -147,6 +147,7 @@ void World::RenderQuickMenu() {
         });
 }
 
+
 void World::RenderMenubar() {
     manager->Render(menubar, menuX, menuY, menuW, menuH);
 }
@@ -252,6 +253,7 @@ void World::UpdateMenubar() {
     }break;
     case MENU_INDUSTRY: {
     }break;
+
     case MENU_FARM: {
     }break;
     case MENU_TOWN: {
