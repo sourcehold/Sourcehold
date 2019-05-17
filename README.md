@@ -36,6 +36,7 @@ data
 ├── gm/
 ├── maps/
 ├── stronghold.mlb
+├── sh.tex
 ├── delete.ani
 ├── hand.ani
 ├── jester.ani
