@@ -16,6 +16,8 @@
 #include <Rendering/Texture.h>
 #include <Rendering/TextureAtlas.h>
 
+#include <Audio/AudioSource.h>
+
 #include <Menus/MenuUtils.h>
 
 namespace Sourcehold
@@ -25,6 +27,7 @@ namespace Sourcehold
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
+		using namespace Audio;
 
         /**
          * Handles the main menu
@@ -46,6 +49,9 @@ namespace Sourcehold
 
             /* User interface */
             StaticElement ui_exit, ui_firefly, ui_tutorial, ui_combat, ui_economic, ui_builder, ui_load, ui_settings;
-        };
+
+			/* SFX */
+			AudioSource aud_greetings, aud_exit;
+		};
     }
 }

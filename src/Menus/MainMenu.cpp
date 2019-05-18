@@ -20,12 +20,14 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
     gm1_icons_additional = manager->GetGm1(manager->GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_icons_main = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end.gm1").lock();
     tgx_bg1 = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_main.tgx").lock();
+
+	aud_greetings.LoadEffect(manager->GetDirectory() / "fx/speech/General_Startgame.wav", false);
+	aud_exit.LoadEffect(manager->GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 }
 
 MainMenu::~MainMenu() {
 
 }
-
 
 UIState MainMenu::EnterMenu() {
     /* Exit button */
@@ -62,6 +64,8 @@ UIState MainMenu::EnterMenu() {
     UIState currentState = MAIN_MENU;
     int32_t glareCounter = 265;
 
+	aud_greetings.Play();
+
     while(manager->Running()) {
         manager->Clear();
         manager->StartTimer();
@@ -69,7 +73,11 @@ UIState MainMenu::EnterMenu() {
         manager->Render(*tgx_bg1);
         Draw(glareCounter);
 
+		aud_greetings.Update();
+
         if(ui_exit.IsClicked()) {
+			aud_exit.Play();
+			// TODO: Exit promt //
             currentState = EXIT_GAME;
         } else if(ui_combat.IsClicked()) {
             currentState = COMBAT_MENU;
