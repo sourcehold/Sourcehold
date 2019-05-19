@@ -20,7 +20,6 @@ CombatMenu::~CombatMenu() {
 
 }
 
-
 UIState CombatMenu::EnterMenu() {
     ui_combat_campaign.Scale(0.17578125, 0.234375);
     ui_combat_invasion.Scale(0.17578125, 0.234375);
@@ -41,7 +40,6 @@ UIState CombatMenu::EnterMenu() {
 
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         manager->Render(*tgx_bg);
 
@@ -70,7 +68,7 @@ UIState CombatMenu::EnterMenu() {
         glareCounter = (glareCounter+1)%360;
 
         manager->Flush();
-        manager->EndTimer();
+        manager->Sync();
     }
 
     return EXIT_GAME;
@@ -78,11 +76,14 @@ UIState CombatMenu::EnterMenu() {
 
 void CombatMenu::Draw(const int32_t glareCounter)
 {
+	selected = COMBAT_NONE;
+
     manager->Render(*tgx_bg);
     auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
             if(ui_back_to_main.IsMouseOver()){
+				selected = COMBAT_BACK_TO_MAIN;
                 RenderMenuText(L"Back to Main Menu");
                 icons_combat->SetRect(icons_combat->Get(69));
             }
@@ -92,7 +93,8 @@ void CombatMenu::Draw(const int32_t glareCounter)
 
     ui_combat_campaign.Render(
         [&]() -> Texture& {
-            if(ui_combat_campaign.IsMouseOver()) {
+            if(ui_combat_campaign.IsMouseOver() && selected == COMBAT_NONE) {
+				selected = COMBAT_CAMPAIGN;
                 RenderMenuText(L"Play the Military Campaign");
                 icons_combat->SetRect(icons_combat->Get(16));//
                 ui_combat_campaign.Translate(0.183, 0.276);
@@ -120,7 +122,8 @@ void CombatMenu::Draw(const int32_t glareCounter)
 
     ui_combat_siege.Render(
         [&]() -> Texture& {
-            if(ui_combat_siege.IsMouseOver()) {
+            if(ui_combat_siege.IsMouseOver() && selected == COMBAT_NONE) {
+				selected = COMBAT_SIEGE;
                 RenderMenuText(L"Play a Siege");
                 icons_combat->SetRect(icons_combat->Get(33));
                 ui_combat_siege.Translate(0.336, 0.276);
@@ -148,7 +151,8 @@ void CombatMenu::Draw(const int32_t glareCounter)
 
     ui_combat_invasion.Render(
         [&]() -> Texture& {
-            if(ui_combat_invasion.IsMouseOver()) {
+            if(ui_combat_invasion.IsMouseOver() && selected == COMBAT_NONE) {
+				selected = COMBAT_INVASION;
                 RenderMenuText(L"Play an Invasion");
                 icons_combat->SetRect(icons_combat->Get(50));
                 ui_combat_invasion.Translate(0.492, 0.276);
@@ -176,7 +180,8 @@ void CombatMenu::Draw(const int32_t glareCounter)
 
     ui_combat_multiplayer.Render(
         [&]() -> Texture& {
-            if(ui_combat_multiplayer.IsMouseOver()) {
+            if(ui_combat_multiplayer.IsMouseOver() && selected == COMBAT_NONE) {
+				selected = COMBAT_MULTIPLAYER;
                 RenderMenuText(L"Play a Multiplayer Game");
                 icons_combat->SetRect(icons_combat->Get(67));
                 ui_combat_multiplayer.Translate(0.648, 0.278);

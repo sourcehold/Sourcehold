@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <chrono>
+#include <thread>
 
 #include <Events/Event.h>
 #include <Events/Keyboard.h>
@@ -24,15 +26,18 @@ namespace Sourcehold
     {
         using namespace Events;
 
+		using namespace std::chrono;
+
         /**
          * Handles everyting related to the game display,
          * constructs and destroys the renderer
          */
         class Display : public Rendering::Renderer
         {
-            const int FRAMES_PER_SECOND = 60;
-            uint32_t timer = 0;
-            int frame = 0;
+			const uint32_t TARGET_FPS = 60;
+			const uint64_t TARGET_TIME_NS = 1000000000 / TARGET_FPS;
+			uint32_t fps;
+			high_resolution_clock::time_point tp;
             bool open = false, fullscreen = false, nograb = false;
             SDL_Window *window;
         public:
@@ -42,8 +47,7 @@ namespace Sourcehold
 
             void Open(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false);
             void ToggleFullscreen();
-            void StartTimer();
-            void EndTimer();
+            void Sync();
             void GrabMouse();
             void ReleaseMouse();
 

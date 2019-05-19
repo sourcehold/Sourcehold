@@ -118,8 +118,9 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
 
     valid = true;
     running = true;
+	packetFinished = true;
+	delayTimer = 0;
 
-    lastTicks = SDL_GetTicks();
     return true;
 }
 
@@ -147,7 +148,7 @@ void BinkVideo::Update() {
 
 	av_init_packet(&packet);
 
-	int ret;
+	int ret = 0;
 	if (av_read_frame(ic, &packet) < 0) {
 		if (looping) {
 			av_seek_frame(ic, -1, 0, 0);
@@ -162,13 +163,20 @@ void BinkVideo::Update() {
 	}
 
 	if (packet.stream_index == videoStream) {
-		if (avcodec_send_packet(codecCtx, &packet) < 0) return;
+		av_frame_unref(frame);
 
+		/* Receive new packet on start or if the last one was processed */
+		if (packetFinished) {
+			if (avcodec_send_packet(codecCtx, &packet) < 0) return;
+		}
+
+		/* Receive one video frame */
 		ret = avcodec_receive_frame(codecCtx, frame);
 		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
 			return;
 		}
 
+		/* Decode video frame into framebuffer texture */
 		uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
 		int strides[3] = { 800 * 4, 0, 0 };
 
@@ -182,10 +190,13 @@ void BinkVideo::Update() {
 	else if (packet.stream_index == audioStream && !IsOpenALMuted()) {
 		av_frame_unref(audioFrame);
 
-		ret = avcodec_send_packet(audioCtx, &packet);
-		if (ret < 0) return;
+		/* Receive new packet on start or if the last one was processed */
+		if (packetFinished) {
+			ret = avcodec_send_packet(audioCtx, &packet);
+		}
 
 		while (ret >= 0) {
+			/* Receive one audio frame */
 			ret = avcodec_receive_frame(audioCtx, audioFrame);
 			if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
 				return;

@@ -45,6 +45,14 @@ namespace Sourcehold
             std::shared_ptr<Gm1File> gm1_icons_combat;
 
             /* User interface */
+			enum CombatButton {
+				COMBAT_NONE,
+				COMBAT_CAMPAIGN,
+				COMBAT_SIEGE,
+				COMBAT_INVASION,
+				COMBAT_MULTIPLAYER,
+				COMBAT_BACK_TO_MAIN
+			} selected = COMBAT_NONE;
             StaticElement ui_combat_campaign, ui_combat_siege, ui_combat_invasion, ui_combat_multiplayer, ui_back_to_main;
         };
     }

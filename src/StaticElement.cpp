@@ -81,6 +81,8 @@ bool StaticElement::IsMouseOver() {
     int rx = manager->ToCoordX(manager->GetTargetX()) + tx * (double)manager->ToCoordX(manager->GetTargetWidth());
     int ry = manager->ToCoordY(manager->GetTargetY()) + ty * (double)manager->ToCoordY(manager->GetTargetHeight());
 
+	//manager->Render(rx, ry, rw, rh, 255, 255, 255, 255, false);
+
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
     return false;
 }
@@ -89,7 +91,8 @@ bool StaticElement::IsClicked() {
     if(clicked) {
         clicked = false;
         return true;
-    } else return false;
+    }
+	return false;
 }
 
 void StaticElement::onEventReceive(Mouse &event) {

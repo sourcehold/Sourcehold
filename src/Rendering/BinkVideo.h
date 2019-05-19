@@ -46,9 +46,10 @@ namespace Sourcehold
             ALuint alSampleRate;
             char *audioBuffer;
 			int videoStream, audioStream, size;
-            uint32_t lastTicks;
             float fps;
 			uint32_t *framebuf;
+			int delayTimer;
+			bool packetFinished;
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
             BinkVideo(std::shared_ptr<Renderer> man);

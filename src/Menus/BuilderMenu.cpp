@@ -20,7 +20,6 @@ BuilderMenu::~BuilderMenu() {
 
 }
 
-
 UIState BuilderMenu::EnterMenu() {
     ui_builder_multiplayer_map.Scale(0.17578125, 0.234375);
     ui_builder_siege_that.Scale(0.17578125, 0.234375);
@@ -36,13 +35,11 @@ UIState BuilderMenu::EnterMenu() {
     ui_builder_stand_alone_mission.Show();
     ui_builder_working_map.Show();
 
-
     UIState currentState = BUILDER_MENU;
     int32_t glareCounter = 265;
 
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         manager->Render(*tgx_bg);
 
@@ -72,7 +69,7 @@ UIState BuilderMenu::EnterMenu() {
         glareCounter = (glareCounter+1)%360;
 
         manager->Flush();
-        manager->EndTimer();
+        manager->Sync();
     }
 
     return EXIT_GAME;
@@ -80,11 +77,14 @@ UIState BuilderMenu::EnterMenu() {
 
 void BuilderMenu::Draw(const int32_t glareCounter)
 {
+	selected = BUILDER_NONE;
+
     manager->Render(*tgx_bg);
     auto icons_builder = gm1_icons_builder->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
             if(ui_back_to_main.IsMouseOver()) {
+				selected = BUILDER_BACK_TO_MAIN;
                 RenderMenuText(L"Back to Main Menu");
                 icons_builder->SetRect(icons_builder->Get(71));
             }
@@ -92,9 +92,12 @@ void BuilderMenu::Draw(const int32_t glareCounter)
             return *icons_builder;
         });
 
+	uint32_t glareIndex = glareCounter % 16;
+
     ui_builder_working_map.Render(
         [&]() -> Texture& {
-            if(ui_builder_working_map.IsMouseOver()) {
+            if(ui_builder_working_map.IsMouseOver() && selected == BUILDER_NONE) {
+				selected = BUILDER_WORKING_MAP;
                 RenderMenuText(L"Load a Working Map");
                 icons_builder->SetRect(icons_builder->Get(16));
                 ui_builder_working_map.Translate(0.183, 0.276);
@@ -122,7 +125,8 @@ void BuilderMenu::Draw(const int32_t glareCounter)
 
     ui_builder_stand_alone_mission.Render(
         [&]() -> Texture& {
-            if(ui_builder_stand_alone_mission.IsMouseOver()) {
+            if(ui_builder_stand_alone_mission.IsMouseOver() && selected == BUILDER_NONE) {
+				selected = BUILDER_STANDALONE;
                 RenderMenuText(L"New Stand-Alone Mission");
                 icons_builder->SetRect(icons_builder->Get(33));
                 ui_builder_stand_alone_mission.Translate(0.336, 0.276);
@@ -150,7 +154,8 @@ void BuilderMenu::Draw(const int32_t glareCounter)
 
     ui_builder_siege_that.Render(
         [&]() -> Texture& {
-            if(ui_builder_siege_that.IsMouseOver()) {
+            if(ui_builder_siege_that.IsMouseOver() && selected == BUILDER_NONE) {
+				selected = BUILDER_SIEGE;
                 RenderMenuText(L"New 'Siege That' Mission");
                 icons_builder->SetRect(icons_builder->Get(50));
                 ui_builder_siege_that.Translate(0.492, 0.276);
@@ -178,7 +183,8 @@ void BuilderMenu::Draw(const int32_t glareCounter)
 
     ui_builder_multiplayer_map.Render(
         [&]() -> Texture& {
-            if(ui_builder_multiplayer_map.IsMouseOver()) {
+            if(ui_builder_multiplayer_map.IsMouseOver() && selected == BUILDER_NONE) {
+				selected = BUILDER_MULTIPLAYER;
                 RenderMenuText(L"New Multiplayer Map");
                 icons_builder->SetRect(icons_builder->Get(67));
                 ui_builder_multiplayer_map.Translate(0.648, 0.278);

@@ -71,20 +71,15 @@ void Display::ToggleFullscreen() {
     }
 }
 
-void Display::StartTimer() {
-    timer = SDL_GetTicks();
-}
+void Display::Sync() {
+	/* TODO */
+	high_resolution_clock::time_point now = high_resolution_clock::now();
 
-void Display::EndTimer() {
-    int32_t ntimer = SDL_GetTicks();
-    int32_t delta = ntimer - timer;
+	Uint64 delta = std::chrono::duration_cast<std::chrono::nanoseconds>(now - tp).count();
 
-    if(delta < 0) return;
-
-    timer = ntimer;
-    if(delta < 1000 / FRAMES_PER_SECOND) {
-        SDL_Delay((1000 / FRAMES_PER_SECOND) - delta);
-    }
+	std::this_thread::sleep_for(
+		std::chrono::milliseconds(10)
+	);
 }
 
 void Display::GrabMouse() {

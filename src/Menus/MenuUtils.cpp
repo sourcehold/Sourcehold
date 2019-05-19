@@ -2,7 +2,6 @@
 #include <Rendering/Font.h>
 #include <Parsers/Gm1File.h>
 
-
 using namespace Sourcehold;
 using namespace Rendering;
 using namespace Game;
@@ -15,7 +14,6 @@ bool Menus::InitializeUtils(std::shared_ptr<GameManager> mgr) {
     _gm_interface_icons3 = _mgr->GetGm1(_mgr->GetDirectory() / "gm/interface_icons3.gm1").lock();
     return true;
 }
-
 
 void Menus::RenderMenuText(const std::wstring &text)
 {

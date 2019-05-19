@@ -4,7 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
 # Project
 project(Stronghold)
-set(Stronghold_VERSION, 0.1.0)
+set(Stronghold_VERSION, 0.2.0)
 
 if(${PROJECT_SOURCE_DIR} MATCHES ${PROJECT_BINARY_DIR})
     message(FATAL_ERROR "Please run cmake from a separate directory!")

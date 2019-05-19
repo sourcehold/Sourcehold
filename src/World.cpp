@@ -65,7 +65,6 @@ World::~World() {
 int World::Play() {
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         UpdateCamera();
 
@@ -85,8 +84,8 @@ int World::Play() {
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
-        manager->EndTimer();
         manager->Flush();
+		manager->Sync();
     }
 
     return 0;

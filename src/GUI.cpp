@@ -42,7 +42,6 @@ int GUI::Startup() {
     double fadeBase = startTime;
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         if(currentUIState == INTRO_SEQUENCE){
             /* Logo switching */
@@ -131,7 +130,7 @@ int GUI::Startup() {
             return EXIT_SUCCESS;
         }
         manager->Flush();
-        manager->EndTimer();
+        manager->Sync();
     }
     return EXIT_SUCCESS;
 }

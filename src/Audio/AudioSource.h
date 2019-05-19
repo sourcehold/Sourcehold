@@ -27,6 +27,10 @@ namespace Sourcehold
         class AudioSource
         {
             boost::filesystem::path path;
+			enum DecoderMode {
+				MODE_PCM,
+				MODE_ADPCM
+			} mode;
 			/* OpenAL stuff */
 			const static uint32_t NUM_AUDIO_BUFFERS = 4;
 			ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
@@ -46,6 +50,7 @@ namespace Sourcehold
 			AVPacket audioPacket;
 			AVFrame *audioFrame;
 			int audioStream;
+			int delayTimer;
 			/* Properties */
 			bool repeat, valid = false, fading = false;
 			bool ffmpegInited = false, ffmpegRunning = false;

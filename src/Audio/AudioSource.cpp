@@ -72,6 +72,8 @@ bool AudioSource::LoadSong(boost::filesystem::path path, bool repeat) {
     alSourcei(source, AL_BUFFER, buffer);
     Audio::PrintError();
 
+	mode = MODE_PCM;
+
     valid = true;
     return true;
 }
@@ -96,12 +98,14 @@ bool AudioSource::LoadEffect(boost::filesystem::path path, bool repeat) {
 		return false;
 	}
 
+	mode = MODE_ADPCM;
+
     valid = true;
     return true;
 }
 
 bool AudioSource::Play() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM) {
 
 	}
 	else {
@@ -115,7 +119,7 @@ bool AudioSource::Play() {
 }
 
 void AudioSource::Pause() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM) {
 
 	}
 	else {
@@ -125,7 +129,7 @@ void AudioSource::Pause() {
 }
 
 void AudioSource::Resume() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM) {
 
 	}
 	else {
@@ -135,7 +139,7 @@ void AudioSource::Resume() {
 }
 
 void AudioSource::Stop() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM) {
 
 	}
 	else {
@@ -145,7 +149,7 @@ void AudioSource::Stop() {
 }
 
 void AudioSource::Rewind() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM) {
 		av_seek_frame(ic, -1, 0, 0);
 	}
 	else {
@@ -175,19 +179,30 @@ void AudioSource::UpdateFade() {
 
 void AudioSource::Destroy() {
 	if (valid) {
-		DestroyOpenAL();
+		if (mode == MODE_ADPCM) {
+			DestroyOpenAL();
+		}
 
 		alDeleteSources(1, &source);
 		Audio::PrintError();
 		alDeleteBuffers(1, &buffer);
 		Audio::PrintError();
 
+		if (ffmpegRunning || mode == MODE_PCM) {
+			free(ptr);
+		}
+
 		valid = false;
 	}
 }
 
 void AudioSource::Update() {
-	if (ffmpegInited) {
+	if (mode == MODE_ADPCM && ffmpegRunning) {
+		if (delayTimer > 0) {
+			delayTimer -= SDL_GetTicks();
+			return;
+		}
+
 		av_init_packet(&audioPacket);
 
 		int ret;
@@ -210,11 +225,13 @@ void AudioSource::Update() {
 			ret = avcodec_send_packet(audioCtx, &audioPacket);
 			if (ret < 0) return;
 
-			while (ret >= 0) {
+			while (ret >= 0 && delayTimer <= 0) {
 				ret = avcodec_receive_frame(audioCtx, audioFrame);
 				if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
 					return;
 				}
+
+				delayTimer = (int)((double)audioFrame->pts * av_q2d(ic->streams[audioStream]->time_base) * 1000.0);
 
 				if (!ffmpegRunning) {
 					alGenSources((ALuint)1, &source);
@@ -298,13 +315,14 @@ void AudioSource::Update() {
 						uint32_t dataSize = numSamples * 2;
 
 						/* Convert samples */
-						unsigned short* p = (unsigned short*)audioFrame->extended_data[0];
+						unsigned short* src = (unsigned short*)audioFrame->extended_data[0];
+						int16_t *dst = (int16_t*)ptr;
 						for (int i = 0; i < numSamples; i++)
-							((int*)ptr)[i] = p[i];
+							dst[i] = src[i];
 
 						alSourceStop(source);
 
-						alBufferData(alBuffer, alFormat, ptr, size, 44100);
+						alBufferData(alBuffer, alFormat, ptr, size, alSampleRate);
 						Audio::PrintError();
 						alSourceQueueBuffers(source, 1, &alBuffer);
 						Audio::PrintError();
@@ -386,6 +404,7 @@ bool AudioSource::InitOpenAL() {
 		return false;
 	}
 
+	delayTimer = 0;
 	ffmpegInited = true;
 }
 

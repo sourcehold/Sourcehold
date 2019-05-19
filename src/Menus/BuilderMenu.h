@@ -45,6 +45,14 @@ namespace Sourcehold
             std::shared_ptr<Gm1File> gm1_icons_builder;
 
             /* User interface */
+			enum MenuButton {
+				BUILDER_NONE,
+				BUILDER_BACK_TO_MAIN,
+				BUILDER_WORKING_MAP,
+				BUILDER_STANDALONE,
+				BUILDER_SIEGE,
+				BUILDER_MULTIPLAYER
+			} selected = BUILDER_NONE;
             StaticElement ui_back_to_main, ui_builder_working_map, ui_builder_stand_alone_mission, ui_builder_siege_that, ui_builder_multiplayer_map;
         };
     }

@@ -19,7 +19,6 @@ EconomicsMenu::~EconomicsMenu() {
 
 }
 
-
 UIState EconomicsMenu::EnterMenu() {
     ui_economic_campaign.Scale(0.17578125, 0.234375);
     ui_economic_free_build.Scale(0.17578125, 0.234375);
@@ -46,7 +45,6 @@ UIState EconomicsMenu::EnterMenu() {
 
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         manager->Render(*tgx_bg);
 
@@ -73,7 +71,7 @@ UIState EconomicsMenu::EnterMenu() {
         glareCounter = (glareCounter+1)%360;
 
         manager->Flush();
-        manager->EndTimer();
+        manager->Sync();
     }
 
     return EXIT_GAME;
@@ -81,11 +79,14 @@ UIState EconomicsMenu::EnterMenu() {
 
 void EconomicsMenu::Draw(const int32_t glareCounter)
 {
+	selected = ECO_NONE;
+
     manager->Render(*tgx_bg);
     auto icons_economics = gm1_icons_economics->GetTextureAtlas().lock();
     ui_back_to_main.Render(
         [&]() -> Texture& {
             if(ui_back_to_main.IsMouseOver()) {
+				selected = ECO_BACK_TO_MAIN;
                 RenderMenuText(L"Back to Main Menu");
                 icons_economics->SetRect(icons_economics->Get(52));
             }
@@ -95,7 +96,8 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
 
     ui_economic_campaign.Render(
         [&]() -> Texture& {
-            if(ui_economic_campaign.IsMouseOver()) {
+            if(ui_economic_campaign.IsMouseOver() && selected == ECO_NONE) {
+				selected = ECO_CAMPAIGN;
                 RenderMenuText(L"Play the Economics Campaign");
                 icons_economics->SetRect(icons_economics->Get(16));
                 ui_economic_campaign.Translate(0.262, 0.276);
@@ -123,7 +125,8 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
 
     ui_economic_mission.Render(
         [&]() -> Texture& {
-            if(ui_economic_mission.IsMouseOver()) {
+            if(ui_economic_mission.IsMouseOver() && selected == ECO_NONE) {
+				selected = ECO_MISSION;
                 RenderMenuText(L"Play an Economics Mission");
                 icons_economics->SetRect(icons_economics->Get(33));
                 ui_economic_mission.Translate(0.416, 0.277);
@@ -151,7 +154,8 @@ void EconomicsMenu::Draw(const int32_t glareCounter)
 
     ui_economic_free_build.Render(
         [&]() -> Texture& {
-            if(ui_economic_free_build.IsMouseOver()) {
+            if(ui_economic_free_build.IsMouseOver() && selected == ECO_NONE) {
+				selected = ECO_FREEBUILD;
                 RenderMenuText(L"Free Build");
                 icons_economics->SetRect(icons_economics->Get(50));
                 ui_economic_free_build.Translate(0.571, 0.277);

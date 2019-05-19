@@ -45,6 +45,13 @@ namespace Sourcehold
             std::shared_ptr<Gm1File> gm1_icons_economics;
 
             /* User interface */
+			enum EcoButton {
+				ECO_NONE,
+				ECO_CAMPAIGN,
+				ECO_MISSION,
+				ECO_FREEBUILD,
+				ECO_BACK_TO_MAIN
+			} selected = ECO_NONE;
             StaticElement ui_economic_campaign, ui_economic_mission, ui_economic_free_build, ui_back_to_main;
         };
     }

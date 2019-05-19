@@ -48,6 +48,17 @@ namespace Sourcehold
             std::shared_ptr<Gm1File> gm1_icons_main, gm1_icons_additional;
 
             /* User interface */
+			enum MenuButton {
+				MAIN_NONE,
+				MAIN_EXIT,
+				MAIN_FIREFLY,
+				MAIN_TUTORIAL,
+				MAIN_COMBAT,
+				MAIN_ECONOMIC,
+				MAIN_BUILDER,
+				MAIN_LOAD,
+				MAIN_SETTINGS
+			} selected = MAIN_NONE;
             StaticElement ui_exit, ui_firefly, ui_tutorial, ui_combat, ui_economic, ui_builder, ui_load, ui_settings;
 
 			/* SFX */

@@ -68,7 +68,6 @@ UIState MainMenu::EnterMenu() {
 
     while(manager->Running()) {
         manager->Clear();
-        manager->StartTimer();
 
         manager->Render(*tgx_bg1);
         Draw(glareCounter);
@@ -111,7 +110,7 @@ UIState MainMenu::EnterMenu() {
         glareCounter = (glareCounter+1) % 360;
 
         manager->Flush();
-        manager->EndTimer();
+        manager->Sync();
     }
 
     return EXIT_GAME;
@@ -122,12 +121,15 @@ void MainMenu::Draw(const int32_t glareCounter)
     manager->SetTarget(tgx_bg1.get(), 0.0, 0.0, 1.0, 1.0);
 
     /* Render user interface */
-    auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
+	selected = MAIN_NONE;
+
+	auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
     auto icons_additional = gm1_icons_additional->GetTextureAtlas().lock();
     ui_exit.Render(
         [&]() -> Texture& {
             if(ui_exit.IsMouseOver()) {
-                RenderMenuText(L"Exit Stronghold");
+				selected = MAIN_EXIT;
+				RenderMenuText(L"Exit Stronghold");
                 icons_main->SetRect(icons_main->Get(69));
             }
             else icons_main->SetRect(icons_main->Get(68));
@@ -136,7 +138,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_tutorial.Render(
         [&]() -> Texture& {
-            if(ui_tutorial.IsMouseOver()) {
+            if(ui_tutorial.IsMouseOver() && selected == MAIN_NONE) {
+				selected = MAIN_TUTORIAL;
                 RenderMenuText(L"Tutorial");
                 icons_main->SetRect(icons_main->Get(73));
             }
@@ -146,7 +149,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_combat.Render(
         [&]() -> Texture& {
-            if(ui_combat.IsMouseOver()) {
+            if(ui_combat.IsMouseOver() && selected == MAIN_NONE) {
+				selected = MAIN_COMBAT;
                 RenderMenuText(L"Combat-based games");
                 icons_main->SetRect(icons_main->Get(16));
                 ui_combat.Translate(0.183, 0.276);
@@ -175,7 +179,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_economic.Render(
         [&]() -> Texture& {
-            if(ui_economic.IsMouseOver()) {
+            if(ui_economic.IsMouseOver() && selected == MAIN_NONE) {
+				selected = MAIN_ECONOMIC;
                 RenderMenuText(L"Economic-based games");
                 icons_main->SetRect(icons_main->Get(33));
                 ui_economic.Translate(0.336, 0.276);
@@ -203,7 +208,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_builder.Render(
         [&]() -> Texture& {
-            if(ui_builder.IsMouseOver()) {
+            if(ui_builder.IsMouseOver() && selected == MAIN_NONE) {
+				selected = MAIN_BUILDER;
                 RenderMenuText(L"Map Editor");
                 icons_main->SetRect(icons_main->Get(50));
                 ui_builder.Translate(0.492, 0.276);
@@ -232,7 +238,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_load.Render(
         [&]() -> Texture& {
-            if(ui_load.IsMouseOver()) {
+            if(ui_load.IsMouseOver() && selected == MAIN_NONE) {
+				selected = MAIN_LOAD;
                 RenderMenuText(L"Load a Saved Game");
                 icons_main->SetRect(icons_main->Get(67));
                 ui_load.Translate(0.648, 0.278);
@@ -261,7 +268,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_firefly.Render(
             [&]() -> Texture& {
-                if(ui_firefly.IsMouseOver()) {
+                if(ui_firefly.IsMouseOver() && selected == MAIN_NONE) {
+					selected = MAIN_FIREFLY;
                     RenderMenuText(L"Credits");
                     icons_additional->SetRect(icons_additional->Get(78));
                 } else {
@@ -272,7 +280,8 @@ void MainMenu::Draw(const int32_t glareCounter)
 
     ui_settings.Render(
             [&]() -> Texture& {
-                if(ui_settings.IsMouseOver()) {
+                if(ui_settings.IsMouseOver() && selected == MAIN_NONE) {
+					selected = MAIN_SETTINGS;
                     RenderMenuText(L"Options");
                     icons_additional->SetRect(icons_additional->Get(89));
                 } else {
