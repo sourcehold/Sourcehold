@@ -24,6 +24,10 @@ bool System::IsFileHidden(boost::filesystem::path path) {
     return false;
 }
 
+bool System::DoesFileExist(boost::filesystem::path path) {
+	return boost::filesystem::exists(path);
+}
+
 std::vector<boost::filesystem::path> System::GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension, bool recursive){
     std::vector<boost::filesystem::path> files;
     if(boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {

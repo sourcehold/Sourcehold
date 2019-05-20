@@ -27,7 +27,7 @@ namespace Sourcehold
             Surface(const Surface&) = delete;
             ~Surface();
 
-            bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+            bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
             void Destroy();
             void LockSurface();
             void UnlockSurface();

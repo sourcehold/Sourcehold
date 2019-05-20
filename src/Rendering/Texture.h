@@ -42,7 +42,7 @@ namespace Sourcehold
              * a streaming texture.
              * Use LockTexture / UnlockTexture to access the pixel data
              */
-            bool AllocNewStreaming(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+            bool AllocNewStreaming(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
 
             /**
              * Allocate a new texture using an existing surface. The texture
@@ -56,7 +56,7 @@ namespace Sourcehold
              * SetTarget. Reset the render target by calling ResetTarget
              * afterwards.
              */
-            bool AllocNewTarget(int width, int height, int format = SDL_PIXELFORMAT_RGBA8888);
+            bool AllocNewTarget(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
 
             void UpdateTexture();
             void Destroy();

@@ -3,11 +3,21 @@
 #include <cinttypes>
 #include <string>
 
+#include <Rendering/Renderer.h>
+
 namespace Sourcehold
 {
     namespace System
     {
-        /*
+		enum StrongholdEdition {
+			STRONGHOLD_CLASSIC,
+			STRONGHOLD_COLLECTION,
+			STRONGHOLD_HD
+		};
+
+		using namespace Rendering;
+		
+		/**
          * Game startup options, modified via config file
          * or command line arguments
          */
@@ -22,8 +32,8 @@ namespace Sourcehold
             bool nosound = false;
             bool nograb = false;
             int color = -1;
-            uint16_t width,height;
-            uint16_t ndisp;
+			Resolution resolution;
+			uint16_t ndisp;
         };
     }
 }

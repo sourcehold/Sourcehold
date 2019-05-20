@@ -37,9 +37,9 @@ int GUI::Startup() {
 
     startTime = manager->GetTime();
 
-
     Uint8 alpha = 255;
     double fadeBase = startTime;
+	Resolution res = manager->GetResolution();
     while(manager->Running()) {
         manager->Clear();
 
@@ -66,24 +66,53 @@ int GUI::Startup() {
                 }
             } else alpha = 255;
 
-            /* Rendering */
+            /**
+			* Images get scaled down on 800x600 and
+			* centered but not scaled on every other res
+			*/
+			int px = (manager->GetWidth() / 2) - (1024 / 2);
+			int py = (manager->GetHeight() / 2) - (768 / 2);
             if(currentStartupState == STARTUP_FIREFLY_LOGO) {
                 tgx_firefly->SetAlphaMod(alpha);
-                manager->Render(*tgx_firefly);
+				if (res == RESOLUTION_800x600) {
+					manager->Render(*tgx_firefly);
+				}
+				else {
+					manager->Render(*tgx_firefly, px, py);
+				}
             }else if(currentStartupState == STARTUP_TAKETWO_LOGO) {
                 tgx_taketwo->SetAlphaMod(alpha);
-                manager->Render(*tgx_taketwo);
-            }else if(currentStartupState == STARTUP_PRESENT) {
+				if (res == RESOLUTION_800x600) {
+					manager->Render(*tgx_taketwo);
+				}
+				else {
+					manager->Render(*tgx_taketwo, px, py);
+				}
+			}else if(currentStartupState == STARTUP_PRESENT) {
                 tgx_present->SetAlphaMod(alpha);
-                manager->Render(*tgx_present);
+				if (res == RESOLUTION_800x600) {
+					manager->Render(*tgx_present);
+				}
+				else {
+					manager->Render(*tgx_present, px, py);
+				}
             }else if(currentStartupState == STARTUP_STRONGHOLD_LOGO) {
                 tgx_logo->SetAlphaMod(alpha);
-                manager->Render(*tgx_logo);
+				if (res == RESOLUTION_800x600) {
+					manager->Render(*tgx_logo);
+				}
+				else {
+					manager->Render(*tgx_logo, px, py);
+				}
             }else if(currentStartupState == STARTUP_INTRO) {
                 aud_startup.SetFadeOut(1.0);
                 aud_startup.UpdateFade();
                 intro->Update();
-                manager->Render(*intro, 0.0, 0.2, 1.0, 0.6);
+
+				px = (manager->GetWidth() / 2) - (640 / 2);
+				py = (manager->GetHeight() / 2) - (230 / 2);
+
+				manager->Render(*intro, px, py);
                 if(!intro->IsRunning()) {
                     currentUIState = MAIN_MENU;
                 }
@@ -132,7 +161,7 @@ int GUI::Startup() {
         manager->Flush();
         manager->Sync();
     }
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
 
 void GUI::onEventReceive(Mouse &event) {

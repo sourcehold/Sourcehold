@@ -22,8 +22,16 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::Menus;
 
+static std::shared_ptr<GameManager> gameManager;
+
+void Cleanup() {
+	UnloadFonts();
+	gameManager->ClearFileCache();
+	gameManager.reset();
+}
+
 int StartGame(GameOptions &opt) {
-    auto gameManager = std::make_shared<GameManager>(opt);
+    gameManager = std::make_shared<GameManager>(opt);
 
     /* Get the assets */
     gameManager->SetDirectory(opt.dataDir);
@@ -46,8 +54,14 @@ int StartGame(GameOptions &opt) {
     GUI menu(gameManager);
     menu.PlayMusic();
 
+	/* Preload some assets */
     uint32_t index = 0;
-    while(gameManager->Running() && index < files.size()-1) {
+
+	/* Calculater the position */
+	int px = (gameManager->GetWidth() / 2) - (1024 / 2);
+	int py = (gameManager->GetHeight() / 2) - (768 / 2);
+	
+	while(gameManager->Running() && index < files.size()-1) {
         gameManager->Clear();
 
         /* Load a file */
@@ -57,10 +71,10 @@ int StartGame(GameOptions &opt) {
 
         /* Normalized loading progess */
         double progress = (double)index / (double)files.size();
-
-        /* Render the background */
-        gameManager->Render(*tgx_loading);
-
+        
+		/* Render the background */
+		gameManager->Render(*tgx_loading, px, py);
+		
         /* Render the loading bar */
         gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
         gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 255, false);
@@ -72,7 +86,10 @@ int StartGame(GameOptions &opt) {
     if(gameManager->Running()) {
         /* Start the intro sequence and the main menu */
         int ret = menu.Startup();
-        if(ret != EXIT_SUCCESS) return ret;
+		if (ret != EXIT_SUCCESS) {
+			Cleanup();
+			return ret;
+		}
 
         /* ------ Alpha testing ------ */
 
@@ -84,8 +101,7 @@ int StartGame(GameOptions &opt) {
         /* ------ Alpha testing ------ */
     }
 
-    gameManager->ClearFileCache();
-    UnloadFonts();
+	Cleanup();
     return EXIT_SUCCESS;
 }
 
@@ -102,9 +118,8 @@ int main(int argc, char **argv) {
         ("d,debug", "Print debug info")
         ("color", "Force color output")
         ("f,fullscreen", "Run in fullscreen mode")
-        ("width", "Width of the window", cxxopts::value<uint16_t>()->default_value("1024"))
-        ("height", "Height of the window", cxxopts::value<uint16_t>()->default_value("768"))
-        ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
+        ("r,resolution", "Resolution of the window", cxxopts::value<uint8_t>()->default_value("1"))
+		("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
         ("noborder", "Remove window border")
         ("nograb", "Don't grab the mouse")
         ("nosound", "Disable sound entirely")
@@ -133,8 +148,7 @@ int main(int argc, char **argv) {
             opt.fullscreen = true;
         }
 
-        opt.width = result["width"].as<uint16_t>();
-        opt.height = result["height"].as<uint16_t>();
+        opt.resolution = (Resolution)result["resolution"].as<uint8_t>();
         opt.ndisp = result["disp"].as<uint16_t>();
 
         if(result["noborder"].as<bool>()) {

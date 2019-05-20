@@ -102,7 +102,7 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
         codecCtx->width,
         codecCtx->height,
         codecCtx->pix_fmt,
-        800, 600,
+        640, 292,
         AV_PIX_FMT_RGB32,
         SWS_BILINEAR,
         NULL,
@@ -113,8 +113,8 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
         return false;
     }
 
-    Texture::AllocNewStreaming(800, 600, SDL_PIXELFORMAT_RGB888);
-	framebuf = (uint32_t*)malloc(800 * 600 * sizeof(uint32_t));
+    Texture::AllocNewStreaming(640, 292, SDL_PIXELFORMAT_RGB888);
+	framebuf = (uint32_t*)malloc(640 * 292 * sizeof(uint32_t));
 
     valid = true;
     running = true;
@@ -178,12 +178,12 @@ void BinkVideo::Update() {
 
 		/* Decode video frame into framebuffer texture */
 		uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
-		int strides[3] = { 800 * 4, 0, 0 };
+		int strides[3] = { 640 * 4, 0, 0 };
 
 		Texture::LockTexture();
 
 		sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-		std::memcpy(Texture::GetData(), framebuf, 800 * 600 * 4);
+		std::memcpy(Texture::GetData(), framebuf, 640 * 292 * 4);
 
 		Texture::UnlockTexture();
 	}

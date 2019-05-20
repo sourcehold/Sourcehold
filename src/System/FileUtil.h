@@ -25,6 +25,7 @@ namespace Sourcehold
         std::string GetFilename(boost::filesystem::path path);
 
         bool IsFileHidden(boost::filesystem::path path);
+		bool DoesFileExist(boost::filesystem::path path);
 
         /**
          * Get all the files in a directory and its

@@ -30,10 +30,12 @@ GameManager::GameManager(GameOptions &opt) : AnimationHandler(), Display(), opt(
 
     if(opt.color >= 0) Logger::SetColorOutput(opt.color == 1);
 
+	auto dim = ResolutionToDim(opt.resolution);
+
     Open(
         "Sourcehold version " SOURCEHOLD_VERSION_STRING,
-        opt.width,
-        opt.height,
+        dim.first,
+		dim.second,
         opt.ndisp,
         opt.fullscreen,
         opt.noborder,
@@ -63,6 +65,8 @@ void GameManager::SetDirectory(boost::filesystem::path dir) {
 }
 
 bool GameManager::LoadGameData() {
+	DetectEdition();
+
     if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
     return true;
 }
@@ -170,6 +174,21 @@ std::weak_ptr<BinkVideo> GameManager::GetBik(boost::filesystem::path filename) {
     return iter.first->second;
 }
 
+void GameManager::DetectEdition() {
+	/**
+	* TODO:
+	* -Maybe give the user the option to manually switch editions
+	* - How do you detect Collection vs Classic?
+	*/
+
+	if (DoesFileExist(_dataFolder / "gfx/SH1_Back.tgx")) {
+		edition = STRONGHOLD_HD;
+	}
+	else {
+		edition = STRONGHOLD_CLASSIC;
+	}
+}
+
 void GameManager::Update() {
     if(!IsOpen() || !eventHandler->FetchEvents()) running = false;
 
@@ -207,5 +226,25 @@ AssetType GameManager::ExtToType(const std::string &ext) {
     }
 
     return type;
+}
+
+std::pair<int, int> GameManager::ResolutionToDim(Resolution res) {
+	std::pair<int, int> dim;
+
+	switch (res) {
+	case RESOLUTION_800x600: dim.first = 800; dim.second = 600; break;
+	case RESOLUTION_1024x768: dim.first = 1024; dim.second = 768; break;
+	case RESOLUTION_1280x720: dim.first = 1280; dim.second = 720; break;
+	case RESOLUTION_1280x1024: dim.first = 1280; dim.second = 1024; break;
+	case RESOLUTION_1366x768: dim.first = 1366; dim.second = 768; break;
+	case RESOLUTION_1440x900: dim.first = 1440; dim.second = 900; break;
+	case RESOLUTION_1600x900: dim.first = 1600; dim.second = 900; break;
+	case RESOLUTION_1600x1200: dim.first = 1600; dim.second = 1200; break;
+	case RESOLUTION_1680x1050: dim.first = 1680; dim.second = 1050; break;
+	case RESOLUTION_1920x1080: dim.first = 1920; dim.second = 1080; break;
+	default: break;
+	}
+
+	return dim;
 }
 

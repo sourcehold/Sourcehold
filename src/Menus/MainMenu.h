@@ -34,6 +34,7 @@ namespace Sourcehold
          */
         class MainMenu
         {
+			StrongholdEdition edition;
         public:
             MainMenu(std::shared_ptr<GameManager> man);
             MainMenu(const MainMenu &) = delete;
@@ -44,7 +45,8 @@ namespace Sourcehold
             void Draw(const int32_t glareCounter);
             /* Resources */
             std::shared_ptr<GameManager> manager;
-            std::shared_ptr<TgxFile> tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo, tgx_firefly_front;
+			Texture screen;
+            std::shared_ptr<TgxFile> tgx_bg1, tgx_firefly, tgx_taketwo, tgx_present, tgx_logo, tgx_firefly_front, tgx_border;
             std::shared_ptr<Gm1File> gm1_icons_main, gm1_icons_additional;
 
             /* User interface */

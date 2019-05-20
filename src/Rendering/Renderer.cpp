@@ -48,6 +48,15 @@ void Renderer::SetTarget(Texture *target, double x, double y, double w, double h
     SDL_SetRenderTarget(renderer, target->GetTexture());
 }
 
+void Renderer::SetTarget(Texture *target, int x, int y, int w, int h) {
+	tx = NormalizeX(x);
+	ty = NormalizeY(y);
+	tw = NormalizeX(w);
+	th = NormalizeY(h);
+	this->target = target;
+	SDL_SetRenderTarget(renderer, target->GetTexture());
+}
+
 void Renderer::ResetTarget() {
     target = nullptr;
     SDL_SetRenderTarget(renderer, NULL);

@@ -37,7 +37,7 @@ bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
 
     /* Allocate image */
     Surface surf(renderer);
-    surf.AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA8888);
+    surf.AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA4444);
 
     /* Calculate size */
     size_t size = Parser::GetLength() - Parser::Tell();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 #include <boost/filesystem.hpp>
 
 #include <Assets.h>
@@ -39,6 +40,7 @@ namespace Sourcehold
         class GameManager : public AnimationHandler, public Display, public std::enable_shared_from_this<GameManager>
         {
             std::shared_ptr<EventHandler> eventHandler;
+			StrongholdEdition edition;
             bool running = false;
             double time = 0.0;
             GameOptions &opt;
@@ -104,9 +106,14 @@ namespace Sourcehold
             inline double GetTime() { return time; }
             inline std::shared_ptr<EventHandler> GetHandler() { return eventHandler; }
             inline boost::filesystem::path GetDirectory() { return _dataFolder; }
-        protected:
+			inline StrongholdEdition GetEdition() { return edition; }
+			inline Resolution GetResolution() { return opt.resolution; }
+		protected:
+			void DetectEdition();
             void Update();
-            AssetType ExtToType(const std::string &ext);
+            
+			AssetType ExtToType(const std::string &ext);
+			std::pair<int, int> ResolutionToDim(Resolution res);
 
             MlbFile _mlb;
             boost::filesystem::path _dataFolder;

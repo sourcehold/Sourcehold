@@ -43,7 +43,7 @@ World::World(std::shared_ptr<GameManager> mgr) :
     ui_hide(mgr)
 {
     /* The repeating, wooden background of the menu bar */
-    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/1280r.tgx").lock();
+    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1440l.tgx").lock();
     /* The right side of the scribe/book */
     tgx_right = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1280r.tgx").lock();
     /* The scribe's facial animation */
@@ -149,9 +149,16 @@ void World::RenderQuickMenu() {
 
 void World::RenderMenubar() {
     manager->Render(menubar, menuX, menuY, menuW, menuH);
+
+	/* Render the sides of the menu for HD resolutions */
 }
 
 void World::UpdateMenubar() {
+	menuX = (manager->GetWidth() / 2) - (menubar.GetWidth() / 2);
+	menuY = manager->GetHeight() - menubar.GetHeight();
+	menuW = menubar.GetWidth();
+	menuH = menubar.GetHeight();
+
     manager->SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();

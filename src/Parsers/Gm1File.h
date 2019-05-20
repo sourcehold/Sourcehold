@@ -7,7 +7,6 @@
 #include <Rendering/Tileset.h>
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/Renderer.h>
-#include <Rendering/Rendering.h>
 
 #include <Parsers/Parser.h>
 

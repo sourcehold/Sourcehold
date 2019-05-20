@@ -7,13 +7,26 @@
 
 #include <System/Logger.h>
 
-#include <Rendering/Rendering.h>
 #include <Rendering/Camera.h>
 
 namespace Sourcehold
 {
     namespace Rendering
     {
+		enum Resolution : uint8_t {
+			RESOLUTION_800x600 = 0,
+			RESOLUTION_1024x768 = 1,
+			RESOLUTION_1280x720 = 2,
+			RESOLUTION_1280x1024 = 3,
+			RESOLUTION_1360x768 = 4,
+			RESOLUTION_1366x768 = 5,
+			RESOLUTION_1440x900 = 6,
+			RESOLUTION_1600x900 = 7,
+			RESOLUTION_1600x1200 = 8,
+			RESOLUTION_1680x1050 = 9,
+			RESOLUTION_1920x1080 = 10,
+		};
+
         class Texture;
         class Renderer : public Camera
         {
@@ -32,6 +45,7 @@ namespace Sourcehold
             void Clear();
             void Flush();
             void SetTarget(Texture *target, double x, double y, double w, double h);
+			void SetTarget(Texture *target, int x, int y, int w, int h);
             void ResetTarget();
 
             /**

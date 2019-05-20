@@ -35,7 +35,7 @@ Texture::~Texture() {
 }
 
 bool Texture::AllocNewStreaming(int width, int height, int format) {
-    this->width = width;
+	this->width = width;
     this->height = height;
     access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
