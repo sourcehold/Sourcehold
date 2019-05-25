@@ -21,8 +21,8 @@ MlbFile::~MlbFile() {
 }
 
 bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
-    if(!Parser::Open(path.string(), std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to load Mlb file '" << path << "' from data folder!" << std::endl;
+    if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
+        Logger::error("PARSERS")  << "Unable to load Mlb file " << path << " from data folder!" << std::endl;
         return false;
     }
 
@@ -33,7 +33,7 @@ bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
         if(!Parser::GetData(&header, 16)) {
             Logger::error("PARSERS")  << "Unable to parse Mlb subheader " << i << " from " << "'" << path << "'!" << std::endl;
             Parser::Close();
-            return false;
+            return true;
         }
 
         std::wstring s = Parser::GetUTF16();

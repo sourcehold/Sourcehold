@@ -17,7 +17,7 @@ namespace Sourcehold
          * The file containing all of the localized
          * mission descriptions.
          */
-        class MlbFile : public Parser
+        class MlbFile : private Parser
         {
             /* Encoded in UTF-16LE */
             std::vector<std::wstring> field;

@@ -2,12 +2,15 @@
 
 #include <memory>
 #include <utility>
+#include <unordered_map>
 #include <boost/filesystem.hpp>
 
 #include <Assets.h>
 #include <AnimationHandler.h>
 
 #include <Parsers/MlbFile.h>
+#include <Parsers/CfgFile.h>
+
 #include <System/System.h>
 
 #include <Rendering/Display.h>
@@ -57,9 +60,10 @@ namespace Sourcehold
             bool Running();
 
             /**
-             * Override the data directory path
+             * Override the game system paths
              */
-            void SetDirectory(boost::filesystem::path dir);
+            void SetDataDirectory(boost::filesystem::path dir);
+            void SetSaveDirectory(boost::filesystem::path dir);
 
             /**
              * Load all of the files which will remain in memory
@@ -116,7 +120,9 @@ namespace Sourcehold
 			std::pair<int, int> ResolutionToDim(Resolution res);
 
             MlbFile _mlb;
+            CfgFile _cfg;
             boost::filesystem::path _dataFolder;
+            boost::filesystem::path _saveFolder;
             std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
             std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
             std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;

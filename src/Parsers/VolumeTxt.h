@@ -4,7 +4,6 @@
 #include <cinttypes>
 #include <regex>
 
-#include <Config.h>
 #include <System/Logger.h>
 #include <Parsers/Parser.h>
 

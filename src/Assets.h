@@ -2,52 +2,29 @@
 
 #include <cinttypes>
 #include <string>
-#include <memory>
-#include <unordered_map>
 
-#include <Config.h>
-
-#include <System/FileUtil.h>
-#include <System/Logger.h>
-
-#include <Rendering/Renderer.h>
-
+/**
+* Definitions and look-up tables
+* related to the game's assets
+*/
 namespace Sourcehold
 {
-    namespace Parsers {
-        class TgxFile;
-        class Gm1File;
-        class AniFile;
-        class MlbFile;
-    }
-
-    namespace Audio {
-        class AudioSource;
-    }
-
-    namespace Rendering {
-        class BinkVideo;
-    }
-
     namespace Assets
     {
-        using namespace Parsers;
-        using namespace Rendering;
-        using namespace Audio;
-
         enum AssetType : uint8_t {
-            BINK_VIDEO, /* Bink video (.bik) file */
-            WAVEFILE, /* Wav audio (.wav) file */
-            RAWFILE, /* Raw PCM audio (.raw) */
-            TGXFILE, /* Texture (.tgx) */
-            GM1FILE, /* Texture/Animation container (.gm1) */
-            ANIFILE, /* Animated cursor (.ani) */
-            MAPFILE, /* Map file (.map) */
-            MLBFILE, /* String container (.mlb) */
-            TXTFILE, /* Audio volume file (.txt) */
-            ACTFILE,
-            BMPFILE,
-            UNKNOWN,
+			UNKNOWN,
+            BIK, /* Bink video (.bik) file */
+            WAV, /* Wav audio (.wav) file */
+            RAW, /* Raw PCM audio (.raw) */
+            TGX, /* Texture (.tgx) */
+            GM1, /* Texture/Animation container (.gm1) */
+            ANI, /* Animated cursor (.ani) */
+            MAP, /* Map file (.map) */
+            MLB, /* String container (.mlb) */
+            TXT, /* Audio volume file (.txt) */
+            ACT, /* ? */
+            BMP,
+            MISC,
         };
 
         enum LocalizedMissionDescription : uint16_t {
@@ -55,6 +32,18 @@ namespace Sourcehold
 
         enum LocalizedTextString : uint16_t {
         };
-    }
+
+		enum SoundFiles : uint16_t {
+		};
+
+        /*
+        * The list of known player names
+        * to read in the main menu
+        */
+        #define NAME_INDEX_FEMALE 0
+        #define NAME_INDEX_MALE 44
+        #define NAME_INDEX_NONSENSE 151
+        extern const char *lut_names[];
+	}
 }
 

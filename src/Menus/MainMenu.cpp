@@ -65,7 +65,7 @@ UIState MainMenu::EnterMenu() {
 
 	ui_settings.Scale(0.1, 0.16);
 	ui_settings.Translate(0.726, 0.511);
-
+	
 	manager->ResetTarget();
 
 	ui_exit.Show();
@@ -103,7 +103,7 @@ UIState MainMenu::EnterMenu() {
 
 			manager->Render(*tgx_border, &rect);
 		}
-
+	
 		manager->SetTarget(&screen, mx, my, 1024, 768);
 		manager->Render(*tgx_bg1);
 		Draw(glareCounter);

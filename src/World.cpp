@@ -1,7 +1,6 @@
 #include <Building.h>
 #include <Entity.h>
 #include <World.h>
-#include <Config.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
@@ -43,7 +42,7 @@ World::World(std::shared_ptr<GameManager> mgr) :
     ui_hide(mgr)
 {
     /* The repeating, wooden background of the menu bar */
-    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1440l.tgx").lock();
+    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/1280r.tgx").lock();
     /* The right side of the scribe/book */
     tgx_right = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1280r.tgx").lock();
     /* The scribe's facial animation */
@@ -149,8 +148,6 @@ void World::RenderQuickMenu() {
 
 void World::RenderMenubar() {
     manager->Render(menubar, menuX, menuY, menuW, menuH);
-
-	/* Render the sides of the menu for HD resolutions */
 }
 
 void World::UpdateMenubar() {
@@ -168,13 +165,6 @@ void World::UpdateMenubar() {
     SDL_Rect rect = atlas->Get(0);
     manager->Render(*atlas, width - 800 - 240, height - rect.h, &rect);
 
-    /**
-     * Render the menu background
-     * TODO: Change depending on the window size, since Stronghold HD
-     * supports multiple resolutions and does not scale menu elements at all,
-     * and will instead fill the sides of the actual menu with the same, repeating
-     * background image, but flipped every second time
-     */
     atlas = gm1_scribe->GetTextureAtlas().lock();
     rect = atlas->Get(0);
     manager->Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);

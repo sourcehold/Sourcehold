@@ -5,6 +5,7 @@
 #include <Events/EventHandler.h>
 
 #include <System/System.h>
+#include <System/FileUtil.h>
 #include <System/Logger.h>
 
 #include <Parsers/TgxFile.h>
@@ -60,14 +61,47 @@ bool GameManager::Running() {
     return running;
 }
 
-void GameManager::SetDirectory(boost::filesystem::path dir) {
+void GameManager::SetDataDirectory(boost::filesystem::path dir) {
     _dataFolder = dir;
+}
+
+void GameManager::SetSaveDirectory(boost::filesystem::path dir) {
+    _saveFolder = dir;
 }
 
 bool GameManager::LoadGameData() {
 	DetectEdition();
 
+    /* Detect game directories */
+    _dataFolder = opt.dataDir;
+    _saveFolder = GetDocumentsPath();
+
+    if(_saveFolder.empty()) {
+        /* Attempt to fall back to local dir */
+        boost::filesystem::path np = _dataFolder / "../saves/";
+        if(DoesFileExist(np)) {
+            _saveFolder = np;
+        }else {
+            Logger::error("GAME") << "Location for save files could not be determined!" << std::endl;
+            return false;
+        }
+    }else _saveFolder /= "Stronghold/Saves/";
+
+    /* Does nothing if it already exists */
+    CreateFolder(_saveFolder);
+
+    /* Create default config */
+    boost::filesystem::path cfgPath = _saveFolder / "../stronghold.cfg";
+    if(!DoesFileExist(cfgPath)) {
+        Logger::warning("PARSERS") << "Cfg file not found, creating one!" << std::endl;
+        _cfg.SetDefaultValues();
+        _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
+    }
+
+    /* Load special files */
     if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
+    if(!_cfg.LoadFromDisk(cfgPath)) return false;
+
     return true;
 }
 
@@ -86,16 +120,16 @@ void GameManager::Cache(boost::filesystem::path filename) {
     }
 
     switch(ExtToType(ext)) {
-    case TGXFILE: {
+    case TGX: {
         _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(shared_from_this(), filename));
     }break;
-    case GM1FILE: {
+    case GM1: {
         _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(shared_from_this(), filename));
     }break;
-    case ANIFILE: {
+	case ANI: {
         _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(shared_from_this(), filename));
     }break;
-    case BINK_VIDEO: {
+	case BIK: {
         _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(shared_from_this(), filename));
     }break;
     case UNKNOWN: {
@@ -108,19 +142,19 @@ void GameManager::Cache(boost::filesystem::path filename) {
 void GameManager::DeleteCacheEntry(boost::filesystem::path filename) {
     AssetType t = ExtToType(GetFileExtension(filename));
     switch(t) {
-    case TGXFILE: {
+    case TGX: {
         auto iter = _tgxFiles.find(filename.string());
         if(iter != _tgxFiles.end()) _tgxFiles.erase(iter);
     }break;
-    case GM1FILE: {
+    case GM1: {
         auto iter = _gm1Files.find(filename.string());
         if(iter != _gm1Files.end()) _gm1Files.erase(iter);
     }break;
-    case ANIFILE: {
+    case ANI: {
         auto iter = _aniFiles.find(filename.string());
         if(iter != _aniFiles.end()) _aniFiles.erase(iter);
     }break;
-    case BINK_VIDEO: {
+    case BIK: {
         auto iter = _bikFiles.find(filename.string());
         if(iter != _bikFiles.end()) _bikFiles.erase(iter);
     }break;
@@ -202,27 +236,27 @@ AssetType GameManager::ExtToType(const std::string &ext) {
     AssetType type = UNKNOWN;
 
     if(ext == ".bik") {
-        type = BINK_VIDEO;
+        type = BIK;
     }else if(ext == ".wav") {
-        type = WAVEFILE;
+        type = WAV;
     }else if(ext == ".raw") {
-        type = RAWFILE;
+        type = RAW;
     }else if(ext == ".tgx") {
-        type = TGXFILE;
+        type = TGX;
     }else if(ext == ".gm1") {
-        type = GM1FILE;
+        type = GM1;
     }else if(ext == ".ani") {
-        type = ANIFILE;
+        type = ANI;
     }else if(ext == ".map") {
-        type = MAPFILE;
+        type = MAP;
     }else if(ext == ".mlb") {
-        type = MLBFILE;
+        type = MLB;
     }else if(ext == ".act") {
-        type = ACTFILE;
+        type = ACT;
     }else if(ext == ".bmp") {
-        type = BMPFILE;
+        type = BMP;
     }else if(ext == ".txt") {
-        type = TXTFILE;
+        type = TXT;
     }
 
     return type;

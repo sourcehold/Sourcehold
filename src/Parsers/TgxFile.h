@@ -5,8 +5,6 @@
 #include <bitset>
 #include <memory>
 
-#include <Config.h>
-
 #include <Parsers/Parser.h>
 
 #include <System/Logger.h>

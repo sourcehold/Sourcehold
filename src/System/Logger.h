@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <Config.h>
+#include <System/Config.h>
 
 namespace Sourcehold
 {

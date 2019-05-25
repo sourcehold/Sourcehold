@@ -2,7 +2,7 @@
 
 using namespace Sourcehold::Parsers;
 
-Parser::Parser() : std::ifstream() {
+Parser::Parser() : std::fstream() {
 
 }
 
@@ -24,19 +24,7 @@ void Parser::Close() {
 }
 
 bool Parser::Ok() {
-    return !(rdstate() & std::ifstream::failbit);
-}
-
-bool Parser::GetData(void *buf, size_t bufsize) {
-    if(rdstate() & std::ifstream::failbit) return false;
-    this->read((char*)buf, bufsize);
-    return true;
-}
-
-bool Parser::GetWhole(void *buf) {
-    if(rdstate() & std::ifstream::failbit) return false;
-    this->read((char*)buf, length);
-    return true;
+    return !(rdstate() & std::fstream::failbit);
 }
 
 void Parser::Seek(uint32_t pos) {
@@ -45,6 +33,18 @@ void Parser::Seek(uint32_t pos) {
 
 uint32_t Parser::Tell() {
     return tellg();
+}
+
+bool Parser::GetData(void *buf, size_t bufsize) {
+    if(rdstate() & std::fstream::failbit) return false;
+    this->read((char*)buf, bufsize);
+    return true;
+}
+
+bool Parser::GetWhole(void *buf) {
+    if(rdstate() & std::fstream::failbit) return false;
+    this->read((char*)buf, length);
+    return true;
 }
 
 std::wstring Parser::GetUTF16() {
@@ -87,6 +87,23 @@ uint32_t Parser::GetDWord() {
     return w;
 }
 
-uint32_t Parser::GetOffset() {
-    return tellg();
+void Parser::WriteData(void *buf, size_t bufsize) {
+    write((const char*)buf, bufsize);
 }
+
+void Parser::WriteUTF16(std::wstring str) {
+    write((const char*)str.data(), str.size() * sizeof(wchar_t));
+}
+
+void Parser::WriteByte(uint8_t byte) {
+    write((const char*)&byte, 1);
+}
+
+void Parser::WriteWord(uint16_t word) {
+    write((const char*)&word, 2);
+}
+
+void Parser::WriteDWord(uint32_t dword) {
+    write((const char*)&dword, 4);
+}
+

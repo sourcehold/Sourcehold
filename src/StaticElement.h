@@ -65,6 +65,7 @@ namespace Sourcehold
 
             inline bool IsHidden() { return !shown; }
         protected:
+			void GetRealCoords(int &rx, int &ry, int& rw, int &rh);
             void onEventReceive(Mouse &event) override;
         };
     }

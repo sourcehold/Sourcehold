@@ -4,8 +4,6 @@
 #include <vector>
 #include <memory>
 
-#include <Config.h>
-
 #include <Rendering/Renderer.h>
 #include <Rendering/Tileset.h>
 

@@ -12,8 +12,6 @@ extern "C" {
 
 #include <memory>
 
-#include <Config.h>
-
 #include <System/Logger.h>
 
 #include <Rendering/Renderer.h>

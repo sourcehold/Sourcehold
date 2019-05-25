@@ -6,8 +6,6 @@
 
 #include <SDL.h>
 
-#include <Config.h>
-
 #include <Rendering/Renderable.h>
 
 namespace Sourcehold

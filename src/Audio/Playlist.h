@@ -4,7 +4,6 @@
 #include <vector>
 #include <string>
 
-#include <Config.h>
 #include <System/Logger.h>
 
 #include <Audio/AudioSource.h>

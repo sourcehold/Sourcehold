@@ -24,7 +24,7 @@ TgxFile::~TgxFile() {
 }
 
 bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
-    if(!Parser::Open(path.string(), std::fstream::in | std::ios::binary)) {
+    if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
     }

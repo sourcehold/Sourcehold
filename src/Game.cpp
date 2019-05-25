@@ -13,6 +13,7 @@
 
 #include <System/System.h>
 #include <System/Logger.h>
+#include <System/FileUtil.h>
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
@@ -34,11 +35,10 @@ int StartGame(GameOptions &opt) {
     gameManager = std::make_shared<GameManager>(opt);
 
     /* Get the assets */
-    gameManager->SetDirectory(opt.dataDir);
     gameManager->LoadGameData();
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
-        Logger::error("GAME") << "The 'data' directory is empty; did you copy all the necessary files?" << std::endl;
+        Logger::error("GAME") << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -94,7 +94,7 @@ int StartGame(GameOptions &opt) {
         /* ------ Alpha testing ------ */
 
         AudioSource aud(gameManager->GetDirectory() / "fx/music/sadtimesa.raw", true);
-        aud.Play();
+        //aud.Play();
 
         World world(gameManager);
         world.Play();
@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
     return EXIT_FAILURE;
 }
 
-#if SOURCEHOLD_MINGW == 1
+#if SOURCEHOLD_MINGW == 1 && 0
 
 #include <windows.h>
 #include <string>

@@ -48,8 +48,8 @@ void StaticElement::Translate(int x, int y) {
 }
 
 void StaticElement::Translate(double x, double y) {
-	nx = tx = x;
-	ny = ty = y;
+    nx = tx = x;
+    ny = ty = y;
 }
 
 void StaticElement::Scale(int w, int h) {
@@ -58,25 +58,25 @@ void StaticElement::Scale(int w, int h) {
     tw = manager->NormalizeTargetX(w);
     th = manager->NormalizeTargetY(h);
 
-	scaled = true;
+    scaled = true;
 }
 
 void StaticElement::Scale(double w, double h) {
     nw = tw = w;
     nh = th = h;
 
-	scaled = true;
+    scaled = true;
 }
 
 void StaticElement::Render(std::function<Texture&()> render_fn) {
     Texture &elem = render_fn();
     SDL_Rect r = elem.GetRect();
-	manager->Render(elem, nx, ny, nw, nh, &r);
+    manager->Render(elem, nx, ny, nw, nh, &r);
 }
 
 void StaticElement::Render(Texture &elem, bool whole) {
     SDL_Rect r = elem.GetRect();
-	manager->Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
+    manager->Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
 }
 
 bool StaticElement::IsMouseOver() {
@@ -85,7 +85,7 @@ bool StaticElement::IsMouseOver() {
     int rx = manager->ToCoordX(manager->GetTargetX()) + tx * (double)manager->ToCoordX(manager->GetTargetWidth());
     int ry = manager->ToCoordY(manager->GetTargetY()) + ty * (double)manager->ToCoordY(manager->GetTargetHeight());
 
-	//manager->Render(rx, ry, rw, rh, 255, 255, 255, 255, false);
+    //manager->Render(rx, ry, rw, rh, 255, 255, 255, 255, false);
 
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
     return false;
@@ -96,7 +96,7 @@ bool StaticElement::IsClicked() {
         clicked = false;
         return true;
     }
-	return false;
+    return false;
 }
 
 void StaticElement::onEventReceive(Mouse &event) {
@@ -110,4 +110,3 @@ void StaticElement::onEventReceive(Mouse &event) {
         if(IsMouseOver()) clicked = true;
     }
 }
-
