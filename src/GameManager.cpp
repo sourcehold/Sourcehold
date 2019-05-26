@@ -70,8 +70,6 @@ void GameManager::SetSaveDirectory(boost::filesystem::path dir) {
 }
 
 bool GameManager::LoadGameData() {
-	DetectEdition();
-
     /* Detect game directories */
     _dataFolder = opt.dataDir;
     _saveFolder = GetDocumentsPath();
@@ -97,6 +95,8 @@ bool GameManager::LoadGameData() {
         _cfg.SetDefaultValues();
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }
+
+    DetectEdition();
 
     /* Load special files */
     if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;

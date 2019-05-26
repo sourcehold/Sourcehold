@@ -79,8 +79,8 @@ namespace Sourcehold
             bool IsPlaying();
             bool IsRepeating();
         protected:
-			bool InitOpenAL();
-			void DestroyOpenAL();
+			bool InitFFmpeg();
+			void DestroyFFmpeg();
         };
     }
 }

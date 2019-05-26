@@ -28,7 +28,6 @@ static std::shared_ptr<GameManager> gameManager;
 void Cleanup() {
 	UnloadFonts();
 	gameManager->ClearFileCache();
-	gameManager.reset();
 }
 
 int StartGame(GameOptions &opt) {
@@ -85,11 +84,11 @@ int StartGame(GameOptions &opt) {
 
     if(gameManager->Running()) {
         /* Start the intro sequence and the main menu */
-        int ret = menu.Startup();
-		if (ret != EXIT_SUCCESS) {
-			Cleanup();
-			return ret;
-		}
+        //int ret = menu.Startup();
+		//if (ret != EXIT_SUCCESS) {
+		//	Cleanup();
+		//	return ret;
+		//}
 
         /* ------ Alpha testing ------ */
 

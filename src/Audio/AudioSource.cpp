@@ -93,8 +93,12 @@ bool AudioSource::LoadEffect(boost::filesystem::path path, bool repeat) {
     alGenBuffers((ALuint)1, &buffer);
     Audio::PrintError();
 
-	if (!InitOpenAL()) {
+	if (!InitFFmpeg()) {
 		Logger::error("AUDIO") << "AudioSource::LoadEffect(): Error while initializing FFmpeg!" << std::endl;
+		alDeleteSources(1, &source);
+		Audio::PrintError();
+		alDeleteBuffers(1, &buffer);
+		Audio::PrintError();
 		return false;
 	}
 
@@ -180,7 +184,7 @@ void AudioSource::UpdateFade() {
 void AudioSource::Destroy() {
 	if (valid) {
 		if (mode == MODE_ADPCM) {
-			DestroyOpenAL();
+			DestroyFFmpeg();
 		}
 
 		alDeleteSources(1, &source);
@@ -360,7 +364,7 @@ bool AudioSource::IsRepeating() {
     return repeat;
 }
 
-bool AudioSource::InitOpenAL() {
+bool AudioSource::InitFFmpeg() {
 	if (ffmpegInited) return true;
 
 	ic = avformat_alloc_context();
@@ -406,9 +410,11 @@ bool AudioSource::InitOpenAL() {
 
 	delayTimer = 0;
 	ffmpegInited = true;
+
+	return true;
 }
 
-void AudioSource::DestroyOpenAL() {
+void AudioSource::DestroyFFmpeg() {
 	if (!ffmpegInited) return;
 
 	avformat_close_input(&ic);

@@ -14,13 +14,12 @@ Renderer::~Renderer() {
 void Renderer::Init(SDL_Window *window) {
     this->window = window;
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if(!renderer) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     }
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-//    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
     /* Window size */
     SDL_AddEventWatch(ResizeEventWatcher, static_cast<void*>(this));
@@ -59,6 +58,8 @@ void Renderer::SetTarget(Texture *target, int x, int y, int w, int h) {
 
 void Renderer::ResetTarget() {
     target = nullptr;
+    tx = ty = 0.0;
+    tw = th = 1.0;
     SDL_SetRenderTarget(renderer, NULL);
 }
 

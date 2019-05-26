@@ -22,6 +22,7 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 
 	if (edition == STRONGHOLD_HD) {
 		tgx_border = manager->GetTgx(manager->GetDirectory() / "gfx/SH1_Back.tgx").lock();
+		screen.AllocNewTarget(1024, 768);
 	}
 
 	gm1_icons_additional = manager->GetGm1(manager->GetDirectory() / "gm/interface_buttons.gm1").lock();
@@ -30,8 +31,6 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 
 	aud_greetings.LoadEffect(manager->GetDirectory() / "fx/speech/General_Startgame.wav", false);
 	aud_exit.LoadEffect(manager->GetDirectory() / "fx/speech/General_Quitgame.wav", false);
-
-	screen.AllocNewTarget(1024, 768);
 }
 
 MainMenu::~MainMenu() {
@@ -81,14 +80,15 @@ UIState MainMenu::EnterMenu() {
 	int32_t glareCounter = 265;
 
 	aud_greetings.Play();
-
+	
 	Resolution res = manager->GetResolution();
 	while (manager->Running()) {
 		manager->Clear();
 
 		if (edition == STRONGHOLD_CLASSIC || res == RESOLUTION_800x600) {
 			/* Don't render any border */
-			manager->Render(screen);
+			manager->Render(*tgx_bg1);
+			Draw(glareCounter);
 		}
 		else if(edition == STRONGHOLD_HD) {
 			/**
@@ -102,14 +102,14 @@ UIState MainMenu::EnterMenu() {
 			rect.h = manager->GetHeight();
 
 			manager->Render(*tgx_border, &rect);
-		}
-	
-		manager->SetTarget(&screen, mx, my, 1024, 768);
-		manager->Render(*tgx_bg1);
-		Draw(glareCounter);
-		manager->ResetTarget();
+		
+			manager->SetTarget(&screen, mx, my, 1024, 768);
+			manager->Render(*tgx_bg1);
+			Draw(glareCounter);
+			manager->ResetTarget();
 
-		manager->Render(screen, mx, my);
+			manager->Render(screen, mx, my);
+		}
 
 		aud_greetings.Update();
 
