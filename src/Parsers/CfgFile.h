@@ -30,6 +30,8 @@ namespace Sourcehold
 			uint8_t soundEnabled;
 			uint8_t musicVolume;
 			uint8_t sfxVolume;
+			uint8_t unlockedMilitary;
+			uint8_t unlockedEconomic;
 			uint8_t speechVolume;
 			uint8_t mousePointer;
 		};

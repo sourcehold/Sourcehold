@@ -14,6 +14,8 @@ void CfgFile::SetDefaultValues() {
 	soundEnabled = 1;
 	musicVolume = 50;
 	sfxVolume = 50;
+    unlockedMilitary = 1;
+    unlockedEconomic = 1;
 	speechVolume = 50;
 	mousePointer = 1;
 }
@@ -38,6 +40,10 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path) {
     musicVolume = Parser::GetByte();
     Parser::SeekG(0x262);
     sfxVolume = Parser::GetByte();
+    Parser::SeekG(0x26A);
+    unlockedMilitary = Parser::GetByte();
+    Parser::SeekG(0x26E);
+    unlockedEconomic = Parser::GetByte();
     Parser::SeekG(0x266);
     speechVolume = Parser::GetByte();
     Parser::SeekG(0x292);
@@ -68,6 +74,10 @@ bool CfgFile::WriteToDisk(boost::filesystem::path path) {
     Parser::WriteByte(musicVolume);
     Parser::SeekP(0x262);
     Parser::WriteByte(sfxVolume);
+    Parser::SeekP(0x26A);
+    Parser::WriteByte(unlockedMilitary);
+    Parser::SeekP(0x26E);
+    Parser::WriteByte(unlockedEconomic);
     Parser::SeekP(0x266);
     Parser::WriteByte(speechVolume);
     Parser::SeekP(0x292);
