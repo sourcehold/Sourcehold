@@ -7,7 +7,7 @@ CfgFile::CfgFile() : Parser() {
 }
 
 void CfgFile::SetDefaultValues() {
-	username = L"Lord Stronghold";
+	username = L"MEGADEATH";
 	speed = 30;
 	bubbleHelp = 0;
 	resolution = 3;
@@ -24,23 +24,23 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path) {
         return false;
     }
 
-    Parser::Seek(0x46);
+    Parser::SeekG(0x46);
     username = Parser::GetUTF16();
-    Parser::Seek(0x246);
+    Parser::SeekG(0x246);
     speed = Parser::GetByte();
-    Parser::Seek(0x24A);
+    Parser::SeekG(0x24A);
     bubbleHelp = Parser::GetByte();
-    Parser::Seek(0x24E);
+    Parser::SeekG(0x24E);
     resolution = Parser::GetByte();
-    Parser::Seek(0x25A);
+    Parser::SeekG(0x25A);
     soundEnabled = Parser::GetByte();
-    Parser::Seek(0x25E);
+    Parser::SeekG(0x25E);
     musicVolume = Parser::GetByte();
-    Parser::Seek(0x262);
+    Parser::SeekG(0x262);
     sfxVolume = Parser::GetByte();
-    Parser::Seek(0x266);
+    Parser::SeekG(0x266);
     speechVolume = Parser::GetByte();
-    Parser::Seek(0x292);
+    Parser::SeekG(0x292);
     mousePointer = Parser::GetByte();
 
     Parser::Close();
@@ -48,10 +48,32 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path) {
 }
 
 bool CfgFile::WriteToDisk(boost::filesystem::path path) {
-    if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::out)) {
+    if(!Parser::Open(path.string(), std::ios::binary | std::ofstream::out)) {
     	Logger::error("PARSERS") << "Unable to write cfg " << path << std::endl;
         return false;
     }
+
+    /* TODO */
+    Parser::SeekP(0x46);
+    Parser::WriteUTF16(username);
+    Parser::SeekP(0x246);
+    Parser::WriteByte(speed);
+    Parser::SeekP(0x24A);
+    Parser::WriteByte(bubbleHelp);
+    Parser::SeekP(0x24E);
+    Parser::WriteByte(resolution);
+    Parser::SeekP(0x25A);
+    Parser::WriteByte(soundEnabled);
+    Parser::SeekP(0x25E);
+    Parser::WriteByte(musicVolume);
+    Parser::SeekP(0x262);
+    Parser::WriteByte(sfxVolume);
+    Parser::SeekP(0x266);
+    Parser::WriteByte(speechVolume);
+    Parser::SeekP(0x292);
+    Parser::WriteByte(mousePointer);
+    Parser::SeekP(0x329);
+    Parser::WriteByte(0x00);
 
     Parser::Close();
 	return true;

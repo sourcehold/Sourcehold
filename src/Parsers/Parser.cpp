@@ -10,11 +10,13 @@ bool Parser::Open(const std::string &path, std::ios_base::openmode mode) {
     open(path, mode);
     if(!is_open()) return false;
 
-    std::streampos fsize = tellg();
-    seekg(0, std::ios::end);
-    fsize = tellg() - fsize;
-    seekg(0, std::ios::beg);
-    length = (uint32_t)fsize;
+    if(mode & std::ifstream::in) {
+        std::streampos fsize = tellg();
+        seekg(0, std::ios::end);
+        fsize = tellg() - fsize;
+        seekg(0, std::ios::beg);
+        length = (uint32_t)fsize;        
+    }
 
     return true;
 }
@@ -27,8 +29,12 @@ bool Parser::Ok() {
     return !(rdstate() & std::fstream::failbit);
 }
 
-void Parser::Seek(uint32_t pos) {
+void Parser::SeekG(uint32_t pos) {
     seekg(pos, std::ios_base::beg);
+}
+
+void Parser::SeekP(uint32_t pos) {
+    seekp(pos, std::ios_base::beg);
 }
 
 uint32_t Parser::Tell() {
@@ -91,8 +97,14 @@ void Parser::WriteData(void *buf, size_t bufsize) {
     write((const char*)buf, bufsize);
 }
 
+void Parser::WriteBytes(uint8_t byte, size_t num) {
+    for(; num; num--) {
+        WriteByte(byte);
+    }
+}
+
 void Parser::WriteUTF16(std::wstring str) {
-    write((const char*)str.data(), str.size() * sizeof(wchar_t));
+    write((const char*)str.c_str(), str.length() * sizeof(wchar_t));
 }
 
 void Parser::WriteByte(uint8_t byte) {

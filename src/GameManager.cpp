@@ -263,22 +263,19 @@ AssetType GameManager::ExtToType(const std::string &ext) {
 }
 
 std::pair<int, int> GameManager::ResolutionToDim(Resolution res) {
-	std::pair<int, int> dim;
+    static const uint16_t resolutions[][2] = {
+        { 800, 600 },
+        { 1024, 768 },
+        { 1280, 720 },
+        { 1280, 1024 },
+        { 1366, 768 },
+        { 1440, 900 },
+        { 1600, 900 },
+        { 1600, 1200 },
+        { 1680, 1050 },
+        { 1920, 1080 }
+    };
 
-	switch (res) {
-	case RESOLUTION_800x600: dim.first = 800; dim.second = 600; break;
-	case RESOLUTION_1024x768: dim.first = 1024; dim.second = 768; break;
-	case RESOLUTION_1280x720: dim.first = 1280; dim.second = 720; break;
-	case RESOLUTION_1280x1024: dim.first = 1280; dim.second = 1024; break;
-	case RESOLUTION_1366x768: dim.first = 1366; dim.second = 768; break;
-	case RESOLUTION_1440x900: dim.first = 1440; dim.second = 900; break;
-	case RESOLUTION_1600x900: dim.first = 1600; dim.second = 900; break;
-	case RESOLUTION_1600x1200: dim.first = 1600; dim.second = 1200; break;
-	case RESOLUTION_1680x1050: dim.first = 1680; dim.second = 1050; break;
-	case RESOLUTION_1920x1080: dim.first = 1920; dim.second = 1080; break;
-	default: break;
-	}
-
-	return dim;
+	return std::make_pair<int, int>(resolutions[res][0], resolutions[res][1]);
 }
 

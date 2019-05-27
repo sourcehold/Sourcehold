@@ -26,7 +26,8 @@ namespace Sourcehold
             bool Open(const std::string &path, std::ios_base::openmode mode);
             void Close();
             bool Ok();
-            void Seek(uint32_t pos);
+            void SeekG(uint32_t pos);
+            void SeekP(uint32_t pos);
             uint32_t Tell();
 
             bool GetData(void *buf, size_t bufsize);
@@ -38,7 +39,8 @@ namespace Sourcehold
             uint32_t GetDWord();
 
             void WriteData(void *buf, size_t bufsize);
-            void WriteUTF16(std::wstring str); 
+            void WriteBytes(uint8_t byte, size_t num);
+            void WriteUTF16(std::wstring str);
             void WriteByte(uint8_t byte);
             void WriteWord(uint16_t word);
             void WriteDWord(uint32_t dword);

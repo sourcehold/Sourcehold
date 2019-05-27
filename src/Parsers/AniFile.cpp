@@ -62,18 +62,18 @@ bool AniFile::ParseChunks() {
 
 		if(id == "anih") {
 			/* TODO */
-			Parser::Seek(Parser::Tell() + bytes);
+			Parser::SeekG(Parser::Tell() + bytes);
 		}else if(id == "rate") {
 			/* TODO */
-			Parser::Seek(Parser::Tell() + bytes);
+			Parser::SeekG(Parser::Tell() + bytes);
 		}else if(id == "seq ") {
 			/* TODO */
-			Parser::Seek(Parser::Tell() + bytes);
+			Parser::SeekG(Parser::Tell() + bytes);
 		}else if(id == "LIST") {
 			/* TODO */
-			Parser::Seek(Parser::Tell() + bytes);
+			Parser::SeekG(Parser::Tell() + bytes);
 		}else {
-			Parser::Seek(Parser::Tell() + bytes);
+			Parser::SeekG(Parser::Tell() + bytes);
 		}
 	}
 	
