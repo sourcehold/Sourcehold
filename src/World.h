@@ -65,7 +65,7 @@ namespace Sourcehold
             /* Quick menu */
             StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
             bool rmbHolding = false;
-            Uint32 rmbPressed, rmbHeld, mouseX, mouseY;
+            Uint32 mouseX, mouseY;
         public:
             World(std::shared_ptr<GameManager> mgr);
             World(const World&) = delete;

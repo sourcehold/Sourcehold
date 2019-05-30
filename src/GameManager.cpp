@@ -91,7 +91,7 @@ bool GameManager::LoadGameData() {
     /* Create default config */
     boost::filesystem::path cfgPath = _saveFolder / "../stronghold.cfg";
     if(!DoesFileExist(cfgPath)) {
-        Logger::warning("PARSERS") << "Cfg file not found, creating one!" << std::endl;
+        Logger::message("PARSERS") << "Cfg file not found, creating one!" << std::endl;
         _cfg.SetDefaultValues();
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }

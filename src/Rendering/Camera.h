@@ -57,6 +57,7 @@ namespace Sourcehold
             inline void SetCamX(int32_t pos) { positionX = pos; }
             inline void SetCamY(int32_t pos) { positionY = pos; }
             inline void ResetMomentum() { momentumX = momentumY = 0; }
+            inline void SetCamPos(int32_t x, int32_t y) { positionX = x; positionY = y; }
             inline void TranslateCam(int32_t x, int32_t y) { positionX += x; positionY += y; }
             inline int32_t CamStepX() { return speed * momentumX; }
             inline int32_t CamStepY() { return speed * momentumY; }

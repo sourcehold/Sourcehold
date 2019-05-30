@@ -55,7 +55,7 @@ World::World(std::shared_ptr<GameManager> mgr) :
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
     manager->SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
-    manager->TranslateCam(15, 8);
+    manager->SetCamPos(15, 8);
 }
 
 World::~World() {
@@ -70,10 +70,7 @@ int World::Play() {
         GameMap::Render();
 
         if(rmbHolding) {
-            rmbHeld = SDL_GetTicks() - rmbPressed;
-            if(rmbHeld > 90) {
-                RenderQuickMenu();
-            }
+            RenderQuickMenu();
         }
 
         if(menubarShown) {
@@ -306,7 +303,6 @@ void World::onEventReceive(Mouse &mouseEvent) {
 
         if(mouseEvent.RmbDown()) {
             rmbHolding = true;
-            rmbPressed = SDL_GetTicks();
             mouseX = mouseEvent.GetPosX();
             mouseY = mouseEvent.GetPosY();
         }
@@ -317,7 +313,6 @@ void World::onEventReceive(Mouse &mouseEvent) {
     }else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
         if(mouseEvent.RmbUp()) {
             rmbHolding = false;
-            rmbHeld = 0;
         }
     }
     else if(mouseEvent.GetType() == MOUSE_MOTION) {

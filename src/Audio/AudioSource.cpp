@@ -72,7 +72,7 @@ bool AudioSource::LoadSong(boost::filesystem::path path, bool repeat) {
     alSourcei(source, AL_BUFFER, buffer);
     Audio::PrintError();
 
-	mode = MODE_PCM;
+    mode = MODE_PCM;
 
     valid = true;
     return true;

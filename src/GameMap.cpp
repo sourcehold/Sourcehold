@@ -50,8 +50,7 @@ void GameMap::Render() {
 
         manager->Render(
             *tileset,
-            mult * x - manager->CamX(), mult * y - manager->CamY(),
-            mult * 30, mult * 16,
+            int(mult * x - manager->CamX()), int(mult * y - manager->CamY()),
             &clip
         );
     }
