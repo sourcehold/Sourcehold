@@ -8,15 +8,13 @@
 
 #include <GameManager.h>
 
+#include <GUI/UIState.h>
+#include <GUI/MainMenu.h>
+
 #include <Audio/AudioSource.h>
 
 #include <Events/Event.h>
 #include <Events/Mouse.h>
-
-#include <Menus/MainMenu.h>
-#include <Menus/CombatMenu.h>
-#include <Menus/BuilderMenu.h>
-#include <Menus/EconomicsMenu.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
@@ -28,26 +26,25 @@
 
 namespace Sourcehold
 {
-    namespace Game
+    namespace GUI
     {
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
-        using namespace Menus;
 
         /**
          * Handles non game states - menus and intro sequence
          */
-        class GUI : protected EventConsumer<Mouse>
+        class Startup : protected EventConsumer<Mouse>
         {
+            MainMenu mainMenu;
         public:
-            GUI(std::shared_ptr<GameManager> man);
-            GUI(const GUI &) = delete;
-            ~GUI();
+            Startup(std::shared_ptr<GameManager> man);
+            Startup(const Startup &) = delete;
+            ~Startup();
 
             void PlayMusic();
-            int Startup();
-
+            int Begin();
         protected:
             void onEventReceive(Mouse &event) override;
 
@@ -69,12 +66,6 @@ namespace Sourcehold
 
             UIState currentUIState = UIState::INTRO_SEQUENCE;
             uint8_t currentStartupState = 0;
-
-        private:
-            MainMenu mainMenu;
-            CombatMenu combatMenu;
-            BuilderMenu builderMenu;
-            EconomicsMenu economicsMenu;
         };
     }
 }

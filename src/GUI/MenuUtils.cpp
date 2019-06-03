@@ -1,4 +1,4 @@
-#include <Menus/MenuUtils.h>
+#include <GUI/MenuUtils.h>
 #include <Rendering/Font.h>
 #include <Parsers/Gm1File.h>
 
@@ -9,13 +9,13 @@ using namespace Game;
 static std::shared_ptr<GameManager> _mgr;
 static std::shared_ptr<Gm1File> _gm_interface_icons3;
 
-bool Menus::InitializeUtils(std::shared_ptr<GameManager> mgr) {
+bool GUI::InitializeUtils(std::shared_ptr<GameManager> mgr) {
     _mgr = mgr;
     _gm_interface_icons3 = _mgr->GetGm1(_mgr->GetDirectory() / "gm/interface_icons3.gm1").lock();
     return true;
 }
 
-void Menus::RenderMenuText(const std::wstring &text)
+void GUI::RenderMenuText(const std::wstring &text)
 {
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas().lock();
     interface_icons->SetRect(interface_icons->Get(18));

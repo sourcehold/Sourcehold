@@ -1,30 +1,27 @@
-#include <GUI.h>
+#include <GUI/Startup.h>
 
 #include <System/Logger.h>
 
-using namespace Sourcehold::Game;
+using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-GUI::GUI(std::shared_ptr<GameManager> man) :
+Startup::Startup(std::shared_ptr<GameManager> man) :
     EventConsumer<Mouse>(man->GetHandler()),
     manager(man),
-    mainMenu(man),
-    combatMenu(man),
-    builderMenu(man),
-    economicsMenu(man)
+    mainMenu(man)
 {
 }
 
-GUI::~GUI() {
+Startup::~Startup() {
 
 }
 
-void GUI::PlayMusic() {
+void Startup::PlayMusic() {
     aud_startup.LoadSong(manager->GetDirectory() / "/fx/music/stainedglass1.raw");
     aud_startup.Play();
 }
 
-int GUI::Startup() {
+int Startup::Begin() {
     aud_chantloop.LoadSong(manager->GetDirectory() / "fx/music/chantloop1.raw", true);
 
     tgx_firefly = manager->GetTgx(manager->GetDirectory() / "gfx/logo1.tgx").lock();
@@ -43,7 +40,7 @@ int GUI::Startup() {
     while(manager->Running()) {
         manager->Clear();
 
-        if(currentUIState == INTRO_SEQUENCE){
+        if(currentUIState == INTRO_SEQUENCE) {
             /* Logo switching */
             double now = manager->GetTime();
             double delta = now - startTime;
@@ -121,39 +118,8 @@ int GUI::Startup() {
                 currentUIState = MAIN_MENU;
             }
         } else if(currentUIState == MAIN_MENU) {
-            if(!aud_chantloop.IsPlaying()) aud_chantloop.Play();
             currentUIState = mainMenu.EnterMenu();
-        } else if(currentUIState == COMBAT_MENU) {
-            currentUIState = combatMenu.EnterMenu();
-        } else if(currentUIState == BUILDER_MENU) {
-            currentUIState = builderMenu.EnterMenu();
-        } else if(currentUIState == ECONOMICS_MENU) {
-            currentUIState = economicsMenu.EnterMenu();
-        } else if (currentUIState == LOAD_SAVED_MENU) {
-
-        } else if(currentUIState == MILITARY_CAMPAIGN_MENU) {
-
-        } else if(currentUIState == SIEGE_MENU) {
-
-        } else if(currentUIState == INVASION_MENU) {
-
-        } else if (currentUIState == ECONOMICS_CAMPAIGN_MENU) {
-
-        } else if(currentUIState == ECONOMICS_MISSION_MENU) {
-
-        } else if(currentUIState == FREE_BUILD_MENU) {
-
-        } else if(currentUIState == WORKING_MAP_MENU) {
-
-        } else if (currentUIState == STAND_ALONE_MISSION_MENU) {
-
-        }  else if(currentUIState == SIEGE_THAT_MENU) {
-
-        } else if(currentUIState == MULTIPLAYER_MAP_MENU) {
-
-        } else if(currentUIState == SETTINGS_MENU) {
-
-        } else if (currentUIState == EXIT_GAME) {
+        }else if (currentUIState == EXIT_GAME) {
             return EXIT_FAILURE;
         } else {
             return EXIT_SUCCESS;
@@ -164,7 +130,7 @@ int GUI::Startup() {
     return EXIT_FAILURE;
 }
 
-void GUI::onEventReceive(Mouse &event) {
+void Startup::onEventReceive(Mouse &event) {
     if(event.LmbDown()) {
         if(currentUIState == INTRO_SEQUENCE) currentStartupState++;
     }

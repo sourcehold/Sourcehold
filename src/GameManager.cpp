@@ -211,7 +211,7 @@ std::weak_ptr<BinkVideo> GameManager::GetBik(boost::filesystem::path filename) {
 void GameManager::DetectEdition() {
 	/**
 	* TODO:
-	* -Maybe give the user the option to manually switch editions
+	* - Maybe give the user the option to manually switch editions
 	* - How do you detect Collection vs Classic?
 	*/
 

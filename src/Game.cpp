@@ -5,7 +5,7 @@
 
 #include <cxxopts.hpp>
 
-#include <GUI.h>
+#include <GUI/Startup.h>
 #include <World.h>
 #include <GameManager.h>
 #include <Rendering/Font.h>
@@ -21,7 +21,7 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Assets;
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
-using namespace Sourcehold::Menus;
+using namespace Sourcehold::GUI;
 
 static std::shared_ptr<GameManager> gameManager;
 
@@ -50,7 +50,7 @@ int StartGame(GameOptions &opt) {
     std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() / "gfx/frontend_loading.tgx").lock();
 
     /* Init the menu */
-    GUI menu(gameManager);
+    Startup menu(gameManager);
     menu.PlayMusic();
 
 	/* Preload some assets */
@@ -84,7 +84,7 @@ int StartGame(GameOptions &opt) {
 
     if(gameManager->Running()) {
         /* Start the intro sequence and the main menu */
-        int ret = menu.Startup();
+        int ret = menu.Begin();
 		if (ret != EXIT_SUCCESS) {
 			Cleanup();
 			return ret;

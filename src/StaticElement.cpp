@@ -48,8 +48,10 @@ void StaticElement::Translate(int x, int y) {
 }
 
 void StaticElement::Translate(double x, double y) {
-    nx = tx = x;
-    ny = ty = y;
+    tx = x;
+    ty = y;
+    nx = manager->GetTargetWidth() * x;
+    ny = manager->GetTargetHeight() * y;
 }
 
 void StaticElement::Scale(int w, int h) {
@@ -62,8 +64,10 @@ void StaticElement::Scale(int w, int h) {
 }
 
 void StaticElement::Scale(double w, double h) {
-    nw = tw = w;
-    nh = th = h;
+    tw = w;
+    th = h;
+    nw = manager->GetTargetWidth() * w;
+    nh = manager->GetTargetHeight() * h;
 
     scaled = true;
 }

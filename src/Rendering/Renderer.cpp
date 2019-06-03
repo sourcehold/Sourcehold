@@ -44,7 +44,9 @@ void Renderer::SetTarget(Texture *target, double x, double y, double w, double h
     tw = w;
     th = h;
     this->target = target;
-    SDL_SetRenderTarget(renderer, target->GetTexture());
+    if(SDL_SetRenderTarget(renderer, target->GetTexture()) < 0) {
+        Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+    }
 }
 
 void Renderer::SetTarget(Texture *target, int x, int y, int w, int h) {
@@ -53,7 +55,9 @@ void Renderer::SetTarget(Texture *target, int x, int y, int w, int h) {
 	tw = NormalizeX(w);
 	th = NormalizeY(h);
 	this->target = target;
-	SDL_SetRenderTarget(renderer, target->GetTexture());
+	if(SDL_SetRenderTarget(renderer, target->GetTexture()) < 0) {
+        Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+    }
 }
 
 void Renderer::ResetTarget() {
