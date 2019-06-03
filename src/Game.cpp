@@ -84,14 +84,13 @@ int StartGame(GameOptions &opt) {
 
     if(gameManager->Running()) {
         /* Start the intro sequence and the main menu */
-        //int ret = menu.Startup();
-		//if (ret != EXIT_SUCCESS) {
-		//	Cleanup();
-		//	return ret;
-		//}
+        int ret = menu.Startup();
+		if (ret != EXIT_SUCCESS) {
+			Cleanup();
+			return ret;
+		}
 
         /* ------ Alpha testing ------ */
-
         AudioSource aud(gameManager->GetDirectory() / "fx/music/sadtimesa.raw", true);
         //aud.Play();
 

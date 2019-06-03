@@ -1,4 +1,6 @@
 #include <cstring>
+#include <thread>
+#include <chrono>
 
 #include <SDL.h>
 
@@ -170,6 +172,11 @@ void BinkVideo::Update() {
 			if (avcodec_send_packet(codecCtx, &packet) < 0) return;
 		}
 
+		/* TODO: don't block the thread by sleeping and use internal
+		  timer or callback instead */
+		double dur_ms = (double)packet.duration * av_q2d(audioCtx->time_base);
+		std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
+
 		/* Receive one video frame */
 		ret = avcodec_receive_frame(codecCtx, frame);
 		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
@@ -194,6 +201,9 @@ void BinkVideo::Update() {
 		if (packetFinished) {
 			ret = avcodec_send_packet(audioCtx, &packet);
 		}
+
+		double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
+		std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
 
 		while (ret >= 0) {
 			/* Receive one audio frame */
