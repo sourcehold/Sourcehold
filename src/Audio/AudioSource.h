@@ -56,6 +56,7 @@ namespace Sourcehold
 			bool ffmpegInited = false, ffmpegRunning = false;
             float gain; /* Current gain */
             double fadeBase = 0.0, fadeAmount = 0.0;
+            bool fadeIn;
             const uint32_t SAMPLING_RATE = 44100;
         public:
             AudioSource(const AudioSource &source);
@@ -71,6 +72,7 @@ namespace Sourcehold
             void Stop();
 			void Rewind();
             void SetFadeOut(double amount = 1.0);
+            void SetFadeIn(double amount = 1.0);
             void UpdateFade();
 			void Destroy();
 			void Update();
@@ -78,6 +80,9 @@ namespace Sourcehold
             bool IsValid();
             bool IsPlaying();
             bool IsRepeating();
+
+            inline bool IsFading() { return fading; }
+            inline void SetGain(double g) { gain = g; }
         protected:
 			bool InitFFmpeg();
 			void DestroyFFmpeg();

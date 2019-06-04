@@ -30,7 +30,7 @@ namespace Sourcehold
         {
             std::shared_ptr<GameManager> manager;
             SDL_Rect rect;
-            bool shown = false;
+            bool shown = true;
             bool clicked = false;
             double nx, ny, nw, nh, tx, ty, tw, th;
             int mouseX, mouseY;

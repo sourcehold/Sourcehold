@@ -73,17 +73,23 @@ void StaticElement::Scale(double w, double h) {
 }
 
 void StaticElement::Render(std::function<Texture&()> render_fn) {
+    if(!shown) return;
+
     Texture &elem = render_fn();
     SDL_Rect r = elem.GetRect();
     manager->Render(elem, nx, ny, nw, nh, &r);
 }
 
 void StaticElement::Render(Texture &elem, bool whole) {
+    if(!shown) return;
+
     SDL_Rect r = elem.GetRect();
     manager->Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
 }
 
 bool StaticElement::IsMouseOver() {
+    if(!shown) return false;
+
     int rw = manager->ToCoordX(tw) * manager->GetTargetWidth();
     int rh = manager->ToCoordY(th) * manager->GetTargetHeight();
     int rx = manager->ToCoordX(manager->GetTargetX()) + tx * (double)manager->ToCoordX(manager->GetTargetWidth());

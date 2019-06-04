@@ -49,7 +49,7 @@ namespace Sourcehold
             void onEventReceive(Mouse &event) override;
 
             double startTime = 0.0, fadeBase = 0.0;
-            AudioSource aud_startup, aud_chantloop;
+            AudioSource aud_startup;
 
             /* Resources */
             std::shared_ptr<GameManager> manager;

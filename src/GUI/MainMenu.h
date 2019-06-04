@@ -10,10 +10,14 @@
 #include <StaticElement.h>
 
 #include <GUI/UIState.h>
+#include <GUI/Credits.h>
 #include <GUI/MenuUtils.h>
 
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
+
+#include <Events/Event.h>
+#include <Events/Mouse.h>
 
 #include <Rendering/Texture.h>
 
@@ -31,9 +35,10 @@ namespace Sourcehold
         /**
          * Handles the main menu and all submenus
          */
-        class MainMenu
+        class MainMenu : protected EventConsumer<Mouse>
         {
 			StrongholdEdition edition;
+            Credits cred;
         public:
             MainMenu(std::shared_ptr<GameManager> man);
             MainMenu(const MainMenu &) = delete;
@@ -41,12 +46,16 @@ namespace Sourcehold
 
             UIState EnterMenu();
         protected:
+            void onEventReceive(Mouse &event) override;
+
+            void RenderBorder();
             void RenderMain();
             void RenderCombat();
             void RenderEconomic();
             void RenderBuilder();
 
             /* Common resources */
+            AudioSource aud_chantloop;
             Texture screen;
             SDL_Rect border_rect;
             int mx, my;
@@ -72,7 +81,7 @@ namespace Sourcehold
             std::shared_ptr<TgxFile> tgx_bg_builder;
             StaticElement ui_builder_working_map, ui_builder_stand_alone_mission, ui_builder_siege_that, ui_builder_multiplayer_map;
 
-            /* User interface */
+            /* User interface states */
 			enum MenuButton : uint8_t {
                 NONE_SELECTED,
                 /* Main */
@@ -96,12 +105,13 @@ namespace Sourcehold
                 ECO_FREEBUILD,
                 ECO_BACK_TO_MAIN,
                 /* Builder */
-                BUILDER_BACK_TO_MAIN,
                 BUILDER_WORKING_MAP,
                 BUILDER_STANDALONE,
                 BUILDER_SIEGE,
-                BUILDER_MULTIPLAYER
+                BUILDER_MULTIPLAYER,
+                BUILDER_BACK_TO_MAIN
 			} selected = NONE_SELECTED;
+            UIState currentState;
 
 			/* SFX */
 			AudioSource aud_greetings, aud_exit;

@@ -22,8 +22,6 @@ void Startup::PlayMusic() {
 }
 
 int Startup::Begin() {
-    aud_chantloop.LoadSong(manager->GetDirectory() / "fx/music/chantloop1.raw", true);
-
     tgx_firefly = manager->GetTgx(manager->GetDirectory() / "gfx/logo1.tgx").lock();
     tgx_taketwo = manager->GetTgx(manager->GetDirectory() / "gfx/logo2.tgx").lock();
     tgx_present = manager->GetTgx(manager->GetDirectory() / "gfx/logo3.tgx").lock();

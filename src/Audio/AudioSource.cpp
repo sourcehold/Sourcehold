@@ -167,17 +167,38 @@ void AudioSource::SetFadeOut(double amount) {
     fadeAmount = amount;
     fading = true;
     fadeBase = (double)SDL_GetTicks() / 1000.0;
+    fadeIn = false;
+}
+
+void AudioSource::SetFadeIn(double amount) {
+    if(fading) return;
+    fadeAmount = amount;
+    fading = true;
+    fadeBase = (double)SDL_GetTicks() / 1000.0;
+    fadeIn = true;
 }
 
 void AudioSource::UpdateFade() {
     if(!fading) return;
 
-    double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
-    if(t > fadeAmount) {
-        Stop();
-        fading = false;
+    if(fadeIn) {
+	    double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
+	    if(t > fadeAmount) {
+	        Pause();
+	        fading = false;
+	        gain = 1.0;
+	    }else {
+	        alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (t / fadeAmount));
+	    }
     }else {
-        alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (1.0 - t / fadeAmount));
+	    double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
+	    if(t > fadeAmount) {
+	        Pause();
+	        fading = false;
+	        gain = 1.0;
+	    }else {
+	        alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (1.0 - t / fadeAmount));
+	    }
     }
 }
 
