@@ -1,4 +1,8 @@
 #include <SDL.h>
+#include <cstring>
+#include <cwchar>
+
+#include <boost/algorithm/string.hpp>
 
 #include <GameManager.h>
 
@@ -96,11 +100,12 @@ bool GameManager::LoadGameData() {
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }
 
-    DetectEdition();
-
     /* Load special files */
     if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
     if(!_cfg.LoadFromDisk(cfgPath)) return false;
+
+    DetectEdition();
+    DetectUsername();
 
     return true;
 }
@@ -221,6 +226,48 @@ void GameManager::DetectEdition() {
 	else {
 		edition = STRONGHOLD_CLASSIC;
 	}
+}
+
+void GameManager::DetectUsername() {
+    if(_cfg.username.empty()) {
+        return;
+    }
+
+    std::vector<std::wstring> words;
+    boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "), boost::token_compress_on); 
+    if(words.empty()) return;
+
+    int gender = 0;
+
+    /* Check if 'Lord', 'Lady' or nothing */
+    std::wstring username;
+    if(words.size() >= 2) {
+        if(words[0] == L"Lord") gender = 1;
+        else if(words[0] == L"Lady") gender = 2;
+
+        if(gender) {
+            for(auto it = words.begin()+1; it != words.end(); ++it) {
+                username += *it + (it == words.end()-1 ? L"" : L" ");
+            }
+        }else username = _cfg.username;
+    }else {
+        username = _cfg.username;
+    }
+
+    /* Look-up the name and store the index */
+    for(int i = 0; i < lut_names.size(); i++) {
+        const wchar_t *name = lut_names[i];
+        if(!wcscmp(name, boost::to_upper_copy<std::wstring>(username).c_str())) {
+            /* Prevent names like 'Lord Cindy' or 'Lady Aaron', no offense */
+            if((gender == 1 && i < NAME_INDEX_MALE) || (gender == 2 && i >= NAME_INDEX_MALE)) {
+                return;
+            }
+            usernameIndex = i;
+            return;
+        }
+    }
+
+    return;
 }
 
 void GameManager::Update() {

@@ -7,7 +7,7 @@ CfgFile::CfgFile() : Parser() {
 }
 
 void CfgFile::SetDefaultValues() {
-	username = L"MEGADEATH";
+	username = L"Lord Julian";
 	speed = 30;
 	bubbleHelp = 0;
 	resolution = 3;

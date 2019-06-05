@@ -1,6 +1,6 @@
 #include <GUI/MainMenu.h>
-
 #include <Rendering/Font.h>
+#include <Assets.h>
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -52,7 +52,7 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 	tgx_bg_economic = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_economics.tgx").lock();
 	tgx_bg_builder = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_builder.tgx").lock();
 
-	aud_greetings.LoadEffect(manager->GetDirectory() / "fx/speech/General_Startgame.wav", false);
+	aud_greetings.LoadEffect(GetGreetingsSound(), false);
 	aud_exit.LoadEffect(manager->GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 
 	/**
@@ -117,14 +117,14 @@ UIState MainMenu::EnterMenu() {
 	currentState = MAIN_MENU;
 
 	aud_chantloop.Play();
-	aud_greetings.Play();
+	//aud_greetings.Play();
 	
 	while (manager->Running()) {
 		manager->Clear();
 
 		RenderBorder();
 
-		aud_greetings.Update();
+		//aud_greetings.Update();
 
 		/* Update state */
 		if (ui_exit.IsClicked()) {
@@ -210,6 +210,18 @@ void MainMenu::onEventReceive(Mouse &event) {
     		aud_chantloop.Resume();
     	}
     }
+}
+
+boost::filesystem::path MainMenu::GetGreetingsSound() {
+	boost::filesystem::path snd = manager->GetDirectory() / "fx/speech/";
+	int index = manager->GetUsernameIndex();
+	if(index == -1) {
+		snd /= "General_Startgame.wav";
+	}else {
+		snd /= "name" + std::to_string(index + 1) + ".wav";
+	}
+
+	return snd;
 }
 
 void MainMenu::RenderBorder() {

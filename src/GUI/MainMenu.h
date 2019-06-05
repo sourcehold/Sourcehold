@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/filesystem.hpp>
+
 #include <cinttypes>
 #include <algorithm>
 #include <cstdlib>
@@ -7,8 +9,8 @@
 #include <memory>
 
 #include <GameManager.h>
-#include <StaticElement.h>
 
+#include <GUI/StaticElement.h>
 #include <GUI/UIState.h>
 #include <GUI/Credits.h>
 #include <GUI/MenuUtils.h>
@@ -47,6 +49,8 @@ namespace Sourcehold
             UIState EnterMenu();
         protected:
             void onEventReceive(Mouse &event) override;
+
+            boost::filesystem::path GetGreetingsSound();
 
             void RenderBorder();
             void RenderMain();

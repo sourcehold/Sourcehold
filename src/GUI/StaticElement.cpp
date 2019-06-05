@@ -1,4 +1,4 @@
-#include <StaticElement.h>
+#include <GUI/StaticElement.h>
 
 using namespace Sourcehold::Rendering;
 

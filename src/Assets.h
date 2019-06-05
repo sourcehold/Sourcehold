@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cinttypes>
-#include <string>
+#include <vector>
 
 /**
 * Definitions and look-up tables
@@ -43,7 +43,7 @@ namespace Sourcehold
         #define NAME_INDEX_FEMALE 0
         #define NAME_INDEX_MALE 44
         #define NAME_INDEX_NONSENSE 151
-        extern const char *lut_names[];
+        extern const std::vector<const wchar_t*>lut_names;
 	}
 }
 

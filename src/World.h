@@ -3,7 +3,8 @@
 #include <memory>
 
 #include <GameMap.h>
-#include <StaticElement.h>
+
+#include <GUI/StaticElement.h>
 
 #include <Rendering/Texture.h>
 

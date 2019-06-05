@@ -46,6 +46,7 @@ namespace Sourcehold
 			StrongholdEdition edition;
             bool running = false;
             double time = 0.0;
+            int usernameIndex = -1;
             GameOptions &opt;
         public:
             GameManager(GameOptions &opt);
@@ -112,8 +113,10 @@ namespace Sourcehold
             inline boost::filesystem::path GetDirectory() { return _dataFolder; }
 			inline StrongholdEdition GetEdition() { return edition; }
 			inline Resolution GetResolution() { return opt.resolution; }
+            inline int GetUsernameIndex() { return usernameIndex; }
 		protected:
 			void DetectEdition();
+            void DetectUsername();
             void Update();
             
 			AssetType ExtToType(const std::string &ext);
