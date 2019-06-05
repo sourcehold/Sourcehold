@@ -21,8 +21,8 @@ use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the comman
 Sourcehold depends on the following libraries:
 * SDL2
 * OpenAL
-* FFmpeg
-* Boost
+* FFmpeg (avcodec, avutil, avformat, swscale)
+* Boost (filesystem)
 
 ## Running
 Copy the following files into the `data` folder:  
