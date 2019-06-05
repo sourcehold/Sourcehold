@@ -240,20 +240,18 @@ void GameManager::DetectUsername() {
     int gender = 0;
 
     /* Check if 'Lord', 'Lady' or nothing */
-    std::wstring username;
+    std::wstring username = _cfg.username;;
     if(words.size() >= 2) {
         if(words[0] == L"Lord") gender = 1;
         else if(words[0] == L"Lady") gender = 2;
 
         if(gender) {
+            username.clear();
             for(auto it = words.begin()+1; it != words.end(); ++it) {
                 username += *it + (it == words.end()-1 ? L"" : L" ");
             }
-        }else username = _cfg.username;
-    }else {
-        username = _cfg.username;
+        }
     }
-
     /* Look-up the name and store the index */
     for(int i = 0; i < lut_names.size(); i++) {
         const wchar_t *name = lut_names[i];

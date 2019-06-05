@@ -18,9 +18,6 @@
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
-
 #include <Rendering/Texture.h>
 
 #include <Audio/AudioSource.h>
@@ -37,7 +34,7 @@ namespace Sourcehold
         /**
          * Handles the main menu and all submenus
          */
-        class MainMenu : protected EventConsumer<Mouse>
+        class MainMenu
         {
 			StrongholdEdition edition;
             Credits cred;
@@ -48,11 +45,8 @@ namespace Sourcehold
 
             UIState EnterMenu();
         protected:
-            void onEventReceive(Mouse &event) override;
-
             boost::filesystem::path GetGreetingsSound();
 
-            void RenderBorder();
             void RenderMain();
             void RenderCombat();
             void RenderEconomic();

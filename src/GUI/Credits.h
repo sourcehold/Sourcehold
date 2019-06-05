@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cinttypes>
 #include <memory>
 
 #include <GameManager.h>
@@ -36,6 +37,7 @@ namespace Sourcehold
     	protected:
     		void onEventReceive(Mouse &event) override;
 
+            uint8_t currentImage = 0;
     		bool playing = false;
     		std::shared_ptr<GameManager> manager;
     		AudioSource music;

@@ -7,7 +7,6 @@ using namespace Sourcehold::Rendering;
 
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 	manager(man),
-	EventConsumer<Mouse>(man->GetHandler()),
 	cred(man),
 	/* UI stuff */
 	screen(man),
@@ -117,54 +116,92 @@ UIState MainMenu::EnterMenu() {
 	currentState = MAIN_MENU;
 
 	aud_chantloop.Play();
-	//aud_greetings.Play();
-	
+	aud_greetings.Play();
+
 	while (manager->Running()) {
 		manager->Clear();
 
-		RenderBorder();
-
-		//aud_greetings.Update();
-
-		/* Update state */
-		if (ui_exit.IsClicked()) {
-			// TODO: exit prompt
-			aud_chantloop.Stop();
-			return EXIT_GAME;
+		if(edition == STRONGHOLD_HD) {
+			manager->Render(*tgx_border, &border_rect);
 		}
-		else if (ui_combat.IsClicked()) {
-			currentState = COMBAT_MENU;
-		}
-		else if (ui_economic.IsClicked()) {
-			currentState = ECONOMICS_MENU;
-		}
-		else if (ui_builder.IsClicked()) {
-			currentState = BUILDER_MENU;
-		}
-		else if (ui_load.IsClicked()) {
-			currentState = LOAD_SAVED_MENU;
-		}
-		else if (ui_tutorial.IsClicked()) {
-			currentState = TUTORIAL;
-		}
-		else if (ui_settings.IsClicked()) {
-			currentState = SETTINGS_MENU;
-		}
-		else if (ui_firefly.IsClicked()) {
-			currentState = CREDITS;
-		}
+		manager->SetTarget(&screen, mx, my, 1024, 768);
+		manager->Render(*tgx_bg_main);
 
 		/* Render the current menu on top of the background */
+		if(ui_back_to_main.IsClicked()) currentState = MAIN_MENU;
 		switch(currentState) {
-			case MAIN_MENU: RenderMain(); break;
-			case COMBAT_MENU: RenderCombat(); break;
-			case ECONOMICS_MENU: RenderEconomic(); break;
-			case BUILDER_MENU: RenderBuilder(); break;
+			case MAIN_MENU: {
+				if (ui_exit.IsClicked()) {
+					// TODO: exit prompt
+					aud_chantloop.Stop();
+					return EXIT_GAME;
+				}
+				else if (ui_combat.IsClicked()) {
+					currentState = COMBAT_MENU;
+				}
+				else if (ui_economic.IsClicked()) {
+					currentState = ECONOMICS_MENU;
+				}
+				else if (ui_builder.IsClicked()) {
+					currentState = BUILDER_MENU;
+				}
+				else if (ui_load.IsClicked()) {
+					currentState = LOAD_SAVED_MENU;
+				}
+				else if (ui_tutorial.IsClicked()) {
+					currentState = TUTORIAL;
+				}
+				else if (ui_settings.IsClicked()) {
+					currentState = SETTINGS_MENU;
+				}
+				else if (ui_firefly.IsClicked()) {
+					currentState = CREDITS;
+				}
+
+				RenderMain();
+			} break;
+			case COMBAT_MENU: {
+				RenderCombat();
+			} break;
+			case ECONOMICS_MENU: {
+				RenderEconomic();
+			} break;
+			case BUILDER_MENU: {
+				RenderBuilder();
+			} break;
 			default: break;
 		}
 
 		manager->ResetTarget();
 		manager->Render(screen, mx, my);
+
+		/* Reset target first, then play credits and leave again */
+		if(currentState == CREDITS) {
+			/* Fade out chantloop, screen -> black */
+	    	/*Uint8 alpha;
+	    	double fadeBase, now;
+	    	now = fadeBase = manager->GetTime();
+	    	aud_chantloop.SetFadeOut(1.0);
+	    	while(aud_chantloop.IsFading()) {
+    			//manager->Clear();
+    			alpha = 255 - Uint8(((now - (fadeBase + 1.0)) * 255.0) / 1.0);
+    			//screen.SetAlphaMod(alpha);
+    			//tgx_border->SetAlphaMod(alpha);
+    			aud_chantloop.UpdateFade();
+    			//RenderBorder();
+    			//manager->Render(screen, mx, my);
+    			manager->Sync();
+    			manager->Flush();
+    		}*/
+    		/* Start credits loop */
+    		cred.Play(false, true, true);
+    		aud_chantloop.SetGain(1.0);
+    		aud_chantloop.Resume();
+
+    		currentState = MAIN_MENU;
+		}
+
+		aud_greetings.Update();
 
 		glareCounter = (int)(manager->GetTime() * 10.0);
 
@@ -176,44 +213,9 @@ UIState MainMenu::EnterMenu() {
 	return EXIT_GAME;
 }
 
-void MainMenu::onEventReceive(Mouse &event) {
-    if(event.LmbDown()) {
-    	if(selected == COMBAT_BACK_TO_MAIN || selected == ECO_BACK_TO_MAIN || selected == BUILDER_BACK_TO_MAIN) {
-    		currentState = MAIN_MENU;
-    	}else if(selected == MAIN_FIREFLY) {
-    		/* Prevent unlimited spawning of credits  */
-    		selected = NONE_SELECTED;
-
-    		/* Fade out chantloop, screen -> black */
-    		Uint8 alpha;
-    		double fadeBase, now;
-    		now = fadeBase = manager->GetTime();
-    		aud_chantloop.SetFadeOut(1.0);
-    		while(aud_chantloop.IsFading()) {
-    			//manager->Clear();
-
-    			alpha = 255 - Uint8(((now - (fadeBase + 1.0)) * 255.0) / 1.0);
-    			//screen.SetAlphaMod(alpha);
-    			//tgx_border->SetAlphaMod(alpha);
-    			aud_chantloop.UpdateFade();
-
-    			//RenderBorder();
-    			//manager->Render(screen, mx, my);
-
-    			manager->Sync();
-    			manager->Flush();
-    		}
-
-    		/* Start credits loop */
-    		cred.Play(false, true, true);
-    		aud_chantloop.SetGain(1.0);
-    		aud_chantloop.Resume();
-    	}
-    }
-}
-
 boost::filesystem::path MainMenu::GetGreetingsSound() {
 	boost::filesystem::path snd = manager->GetDirectory() / "fx/speech/";
+
 	int index = manager->GetUsernameIndex();
 	if(index == -1) {
 		snd /= "General_Startgame.wav";
@@ -222,19 +224,6 @@ boost::filesystem::path MainMenu::GetGreetingsSound() {
 	}
 
 	return snd;
-}
-
-void MainMenu::RenderBorder() {
-	Resolution res = manager->GetResolution();
-	if (edition == STRONGHOLD_CLASSIC || res == RESOLUTION_800x600) {
-		/* Don't render any border */
-		manager->Render(*tgx_bg_main);
-	}
-	else if(edition == STRONGHOLD_HD) {
-		manager->Render(*tgx_border, &border_rect);
-		manager->SetTarget(&screen, mx, my, 1024, 768);
-		manager->Render(*tgx_bg_main);
-	}
 }
 
 void MainMenu::RenderMain() {
