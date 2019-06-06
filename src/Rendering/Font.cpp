@@ -47,7 +47,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
             x += _table_width_height[type].first;
         }else {
             int8_t lowercaseOffset = 0;
-            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 2); /*g p q y*/
+            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5); /*g p q y*/
             if(c == 0x6A) lowercaseOffset = _table_width_height[type].second / 2; /*j*/
             if(c == 0x2D) lowercaseOffset = FONT_SMALL ? -8 : -12;
             if(c == 0x27) lowercaseOffset = FONT_SMALL ? -12 : -17;

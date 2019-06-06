@@ -33,7 +33,7 @@ const static wchar_t *credit_lines_firefly[] = {
 	L"",
 	L"Sound Design and Original",
 	L"Music composed by",
-	L"Robert L.Euvino",
+	L"Robert L. Euvino",
 	L"",
 	L"Manual and Story Writer",
 	L"Casimir C. Windsor",
@@ -162,7 +162,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
 		/* Render the scroller */
 		int sy = manager->GetHeight() - scrollOffset;
-		scrollOffset = int((now - startTime) * 80.0);
+		scrollOffset = int((now - startTime) * 60.0);
 
 		/* Firefly Studios */
 		manager->Render(*tgx_firefly, sx, sy);

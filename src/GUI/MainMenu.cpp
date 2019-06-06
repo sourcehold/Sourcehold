@@ -132,12 +132,7 @@ UIState MainMenu::EnterMenu() {
 		switch(currentState) {
 			case MAIN_MENU: {
 				manager->Render(*tgx_bg_main);
-				if (ui_exit.IsClicked()) {
-					// TODO: exit prompt
-					aud_chantloop.Stop();
-					return EXIT_GAME;
-				}
-				else if (ui_combat.IsClicked()) {
+				if (ui_combat.IsClicked()) {
 					currentState = COMBAT_MENU;
 				}
 				else if (ui_economic.IsClicked()) {
@@ -157,6 +152,14 @@ UIState MainMenu::EnterMenu() {
 				}
 				else if (ui_firefly.IsClicked()) {
 					currentState = CREDITS;
+				}
+				else if(ui_back_to_main.IsClicked()) {
+					currentState = MAIN_MENU;
+				}
+				else if (ui_exit.IsClicked()) {
+					// TODO: exit prompt
+					aud_chantloop.Stop();
+					return EXIT_GAME;
 				}
 
 				RenderMain();
