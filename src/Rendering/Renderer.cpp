@@ -260,7 +260,14 @@ int Renderer::GetMouseY() {
     int p;
     SDL_GetMouseState(NULL, &p);
     return p;
+}
 
+void Renderer::MouseOn() {
+    SDL_ShowCursor(SDL_ENABLE);
+}
+
+void Renderer::MouseOff() {
+    SDL_ShowCursor(SDL_DISABLE);
 }
 
 int Renderer::ResizeEventWatcher(void *data, SDL_Event *event) {

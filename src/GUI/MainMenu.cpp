@@ -1,5 +1,6 @@
 #include <GUI/MainMenu.h>
 #include <Rendering/Font.h>
+#include <System/Config.h>
 #include <Assets.h>
 
 using namespace Sourcehold::GUI;
@@ -125,12 +126,12 @@ UIState MainMenu::EnterMenu() {
 			manager->Render(*tgx_border, &border_rect);
 		}
 		manager->SetTarget(&screen, mx, my, 1024, 768);
-		manager->Render(*tgx_bg_main);
 
 		/* Render the current menu on top of the background */
 		if(ui_back_to_main.IsClicked()) currentState = MAIN_MENU;
 		switch(currentState) {
 			case MAIN_MENU: {
+				manager->Render(*tgx_bg_main);
 				if (ui_exit.IsClicked()) {
 					// TODO: exit prompt
 					aud_chantloop.Stop();
@@ -172,6 +173,8 @@ UIState MainMenu::EnterMenu() {
 			default: break;
 		}
 
+		RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4);
+
 		manager->ResetTarget();
 		manager->Render(screen, mx, my);
 
@@ -193,6 +196,7 @@ UIState MainMenu::EnterMenu() {
     			manager->Sync();
     			manager->Flush();
     		}*/
+    		aud_chantloop.Stop();
     		/* Start credits loop */
     		cred.Play(false, true, true);
     		aud_chantloop.SetGain(1.0);

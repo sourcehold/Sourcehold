@@ -98,6 +98,9 @@ namespace Sourcehold
 
             int GetMouseX();
             int GetMouseY();
+
+            void MouseOn();
+            void MouseOff();
         protected:
             static int ResizeEventWatcher(void *data, SDL_Event *event);
         };

@@ -37,11 +37,8 @@ namespace Sourcehold
     	protected:
     		void onEventReceive(Mouse &event) override;
 
-            uint8_t currentImage = 0;
-    		bool playing = false;
+            bool playing;
     		std::shared_ptr<GameManager> manager;
-    		AudioSource music;
-    		std::shared_ptr<TgxFile> tgx_credits, tgx_1, tgx_2, tgx_3, tgx_4;
     	};
     }
 }
