@@ -6,31 +6,44 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
+/* All of the menu buttons. TODO: replace double with int */
+struct MenuButtonInfo {
+	double x;
+	double y;
+	double w;
+	double h;
+	const wchar_t *text;
+	bool hasGlare;
+	uint8_t index;
+	uint8_t glareIndex;
+};
+const static MenuButtonInfo lut_buttons[] = {
+	{ 0.12, 0.67,0.17578125,0.234375, L"Exit Stronghold", false, 68, 0 },
+	{ 0.423,0.774,0.1337890625,0.234375, L"Credits", false, 77, 0 },
+	{ 0.691,0.687,0.17578125,0.234375, L"Tutorial", false, 72, 0 },
+	{ 0.183,0.276,0.17578125,0.234375, L"Combat-based games", true, 15, 1 },
+	{ 0.336,0.276,0.17578125,0.234375, L"Economic-based games", true, 32, 18 },
+	{ 0.492,0.276,0.17578125,0.234375, L"Map Editor", true, 49, 35 },
+	{ 0.648,0.278,0.17578125,0.234375, L"Load a Saved Game", true, 66, 52 },
+	{ 0.726,0.511,0.1,0.16, L"Options", false, 88, 0 },
+	{ 0.183,0.276,0.17578125,0.234375, L"Play the Military Campaign", true, 15, 1 },
+	{ 0.336,0.276,0.17578125,0.234375, L"Play a Siege", true, 32, 18 },
+	{ 0.492,0.276,0.17578125,0.234375, L"Play an Invasion", true, 49, 35 },
+	{ 0.648,0.276,0.17578125,0.234375, L"Play a Multiplayer Game", true, 66, 52 },
+	{ 0.262,0.276,0.17578125,0.234375, L"Play the Economics Campaign", true, 15, 1 },
+	{ 0.416,0.276,0.17578125,0.234375, L"Play an Economics Mission", true, 32, 18 },
+	{ 0.571,0.276,0.17578125,0.234375, L"Free Build", true, 49, 35 },
+	{ 0.183,0.276,0.17578125,0.234375, L"New Working Map", true, 15, 1 },
+	{ 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18 },
+	{ 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35 },
+	{ 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52 },
+	{ 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 68, 0 }
+};
+
 MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 	manager(man),
 	cred(man),
-	/* UI stuff */
-	screen(man),
-	ui_back_to_main(man),
-	ui_exit(man),
-	ui_firefly(man),
-	ui_tutorial(man),
-	ui_combat(man),
-	ui_economic(man),
-	ui_builder(man),
-	ui_load(man),
-	ui_settings(man),
-	ui_combat_campaign(man),
-	ui_combat_siege(man),
-	ui_combat_invasion(man),
-	ui_combat_multiplayer(man),
-	ui_economic_campaign(man),
-	ui_economic_mission(man),
-	ui_economic_free_build(man),
-	ui_builder_working_map(man),
-	ui_builder_stand_alone_mission(man),
-	ui_builder_siege_that(man),
-	ui_builder_multiplayer_map(man)
+	screen(man)
 {
 	edition = manager->GetEdition();
 
@@ -66,6 +79,9 @@ MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
 
 	mx = (manager->GetWidth() - 1024) / 2;
 	my = (manager->GetHeight() - 768) / 2;
+
+	/* Allocate buttons */
+	ui_elems.resize(BUTTON_END, manager);
 }
 
 MainMenu::~MainMenu() {
@@ -76,41 +92,6 @@ UIState MainMenu::EnterMenu() {
 	if(edition == STRONGHOLD_HD) {
 		manager->SetTarget(&screen, mx, my, 1024, 768);		
 	}
-
-	/* Init the buttons */
-	ui_exit.Translate(0.12, 0.67);
-	ui_exit.Scale(0.17578125, 0.234375);
-
-	ui_firefly.Translate(0.423, 0.774);
-	ui_firefly.Scale(0.1337890625, 0.098958334);
-
-	ui_tutorial.Translate(0.691, 0.687);
-	ui_tutorial.Scale(0.17578125, 0.234375);
-
-	ui_combat.Scale(0.17578125, 0.234375);
-	ui_economic.Scale(0.17578125, 0.234375);
-	ui_builder.Scale(0.17578125, 0.234375);
-	ui_load.Scale(0.17578125, 0.234375);
-
-	ui_settings.Scale(0.1, 0.16);
-	ui_settings.Translate(0.726, 0.511);
-	
-    ui_combat_campaign.Scale(0.17578125, 0.234375);
-    ui_combat_invasion.Scale(0.17578125, 0.234375);
-    ui_combat_multiplayer.Scale(0.17578125, 0.234375);
-    ui_combat_siege.Scale(0.17578125, 0.234375);
-
-    ui_back_to_main.Scale(0.17578125, 0.234375);
-    ui_back_to_main.Translate(0.12, 0.67);
-
-    ui_economic_campaign.Scale(0.17578125, 0.234375);
-    ui_economic_free_build.Scale(0.17578125, 0.234375);
-    ui_economic_mission.Scale(0.17578125, 0.234375);
-
-    ui_builder_multiplayer_map.Scale(0.17578125, 0.234375);
-    ui_builder_siege_that.Scale(0.17578125, 0.234375);
-    ui_builder_stand_alone_mission.Scale(0.17578125, 0.234375);
-    ui_builder_working_map.Scale(0.17578125, 0.234375);
 
 	manager->ResetTarget();
 
@@ -128,40 +109,9 @@ UIState MainMenu::EnterMenu() {
 		manager->SetTarget(&screen, mx, my, 1024, 768);
 
 		/* Render the current menu on top of the background */
-		if(ui_back_to_main.IsClicked()) currentState = MAIN_MENU;
 		switch(currentState) {
 			case MAIN_MENU: {
 				manager->Render(*tgx_bg_main);
-				if (ui_combat.IsClicked()) {
-					currentState = COMBAT_MENU;
-				}
-				else if (ui_economic.IsClicked()) {
-					currentState = ECONOMICS_MENU;
-				}
-				else if (ui_builder.IsClicked()) {
-					currentState = BUILDER_MENU;
-				}
-				else if (ui_load.IsClicked()) {
-					currentState = LOAD_SAVED_MENU;
-				}
-				else if (ui_tutorial.IsClicked()) {
-					currentState = TUTORIAL;
-				}
-				else if (ui_settings.IsClicked()) {
-					currentState = SETTINGS_MENU;
-				}
-				else if (ui_firefly.IsClicked()) {
-					currentState = CREDITS;
-				}
-				else if(ui_back_to_main.IsClicked()) {
-					currentState = MAIN_MENU;
-				}
-				else if (ui_exit.IsClicked()) {
-					// TODO: exit prompt
-					aud_chantloop.Stop();
-					return EXIT_GAME;
-				}
-
 				RenderMain();
 			} break;
 			case COMBAT_MENU: {
@@ -235,320 +185,41 @@ boost::filesystem::path MainMenu::GetGreetingsSound() {
 
 void MainMenu::RenderMain() {
 	/* Render the buttons */
-	selected = NONE_SELECTED;
+	selected = BUTTON_END;
+	return;
 
 	auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
 	auto icons_additional = gm1_icons_additional->GetTextureAtlas().lock();
-	ui_exit.Render(
-		[&]() -> Texture& {
-		if (ui_exit.IsMouseOver()) {
-			selected = MAIN_EXIT;
-			RenderMenuText(L"Exit Stronghold");
-			icons_main->SetRect(icons_main->Get(69));
-		}
-		else icons_main->SetRect(icons_main->Get(68));
-		return *icons_main;
-	});
+	for(int i = MAIN_EXIT; i < MAIN_SETTINGS+1; i++) {
+		ui_elems[i].Render(
+			[&]() -> Texture& {
+				MenuButtonInfo inf = lut_buttons[i];
 
-	ui_tutorial.Render(
-		[&]() -> Texture& {
-		if (ui_tutorial.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_TUTORIAL;
-			RenderMenuText(L"Tutorial");
-			icons_main->SetRect(icons_main->Get(73));
-		}
-		else icons_main->SetRect(icons_main->Get(72));
-		return *icons_main;
-	});
-
-	ui_combat.Render(
-		[&]() -> Texture& {
-		if (ui_combat.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_COMBAT;
-			RenderMenuText(L"Combat-based games");
-			icons_main->SetRect(icons_main->Get(16));
-			ui_combat.Translate(0.183, 0.276);
-		}
-		else {
-			icons_main->SetRect(icons_main->Get(1 + (glareCounter % 14)));
-			ui_combat.Translate(0.182, 0.277);
-		}
-		return *icons_main;
-	});
-
-	ui_economic.Render(
-		[&]() -> Texture& {
-		if (ui_economic.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_ECONOMIC;
-			RenderMenuText(L"Economic-based games");
-			icons_main->SetRect(icons_main->Get(33));
-			ui_economic.Translate(0.336, 0.276);
-		}
-		else {
-			icons_main->SetRect(icons_main->Get(18 + (glareCounter % 14)));
-			ui_economic.Translate(0.337, 0.275);
-		}
-		return *icons_main;
-	});
-
-	ui_builder.Render(
-		[&]() -> Texture& {
-		if (ui_builder.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_BUILDER;
-			RenderMenuText(L"Map Editor");
-			icons_main->SetRect(icons_main->Get(50));
-			ui_builder.Translate(0.492, 0.276);
-		}
-		else {
-			icons_main->SetRect(icons_main->Get(35 + (glareCounter % 14)));
-			ui_builder.Translate(0.492, 0.275);
-		}
-		return *icons_main;
-	});
-
-	ui_load.Render(
-		[&]() -> Texture& {
-		if (ui_load.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_LOAD;
-			RenderMenuText(L"Load a Saved Game");
-			icons_main->SetRect(icons_main->Get(67));
-			ui_load.Translate(0.648, 0.278);
-		}
-		else {
-			icons_main->SetRect(icons_main->Get(52 + (glareCounter % 14)));
-			ui_load.Translate(0.648, 0.276);
-		}
-		return *icons_main;
-	});
-
-	ui_firefly.Render(
-		[&]() -> Texture& {
-		if (ui_firefly.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_FIREFLY;
-			RenderMenuText(L"Credits");
-			icons_additional->SetRect(icons_additional->Get(78));
-		}
-		else {
-			icons_additional->SetRect(icons_additional->Get(77));
-		}
-		return *icons_additional;
-	});
-
-	ui_settings.Render(
-		[&]() -> Texture& {
-		if (ui_settings.IsMouseOver() && selected == NONE_SELECTED) {
-			selected = MAIN_SETTINGS;
-			RenderMenuText(L"Options");
-			icons_additional->SetRect(icons_additional->Get(89));
-		}
-		else {
-			icons_additional->SetRect(icons_additional->Get(88));
-		}
-		return *icons_additional;
-	});
+				selected = (MenuButton)i;
+				RenderMenuText(inf.text);
+				
+				if (ui_elems[i].IsMouseOver()) {
+					icons_main->SetRect(icons_main->Get(inf.index + 1));
+				} else {
+					if(inf.hasGlare) {
+						icons_main->SetRect(icons_main->Get(inf.glareIndex + (glareCounter % 14)));
+					}else {
+						icons_main->SetRect(icons_main->Get(inf.index));
+					}
+				}
+			return *icons_main;
+		});
+	}
 }
 
 void MainMenu::RenderCombat() {
-	selected = NONE_SELECTED;
-
-    manager->Render(*tgx_bg_combat);
-    auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
-    ui_back_to_main.Render(
-        [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) {
-				selected = COMBAT_BACK_TO_MAIN;
-                RenderMenuText(L"Back to Main Menu");
-                icons_combat->SetRect(icons_combat->Get(69));
-            }
-            else icons_combat->SetRect(icons_combat->Get(68));
-            return *icons_combat;
-        });
-
-    ui_combat_campaign.Render(
-        [&]() -> Texture& {
-            if(ui_combat_campaign.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = COMBAT_CAMPAIGN;
-                RenderMenuText(L"Play the Military Campaign");
-                icons_combat->SetRect(icons_combat->Get(16));
-                ui_combat_campaign.Translate(0.183, 0.276);
-            } else {
-				icons_combat->SetRect(icons_combat->Get(1 + (glareCounter % 14)));
-                ui_combat_campaign.Translate(0.182, 0.277);
-            }
-            return *icons_combat;
-        });
-
-    ui_combat_siege.Render(
-        [&]() -> Texture& {
-            if(ui_combat_siege.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = COMBAT_SIEGE;
-                RenderMenuText(L"Play a Siege");
-                icons_combat->SetRect(icons_combat->Get(33));
-                ui_combat_siege.Translate(0.336, 0.276);
-            } else {
-            	icons_combat->SetRect(icons_combat->Get(18 + (glareCounter % 14)));
-                ui_combat_siege.Translate(0.337, 0.275);
-            }
-            return *icons_combat;
-        });
-
-    ui_combat_invasion.Render(
-        [&]() -> Texture& {
-            if(ui_combat_invasion.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = COMBAT_INVASION;
-                RenderMenuText(L"Play an Invasion");
-                icons_combat->SetRect(icons_combat->Get(50));
-                ui_combat_invasion.Translate(0.492, 0.276);
-            } else {
-            	icons_combat->SetRect(icons_combat->Get(35 + (glareCounter % 14)));
-                ui_combat_invasion.Translate(0.492, 0.275);
-            }
-            return *icons_combat;
-        });
-
-    ui_combat_multiplayer.Render(
-        [&]() -> Texture& {
-            if(ui_combat_multiplayer.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = COMBAT_MULTIPLAYER;
-                RenderMenuText(L"Play a Multiplayer Game");
-                icons_combat->SetRect(icons_combat->Get(67));
-                ui_combat_multiplayer.Translate(0.648, 0.278);
-            } else {
-            	icons_combat->SetRect(icons_combat->Get(52 + (glareCounter % 14)));
-                ui_combat_multiplayer.Translate(0.648, 0.276);
-            }
-            return *icons_combat;
-        });
+	selected = BUTTON_END;
 }
 
 void MainMenu::RenderEconomic() {
-	selected = NONE_SELECTED;
-
-    manager->Render(*tgx_bg_economic);
-    auto icons_economics = gm1_icons_economic->GetTextureAtlas().lock();
-    ui_back_to_main.Render(
-        [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) {
-				selected = ECO_BACK_TO_MAIN;
-                RenderMenuText(L"Back to Main Menu");
-                icons_economics->SetRect(icons_economics->Get(52));
-            }
-            else icons_economics->SetRect(icons_economics->Get(51));
-            return *icons_economics;
-        });
-
-    ui_economic_campaign.Render(
-        [&]() -> Texture& {
-            if(ui_economic_campaign.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = ECO_CAMPAIGN;
-                RenderMenuText(L"Play the Economics Campaign");
-                icons_economics->SetRect(icons_economics->Get(16));
-                ui_economic_campaign.Translate(0.262, 0.276);
-            } else {
-            	icons_economics->SetRect(icons_economics->Get(1 + (glareCounter % 14)));
-                ui_economic_campaign.Translate(0.261, 0.277);
-            }
-            return *icons_economics;
-        });
-
-    ui_economic_mission.Render(
-        [&]() -> Texture& {
-            if(ui_economic_mission.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = ECO_MISSION;
-                RenderMenuText(L"Play an Economics Mission");
-                icons_economics->SetRect(icons_economics->Get(33));
-                ui_economic_mission.Translate(0.416, 0.277);
-            } else {
-            	icons_economics->SetRect(icons_economics->Get(18 + (glareCounter % 14)));
-                ui_economic_mission.Translate(0.4165, 0.277);
-            }
-            return *icons_economics;
-        });
-
-    ui_economic_free_build.Render(
-        [&]() -> Texture& {
-            if(ui_economic_free_build.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = ECO_FREEBUILD;
-                RenderMenuText(L"Free Build");
-                icons_economics->SetRect(icons_economics->Get(50));
-                ui_economic_free_build.Translate(0.571, 0.277);
-            } else {
-            	icons_economics->SetRect(icons_economics->Get(35 + (glareCounter % 14)));
-                ui_economic_free_build.Translate(0.571, 0.277);
-            }
-            return *icons_economics;
-        });
+	selected = BUTTON_END;
 }
 
 void MainMenu::RenderBuilder() {
-	selected = NONE_SELECTED;
-
-    manager->Render(*tgx_bg_builder);
-    auto icons_builder = gm1_icons_builder->GetTextureAtlas().lock();
-    ui_back_to_main.Render(
-        [&]() -> Texture& {
-            if(ui_back_to_main.IsMouseOver()) {
-				selected = BUILDER_BACK_TO_MAIN;
-                RenderMenuText(L"Back to Main Menu");
-                icons_builder->SetRect(icons_builder->Get(71));
-            }
-            else icons_builder->SetRect(icons_builder->Get(70));
-            return *icons_builder;
-        });
-
-    ui_builder_working_map.Render(
-        [&]() -> Texture& {
-            if(ui_builder_working_map.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = BUILDER_WORKING_MAP;
-                RenderMenuText(L"Load a Working Map");
-                icons_builder->SetRect(icons_builder->Get(16));
-                ui_builder_working_map.Translate(0.183, 0.276);
-            } else {
-            	icons_builder->SetRect(icons_builder->Get(1 + (glareCounter % 14)));
-                ui_builder_working_map.Translate(0.182, 0.277);
-            }
-            return *icons_builder;
-        });
-
-    ui_builder_stand_alone_mission.Render(
-        [&]() -> Texture& {
-            if(ui_builder_stand_alone_mission.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = BUILDER_STANDALONE;
-                RenderMenuText(L"New Stand-Alone Mission");
-                icons_builder->SetRect(icons_builder->Get(33));
-                ui_builder_stand_alone_mission.Translate(0.336, 0.276);
-            } else {
-            	icons_builder->SetRect(icons_builder->Get(18 + (glareCounter % 14)));
-                ui_builder_stand_alone_mission.Translate(0.337, 0.275);
-            }
-            return *icons_builder;
-        });
-
-    ui_builder_siege_that.Render(
-        [&]() -> Texture& {
-            if(ui_builder_siege_that.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = BUILDER_SIEGE;
-                RenderMenuText(L"New 'Siege That' Mission");
-                icons_builder->SetRect(icons_builder->Get(50));
-                ui_builder_siege_that.Translate(0.492, 0.276);
-            } else {
-            	icons_builder->SetRect(icons_builder->Get(35 + (glareCounter % 35)));
-                ui_builder_siege_that.Translate(0.492, 0.275);
-            }
-            return *icons_builder;
-        });
-
-    ui_builder_multiplayer_map.Render(
-        [&]() -> Texture& {
-            if(ui_builder_multiplayer_map.IsMouseOver() && selected == NONE_SELECTED) {
-				selected = BUILDER_MULTIPLAYER;
-                RenderMenuText(L"New Multiplayer Map");
-                icons_builder->SetRect(icons_builder->Get(67));
-                ui_builder_multiplayer_map.Translate(0.648, 0.278);
-            } else {
-            	icons_builder->SetRect(icons_builder->Get(52 + (glareCounter % 14)));
-                ui_builder_multiplayer_map.Translate(0.648, 0.276);
-            }
-            return *icons_builder;
-        });
+	selected = BUTTON_END;
 }

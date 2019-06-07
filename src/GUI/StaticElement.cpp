@@ -110,9 +110,9 @@ bool StaticElement::IsClicked() {
 }
 
 void StaticElement::onEventReceive(Mouse &event) {
-    EventType type = event.GetType();
     if(!shown) return;
 
+    EventType type = event.GetType();
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();
         mouseY = event.GetPosY();

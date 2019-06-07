@@ -168,7 +168,9 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 		manager->Render(*tgx_firefly, sx, sy);
 		sy += 122 + 30;
 
-		for(int i = 0; i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]); i++, sy += 46) {
+		for(int i = 0;
+			sy < manager->GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
+			i++, sy += 46) {
 			const wchar_t *line = credit_lines_firefly[i];
 			RenderText(line, sx, sy, 1, FONT_LARGE);
 		}

@@ -32,9 +32,6 @@ namespace Sourcehold
                 Event(const Event &event) = delete;
                 ~Event() = default;
 
-                inline std::string GetName() { return name; }
-                inline void SetName(const std::string &newName) { name = newName; }
-
                 inline void SetHandled(bool h) { handled = h; }
                 inline bool IsHandled() { return handled; }
 
@@ -52,7 +49,6 @@ namespace Sourcehold
                 }
             protected:
                 EventType type;
-                std::string name;
                 bool handled = false;
         };
 
