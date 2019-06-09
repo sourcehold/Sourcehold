@@ -15,7 +15,7 @@ using namespace Rendering;
 
 static AVCodec *bink_codec;
 
-BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man)
+BinkVideo::BinkVideo() : Texture()
 {
     ic = avformat_alloc_context();
     if(!ic) {
@@ -23,7 +23,7 @@ BinkVideo::BinkVideo(std::shared_ptr<Renderer> man) : Texture(man)
     }
 }
 
-BinkVideo::BinkVideo(std::shared_ptr<Renderer> man, boost::filesystem::path path, bool looping) : Texture(man) {
+BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture() {
     ic = avformat_alloc_context();
     if(!ic) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;

@@ -1,10 +1,10 @@
 #include <GUI/StaticElement.h>
+#include <Rendering/Renderer.h>
 
 using namespace Sourcehold::Rendering;
 
-StaticElement::StaticElement(std::shared_ptr<GameManager> mgr, double x, double y, SDL_Rect r) :
-    manager(mgr),
-    EventConsumer<Mouse>(mgr->GetHandler())
+StaticElement::StaticElement(double x, double y, SDL_Rect r) :
+    EventConsumer<Mouse>(GetHandler())
 {
     nx = x;
     ny = y;
@@ -12,8 +12,7 @@ StaticElement::StaticElement(std::shared_ptr<GameManager> mgr, double x, double 
 }
 
 StaticElement::StaticElement(const StaticElement &elem) :
-    manager(elem.manager),
-    EventConsumer<Mouse>(elem.manager->GetHandler())
+    EventConsumer<Mouse>(GetHandler())
 {
     this->rect = elem.rect;
     this->shown = elem.shown;
@@ -41,24 +40,24 @@ void StaticElement::Destroy() {
 }
 
 void StaticElement::Translate(int x, int y) {
-    nx = manager->NormalizeX(x);
-    ny = manager->NormalizeY(y);
-    tx = manager->NormalizeTargetX(x);
-    ty = manager->NormalizeTargetY(y);
+    nx = NormalizeX(x);
+    ny = NormalizeY(y);
+    tx = NormalizeTargetX(x);
+    ty = NormalizeTargetY(y);
 }
 
 void StaticElement::Translate(double x, double y) {
     tx = x;
     ty = y;
-    nx = manager->GetTargetWidth() * x;
-    ny = manager->GetTargetHeight() * y;
+    nx = GetTargetWidth() * x;
+    ny = GetTargetHeight() * y;
 }
 
 void StaticElement::Scale(int w, int h) {
-    nw = manager->NormalizeX(w);
-    nh = manager->NormalizeY(h);
-    tw = manager->NormalizeTargetX(w);
-    th = manager->NormalizeTargetY(h);
+    nw = NormalizeX(w);
+    nh = NormalizeY(h);
+    tw = NormalizeTargetX(w);
+    th = NormalizeTargetY(h);
 
     scaled = true;
 }
@@ -66,8 +65,8 @@ void StaticElement::Scale(int w, int h) {
 void StaticElement::Scale(double w, double h) {
     tw = w;
     th = h;
-    nw = manager->GetTargetWidth() * w;
-    nh = manager->GetTargetHeight() * h;
+    nw = GetTargetWidth() * w;
+    nh = GetTargetHeight() * h;
 
     scaled = true;
 }
@@ -77,25 +76,23 @@ void StaticElement::Render(std::function<Texture&()> render_fn) {
 
     Texture &elem = render_fn();
     SDL_Rect r = elem.GetRect();
-    manager->Render(elem, nx, ny, nw, nh, &r);
+    Rendering::Render(elem, nx, ny, nw, nh, &r);
 }
 
 void StaticElement::Render(Texture &elem, bool whole) {
     if(!shown) return;
 
     SDL_Rect r = elem.GetRect();
-    manager->Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
+    Rendering::Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
 }
 
 bool StaticElement::IsMouseOver() {
     if(!shown) return false;
 
-    int rw = manager->ToCoordX(tw) * manager->GetTargetWidth();
-    int rh = manager->ToCoordY(th) * manager->GetTargetHeight();
-    int rx = manager->ToCoordX(manager->GetTargetX()) + tx * (double)manager->ToCoordX(manager->GetTargetWidth());
-    int ry = manager->ToCoordY(manager->GetTargetY()) + ty * (double)manager->ToCoordY(manager->GetTargetHeight());
-
-    //manager->Render(rx, ry, rw, rh, 255, 255, 255, 255, false);
+    int rw = ToCoordX(tw) * GetTargetWidth();
+    int rh = ToCoordY(th) * GetTargetHeight();
+    int rx = ToCoordX(GetTargetX()) + tx * (double)ToCoordX(GetTargetWidth());
+    int ry = ToCoordY(GetTargetY()) + ty * (double)ToCoordY(GetTargetHeight());
 
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
     return false;

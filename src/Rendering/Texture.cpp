@@ -7,13 +7,12 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Texture::Texture(std::shared_ptr<Renderer> rend) :
+Texture::Texture() :
     Renderable(),
     angle(0.0),
     width(0),
     height(0),
-    flip(SDL_FLIP_NONE),
-    renderer(rend)
+    flip(SDL_FLIP_NONE)
 {
 }
 
@@ -24,7 +23,6 @@ Texture::Texture(const Texture &tex) :
     height(0),
     flip(SDL_FLIP_NONE)
 {
-    this->renderer = tex.renderer;
     this->texture = tex.texture;
     this->width = tex.width;
     this->height = tex.height;
@@ -39,7 +37,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
     this->height = height;
     access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
-        renderer->GetRenderer(),
+        GetRenderer(),
         format,
         SDL_TEXTUREACCESS_STREAMING,
         width, height
@@ -59,7 +57,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
 bool Texture::AllocFromSurface(Surface &surface) {
     width = surface.GetWidth();
     height = surface.GetHeight();
-    texture = SDL_CreateTextureFromSurface(renderer->GetRenderer(), surface.GetSurface());
+    texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
         return false;
@@ -76,7 +74,7 @@ bool Texture::AllocNewTarget(int width, int height, int format) {
     this->height = height;
     access = SDL_TEXTUREACCESS_TARGET;
     texture = SDL_CreateTexture(
-        renderer->GetRenderer(),
+        GetRenderer(),
         format,
         SDL_TEXTUREACCESS_TARGET,
         width, height
@@ -185,7 +183,7 @@ Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 
 void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a) {
     *r = value >> 24;
-    *g = (value >> 16) & 0b11111111;
-    *b = (value >> 8) & 0b1111111111111111;
-    *a = value & 0b111111111111111111111111;
+    *g = (value >> 16) & (uint8_t)0xFF;
+    *b = (value >> 8) & (uint16_t)0xFF;
+    *a = value & (uint32_t)0xFF;
 }

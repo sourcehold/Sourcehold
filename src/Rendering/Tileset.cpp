@@ -7,10 +7,7 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Tileset::Tileset(std::shared_ptr<Renderer> rend) :
-    renderer(rend),
-    Texture(rend),
-    surf(rend)
+Tileset::Tileset()
 {
 }
 

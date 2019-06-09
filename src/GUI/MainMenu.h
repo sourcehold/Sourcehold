@@ -39,7 +39,7 @@ namespace Sourcehold
 			StrongholdEdition edition;
             Credits cred;
         public:
-            MainMenu(std::shared_ptr<GameManager> man);
+            MainMenu();
             MainMenu(const MainMenu &) = delete;
             ~MainMenu();
 
@@ -58,7 +58,6 @@ namespace Sourcehold
             SDL_Rect border_rect;
             int mx, my;
             int glareCounter;
-            std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_border;
             std::shared_ptr<Gm1File> gm1_icons_additional;
 

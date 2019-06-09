@@ -21,9 +21,9 @@ namespace Sourcehold
 		class AniFile : public Parser
 		{
 			public:
-				AniFile(std::shared_ptr<Rendering::Renderer> rend);
+				AniFile();
 				AniFile(const AniFile&);
-				AniFile(std::shared_ptr<Rendering::Renderer> rend, boost::filesystem::path path);
+				AniFile(boost::filesystem::path path);
 				~AniFile();
 
 				bool LoadFromDisk(boost::filesystem::path path);

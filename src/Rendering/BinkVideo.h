@@ -50,8 +50,8 @@ namespace Sourcehold
 			bool packetFinished;
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
-            BinkVideo(std::shared_ptr<Renderer> man);
-            BinkVideo(std::shared_ptr<Renderer> man, boost::filesystem::path path, bool looping = false);
+            BinkVideo();
+            BinkVideo(boost::filesystem::path path, bool looping = false);
             ~BinkVideo();
 
             bool LoadFromDisk(boost::filesystem::path path, bool looping = false);

@@ -29,7 +29,7 @@ namespace Sourcehold
     	class Credits : protected EventConsumer<Mouse>
     	{
     	public:
-    		Credits(std::shared_ptr<GameManager> man);
+    		Credits();
     		Credits(const Credits&) = delete;
     		~Credits();
 
@@ -38,7 +38,6 @@ namespace Sourcehold
     		void onEventReceive(Mouse &event) override;
 
             bool playing;
-    		std::shared_ptr<GameManager> manager;
     	};
     }
 }

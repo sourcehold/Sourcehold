@@ -36,17 +36,15 @@ namespace Sourcehold
         using namespace Rendering;
         using namespace Parsers;
 
-        class GameManager;
         class GameMap
         {
             int mult = 1;
             uint16_t maypole;
             std::shared_ptr<Gm1File> gm1_tile, gm1_maypole, gm1_churches, gm1_anim;
-            std::shared_ptr<GameManager> manager;
             std::shared_ptr<Tileset> tileset;
             std::vector<SDL_Rect> tiles;
         public:
-            GameMap(std::shared_ptr<GameManager> man);
+            GameMap();
             GameMap(const GameMap&) = delete;
             ~GameMap() = default;
 

@@ -29,10 +29,9 @@ namespace Sourcehold
          */
         class TgxFile : private Parser, public Texture
         {
-            std::shared_ptr<Renderer> renderer;
         public:
-            TgxFile(std::shared_ptr<Renderer> rend);
-            TgxFile(std::shared_ptr<Renderer> rend, boost::filesystem::path path);
+            TgxFile();
+            TgxFile(boost::filesystem::path path);
             ~TgxFile();
 
             bool LoadFromDisk(boost::filesystem::path path);

@@ -5,10 +5,8 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-Startup::Startup(std::shared_ptr<GameManager> man) :
-    EventConsumer<Mouse>(man->GetHandler()),
-    manager(man),
-    mainMenu(man)
+Startup::Startup() :
+    EventConsumer<Mouse>(GetHandler())
 {
 }
 
@@ -17,30 +15,30 @@ Startup::~Startup() {
 }
 
 void Startup::PlayMusic() {
-    aud_startup.LoadSong(manager->GetDirectory() / "/fx/music/stainedglass1.raw");
+    aud_startup.LoadSong(GetDirectory() / "/fx/music/stainedglass1.raw");
     aud_startup.Play();
 }
 
 int Startup::Begin() {
-    tgx_firefly = manager->GetTgx(manager->GetDirectory() / "gfx/logo1.tgx").lock();
-    tgx_taketwo = manager->GetTgx(manager->GetDirectory() / "gfx/logo2.tgx").lock();
-    tgx_present = manager->GetTgx(manager->GetDirectory() / "gfx/logo3.tgx").lock();
-    tgx_logo = manager->GetTgx(manager->GetDirectory() / "gfx/startup screen.tgx").lock();
-    tgx_firefly_front = manager->GetTgx(manager->GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
+    tgx_firefly = GetTgx(GetDirectory() / "gfx/logo1.tgx").lock();
+    tgx_taketwo = GetTgx(GetDirectory() / "gfx/logo2.tgx").lock();
+    tgx_present = GetTgx(GetDirectory() / "gfx/logo3.tgx").lock();
+    tgx_logo = GetTgx(GetDirectory() / "gfx/startup screen.tgx").lock();
+    tgx_firefly_front = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
 
-    intro = manager->GetBik(manager->GetDirectory() / "binks/intro.bik").lock();
+    intro = GetBik(GetDirectory() / "binks/intro.bik").lock();
 
-    startTime = manager->GetTime();
+    startTime = GetTime();
 
     Uint8 alpha = 255;
     double fadeBase = startTime;
-	Resolution res = manager->GetResolution();
-    while(manager->Running()) {
-        manager->Clear();
+	Resolution res = GetResolution();
+    while(Running()) {
+        ClearDisplay();
 
         if(currentUIState == INTRO_SEQUENCE) {
             /* Logo switching */
-            double now = manager->GetTime();
+            double now = GetTime();
             double delta = now - startTime;
 
             /* Logo fading */
@@ -65,49 +63,49 @@ int Startup::Begin() {
 			* Images get scaled down on 800x600 and
 			* centered but not scaled on every other res
 			*/
-			int px = (manager->GetWidth() / 2) - (1024 / 2);
-			int py = (manager->GetHeight() / 2) - (768 / 2);
+			int px = (GetWidth() / 2) - (1024 / 2);
+			int py = (GetHeight() / 2) - (768 / 2);
             if(currentStartupState == STARTUP_FIREFLY_LOGO) {
                 tgx_firefly->SetAlphaMod(alpha);
 				if (res == RESOLUTION_800x600) {
-					manager->Render(*tgx_firefly);
+					Render(*tgx_firefly);
 				}
 				else {
-					manager->Render(*tgx_firefly, px, py);
+					Render(*tgx_firefly, px, py);
 				}
             }else if(currentStartupState == STARTUP_TAKETWO_LOGO) {
                 tgx_taketwo->SetAlphaMod(alpha);
 				if (res == RESOLUTION_800x600) {
-					manager->Render(*tgx_taketwo);
+					Render(*tgx_taketwo);
 				}
 				else {
-					manager->Render(*tgx_taketwo, px, py);
+					Render(*tgx_taketwo, px, py);
 				}
 			}else if(currentStartupState == STARTUP_PRESENT) {
                 tgx_present->SetAlphaMod(alpha);
 				if (res == RESOLUTION_800x600) {
-					manager->Render(*tgx_present);
+					Render(*tgx_present);
 				}
 				else {
-					manager->Render(*tgx_present, px, py);
+					Render(*tgx_present, px, py);
 				}
             }else if(currentStartupState == STARTUP_STRONGHOLD_LOGO) {
                 tgx_logo->SetAlphaMod(alpha);
 				if (res == RESOLUTION_800x600) {
-					manager->Render(*tgx_logo);
+					Render(*tgx_logo);
 				}
 				else {
-					manager->Render(*tgx_logo, px, py);
+					Render(*tgx_logo, px, py);
 				}
             }else if(currentStartupState == STARTUP_INTRO) {
                 aud_startup.SetFadeOut(1.0);
                 aud_startup.UpdateFade();
                 intro->Update();
 
-				px = (manager->GetWidth() / 2) - (640 / 2);
-				py = (manager->GetHeight() / 2) - (230 / 2);
+				px = (GetWidth() / 2) - (640 / 2);
+				py = (GetHeight() / 2) - (230 / 2);
 
-				manager->Render(*intro, px, py);
+				Render(*intro, px, py);
                 if(!intro->IsRunning()) {
                     currentUIState = MAIN_MENU;
                 }
@@ -122,8 +120,8 @@ int Startup::Begin() {
         } else {
             return EXIT_SUCCESS;
         }
-        manager->Flush();
-        manager->Sync();
+        FlushDisplay();
+        SyncDisplay();
     }
     return EXIT_FAILURE;
 }

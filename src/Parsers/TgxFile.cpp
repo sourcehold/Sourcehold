@@ -10,12 +10,10 @@ struct TgxFile::TgxHeader {
     uint16_t u1;
 };
 
-TgxFile::TgxFile(std::shared_ptr<Renderer> rend) : Parser(), Texture(rend) {
-    renderer = rend;
+TgxFile::TgxFile() {
 }
 
-TgxFile::TgxFile(std::shared_ptr<Renderer> rend, boost::filesystem::path path) : Parser(), Texture(rend) {
-    renderer = rend;
+TgxFile::TgxFile(boost::filesystem::path path) {
     this->LoadFromDisk(path);
 }
 
@@ -36,7 +34,7 @@ bool TgxFile::LoadFromDisk(boost::filesystem::path path) {
     }
 
     /* Allocate image */
-    Surface surf(renderer);
+    Surface surf;
     surf.AllocNew(header.width, header.height, SDL_PIXELFORMAT_RGBA4444);
 
     /* Calculate size */

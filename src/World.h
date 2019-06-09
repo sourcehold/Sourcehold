@@ -43,10 +43,8 @@ namespace Sourcehold
          */
         class Building;
         class Entity;
-        class GameManager;
         class World : public GameMap, protected EventConsumer<Keyboard>, protected EventConsumer<Mouse>
         {
-            std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_right, tgx_bar_bg;
             std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats;
             ScrollInformation scroll;
@@ -68,10 +66,9 @@ namespace Sourcehold
             bool rmbHolding = false;
             Uint32 mouseX, mouseY;
         public:
-            World(std::shared_ptr<GameManager> mgr);
+            World();
             World(const World&) = delete;
             ~World();
-
             
             int Play();
         protected:

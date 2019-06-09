@@ -5,16 +5,10 @@
 
 using namespace Sourcehold::Rendering;
 
-TextureAtlas::TextureAtlas(std::shared_ptr<Renderer> rend) :
-    Texture(rend),
-    renderer(rend),
-    surf(rend)
-{
+TextureAtlas::TextureAtlas() {
 }
 
-TextureAtlas::TextureAtlas(const TextureAtlas &atlas) : Texture(atlas.renderer), surf(atlas.renderer)
-{
-    this->renderer = atlas.renderer;
+TextureAtlas::TextureAtlas(const TextureAtlas &atlas) {
 }
 
 TextureAtlas::~TextureAtlas() {

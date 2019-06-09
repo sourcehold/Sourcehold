@@ -46,20 +46,16 @@ struct Gm1File::Gm1Entry {
     uint16_t offX, offY, tileX, tileY;
 };
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend) : Parser()
+Gm1File::Gm1File() : Parser()
 {
-    this->renderer = rend;
-
-    textureAtlas = std::make_shared<TextureAtlas>(rend);
-    tileset = std::make_shared<Tileset>(rend);
+    textureAtlas = std::make_shared<TextureAtlas>();
+    tileset = std::make_shared<Tileset>();
 }
 
-Gm1File::Gm1File(std::shared_ptr<Renderer> rend, boost::filesystem::path path) : Parser()
+Gm1File::Gm1File(boost::filesystem::path path) : Parser()
 {
-    this->renderer = rend;
-
-    textureAtlas = std::make_shared<TextureAtlas>(rend);
-    tileset = std::make_shared<Tileset>(rend);
+    textureAtlas = std::make_shared<TextureAtlas>();
+    tileset = std::make_shared<Tileset>();
 
     this->LoadFromDisk(path, false);
 }

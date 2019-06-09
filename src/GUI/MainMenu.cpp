@@ -40,48 +40,45 @@ const static MenuButtonInfo lut_buttons[] = {
 	{ 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 68, 0 }
 };
 
-MainMenu::MainMenu(std::shared_ptr<GameManager> man) :
-	manager(man),
-	cred(man),
-	screen(man)
+MainMenu::MainMenu()
 {
-	edition = manager->GetEdition();
+	edition = GetEdition();
 
 	if (edition == STRONGHOLD_HD) {
-		tgx_border = manager->GetTgx(manager->GetDirectory() / "gfx/SH1_Back.tgx").lock();
+		tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
 		screen.AllocNewTarget(1024, 768);
 	}
 
-    aud_chantloop.LoadSong(manager->GetDirectory() / "fx/music/chantloop1.raw", true);
+    aud_chantloop.LoadSong(GetDirectory() / "fx/music/chantloop1.raw", true);
 
-	gm1_icons_additional = manager->GetGm1(manager->GetDirectory() / "gm/interface_buttons.gm1").lock();
-	gm1_icons_main = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end.gm1").lock();
-	gm1_icons_combat = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end_combat.gm1").lock();
-	gm1_icons_economic = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end_economics.gm1").lock();
-	gm1_icons_builder = manager->GetGm1(manager->GetDirectory() / "gm/icons_front_end_builder.gm1").lock();
+	gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
+	gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1").lock();
+	gm1_icons_combat = GetGm1(GetDirectory() / "gm/icons_front_end_combat.gm1").lock();
+	gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1").lock();
+	gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1").lock();
 
-	tgx_bg_main = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_main.tgx").lock();
-	tgx_bg_combat = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_combat.tgx").lock();
-	tgx_bg_economic = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_economics.tgx").lock();
-	tgx_bg_builder = manager->GetTgx(manager->GetDirectory() / "gfx/frontend_builder.tgx").lock();
+	tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx").lock();
+	tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx").lock();
+	tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx").lock();
+	tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx").lock();
 
 	aud_greetings.LoadEffect(GetGreetingsSound(), false);
-	aud_exit.LoadEffect(manager->GetDirectory() / "fx/speech/General_Quitgame.wav", false);
+	aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 
 	/**
 	* Render the border 'zoomed in' so that the
 	* menu can be placed in the middle without scaling.
 	*/
-	border_rect.x = (1920 - manager->GetWidth()) / 2;
-	border_rect.y = (1200 - manager->GetHeight()) / 2;
-	border_rect.w = manager->GetWidth();
-	border_rect.h = manager->GetHeight();
+	border_rect.x = (1920 - GetWidth()) / 2;
+	border_rect.y = (1200 - GetHeight()) / 2;
+	border_rect.w = GetWidth();
+	border_rect.h = GetHeight();
 
-	mx = (manager->GetWidth() - 1024) / 2;
-	my = (manager->GetHeight() - 768) / 2;
+	mx = (GetWidth() - 1024) / 2;
+	my = (GetHeight() - 768) / 2;
 
 	/* Allocate buttons */
-	ui_elems.resize(BUTTON_END, manager);
+	ui_elems.resize(BUTTON_END);
 }
 
 MainMenu::~MainMenu() {
@@ -90,28 +87,28 @@ MainMenu::~MainMenu() {
 
 UIState MainMenu::EnterMenu() {
 	if(edition == STRONGHOLD_HD) {
-		manager->SetTarget(&screen, mx, my, 1024, 768);		
+		SetTarget(&screen, mx, my, 1024, 768);		
 	}
 
-	manager->ResetTarget();
+	ResetTarget();
 
 	currentState = MAIN_MENU;
 
 	aud_chantloop.Play();
 	aud_greetings.Play();
 
-	while (manager->Running()) {
-		manager->Clear();
+	while (Running()) {
+		ClearDisplay();
 
 		if(edition == STRONGHOLD_HD) {
-			manager->Render(*tgx_border, &border_rect);
+			Render(*tgx_border, &border_rect);
 		}
-		manager->SetTarget(&screen, mx, my, 1024, 768);
+		SetTarget(&screen, mx, my, 1024, 768);
 
 		/* Render the current menu on top of the background */
 		switch(currentState) {
 			case MAIN_MENU: {
-				manager->Render(*tgx_bg_main);
+				Render(*tgx_bg_main);
 				RenderMain();
 			} break;
 			case COMBAT_MENU: {
@@ -128,27 +125,11 @@ UIState MainMenu::EnterMenu() {
 
 		RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4);
 
-		manager->ResetTarget();
-		manager->Render(screen, mx, my);
+		ResetTarget();
+		Render(screen, mx, my);
 
 		/* Reset target first, then play credits and leave again */
 		if(currentState == CREDITS) {
-			/* Fade out chantloop, screen -> black */
-	    	/*Uint8 alpha;
-	    	double fadeBase, now;
-	    	now = fadeBase = manager->GetTime();
-	    	aud_chantloop.SetFadeOut(1.0);
-	    	while(aud_chantloop.IsFading()) {
-    			//manager->Clear();
-    			alpha = 255 - Uint8(((now - (fadeBase + 1.0)) * 255.0) / 1.0);
-    			//screen.SetAlphaMod(alpha);
-    			//tgx_border->SetAlphaMod(alpha);
-    			aud_chantloop.UpdateFade();
-    			//RenderBorder();
-    			//manager->Render(screen, mx, my);
-    			manager->Sync();
-    			manager->Flush();
-    		}*/
     		aud_chantloop.Stop();
     		/* Start credits loop */
     		cred.Play(false, true, true);
@@ -160,10 +141,10 @@ UIState MainMenu::EnterMenu() {
 
 		aud_greetings.Update();
 
-		glareCounter = (int)(manager->GetTime() * 10.0);
+		glareCounter = (int)(GetTime() * 10.0);
 
-		manager->Flush();
-		manager->Sync();
+		FlushDisplay();
+		SyncDisplay();
 	}
 
 	aud_chantloop.Stop();
@@ -171,9 +152,9 @@ UIState MainMenu::EnterMenu() {
 }
 
 boost::filesystem::path MainMenu::GetGreetingsSound() {
-	boost::filesystem::path snd = manager->GetDirectory() / "fx/speech/";
+	boost::filesystem::path snd = GetDirectory() / "fx/speech/";
 
-	int index = manager->GetUsernameIndex();
+	int index = GetUsernameIndex();
 	if(index == -1) {
 		snd /= "General_Startgame.wav";
 	}else {

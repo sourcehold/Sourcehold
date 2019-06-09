@@ -1,5 +1,6 @@
 #include <GUI/Credits.h>
 #include <Rendering/Font.h>
+#include <Rendering/Renderer.h>
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -67,10 +68,9 @@ const static wchar_t *credit_lines_firefly[] = {
 	L"Davis Lester",
 };
 
-Credits::Credits(std::shared_ptr<GameManager> man) :
-	EventConsumer<Mouse>(man->GetHandler())
+Credits::Credits() :
+	EventConsumer<Mouse>(GetHandler())
 {
-	manager = man;
 }
 
 Credits::~Credits() {
@@ -84,38 +84,38 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
     std::shared_ptr<TgxFile> tgx_credits, tgx_1, tgx_2, tgx_3, tgx_4, tgx_firefly;
 
 	if(endgame) {
-		music.LoadSong(manager->GetDirectory() / "fx/music/Glory_06.raw", true);
-		tgx_credits = manager->GetTgx(manager->GetDirectory() / "gfx/end_credit.tgx").lock();
+		music.LoadSong(GetDirectory() / "fx/music/Glory_06.raw", true);
+		tgx_credits = GetTgx(GetDirectory() / "gfx/end_credit.tgx").lock();
 	}else {
-		music.LoadSong(manager->GetDirectory() / "fx/music/castlejam.raw", true);
-		tgx_1 = manager->GetTgx(manager->GetDirectory() / "gfx/credits_1.tgx").lock();
-		tgx_2 = manager->GetTgx(manager->GetDirectory() / "gfx/credits_2.tgx").lock();
-		tgx_3 = manager->GetTgx(manager->GetDirectory() / "gfx/credits_3.tgx").lock();
-		tgx_4 = manager->GetTgx(manager->GetDirectory() / "gfx/credits_4.tgx").lock();
+		music.LoadSong(GetDirectory() / "fx/music/castlejam.raw", true);
+		tgx_1 = GetTgx(GetDirectory() / "gfx/credits_1.tgx").lock();
+		tgx_2 = GetTgx(GetDirectory() / "gfx/credits_2.tgx").lock();
+		tgx_3 = GetTgx(GetDirectory() / "gfx/credits_3.tgx").lock();
+		tgx_4 = GetTgx(GetDirectory() / "gfx/credits_4.tgx").lock();
 	}
 
-	tgx_firefly = manager->GetTgx(manager->GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
+	tgx_firefly = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
 
 	music.Play();
 
 	Uint8 alpha = 255;
-	double startTime = manager->GetTime();
+	double startTime = GetTime();
 	double fadeBase = startTime;
 
 	int iw = endgame ? 1024 : 800, ih = endgame ? 768 : 600;
-	int px = (manager->GetWidth() / 2) - (iw / 2);
-	int py = (manager->GetHeight() / 2) - (ih / 2);
+	int px = (GetWidth() / 2) - (iw / 2);
+	int py = (GetHeight() / 2) - (ih / 2);
 
-	int sx = (manager->GetWidth() / 2) + (200 / 2);
+	int sx = (GetWidth() / 2) + (200 / 2);
 	int scrollOffset = 0;
 
-	manager->MouseOff();
+	MouseOff();
 
-	Resolution res = manager->GetResolution();
-	while (manager->Running() && playing) {
-		manager->Clear();
+	Resolution res = GetResolution();
+	while (Running() && playing) {
+		ClearDisplay();
 
-		double now = manager->GetTime();
+		double now = GetTime();
 		double delta = now - fadeBase;
 
 		if(now < fadeBase + 2.0) {
@@ -133,43 +133,43 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 		if(endgame) {
 			if(res == RESOLUTION_800x600) {
 				/* Scale down */
-				manager->Render(*tgx_credits);
+				Render(*tgx_credits);
 			}else {
 				/* Place in the middle */
-				manager->Render(*tgx_credits, px, py);
+				Render(*tgx_credits, px, py);
 			}
 		}else {
 			switch(currentImage) {
 				case 0: {
 					tgx_1->SetAlphaMod(alpha);
-					manager->Render(*tgx_1, px, py);
+					Render(*tgx_1, px, py);
 				} break;
 				case 1: {
 					tgx_2->SetAlphaMod(alpha);
-					manager->Render(*tgx_2, px, py);
+					Render(*tgx_2, px, py);
 				} break;
 				case 2: {
 					tgx_3->SetAlphaMod(alpha);
-					manager->Render(*tgx_3, px, py);
+					Render(*tgx_3, px, py);
 				} break;
 				case 3: {
 					tgx_4->SetAlphaMod(alpha);
-					manager->Render(*tgx_4, px, py);
+					Render(*tgx_4, px, py);
 				} break;
 				default: break;
 			}
 		}
 
 		/* Render the scroller */
-		int sy = manager->GetHeight() - scrollOffset;
+		int sy = GetHeight() - scrollOffset;
 		scrollOffset = int((now - startTime) * 60.0);
 
 		/* Firefly Studios */
-		manager->Render(*tgx_firefly, sx, sy);
+		Render(*tgx_firefly, sx, sy);
 		sy += 122 + 30;
 
 		for(int i = 0;
-			sy < manager->GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
+			sy < GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
 			i++, sy += 46) {
 			const wchar_t *line = credit_lines_firefly[i];
 			RenderText(line, sx, sy, 1, FONT_LARGE);
@@ -177,11 +177,11 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
 		// TODO: Rest of credits, colored titles
 
-		manager->Flush();
-		manager->Sync();
+		FlushDisplay();
+		SyncDisplay();
 	}
 
-	manager->MouseOn();
+	MouseOn();
 	music.Stop();
 
 	return true;

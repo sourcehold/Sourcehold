@@ -21,13 +21,12 @@ namespace Sourcehold
          */
         class TextureAtlas : public Texture
         {
-            std::shared_ptr<Renderer> renderer;
             uint32_t num;
             const uint32_t MAX_X_RESOLUTION = 2048;
             std::vector<SDL_Rect> entries;
             Surface surf;
         public:
-            TextureAtlas(std::shared_ptr<Renderer> rend);
+            TextureAtlas();
             TextureAtlas(const TextureAtlas &atlas);
             ~TextureAtlas();
 

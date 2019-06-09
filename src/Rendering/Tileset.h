@@ -20,11 +20,10 @@ namespace Sourcehold
          */
         class Tileset : public Texture
         {
-            std::shared_ptr<Renderer> renderer;
             uint32_t numRows, num;
             Surface surf;
         public:
-            Tileset(std::shared_ptr<Renderer> rend);
+            Tileset();
             ~Tileset();
 
             void Allocate(uint32_t num);

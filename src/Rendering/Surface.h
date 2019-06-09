@@ -17,13 +17,12 @@ namespace Sourcehold
         class Surface : public Renderable
         {
             SDL_Surface *surface;
-            std::shared_ptr<Renderer> renderer;
             bool locked = false;
             bool valid = false;
             Uint32 *pixels = nullptr;
             uint32_t width, height;
         public:
-            Surface(std::shared_ptr<Renderer> rend);
+            Surface();
             Surface(const Surface&) = delete;
             ~Surface();
 

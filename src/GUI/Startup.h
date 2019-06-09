@@ -39,7 +39,7 @@ namespace Sourcehold
         {
             MainMenu mainMenu;
         public:
-            Startup(std::shared_ptr<GameManager> man);
+            Startup();
             Startup(const Startup &) = delete;
             ~Startup();
 
@@ -52,7 +52,6 @@ namespace Sourcehold
             AudioSource aud_startup;
 
             /* Resources */
-            std::shared_ptr<GameManager> manager;
             std::shared_ptr<TgxFile> tgx_firefly, tgx_taketwo, tgx_present, tgx_logo, tgx_firefly_front;
             std::shared_ptr<BinkVideo> intro;
 

@@ -6,6 +6,7 @@
 #include <Parsers/Gm1File.h>
 
 #include <Rendering/Font.h>
+#include <Rendering/Camera.h>
 
 using namespace Sourcehold::Game;
 
@@ -25,45 +26,33 @@ static uint16_t _ui_tabs_indices[6][3] = {
     { 22, 23, 24 },
 };
 
-World::World(std::shared_ptr<GameManager> mgr) :
-    GameMap(mgr),
-    manager(mgr),
-    EventConsumer<Keyboard>(mgr->GetHandler()),
-    EventConsumer<Mouse>(mgr->GetHandler()),
-    menubar(mgr),
-    ui_disk(mgr),
-    ui_info(mgr),
-    ui_delete(mgr),
-    ui_revert(mgr),
-    ui_tabs { mgr, mgr, mgr, mgr, mgr, mgr },
-    ui_compass(mgr),
-    ui_magnify(mgr),
-    ui_lower(mgr),
-    ui_hide(mgr)
+World::World() :
+    EventConsumer<Keyboard>(GetHandler()),
+    EventConsumer<Mouse>(GetHandler())
 {
     /* The repeating, wooden background of the menu bar */
-    tgx_bar_bg = mgr->GetTgx(mgr->GetDirectory() / "gfx/1280r.tgx").lock();
+    tgx_bar_bg = GetTgx(GetDirectory() / "gfx/1280r.tgx").lock();
     /* The right side of the scribe/book */
-    tgx_right = mgr->GetTgx(mgr->GetDirectory() / "gfx/edge1280r.tgx").lock();
+    tgx_right = GetTgx(GetDirectory() / "gfx/edge1280r.tgx").lock();
     /* The scribe's facial animation */
-    gm1_scribe = mgr->GetGm1(mgr->GetDirectory() / "gm/scribe.gm1").lock();
+    gm1_scribe = GetGm1(GetDirectory() / "gm/scribe.gm1").lock();
     /* The menu faces */
-    gm1_face = mgr->GetGm1(mgr->GetDirectory() / "gm/face800-blank.gm1").lock();
-    gm1_icons = mgr->GetGm1(mgr->GetDirectory() / "gm/interface_buttons.gm1").lock();
-    gm1_floats = mgr->GetGm1(mgr->GetDirectory() / "gm/floats.gm1").lock();
+    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1").lock();
+    gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
+    gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1").lock();
 
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
-    manager->SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
-    manager->SetCamPos(15, 8);
+    SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
+    SetCamPos(15, 8);
 }
 
 World::~World() {
 }
 
 int World::Play() {
-    while(manager->Running()) {
-        manager->Clear();
+    while(Running()) {
+        ClearDisplay();
 
         UpdateCamera();
 
@@ -80,8 +69,8 @@ int World::Play() {
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
-        manager->Flush();
-		manager->Sync();
+        FlushDisplay();
+		SyncDisplay();
     }
 
     return 0;
@@ -109,7 +98,7 @@ void World::RenderQuickMenu() {
     ui_compass.Render(
         [&]() -> Texture& {
             if(ui_compass.IsMouseOver()) {
-                Camera::Rotation rota = manager->GetRotation();
+                Rotation rota = GetRotation();
             }
             atlas->SetRect(atlas->Get(37));
             return *atlas;
@@ -144,29 +133,29 @@ void World::RenderQuickMenu() {
 
 
 void World::RenderMenubar() {
-    manager->Render(menubar, menuX, menuY, menuW, menuH);
+    Rendering::Render(menubar, menuX, menuY, menuW, menuH);
 }
 
 void World::UpdateMenubar() {
-	menuX = (manager->GetWidth() / 2) - (menubar.GetWidth() / 2);
-	menuY = manager->GetHeight() - menubar.GetHeight();
+	menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
+	menuY = GetHeight() - menubar.GetHeight();
 	menuW = menubar.GetWidth();
 	menuH = menubar.GetHeight();
 
-    manager->SetTarget(&menubar, menuX, menuY, menuW, menuH);
+    SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
 
     /* TODO: Less hardcoding */
     auto atlas = gm1_face->GetTextureAtlas().lock();
     SDL_Rect rect = atlas->Get(0);
-    manager->Render(*atlas, width - 800 - 240, height - rect.h, &rect);
+    Rendering::Render(*atlas, width - 800 - 240, height - rect.h, &rect);
 
     atlas = gm1_scribe->GetTextureAtlas().lock();
     rect = atlas->Get(0);
-    manager->Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);
-    manager->Render(*tgx_right, width - tgx_right->GetWidth(), height - tgx_right->GetHeight());
-    manager->Render(*tgx_bar_bg, 0, height - tgx_bar_bg->GetHeight());
+    Rendering::Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);
+    Rendering::Render(*tgx_right, width - tgx_right->GetWidth(), height - tgx_right->GetHeight());
+    Rendering::Render(*tgx_bar_bg, 0, height - tgx_bar_bg->GetHeight());
 
     atlas = gm1_icons->GetTextureAtlas().lock();
 
@@ -258,14 +247,14 @@ void World::UpdateMenubar() {
     default: break;
     }
 
-    manager->ResetTarget();
+    ResetTarget();
 }
 
 void World::UpdateCamera() {
-    if(scroll.left) manager->MoveLeft();
-    if(scroll.right) manager->MoveRight();
-    if(scroll.up) manager->MoveUp();
-    if(scroll.down) manager->MoveDown();
+    if(scroll.left) MoveLeft();
+    if(scroll.right) MoveRight();
+    if(scroll.up) MoveUp();
+    if(scroll.down) MoveDown();
 }
 
 void World::onEventReceive(Keyboard &keyEvent) {
@@ -276,11 +265,11 @@ void World::onEventReceive(Keyboard &keyEvent) {
         case SDLK_UP: scroll.up.shouldScroll = true; scroll.up.setByKeyboard = true; break;
         case SDLK_DOWN: scroll.down.shouldScroll = true; scroll.down.setByKeyboard = true; break;
         case SDLK_SPACE:
-            if(manager->GetZoomLevel() == Camera::ZOOM_NEAR) manager->ZoomOut();
-            else manager->ZoomIn();
+            if(GetZoomLevel() == ZOOM_NEAR) ZoomOut();
+            else ZoomIn();
             break;
         case SDLK_TAB: menubarShown = !menubarShown; break;
-        case SDLK_ESCAPE: manager->ReleaseMouse(); break;
+        case SDLK_ESCAPE: ReleaseMouse(); break;
         default: break;
         }
     }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
@@ -292,14 +281,14 @@ void World::onEventReceive(Keyboard &keyEvent) {
         default: break;
         }
 
-        manager->ResetMomentum();
+        ResetMomentum();
     }
 }
 
 void World::onEventReceive(Mouse &mouseEvent) {
     if(mouseEvent.GetType() == MOUSE_BUTTONDOWN) {
-        int64_t px = (mouseEvent.GetPosX() + manager->CamX()) / 30;
-        int64_t py = (mouseEvent.GetPosY() + manager->CamY()) / 16;
+        int64_t px = (mouseEvent.GetPosX() + CamX()) / 30;
+        int64_t py = (mouseEvent.GetPosY() + CamY()) / 16;
 
         if(mouseEvent.RmbDown()) {
             rmbHolding = true;
@@ -308,7 +297,7 @@ void World::onEventReceive(Mouse &mouseEvent) {
         }
 
         if(mouseEvent.LmbDown()) {
-            manager->GrabMouse();
+            GrabMouse();
         }
     }else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
         if(mouseEvent.RmbUp()) {
@@ -333,7 +322,7 @@ void World::onEventReceive(Mouse &mouseEvent) {
             shouldReset = true;
         }
 
-        if(x > manager->GetWidth() - scrollThreshold) {
+        if(x > GetWidth() - scrollThreshold) {
             scroll.right.shouldScroll = true;
             scroll.right.setByMouse = true;
         }
@@ -353,7 +342,7 @@ void World::onEventReceive(Mouse &mouseEvent) {
             shouldReset = true;
         }
 
-        if(y > manager->GetHeight() - scrollThreshold) {
+        if(y > GetHeight() - scrollThreshold) {
             scroll.down.shouldScroll = true;
             scroll.down.setByMouse = true;
         }
@@ -364,7 +353,7 @@ void World::onEventReceive(Mouse &mouseEvent) {
         }
 
         if(shouldReset) {
-            manager->ResetMomentum();
+            ResetMomentum();
         }
     }
 }

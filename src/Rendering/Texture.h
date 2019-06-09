@@ -22,7 +22,6 @@ namespace Sourcehold
         class Surface;
         class Texture : public Renderable
         {
-            std::shared_ptr<Renderer> renderer;
             SDL_Texture *texture = nullptr;
             int width, height, pitch = 0;
             double angle;
@@ -31,7 +30,7 @@ namespace Sourcehold
             SDL_RendererFlip flip;
             SDL_TextureAccess access;
         public:
-            Texture(std::shared_ptr<Renderer> rend);
+            Texture();
             Texture(const Texture &tex);
             ~Texture();
 

@@ -26,8 +26,8 @@ namespace Sourcehold
         class Gm1File : private Parser
         {
         public:
-            Gm1File(std::shared_ptr<Renderer> rend);
-            Gm1File(std::shared_ptr<Renderer> rend, boost::filesystem::path path);
+            Gm1File();
+            Gm1File(boost::filesystem::path path);
             Gm1File(const Gm1File&) = delete;
             Gm1File& operator=(const Gm1File&)= delete;
             ~Gm1File();
@@ -74,7 +74,6 @@ namespace Sourcehold
 
             std::shared_ptr<TextureAtlas> textureAtlas;
             std::shared_ptr<Tileset> tileset;
-            std::shared_ptr<Renderer> renderer;
             boost::filesystem::path path;
             /* Color palette for tgx image entries */
             uint16_t palette[2560];

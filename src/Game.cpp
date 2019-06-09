@@ -5,9 +5,10 @@
 
 #include <cxxopts.hpp>
 
-#include <GUI/Startup.h>
 #include <World.h>
 #include <GameManager.h>
+
+#include <GUI/Startup.h>
 #include <Rendering/Font.h>
 #include <Parsers/MlbFile.h>
 
@@ -23,66 +24,71 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::GUI;
 
-static std::shared_ptr<GameManager> gameManager;
-
 void Cleanup() {
 	UnloadFonts();
-	gameManager->ClearFileCache();
+	ClearFileCache();
+    DestroyManager();
 }
 
 int StartGame(GameOptions &opt) {
-    gameManager = std::make_shared<GameManager>(opt);
+    if(!InitManager(opt) || !LoadGameData()) {
+        Logger::error("GAME") << "Error while initializing game!" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    /* Get the assets */
-    gameManager->LoadGameData();
+    /* Get the assets */    
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
     if(files.empty()) {
         Logger::error("GAME") << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
         return EXIT_FAILURE;
     }
 
-    if(!LoadFonts(gameManager)) return EXIT_FAILURE;
-    if(!InitializeUtils(gameManager)) return EXIT_FAILURE;
+    if(!LoadFonts()) {
+        Logger::error("GAME") << "Error while loading fonts!" << std::endl;
+        return EXIT_FAILURE;
+    }
+    if(!InitializeUtils()) {
+        Logger::error("GAME") << "Error while initializing menu utils!" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-    MlbFile mlb;
-    mlb.LoadFromDisk(gameManager->GetDirectory() / "stronghold.mlb");
-
-    std::shared_ptr<TgxFile> tgx_loading = gameManager->GetTgx(gameManager->GetDirectory() / "gfx/frontend_loading.tgx").lock();
+    std::shared_ptr<TgxFile> tgx_loading = GetTgx(GetDirectory() / "gfx/frontend_loading.tgx").lock();
 
     /* Init the menu */
-    Startup menu(gameManager);
+    Startup menu;
     menu.PlayMusic();
 
 	/* Preload some assets */
     uint32_t index = 0;
 
 	/* Calculater the position */
-	int px = (gameManager->GetWidth() / 2) - (1024 / 2);
-	int py = (gameManager->GetHeight() / 2) - (768 / 2);
-	
-	while(gameManager->Running() && index < files.size()-1) {
-        gameManager->Clear();
+	int px = (GetWidth() / 2) - (1024 / 2);
+	int py = (GetHeight() / 2) - (768 / 2);
+
+	while(Running() && index < files.size()-1) {
+        ClearDisplay();
 
         /* Load a file */
         boost::filesystem::path path = files.at(index);
-        gameManager->Cache(path);
+        Cache(path);
         index++;
 
         /* Normalized loading progess */
         double progress = (double)index / (double)files.size();
         
 		/* Render the background */
-		gameManager->Render(*tgx_loading, px, py);
+		Render(*tgx_loading, px, py);
 		
         /* Render the loading bar */
-        gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
-        gameManager->Render(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 255, false);
-        gameManager->Render(0.305, 0.755, 0.39 * progress, 0.03, 0, 0, 0, 255, true);
+        DrawRect(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
+        DrawRect(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 255, false);
+        DrawRect(0.305, 0.755, 0.39 * progress, 0.03, 0, 0, 0, 255, true);
 
-        gameManager->Flush();
+        FlushDisplay();
+        SyncDisplay();
     }
 
-    if(gameManager->Running()) {
+    if(Running()) {
         /* Start the intro sequence and the main menu */
         int ret = menu.Begin();
 		if (ret != EXIT_SUCCESS) {
@@ -91,10 +97,10 @@ int StartGame(GameOptions &opt) {
 		}
 
         /* ------ Alpha testing ------ */
-        AudioSource aud(gameManager->GetDirectory() / "fx/music/sadtimesa.raw", true);
+        AudioSource aud(GetDirectory() / "fx/music/sadtimesa.raw", true);
         //aud.Play();
 
-        World world(gameManager);
+        World world;
         world.Play();
         /* ------ Alpha testing ------ */
     }

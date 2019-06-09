@@ -1,73 +1,76 @@
 #include <Rendering/Renderer.h>
-#include <Rendering/Texture.h>
+#include <Rendering/Display.h>
+#include <System/Logger.h>
 
-using namespace Sourcehold::Rendering;
-using namespace Sourcehold::System;
+using namespace Sourcehold;
+using namespace Rendering;
+using namespace System;
 
-Renderer::Renderer() : Camera(0, 0) {
-}
+static SDL_Renderer *_renderer;
+static SDL_Window *_window;
+static Texture *_target = nullptr;
+static double tx,ty,tw,th;
 
-Renderer::~Renderer() {
-    if(renderer) SDL_DestroyRenderer(renderer);
-}
-
-void Renderer::Init(SDL_Window *window) {
-    this->window = window;
-
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-    if(!renderer) {
+bool Rendering::InitRenderer() {
+    _window = GetWindow();
+    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+    if(!_renderer) {
         Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
+    	return false;
     }
 
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
 
-    /* Window size */
-    SDL_AddEventWatch(ResizeEventWatcher, static_cast<void*>(this));
-    SDL_GetWindowSize(window, &width, &height);
+	return true;
 }
 
-void Renderer::Update() {
+void Rendering::DestroyRenderer() {
+	if(_renderer) SDL_DestroyRenderer(_renderer);
 }
 
-void Renderer::Clear() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
+void Rendering::UpdateRenderer() {
+
 }
 
-void Renderer::Flush() {
-    SDL_RenderPresent(renderer);
+void Rendering::ClearDisplay() {
+    SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(_renderer);
 }
 
-void Renderer::SetTarget(Texture *target, double x, double y, double w, double h) {
+void Rendering::FlushDisplay() {
+	SDL_RenderPresent(_renderer);
+}
+
+void Rendering::SetTarget(Texture *target, double x, double y, double w, double h) {
     tx = x;
     ty = y;
     tw = w;
     th = h;
-    this->target = target;
-    if(SDL_SetRenderTarget(renderer, target->GetTexture()) < 0) {
+    _target = target;
+    if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
         Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
     }
 }
 
-void Renderer::SetTarget(Texture *target, int x, int y, int w, int h) {
+void Rendering::SetTarget(Texture *target, int x, int y, int w, int h) {
 	tx = NormalizeX(x);
 	ty = NormalizeY(y);
 	tw = NormalizeX(w);
 	th = NormalizeY(h);
-	this->target = target;
-	if(SDL_SetRenderTarget(renderer, target->GetTexture()) < 0) {
+	_target = target;
+	if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
         Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
     }
 }
 
-void Renderer::ResetTarget() {
-    target = nullptr;
+void Rendering::ResetTarget() {
+    _target = nullptr;
     tx = ty = 0.0;
     tw = th = 1.0;
-    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderTarget(_renderer, NULL);
 }
 
-void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
+void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     SDL_Rect rect = {
         x, y,
         texture.GetWidth(),
@@ -80,7 +83,7 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     }
 
     SDL_RenderCopyEx(
-        renderer,
+        _renderer,
         texture.GetTexture(),
         clip,
         &rect,
@@ -90,7 +93,7 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     );
 }
 
-void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip) {
+void Rendering::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip) {
     /**
      * Source texture, specified by SDL_Rect, will
      * be stretched to fit the destination rect
@@ -101,7 +104,7 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *cl
     };
 
     SDL_RenderCopyEx(
-        renderer,
+        _renderer,
         texture.GetTexture(),
         clip,
         &rect,
@@ -111,13 +114,13 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *cl
     );
 }
 
-void Renderer::Render(Texture &texture, double x, double y, SDL_Rect *clip) {
+void Rendering::Render(Texture &texture, double x, double y, SDL_Rect *clip) {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
     Render(texture, ix, iy, clip);
 }
 
-void Renderer::Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip) {
+void Rendering::Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip) {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
     int sx = ToCoordX(w);
@@ -125,9 +128,9 @@ void Renderer::Render(Texture &texture, double x, double y, double w, double h, 
     Render(texture, ix, iy, sx, sy, clip);
 }
 
-void Renderer::Render(Texture &texture, SDL_Rect *clip) {
+void Rendering::Render(Texture &texture, SDL_Rect *clip) {
     SDL_RenderCopyEx(
-        renderer,
+        _renderer,
         texture.GetTexture(),
         clip,
         NULL,
@@ -137,9 +140,9 @@ void Renderer::Render(Texture &texture, SDL_Rect *clip) {
     );
 }
 
-void Renderer::Render(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid) {
+void Rendering::DrawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid) {
     SDL_SetRenderDrawColor(
-        renderer,
+        _renderer,
         r, g, b, a
     );
 
@@ -150,31 +153,31 @@ void Renderer::Render(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uin
 
     if(solid) {
         SDL_RenderFillRect(
-            renderer,
+            _renderer,
             &rect
         );
     }else {
         SDL_RenderDrawRect(
-            renderer,
+            _renderer,
             &rect
         );
     }
 }
 
-void Renderer::Render(double x, double y, double w, double h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid) {
+void Rendering::DrawRect(double x, double y, double w, double h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid) {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
     int sx = ToCoordX(w);
     int sy = ToCoordY(h);
-    Render(ix, iy, sx, sy, r, g, b, a, solid);
+    DrawRect(ix, iy, sx, sy, r, g, b, a, solid);
 }
 
-void Renderer::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b) {
-    SDL_SetRenderDrawColor(renderer, r, b, g, SDL_ALPHA_OPAQUE);
-    int err = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+void Rendering::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b) {
+    SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
+    int err = SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
 }
 
-void Renderer::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b) {
+void Rendering::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b) {
     DrawLine(
         (int)ToCoordX(x1),
         (int)ToCoordY(y1),
@@ -184,25 +187,25 @@ void Renderer::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uin
         );
 }
 
-double Renderer::NormalizeX(int32_t c) {
+double Rendering::NormalizeX(int32_t c) {
     return (double)c / (double)GetWidth();
 }
 
-double Renderer::NormalizeY(int32_t c) {
+double Rendering::NormalizeY(int32_t c) {
     return (double)c / (double)GetHeight();
 }
 
-int32_t Renderer::ToCoordX(double c) {
+int32_t Rendering::ToCoordX(double c) {
     return (int)(c * (double)GetWidth());
 }
 
-int32_t Renderer::ToCoordY(double c) {
+int32_t Rendering::ToCoordY(double c) {
     return (int)(c * (double)GetHeight());
 }
 
-double Renderer::NormalizeTargetX(int32_t c) {
-    int w = width, h = height;
-    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+double Rendering::NormalizeTargetX(int32_t c) {
+    int w = GetWidth(), h = GetHeight();
+    SDL_Texture *target = SDL_GetRenderTarget(_renderer);
     if(target != NULL) {
         SDL_QueryTexture(target, NULL, NULL, &w, &h);
     }
@@ -210,9 +213,9 @@ double Renderer::NormalizeTargetX(int32_t c) {
     return (double)c / (double)w;
 }
 
-double Renderer::NormalizeTargetY(int32_t c) {
-    int w = width, h = height;
-    SDL_Texture *target = SDL_GetRenderTarget(renderer);
+double Rendering::NormalizeTargetY(int32_t c) {
+    int w = GetWidth(), h = GetHeight();
+    SDL_Texture *target = SDL_GetRenderTarget(_renderer);
     if(target != NULL) {
         SDL_QueryTexture(target, NULL, NULL, &w, &h);
     }
@@ -220,64 +223,36 @@ double Renderer::NormalizeTargetY(int32_t c) {
     return (double)c / (double)h;
 }
 
-int32_t Renderer::ToTargetCoordX(double c) {
-    if(!target) return ToCoordX(c);
+int32_t Rendering::ToTargetCoordX(double c) {
+    if(!_target) return ToCoordX(c);
     return (int)(c * (double)GetTargetWidth());
 }
 
-int32_t Renderer::ToTargetCoordY(double c) {
-    if(!target) return ToCoordY(c);
+int32_t Rendering::ToTargetCoordY(double c) {
+    if(!_target) return ToCoordY(c);
     return (int)(c * (double)GetTargetHeight());
 }
 
-double Renderer::GetTargetWidth() {
-    if(!target) return 1.0;
+double Rendering::GetTargetWidth() {
+    if(!_target) return 1.0;
     return tw;
 }
 
-double Renderer::GetTargetHeight() {
-    if(!target) return 1.0;
+double Rendering::GetTargetHeight() {
+    if(!_target) return 1.0;
     return th;
 }
 
-double Renderer::GetTargetX() {
-    if(!target) return 0.0;
+double Rendering::GetTargetX() {
+    if(!_target) return 0.0;
     return tx;
 }
 
-double Renderer::GetTargetY() {
-    if(!target) return 0.0;
+double Rendering::GetTargetY() {
+    if(!_target) return 0.0;
     return ty;
 }
 
-int Renderer::GetMouseX() {
-    int p;
-    SDL_GetMouseState(&p, NULL);
-    return p;
-}
-
-int Renderer::GetMouseY() {
-    int p;
-    SDL_GetMouseState(NULL, &p);
-    return p;
-}
-
-void Renderer::MouseOn() {
-    SDL_ShowCursor(SDL_ENABLE);
-}
-
-void Renderer::MouseOff() {
-    SDL_ShowCursor(SDL_DISABLE);
-}
-
-int Renderer::ResizeEventWatcher(void *data, SDL_Event *event) {
-    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED) {
-        SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
-        Renderer *rend = static_cast<Renderer*>(data);
-        if (win == rend->window) {
-            SDL_GetWindowSize(win, &rend->width, &rend->height);
-        }
-    }
-
-    return 0;
+SDL_Renderer *Rendering::GetRenderer() {
+    return _renderer;
 }

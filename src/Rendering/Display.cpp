@@ -1,25 +1,39 @@
+#include <chrono>
+#include <thread>
+
 #include <Rendering/Display.h>
+#include <System/Logger.h>
 
-using namespace Sourcehold::System;
-using namespace Sourcehold::Rendering;
+using namespace Sourcehold;
+using namespace System;
 
-Display::Display() :
-    Renderer()
-{
+static SDL_Window *_window;
+static bool _fullscreen, _nograb;
+static int _width, _height;
+static std::chrono::high_resolution_clock::time_point tp;
+
+static int ResizeEventWatcher(void *data, SDL_Event *event) {
+    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED) {
+        SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
+        if(win == _window) {
+            SDL_GetWindowSize(win, &_width, &_height);
+        }
+    }
+
+    return 0;
+}
+
+bool Rendering::InitDisplay(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb) {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Logger::error("RENDERING") << SDL_GetError() << std::endl;
-    }
-}
+		return false;
+	}
 
-Display::~Display() {
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-}
+	int param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
 
-void Display::Open(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb) {
-    int param = /*SDL_WINDOW_RESIZABLE |*/ SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
+	_fullscreen = fullscreen;
+	_nograb = nograb;
 
-    this->fullscreen = fullscreen;
     if(fullscreen) {
         param |= SDL_WINDOW_FULLSCREEN;
     }
@@ -38,7 +52,7 @@ void Display::Open(const std::string &title, int width, int height, int index, b
         SDL_GetDisplayBounds(i, &displayBounds[i]);
     }
 
-    window = SDL_CreateWindow(
+    _window = SDL_CreateWindow(
         title.c_str(),
         displayBounds[index].x + (displayBounds[index].w / 2) - width / 2,
         displayBounds[index].y + (displayBounds[index].h / 2) - height / 2,
@@ -46,34 +60,38 @@ void Display::Open(const std::string &title, int width, int height, int index, b
         height,
         param
     );
-    if(!window) {
+    if(!_window) {
         Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
     delete [] displayBounds;
 
-    this->nograb = nograb;
     if(!nograb) {
-        SDL_SetWindowGrab(window, SDL_TRUE);
+        SDL_SetWindowGrab(_window, SDL_TRUE);
     }
 
-    Renderer::Init(window);
+    _width = width;
+    _height = height;
+    SDL_AddEventWatch(ResizeEventWatcher, nullptr);
 
-    open = true;
+	return true;
 }
 
-void Display::ToggleFullscreen() {
-    fullscreen = !fullscreen;
+void Rendering::DestroyDisplay() {
+    SDL_DestroyWindow(_window);
+	SDL_Quit();
+}
 
-    int err = SDL_SetWindowFullscreen(window, fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
+void Rendering::ToggleFullscreen() {
+    int err = SDL_SetWindowFullscreen(_window, _fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     if(err < 0) {
         Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
-    }
+	}
+	_fullscreen = !_fullscreen;
 }
 
-void Display::Sync() {
-	/* TODO */
-	high_resolution_clock::time_point now = high_resolution_clock::now();
+void Rendering::SyncDisplay() {
+	std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
 
 	Uint64 delta = std::chrono::duration_cast<std::chrono::nanoseconds>(now - tp).count();
 
@@ -82,26 +100,50 @@ void Display::Sync() {
 	);
 }
 
-void Display::GrabMouse() {
-    if(!nograb && SDL_GetWindowGrab(window) == SDL_FALSE) {
-        SDL_SetWindowGrab(window, SDL_TRUE);
-    }
+void Rendering::GrabMouse() {
+    if(!_nograb && SDL_GetWindowGrab(_window) == SDL_FALSE) {
+        SDL_SetWindowGrab(_window, SDL_TRUE);
+	}
 }
 
-void Display::ReleaseMouse() {
-    if(SDL_GetWindowGrab(window) == SDL_TRUE) {
-        SDL_SetWindowGrab(window, SDL_FALSE);
-    }
+void Rendering::ReleaseMouse() {
+    if(SDL_GetWindowGrab(_window) == SDL_TRUE) {
+        SDL_SetWindowGrab(_window, SDL_FALSE);
+	}
 }
 
-bool Display::IsOpen() {
-    return open;
+bool Rendering::IsDisplayOpen() {
+	return true;
 }
 
-uint32_t Display::GetTicks() {
-    return SDL_GetTicks();
+int Rendering::GetWidth() {
+    return _width;
 }
 
-uint32_t Display::GetSeconds() {
-    return SDL_GetTicks() / 1000;
+int Rendering::GetHeight() {
+    return _height;
+}
+
+int Rendering::GetMouseX() {
+    int p;
+    SDL_GetMouseState(&p, NULL);
+    return p;
+}
+
+int Rendering::GetMouseY() {
+    int p;
+    SDL_GetMouseState(NULL, &p);
+    return p;
+}
+
+void Rendering::MouseOn() {
+    SDL_ShowCursor(SDL_ENABLE);
+}
+
+void Rendering::MouseOff() {
+    SDL_ShowCursor(SDL_DISABLE);
+}
+
+SDL_Window *Rendering::GetWindow() {
+    return _window;
 }

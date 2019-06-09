@@ -14,7 +14,7 @@ namespace Sourcehold
     namespace GUI
     {
         using namespace Game;
-        bool InitializeUtils(std::shared_ptr<GameManager> mgr) ;
+        bool InitializeUtils() ;
         void RenderMenuText(const std::wstring &text);
     }
 }
