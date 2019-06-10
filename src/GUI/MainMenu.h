@@ -51,6 +51,7 @@ namespace Sourcehold
             void RenderCombat();
             void RenderEconomic();
             void RenderBuilder();
+            void RenderBackToMain();
 
             /* Common resources */
             AudioSource aud_chantloop;
