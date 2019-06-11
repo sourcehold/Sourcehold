@@ -172,7 +172,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 			sy < GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
 			i++, sy += 46) {
 			const wchar_t *line = credit_lines_firefly[i];
-			RenderText(line, sx, sy, 1, FONT_LARGE);
+			RenderText(line, sx, sy, 1, FONT_SMALL);
 		}
 
 		// TODO: Rest of credits, colored titles

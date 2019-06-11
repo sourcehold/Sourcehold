@@ -37,7 +37,7 @@ const static MenuButtonInfo lut_buttons[] = {
 	{ 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18 },
 	{ 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35 },
 	{ 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52 },
-	{ 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 68, 0 }
+	{ 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0 }
 };
 
 MainMenu::MainMenu()
@@ -113,6 +113,7 @@ UIState MainMenu::EnterMenu() {
 		}
 
 		/* Render the current menu on top of the background */
+		HideAll();
 		switch(currentState) {
 			case MAIN_MENU: {
 				RenderMain();
@@ -213,6 +214,7 @@ void MainMenu::RenderMain() {
 	auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
 	auto icons_additional = gm1_icons_additional->GetTextureAtlas().lock();
 	for(int i = MAIN_EXIT; i < MAIN_SETTINGS+1; i++) {
+		ui_elems[i].Show();
 		ui_elems[i].Render(
 			[&]() -> Texture& {
 				MenuButtonInfo inf = lut_buttons[i];
@@ -251,6 +253,7 @@ void MainMenu::RenderCombat() {
 
 	auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
 	for(int i = COMBAT_CAMPAIGN; i < COMBAT_MULTIPLAYER+1; i++) {
+		ui_elems[i].Show();
 		ui_elems[i].Render(
 			[&]() -> Texture& {
 				MenuButtonInfo inf = lut_buttons[i];
@@ -278,6 +281,7 @@ void MainMenu::RenderEconomic() {
 
 	auto icons_economics = gm1_icons_economic->GetTextureAtlas().lock();
 	for(int i = ECO_CAMPAIGN; i < ECO_FREEBUILD+1; i++) {
+		ui_elems[i].Show();
 		ui_elems[i].Render(
 			[&]() -> Texture& {
 				MenuButtonInfo inf = lut_buttons[i];
@@ -305,6 +309,7 @@ void MainMenu::RenderBuilder() {
 
 	auto icons_economics = gm1_icons_economic->GetTextureAtlas().lock();
 	for(int i = BUILDER_WORKING_MAP; i < BUILDER_MULTIPLAYER+1; i++) {
+		ui_elems[i].Show();
 		ui_elems[i].Render(
 			[&]() -> Texture& {
 				MenuButtonInfo inf = lut_buttons[i];
@@ -326,17 +331,24 @@ void MainMenu::RenderBuilder() {
 }
 
 void MainMenu::RenderBackToMain() {
-	auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
+	auto icons_front_end = gm1_icons_main->GetTextureAtlas().lock();
+	ui_elems[BACK_TO_MAIN].Show();
 	ui_elems[BACK_TO_MAIN].Render(
 		[&]() -> Texture& {
 			MenuButtonInfo inf = lut_buttons[BACK_TO_MAIN];
 			if(ui_elems[BACK_TO_MAIN].IsClicked()) selected = BACK_TO_MAIN;
 			if (ui_elems[BACK_TO_MAIN].IsMouseOver()) {
-				icons_combat->SetRect(icons_combat->Get(inf.index + 1));
+				icons_front_end->SetRect(icons_front_end->Get(inf.index + 1));
 				RenderMenuText(inf.text);
 			} else {
-					icons_combat->SetRect(icons_combat->Get(inf.index));
+				icons_front_end->SetRect(icons_front_end->Get(inf.index));
 			}
-		return *icons_combat;
+		return *icons_front_end;
 	});
+}
+
+void MainMenu::HideAll() {
+	for(auto & e : ui_elems) {
+		e.Hide();
+	}
 }

@@ -28,7 +28,6 @@ StaticElement::~StaticElement() {
 
 void StaticElement::Hide() {
     shown = false;
-    clicked = false;
 }
 
 void StaticElement::Show() {
@@ -99,7 +98,7 @@ bool StaticElement::IsMouseOver() {
 }
 
 bool StaticElement::IsClicked() {
-    if(clicked) {
+    if(clicked && shown) {
         clicked = false;
         return true;
     }
@@ -107,13 +106,11 @@ bool StaticElement::IsClicked() {
 }
 
 void StaticElement::onEventReceive(Mouse &event) {
-    if(!shown) return;
-
     EventType type = event.GetType();
     if(type == MOUSE_MOTION) {
         mouseX = event.GetPosX();
         mouseY = event.GetPosY();
     }else if(type == MOUSE_BUTTONDOWN) {
-        if(IsMouseOver()) clicked = true;
+        if(IsMouseOver() && shown) clicked = true;
     }
 }
