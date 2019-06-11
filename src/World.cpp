@@ -47,10 +47,12 @@ World::World() :
     SetCamPos(15, 8);
 }
 
-World::~World() {
+World::~World()
+{
 }
 
-int World::Play() {
+int World::Play()
+{
     while(Running()) {
         ClearDisplay();
 
@@ -70,13 +72,14 @@ int World::Play() {
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
         FlushDisplay();
-		SyncDisplay();
+        SyncDisplay();
     }
 
     return 0;
 }
 
-void World::RenderQuickMenu() {
+void World::RenderQuickMenu()
+{
     auto atlas = gm1_floats->GetTextureAtlas().lock();
 
     SDL_Rect rect = atlas->Get(37);
@@ -96,51 +99,59 @@ void World::RenderQuickMenu() {
     ui_lower.Scale(rect.w, rect.h);
 
     ui_compass.Render(
-        [&]() -> Texture& {
-            if(ui_compass.IsMouseOver()) {
-                Rotation rota = GetRotation();
-            }
-            atlas->SetRect(atlas->Get(37));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_compass.IsMouseOver())
+        {
+            Rotation rota = GetRotation();
+        }
+        atlas->SetRect(atlas->Get(37));
+        return *atlas;
+    });
 
     ui_hide.Render(
-        [&]() -> Texture& {
-            if(ui_hide.IsMouseOver()) {
-                atlas->SetRect(atlas->Get(125));
-                menubarShown = false;
-            } else {
-                atlas->SetRect(atlas->Get(124));
-                menubarShown = true;
-            }
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_hide.IsMouseOver())
+        {
+            atlas->SetRect(atlas->Get(125));
+            menubarShown = false;
+        }
+        else
+        {
+            atlas->SetRect(atlas->Get(124));
+            menubarShown = true;
+        }
+        return *atlas;
+    });
 
     ui_magnify.Render(
-        [&]() -> Texture& {
-            atlas->SetRect(atlas->Get(45));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        atlas->SetRect(atlas->Get(45));
+        return *atlas;
+    });
 
     ui_lower.Render(
-        [&]() -> Texture& {
-            if(ui_lower.IsMouseOver()) {
-                atlas->SetRect(atlas->Get(36));
-            }else atlas->SetRect(atlas->Get(35));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_lower.IsMouseOver())
+        {
+            atlas->SetRect(atlas->Get(36));
+        }
+        else atlas->SetRect(atlas->Get(35));
+        return *atlas;
+    });
 }
 
 
-void World::RenderMenubar() {
+void World::RenderMenubar()
+{
     Rendering::Render(menubar, menuX, menuY, menuW, menuH);
 }
 
-void World::UpdateMenubar() {
-	menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
-	menuY = GetHeight() - menubar.GetHeight();
-	menuW = menubar.GetWidth();
-	menuH = menubar.GetHeight();
+void World::UpdateMenubar()
+{
+    menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
+    menuY = GetHeight() - menubar.GetHeight();
+    menuW = menubar.GetWidth();
+    menuH = menubar.GetHeight();
 
     SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
@@ -188,104 +199,140 @@ void World::UpdateMenubar() {
 
     /* Render the menu buttons */
     ui_disk.Render(
-        [&]() -> Texture& {
-            if(ui_disk.IsMouseOver()) atlas->SetRect(atlas->Get(26));
-            else atlas->SetRect(atlas->Get(25));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_disk.IsMouseOver()) atlas->SetRect(atlas->Get(26));
+        else atlas->SetRect(atlas->Get(25));
+        return *atlas;
+    });
 
     ui_info.Render(
-        [&]() -> Texture& {
-            if(ui_info.IsMouseOver()) atlas->SetRect(atlas->Get(28));
-            else atlas->SetRect(atlas->Get(27));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_info.IsMouseOver()) atlas->SetRect(atlas->Get(28));
+        else atlas->SetRect(atlas->Get(27));
+        return *atlas;
+    });
 
     ui_delete.Render(
-        [&]() -> Texture& {
-            if(ui_delete.IsMouseOver()) atlas->SetRect(atlas->Get(30));
-            else atlas->SetRect(atlas->Get(29));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_delete.IsMouseOver()) atlas->SetRect(atlas->Get(30));
+        else atlas->SetRect(atlas->Get(29));
+        return *atlas;
+    });
 
     ui_revert.Render(
-        [&]() -> Texture& {
-            if(ui_revert.IsMouseOver()) atlas->SetRect(atlas->Get(69));
-            else atlas->SetRect(atlas->Get(68));
-            return *atlas;
-        });
+    [&]() -> Texture& {
+        if(ui_revert.IsMouseOver()) atlas->SetRect(atlas->Get(69));
+        else atlas->SetRect(atlas->Get(68));
+        return *atlas;
+    });
 
     for(uint8_t i = 0; i < 6; i++) {
         ui_tabs[i].Render(
-            [&]() -> Texture& {
-                if(ui_tabs[i].IsMouseOver()) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][1]));
-                else atlas->SetRect(atlas->Get(_ui_tabs_indices[i][0]));
-                if(ui_tabs[i].IsClicked()) {
-                    currentTab = static_cast<MenuPage>(i);
-                }
-                /* Highlight the selected tab */
-                if(currentTab == i) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][2]));
-                return *atlas;
-            });
+        [&]() -> Texture& {
+            if(ui_tabs[i].IsMouseOver()) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][1]));
+            else atlas->SetRect(atlas->Get(_ui_tabs_indices[i][0]));
+            if(ui_tabs[i].IsClicked())
+            {
+                currentTab = static_cast<MenuPage>(i);
+            }
+            /* Highlight the selected tab */
+            if(currentTab == i) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][2]));
+            return *atlas;
+        });
     }
 
     /* Render the current pages content, TODO: may change when different building selected, etc. */
     switch(currentTab) {
     case MENU_CASTLE: {
-    }break;
+    } break;
     case MENU_INDUSTRY: {
-    }break;
+    } break;
 
     case MENU_FARM: {
-    }break;
+    } break;
     case MENU_TOWN: {
-    }break;
+    } break;
     case MENU_WEAPONS: {
-    }break;
+    } break;
     case MENU_FOOD_PROCESSING: {
-    }break;
-    default: break;
+    } break;
+    default:
+        break;
     }
 
     ResetTarget();
 }
 
-void World::UpdateCamera() {
+void World::UpdateCamera()
+{
     if(scroll.left) MoveLeft();
     if(scroll.right) MoveRight();
     if(scroll.up) MoveUp();
     if(scroll.down) MoveDown();
 }
 
-void World::onEventReceive(Keyboard &keyEvent) {
+void World::onEventReceive(Keyboard &keyEvent)
+{
     if(keyEvent.GetType() == KEYBOARD_KEYDOWN) {
         switch(keyEvent.Key().sym) {
-        case SDLK_LEFT: scroll.left.shouldScroll = true; scroll.left.setByKeyboard = true; break;
-        case SDLK_RIGHT: scroll.right.shouldScroll = true; scroll.right.setByKeyboard = true; break;
-        case SDLK_UP: scroll.up.shouldScroll = true; scroll.up.setByKeyboard = true; break;
-        case SDLK_DOWN: scroll.down.shouldScroll = true; scroll.down.setByKeyboard = true; break;
+        case SDLK_LEFT:
+            scroll.left.shouldScroll = true;
+            scroll.left.setByKeyboard = true;
+            break;
+        case SDLK_RIGHT:
+            scroll.right.shouldScroll = true;
+            scroll.right.setByKeyboard = true;
+            break;
+        case SDLK_UP:
+            scroll.up.shouldScroll = true;
+            scroll.up.setByKeyboard = true;
+            break;
+        case SDLK_DOWN:
+            scroll.down.shouldScroll = true;
+            scroll.down.setByKeyboard = true;
+            break;
         case SDLK_SPACE:
             if(GetZoomLevel() == ZOOM_NEAR) ZoomOut();
             else ZoomIn();
             break;
-        case SDLK_TAB: menubarShown = !menubarShown; break;
-        case SDLK_ESCAPE: ReleaseMouse(); break;
-        default: break;
+        case SDLK_TAB:
+            menubarShown = !menubarShown;
+            break;
+        case SDLK_ESCAPE:
+            ReleaseMouse();
+            break;
+        default:
+            break;
         }
-    }else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
+    }
+    else if(keyEvent.GetType() == KEYBOARD_KEYUP) {
         switch(keyEvent.Key().sym) {
-        case SDLK_LEFT: scroll.left.shouldScroll = false; scroll.left.setByKeyboard = false; break;
-        case SDLK_RIGHT: scroll.right.shouldScroll = false; scroll.right.setByKeyboard = false;  break;
-        case SDLK_UP: scroll.up.shouldScroll = false; scroll.up.setByKeyboard = false;  break;
-        case SDLK_DOWN: scroll.down.shouldScroll = false; scroll.down.setByKeyboard = false;  break;
-        default: break;
+        case SDLK_LEFT:
+            scroll.left.shouldScroll = false;
+            scroll.left.setByKeyboard = false;
+            break;
+        case SDLK_RIGHT:
+            scroll.right.shouldScroll = false;
+            scroll.right.setByKeyboard = false;
+            break;
+        case SDLK_UP:
+            scroll.up.shouldScroll = false;
+            scroll.up.setByKeyboard = false;
+            break;
+        case SDLK_DOWN:
+            scroll.down.shouldScroll = false;
+            scroll.down.setByKeyboard = false;
+            break;
+        default:
+            break;
         }
 
         ResetMomentum();
     }
 }
 
-void World::onEventReceive(Mouse &mouseEvent) {
+void World::onEventReceive(Mouse &mouseEvent)
+{
     if(mouseEvent.GetType() == MOUSE_BUTTONDOWN) {
         int64_t px = (mouseEvent.GetPosX() + CamX()) / 30;
         int64_t py = (mouseEvent.GetPosY() + CamY()) / 16;
@@ -299,7 +346,8 @@ void World::onEventReceive(Mouse &mouseEvent) {
         if(mouseEvent.LmbDown()) {
             GrabMouse();
         }
-    }else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
+    }
+    else if(mouseEvent.GetType() == MOUSE_BUTTONUP) {
         if(mouseEvent.RmbUp()) {
             rmbHolding = false;
         }

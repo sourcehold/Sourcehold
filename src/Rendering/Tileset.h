@@ -9,17 +9,14 @@
 #include <Rendering/Surface.h>
 #include <Rendering/Renderer.h>
 
-namespace Sourcehold
-{
-    namespace Rendering
-    {
+namespace Sourcehold {
+    namespace Rendering {
         using namespace Rendering;
 
         /*
          * Constructs a tileset from a GM1 container
          */
-        class Tileset : public Texture
-        {
+        class Tileset : public Texture {
             uint32_t numRows, num;
             Surface surf;
         public:
@@ -34,8 +31,12 @@ namespace Sourcehold
             void Lock();
             void Unlock();
 
-            inline uint32_t GetNumTiles() { return num; }
-            inline Surface& GetSurface() { return surf; }
+            inline uint32_t GetNumTiles() {
+                return num;
+            }
+            inline Surface& GetSurface() {
+                return surf;
+            }
             SDL_Rect GetTile(uint32_t index);
         protected:
             std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);

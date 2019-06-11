@@ -1,12 +1,10 @@
 #pragma once
 
-namespace Sourcehold
-{
-    namespace Audio
-    {
+namespace Sourcehold {
+    namespace Audio {
         /**
          * Init OpenAL context, called once at the start of
-         * the app and is required by other audio stuff 
+         * the app and is required by other audio stuff
          */
         bool InitOpenAL();
 

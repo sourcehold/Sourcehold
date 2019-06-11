@@ -15,8 +15,7 @@
 #include <Rendering/Display.h>
 #include <Rendering/Renderer.h>
 
-namespace Sourcehold
-{
+namespace Sourcehold {
     namespace Events {
         class EventHandler;
     }
@@ -31,8 +30,7 @@ namespace Sourcehold
         class BinkVideo;
     }
 
-    namespace Game
-    {
+    namespace Game {
         using namespace Events;
         using namespace Parsers;
         using namespace System;

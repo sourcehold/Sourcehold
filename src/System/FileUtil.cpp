@@ -16,33 +16,40 @@
 using namespace Sourcehold;
 using namespace System;
 
-std::string System::GetFileExtension(boost::filesystem::path path) {
+std::string System::GetFileExtension(boost::filesystem::path path)
+{
     return path.extension().string();
 }
 
-std::string System::GetFileStem(boost::filesystem::path path) {
+std::string System::GetFileStem(boost::filesystem::path path)
+{
     return path.stem().string();
 }
 
-std::string System::GetFilename(boost::filesystem::path path) {
+std::string System::GetFilename(boost::filesystem::path path)
+{
     return path.filename().string();
 }
 
-bool System::IsFileHidden(boost::filesystem::path path) {
+bool System::IsFileHidden(boost::filesystem::path path)
+{
     std::string name = path.filename().string();
     if(name[0] == '.') return true;
     return false;
 }
 
-bool System::DoesFileExist(boost::filesystem::path path) {
-	return boost::filesystem::exists(path);
+bool System::DoesFileExist(boost::filesystem::path path)
+{
+    return boost::filesystem::exists(path);
 }
 
-void System::CreateFolder(boost::filesystem::path path) {
+void System::CreateFolder(boost::filesystem::path path)
+{
     boost::filesystem::create_directory(path);
 }
 
-boost::filesystem::path System::GetDocumentsPath() {
+boost::filesystem::path System::GetDocumentsPath()
+{
     char path[512];
 
     /**
@@ -69,7 +76,7 @@ boost::filesystem::path System::GetDocumentsPath() {
             std::size_t valueStart = line.find('"', splitPos);
             std::size_t valueEnd = line.find('"', valueStart+1);
             std::string value = line.substr(valueStart+1, valueEnd - valueStart - 1);
-        
+
             if (value.compare(0, 5, "$HOME") == 0) {
                 value = std::string(home) + value.substr(5, std::string::npos);
             }
@@ -79,7 +86,8 @@ boost::filesystem::path System::GetDocumentsPath() {
             }
         }
         infile.close();
-    }else {
+    }
+    else {
         *path = '\0';
     }
 
@@ -92,7 +100,8 @@ boost::filesystem::path System::GetDocumentsPath() {
     return boost::filesystem::path(path);
 }
 
-std::vector<boost::filesystem::path> System::GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension, bool recursive){
+std::vector<boost::filesystem::path> System::GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension, bool recursive)
+{
     std::vector<boost::filesystem::path> files;
     if(boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
         if(recursive) {

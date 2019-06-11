@@ -8,7 +8,8 @@ using namespace Game;
 
 static std::shared_ptr<Gm1File> _gm_interface_icons3;
 
-bool GUI::InitializeUtils() {
+bool GUI::InitializeUtils()
+{
     _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1").lock();
     return true;
 }

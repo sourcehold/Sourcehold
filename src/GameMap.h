@@ -10,15 +10,12 @@
 
 #include <Assets.h>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         class Gm1File;
         class TgxFile;
     }
-    namespace Game
-    {
+    namespace Game {
         struct WorldInformation {
             enum Dimensions : uint8_t {
                 WORLD_160,
@@ -36,8 +33,7 @@ namespace Sourcehold
         using namespace Rendering;
         using namespace Parsers;
 
-        class GameMap
-        {
+        class GameMap {
             int mult = 1;
             uint16_t maypole;
             std::shared_ptr<Gm1File> gm1_tile, gm1_maypole, gm1_churches, gm1_anim;

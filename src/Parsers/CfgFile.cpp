@@ -3,26 +3,29 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-CfgFile::CfgFile() : Parser() {
+CfgFile::CfgFile() : Parser()
+{
 }
 
-void CfgFile::SetDefaultValues() {
-	username = L"Lord Julian";
-	speed = 30;
-	bubbleHelp = 0;
-	resolution = 3;
-	soundEnabled = 1;
-	musicVolume = 50;
-	sfxVolume = 50;
+void CfgFile::SetDefaultValues()
+{
+    username = L"Lord Julian";
+    speed = 30;
+    bubbleHelp = 0;
+    resolution = 3;
+    soundEnabled = 1;
+    musicVolume = 50;
+    sfxVolume = 50;
     unlockedMilitary = 1;
     unlockedEconomic = 1;
-	speechVolume = 50;
-	mousePointer = 1;
+    speechVolume = 50;
+    mousePointer = 1;
 }
 
-bool CfgFile::LoadFromDisk(boost::filesystem::path path) {
+bool CfgFile::LoadFromDisk(boost::filesystem::path path)
+{
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
-    	Logger::error("PARSERS") << "Unable to read cfg " << path << std::endl;
+        Logger::error("PARSERS") << "Unable to read cfg " << path << std::endl;
         return false;
     }
 
@@ -53,9 +56,10 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path) {
     return true;
 }
 
-bool CfgFile::WriteToDisk(boost::filesystem::path path) {
+bool CfgFile::WriteToDisk(boost::filesystem::path path)
+{
     if(!Parser::Open(path.string(), std::ios::binary | std::ofstream::out)) {
-    	Logger::error("PARSERS") << "Unable to write cfg " << path << std::endl;
+        Logger::error("PARSERS") << "Unable to write cfg " << path << std::endl;
         return false;
     }
 
@@ -86,6 +90,6 @@ bool CfgFile::WriteToDisk(boost::filesystem::path path) {
     Parser::WriteByte(0x00);
 
     Parser::Close();
-	return true;
+    return true;
 }
 

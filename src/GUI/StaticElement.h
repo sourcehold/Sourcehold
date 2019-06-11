@@ -14,10 +14,8 @@
 #include <Events/Event.h>
 #include <Events/Mouse.h>
 
-namespace Sourcehold
-{
-    namespace Rendering
-    {
+namespace Sourcehold {
+    namespace Rendering {
         using namespace Events;
         using namespace Game;
 
@@ -26,14 +24,13 @@ namespace Sourcehold
          * mouse events
          * Use this for UI elements.
          */
-        class StaticElement : public EventConsumer<Mouse>
-        {
+        class StaticElement : public EventConsumer<Mouse> {
             SDL_Rect rect;
             bool shown = true;
             bool clicked = false;
             double nx, ny, nw, nh, tx, ty, tw, th;
             int mouseX, mouseY;
-			bool scaled = false;
+            bool scaled = false;
         public:
             StaticElement(double x = 0.0, double y = 0.0, SDL_Rect r = { 0,0,0,0 });
             StaticElement(const StaticElement &elem);
@@ -62,7 +59,9 @@ namespace Sourcehold
             bool IsMouseOver();
             bool IsClicked();
 
-            inline bool IsHidden() { return !shown; }
+            inline bool IsHidden() {
+                return !shown;
+            }
         protected:
             void onEventReceive(Mouse &event) override;
         };

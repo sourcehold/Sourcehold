@@ -9,15 +9,12 @@
 
 #include <boost/filesystem.hpp>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         /*
          * Text file containing audio volume data
          */
-        class VolumeTxt : private Parser
-        {
+        class VolumeTxt : private Parser {
             std::map<std::string, uint8_t> volumes;
         public:
             VolumeTxt();

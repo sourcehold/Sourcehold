@@ -2,17 +2,21 @@
 
 using namespace Sourcehold::Rendering;
 
-Renderable::Renderable() {
+Renderable::Renderable()
+{
 }
 
-Renderable::Renderable(const Renderable& other) {
+Renderable::Renderable(const Renderable& other)
+{
     rect = other.rect;
 }
 
-Renderable::~Renderable() {
+Renderable::~Renderable()
+{
 }
 
-void Renderable::SetRect(SDL_Rect rect) {
+void Renderable::SetRect(SDL_Rect rect)
+{
     this->rect = rect;
 }
 

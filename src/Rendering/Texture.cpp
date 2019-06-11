@@ -28,20 +28,22 @@ Texture::Texture(const Texture &tex) :
     this->height = tex.height;
 }
 
-Texture::~Texture() {
+Texture::~Texture()
+{
     Destroy();
 }
 
-bool Texture::AllocNewStreaming(int width, int height, int format) {
-	this->width = width;
+bool Texture::AllocNewStreaming(int width, int height, int format)
+{
+    this->width = width;
     this->height = height;
     access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
-        GetRenderer(),
-        format,
-        SDL_TEXTUREACCESS_STREAMING,
-        width, height
-    );
+                  GetRenderer(),
+                  format,
+                  SDL_TEXTUREACCESS_STREAMING,
+                  width, height
+              );
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create streaming texture: " << SDL_GetError() << std::endl;
         return false;
@@ -54,7 +56,8 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
     return true;
 }
 
-bool Texture::AllocFromSurface(Surface &surface) {
+bool Texture::AllocFromSurface(Surface &surface)
+{
     width = surface.GetWidth();
     height = surface.GetHeight();
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
@@ -69,16 +72,17 @@ bool Texture::AllocFromSurface(Surface &surface) {
     return true;
 }
 
-bool Texture::AllocNewTarget(int width, int height, int format) {
+bool Texture::AllocNewTarget(int width, int height, int format)
+{
     this->width = width;
     this->height = height;
     access = SDL_TEXTUREACCESS_TARGET;
     texture = SDL_CreateTexture(
-        GetRenderer(),
-        format,
-        SDL_TEXTUREACCESS_TARGET,
-        width, height
-        );
+                  GetRenderer(),
+                  format,
+                  SDL_TEXTUREACCESS_TARGET,
+                  width, height
+              );
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create target texture: " << SDL_GetError() << std::endl;
         return false;
@@ -90,57 +94,69 @@ bool Texture::AllocNewTarget(int width, int height, int format) {
     return true;
 }
 
-void Texture::UpdateTexture() {
+void Texture::UpdateTexture()
+{
 
 }
 
-void Texture::Destroy() {
+void Texture::Destroy()
+{
     if(!valid) return;
     SDL_DestroyTexture(texture);
     valid = false;
 }
 
-void Texture::LockTexture() {
+void Texture::LockTexture()
+{
     if(locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     if(SDL_LockTexture(texture, nullptr, (void**)&pixels, &pitch)) {
         Logger::error("RENDERING") << "Unable to lock texture: " << SDL_GetError() << std::endl;
         locked = false;
-    }else locked = true;
+    }
+    else locked = true;
 }
 
-void Texture::UnlockTexture() {
+void Texture::UnlockTexture()
+{
     if(!locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     SDL_UnlockTexture(texture);
     locked = false;
 }
 
-void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
     if(!locked) return;
     uint32_t index = x + y * width;
     pixels[index] = ToPixel(r, g, b, a);
 }
 
-void Texture::Rotate(double angle) {
+void Texture::Rotate(double angle)
+{
     this->angle += angle;
 }
 
-void Texture::FlipHorizontal() {
+void Texture::FlipHorizontal()
+{
     flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_HORIZONTAL);
 }
 
-void Texture::FlipVertical() {
+void Texture::FlipVertical()
+{
     flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_VERTICAL);
 }
 
-void Texture::FlipNone() {
+void Texture::FlipNone()
+{
     flip = (SDL_RendererFlip)SDL_FLIP_NONE;
 }
 
-void Texture::SetAlphaMod(Uint8 alpha) {
+void Texture::SetAlphaMod(Uint8 alpha)
+{
     SDL_SetTextureAlphaMod(texture, alpha);
 }
 
-void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect) {
+void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
+{
     if(!locked || !other.IsLocked()) {
         Logger::error("RENDERING") << "Lock the texture before copying from or to it!" << std::endl;
         return;
@@ -172,16 +188,19 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect) {
     }
 }
 
-uint32_t *Texture::GetData() {
+uint32_t *Texture::GetData()
+{
     if(!locked) return nullptr;
     return pixels;
 }
 
-Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-   return r << 24 | g << 16 | b << 8 | a;
+Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+    return r << 24 | g << 16 | b << 8 | a;
 }
 
-void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a) {
+void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a)
+{
     *r = value >> 24;
     *g = (value >> 16) & (uint8_t)0xFF;
     *b = (value >> 8) & (uint16_t)0xFF;

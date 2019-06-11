@@ -3,15 +3,18 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-VolumeTxt::VolumeTxt() : Parser() {
+VolumeTxt::VolumeTxt() : Parser()
+{
 
 }
 
-VolumeTxt::~VolumeTxt() {
+VolumeTxt::~VolumeTxt()
+{
 
 }
 
-bool VolumeTxt::LoadFromDisk(boost::filesystem::path path) {
+bool VolumeTxt::LoadFromDisk(boost::filesystem::path path)
+{
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error("PARSERS")  << "Unable to open volume file '" << path.string() << "'!" << std::endl;
         return false;
@@ -26,11 +29,13 @@ bool VolumeTxt::LoadFromDisk(boost::filesystem::path path) {
     return true;
 }
 
-void VolumeTxt::Clear() {
+void VolumeTxt::Clear()
+{
     volumes.clear();
 }
 
-uint8_t VolumeTxt::GetVolumeOf(std::string key) {
+uint8_t VolumeTxt::GetVolumeOf(std::string key)
+{
     auto iter = volumes.find(key);
     if(iter == volumes.end()) {
         return 100;
@@ -38,7 +43,8 @@ uint8_t VolumeTxt::GetVolumeOf(std::string key) {
     return (*iter).second;
 }
 
-void VolumeTxt::ParseLine(std::string &line) {
+void VolumeTxt::ParseLine(std::string &line)
+{
     std::regex regex("\"([^\"]*)\"\\s*([0-9]+)\\s");
     std::smatch match;
 

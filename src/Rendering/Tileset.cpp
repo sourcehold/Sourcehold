@@ -11,23 +11,27 @@ Tileset::Tileset()
 {
 }
 
-Tileset::~Tileset()  {
+Tileset::~Tileset()
+{
 
 }
 
-void Tileset::Allocate(uint32_t num) {
+void Tileset::Allocate(uint32_t num)
+{
     this->num = num;
 
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
     surf.AllocNew(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA4444);
 }
 
-void Tileset::Create() {
+void Tileset::Create()
+{
     Texture::AllocFromSurface(surf);
     surf.Destroy();
 }
 
-void Tileset::SetTile(Texture &image, uint32_t index) {
+void Tileset::SetTile(Texture &image, uint32_t index)
+{
     auto coords = IndexToCoords(index);
 
     image.LockTexture();
@@ -37,7 +41,8 @@ void Tileset::SetTile(Texture &image, uint32_t index) {
     Texture::UnlockTexture();
 }
 
-SDL_Rect Tileset::GetTile(uint32_t index) {
+SDL_Rect Tileset::GetTile(uint32_t index)
+{
     auto coords = IndexToCoords(index);
 
     SDL_Rect rect;
@@ -49,22 +54,27 @@ SDL_Rect Tileset::GetTile(uint32_t index) {
     return rect;
 }
 
-void Tileset::Clear() {
+void Tileset::Clear()
+{
     Texture::Destroy();
 }
 
-Uint32 *Tileset::GetData() {
+Uint32 *Tileset::GetData()
+{
     return surf.GetData();
 }
 
-void Tileset::Lock() {
+void Tileset::Lock()
+{
     surf.LockSurface();
 }
 
-void Tileset::Unlock() {
+void Tileset::Unlock()
+{
     surf.UnlockSurface();
 }
 
-std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {
+std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index)
+{
     return std::pair<uint32_t, uint32_t>(30 * (index % numRows), 16 * (index / numRows));
 }

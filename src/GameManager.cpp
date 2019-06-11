@@ -42,7 +42,8 @@ static StrongholdEdition _edition;
 static bool _running = false;
 static double _time = 0.0;
 
-static void DetectEdition() {
+static void DetectEdition()
+{
     /**
     * TODO:
     * - Maybe give the user the option to manually switch editions
@@ -57,13 +58,14 @@ static void DetectEdition() {
     }
 }
 
-static void DetectUsername() {
+static void DetectUsername()
+{
     if(_cfg.username.empty()) {
         return;
     }
 
     std::vector<std::wstring> words;
-    boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "), boost::token_compress_on); 
+    boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "), boost::token_compress_on);
     if(words.empty()) return;
 
     int gender = 0;
@@ -97,7 +99,8 @@ static void DetectUsername() {
     return;
 }
 
-static void UpdateGame() {
+static void UpdateGame()
+{
     if(!IsDisplayOpen() || !_eventHandler->FetchEvents()) _running = false;
 
     /* TODO: accuracy */
@@ -106,37 +109,49 @@ static void UpdateGame() {
     UpdateRenderer();
 }
 
-AssetType ExtToType(const std::string &ext) {
+AssetType ExtToType(const std::string &ext)
+{
     AssetType type = UNKNOWN;
 
     if(ext == ".bik") {
         type = BIK;
-    }else if(ext == ".wav") {
+    }
+    else if(ext == ".wav") {
         type = WAV;
-    }else if(ext == ".raw") {
+    }
+    else if(ext == ".raw") {
         type = RAW;
-    }else if(ext == ".tgx") {
+    }
+    else if(ext == ".tgx") {
         type = TGX;
-    }else if(ext == ".gm1") {
+    }
+    else if(ext == ".gm1") {
         type = GM1;
-    }else if(ext == ".ani") {
+    }
+    else if(ext == ".ani") {
         type = ANI;
-    }else if(ext == ".map") {
+    }
+    else if(ext == ".map") {
         type = MAP;
-    }else if(ext == ".mlb") {
+    }
+    else if(ext == ".mlb") {
         type = MLB;
-    }else if(ext == ".act") {
+    }
+    else if(ext == ".act") {
         type = ACT;
-    }else if(ext == ".bmp") {
+    }
+    else if(ext == ".bmp") {
         type = BMP;
-    }else if(ext == ".txt") {
+    }
+    else if(ext == ".txt") {
         type = TXT;
     }
 
     return type;
 }
 
-std::pair<int, int> ResolutionToDim(Resolution res) {
+std::pair<int, int> ResolutionToDim(Resolution res)
+{
     static const int resolutions[][2] = {
         { 800, 600 },
         { 1024, 768 },
@@ -150,13 +165,14 @@ std::pair<int, int> ResolutionToDim(Resolution res) {
         { 1920, 1080 }
     };
 
-	int rx = resolutions[res][0];
-	int ry = resolutions[res][1];
+    int rx = resolutions[res][0];
+    int ry = resolutions[res][1];
 
     return std::pair<int, int>(rx, ry);
 }
 
-bool Game::InitManager(GameOptions &opt) {
+bool Game::InitManager(GameOptions &opt)
+{
     _opt = opt;
 
 #if SOURCEHOLD_UNIX == 1
@@ -192,26 +208,31 @@ bool Game::InitManager(GameOptions &opt) {
     return true;
 }
 
-void Game::DestroyManager() {
+void Game::DestroyManager()
+{
     DestroyOpenAL();
     DestroyDisplay();
     DestroyRenderer();
 }
 
-bool Game::Running() {
+bool Game::Running()
+{
     UpdateGame();
     return _running;
 }
 
-void Game::SetDataDirectory(boost::filesystem::path dir) {
+void Game::SetDataDirectory(boost::filesystem::path dir)
+{
     _dataFolder = dir;
 }
 
-void Game::SetSaveDirectory(boost::filesystem::path dir) {
+void Game::SetSaveDirectory(boost::filesystem::path dir)
+{
     _saveFolder = dir;
 }
 
-bool Game::LoadGameData() {
+bool Game::LoadGameData()
+{
     /* Detect game directories */
     _dataFolder = _opt.dataDir;
     _saveFolder = GetDocumentsPath();
@@ -221,11 +242,13 @@ bool Game::LoadGameData() {
         boost::filesystem::path np = _dataFolder / "../saves/";
         if(DoesFileExist(np)) {
             _saveFolder = np;
-        }else {
+        }
+        else {
             Logger::warning("GAME") << "Location for save files could not be determined!" << std::endl;
             return false;
         }
-    }else _saveFolder /= "Stronghold/Saves/";
+    }
+    else _saveFolder /= "Stronghold/Saves/";
 
     /* Does nothing if it already exists */
     CreateFolder(_saveFolder);
@@ -248,14 +271,16 @@ bool Game::LoadGameData() {
     return true;
 }
 
-void Game::ClearFileCache() {
+void Game::ClearFileCache()
+{
     _tgxFiles.clear();
     _gm1Files.clear();
     _aniFiles.clear();
     _bikFiles.clear();
 }
 
-void Game::Cache(boost::filesystem::path filename) {
+void Game::Cache(boost::filesystem::path filename)
+{
     std::string ext = GetFileExtension(filename);
     if(filename.empty() || ext.empty()) {
         Logger::warning("ASSETS") << "Unable to cache asset: '" << filename << "'" << std::endl;
@@ -265,81 +290,102 @@ void Game::Cache(boost::filesystem::path filename) {
     switch(ExtToType(ext)) {
     case TGX: {
         _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(filename));
-    }break;
+    }
+    break;
     case GM1: {
         _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(filename));
-    }break;
-	case ANI: {
+    }
+    break;
+    case ANI: {
         _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(filename));
-    }break;
-	case BIK: {
+    }
+    break;
+    case BIK: {
         _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(filename));
-    }break;
+    }
+    break;
     case UNKNOWN: {
         Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;
-    }break;
-    default: break;
+    }
+    break;
+    default:
+        break;
     }
 }
 
-void Game::DeleteCacheEntry(boost::filesystem::path filename) {
+void Game::DeleteCacheEntry(boost::filesystem::path filename)
+{
     AssetType t = ExtToType(GetFileExtension(filename));
     switch(t) {
     case TGX: {
         auto iter = _tgxFiles.find(filename.string());
         if(iter != _tgxFiles.end()) _tgxFiles.erase(iter);
-    }break;
+    }
+    break;
     case GM1: {
         auto iter = _gm1Files.find(filename.string());
         if(iter != _gm1Files.end()) _gm1Files.erase(iter);
-    }break;
+    }
+    break;
     case ANI: {
         auto iter = _aniFiles.find(filename.string());
         if(iter != _aniFiles.end()) _aniFiles.erase(iter);
-    }break;
+    }
+    break;
     case BIK: {
         auto iter = _bikFiles.find(filename.string());
         if(iter != _bikFiles.end()) _bikFiles.erase(iter);
-    }break;
-    default: break;
+    }
+    break;
+    default:
+        break;
     }
 }
 
-std::wstring Game::GetLocalizedDescription(LocalizedMissionDescription index) {
+std::wstring Game::GetLocalizedDescription(LocalizedMissionDescription index)
+{
     std::wstring& str = _mlb.GetString(index);
     return str;
 }
 
-std::wstring Game::GetLocalizedString(LocalizedTextString index) {
+std::wstring Game::GetLocalizedString(LocalizedTextString index)
+{
     std::wstring str;
     return str;
 }
 
-double Game::GetTime() {
+double Game::GetTime()
+{
     return _time;
 }
 
-std::shared_ptr<EventHandler> Game::GetHandler() {
+std::shared_ptr<EventHandler> Game::GetHandler()
+{
     return _eventHandler;
 }
 
-boost::filesystem::path Game::GetDirectory() {
+boost::filesystem::path Game::GetDirectory()
+{
     return _dataFolder;
 }
 
-StrongholdEdition Game::GetEdition() {
+StrongholdEdition Game::GetEdition()
+{
     return _edition;
 }
 
-Resolution Game::GetResolution() {
+Resolution Game::GetResolution()
+{
     return _opt.resolution;
 }
 
-int Game::GetUsernameIndex() {
+int Game::GetUsernameIndex()
+{
     return _usernameIndex;
 }
 
-std::weak_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename) {
+std::weak_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
+{
     if(_tgxFiles.count(filename.string())) {
         return _tgxFiles.at(filename.string());
     }
@@ -348,7 +394,8 @@ std::weak_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename) {
     return iter.first->second;
 }
 
-std::weak_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename) {
+std::weak_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
+{
     if(_gm1Files.count(filename.string())) {
         return _gm1Files.at(filename.string());
     }
@@ -357,7 +404,8 @@ std::weak_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename) {
     return iter.first->second;
 }
 
-std::weak_ptr<AniFile> Game::GetAni(boost::filesystem::path filename) {
+std::weak_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
+{
     if(_aniFiles.count(filename.string())) {
         return _aniFiles.at(filename.string());
     }
@@ -366,7 +414,8 @@ std::weak_ptr<AniFile> Game::GetAni(boost::filesystem::path filename) {
     return iter.first->second;
 }
 
-std::weak_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename) {
+std::weak_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
+{
     if(_bikFiles.count(filename.string())) {
         return _bikFiles.at(filename.string());
     }

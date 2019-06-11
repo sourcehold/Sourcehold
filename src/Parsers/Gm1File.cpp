@@ -60,11 +60,13 @@ Gm1File::Gm1File(boost::filesystem::path path) : Parser()
     this->LoadFromDisk(path, false);
 }
 
-Gm1File::~Gm1File() {
+Gm1File::~Gm1File()
+{
 
 }
 
-bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
+bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded)
+{
     this->path = path;
 
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
@@ -108,7 +110,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
         Parser::GetData(&(entries.begin() + n)->header, sizeof(ImageHeader));
     }
 
-     /* Get offset of data start */
+    /* Get offset of data start */
     offData = Parser::Tell();
 
     /* Read compressed images into buffer */
@@ -177,7 +179,8 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
         tileset->Create();
         textureAtlas->Unlock();
         textureAtlas->Create();
-    }else {
+    }
+    else {
         /* Allocate images */
         std::vector<std::pair<uint32_t, uint32_t>> entryDims(header.num);
         for(n = 0; n < header.num; n++) {
@@ -198,105 +201,116 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded) {
     return true;
 }
 
-void Gm1File::DumpInformation() {
+void Gm1File::DumpInformation()
+{
     Logger::message("PARSERS") << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
 }
 
-void Gm1File::Free() {
+void Gm1File::Free()
+{
     entries.clear();
     textureAtlas->Clear();
     tileset->Clear();
 }
 
-bool Gm1File::GetImage(uint32_t index) {
+bool Gm1File::GetImage(uint32_t index)
+{
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
 
     switch(header.type) {
-        case Gm1Header::TYPE_INTERFACE: case Gm1Header::TYPE_FONT: case Gm1Header::TYPE_CONSTSIZE: {
-            SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr, 0);
-        }break;
-        case Gm1Header::TYPE_ANIMATION: {
-            SDL_Rect part = textureAtlas->Get(index);
-            TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette, entries[index].header.color % 10);
-        }break;
-        case Gm1Header::TYPE_TILE: {
-            /* Read tile */
-            SDL_Rect tile = tileset->GetTile(index);
-            SDL_Rect part = textureAtlas->Get(entries[index].collection);
+    case Gm1Header::TYPE_INTERFACE:
+    case Gm1Header::TYPE_FONT:
+    case Gm1Header::TYPE_CONSTSIZE: {
+        SDL_Rect part = textureAtlas->Get(index);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr, 0);
+    }
+    break;
+    case Gm1Header::TYPE_ANIMATION: {
+        SDL_Rect part = textureAtlas->Get(index);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette, entries[index].header.color % 10);
+    }
+    break;
+    case Gm1Header::TYPE_TILE: {
+        /* Read tile */
+        SDL_Rect tile = tileset->GetTile(index);
+        SDL_Rect part = textureAtlas->Get(entries[index].collection);
 
-            TgxFile::ReadTgx(textureAtlas->GetSurface(),
-                             position+512,
-                             entries[index].size-512,
-                             part.x + entries[index].offX,
-                             part.y + entries[index].offY,
-                             part.w,
-                             part.h,
-                             nullptr,
-                             0);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(),
+                         position+512,
+                         entries[index].size-512,
+                         part.x + entries[index].offX,
+                         part.y + entries[index].offY,
+                         part.w,
+                         part.h,
+                         nullptr,
+                         0);
 
-            /* Extract pixel data */
-            const static uint8_t lines[16] = {
-                2, 6, 10, 14, 18, 22, 26, 30,
-                30, 26, 22, 18, 14, 10, 6, 2
-            };
+        /* Extract pixel data */
+        const static uint8_t lines[16] = {
+            2, 6, 10, 14, 18, 22, 26, 30,
+            30, 26, 22, 18, 14, 10, 6, 2
+        };
 
-            /* Read every line */
-            for(uint8_t l = 0; l < 16; l++) {
-                /* Read every pixel in a line */
-                for(uint8_t i = 0; i < lines[l]; i++) {
-                    uint16_t pixel = *reinterpret_cast<uint16_t*>(position);
-                    position += 2;
+        /* Read every line */
+        for(uint8_t l = 0; l < 16; l++) {
+            /* Read every pixel in a line */
+            for(uint8_t i = 0; i < lines[l]; i++) {
+                uint16_t pixel = *reinterpret_cast<uint16_t*>(position);
+                position += 2;
 
-                    /* Read RGB */
-                    uint8_t r,g,b,a;
-                    TgxFile::ReadPixel(pixel, r, g, b, a);
+                /* Read RGB */
+                uint8_t r,g,b,a;
+                TgxFile::ReadPixel(pixel, r, g, b, a);
 
-                    /* Add to tileset texture */
-                    tileset->GetSurface().SetPixel(
-                        tile.x + (15 - lines[l] / 2 + i),
-                        tile.y + l,
-                        r, g, b, 0xFF
-                    );
+                /* Add to tileset texture */
+                tileset->GetSurface().SetPixel(
+                    tile.x + (15 - lines[l] / 2 + i),
+                    tile.y + l,
+                    r, g, b, 0xFF
+                );
 
-                    textureAtlas->GetSurface().SetPixel(
-                        part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
-                        part.y + entries[index].tileY + l,
-                        r, g, b, a
-                        );
-                }
+                textureAtlas->GetSurface().SetPixel(
+                    part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
+                    part.y + entries[index].tileY + l,
+                    r, g, b, a
+                );
             }
-
-            position += entries[index].size-512;
-        }break;
-        case Gm1Header::TYPE_MISC1: case Gm1Header::TYPE_MISC2: {
-            SDL_Rect part = textureAtlas->Get(index);
-
-            for(uint32_t x = 0; x < entries[index].header.width; x++) {
-                for(uint32_t y = 0; y < entries[index].header.height; y++) {
-                    uint16_t pixel = *reinterpret_cast<uint16_t*>(position);
-                    position += 2;
-
-                    /* Read RGB */
-                    uint8_t r,g,b,a;
-                    TgxFile::ReadPixel(pixel, r, g, b, a);
-
-                    /* Add to texture */
-                    textureAtlas->GetSurface().SetPixel(x+part.x, y+part.y, r, g, b, a);
-                }
-            }
-        }break;
-        default: {
-            Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
-            return false;
         }
+
+        position += entries[index].size-512;
+    }
+    break;
+    case Gm1Header::TYPE_MISC1:
+    case Gm1Header::TYPE_MISC2: {
+        SDL_Rect part = textureAtlas->Get(index);
+
+        for(uint32_t x = 0; x < entries[index].header.width; x++) {
+            for(uint32_t y = 0; y < entries[index].header.height; y++) {
+                uint16_t pixel = *reinterpret_cast<uint16_t*>(position);
+                position += 2;
+
+                /* Read RGB */
+                uint8_t r,g,b,a;
+                TgxFile::ReadPixel(pixel, r, g, b, a);
+
+                /* Add to texture */
+                textureAtlas->GetSurface().SetPixel(x+part.x, y+part.y, r, g, b, a);
+            }
+        }
+    }
+    break;
+    default: {
+        Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
+        return false;
+    }
     }
 
     return true;
 }
 
-void Gm1File::ReadPalette() {
+void Gm1File::ReadPalette()
+{
     if(!Parser::GetData(palette, sizeof(palette))) {
         Logger::error("PARSERS") << "Unable to read palette from Gm1!" << std::endl;
         Parser::Close();

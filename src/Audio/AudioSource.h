@@ -12,48 +12,45 @@
 #include <FFmpegUtil.h>
 #include <System/Logger.h>
 
-namespace Sourcehold
-{
-    namespace Audio
-    {
+namespace Sourcehold {
+    namespace Audio {
         /**
          * A single audio source, assumes that the audio context
          * has been created already. This handles two use cases:
-		 * - Raw PCM audio (16-bit MONO) at 44100 baud used for songs
-		 * - WAV ADPCM audio used for SFX
-		 * This class can be reused by calling Destroy() and initializing
-		 * a new effect/song afterwards.
+         * - Raw PCM audio (16-bit MONO) at 44100 baud used for songs
+         * - WAV ADPCM audio used for SFX
+         * This class can be reused by calling Destroy() and initializing
+         * a new effect/song afterwards.
          */
-        class AudioSource
-        {
+        class AudioSource {
             boost::filesystem::path path;
-			enum DecoderMode {
-				MODE_PCM,
-				MODE_ADPCM
-			} mode;
-			/* OpenAL stuff */
-			const static uint32_t NUM_AUDIO_BUFFERS = 4;
-			ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
-			ALuint alBuffers[NUM_AUDIO_BUFFERS];
-			ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-			ALuint alNumChannels;
-			ALuint alFormat;
-			ALuint alSampleRate;
+            enum DecoderMode {
+                MODE_PCM,
+                MODE_ADPCM
+            } mode;
+            /* OpenAL stuff */
+            const static uint32_t NUM_AUDIO_BUFFERS = 4;
+            ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
+            ALuint alBuffers[NUM_AUDIO_BUFFERS];
+            ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
+            ALuint alNumChannels;
+            ALuint alFormat;
+            ALuint alSampleRate;
             ALuint source;
             ALuint buffer;
             uint8_t *ptr;
             size_t size;
-			/* FFmpeg stuff */
-			AVFormatContext *ic;
-			AVCodecContext *audioCtx;
-			AVCodec *audioDecoder;
-			AVPacket audioPacket;
-			AVFrame *audioFrame;
-			int audioStream;
-			int delayTimer;
-			/* Properties */
-			bool repeat, valid = false, fading = false;
-			bool ffmpegInited = false, ffmpegRunning = false;
+            /* FFmpeg stuff */
+            AVFormatContext *ic;
+            AVCodecContext *audioCtx;
+            AVCodec *audioDecoder;
+            AVPacket audioPacket;
+            AVFrame *audioFrame;
+            int audioStream;
+            int delayTimer;
+            /* Properties */
+            bool repeat, valid = false, fading = false;
+            bool ffmpegInited = false, ffmpegRunning = false;
             float gain; /* Current gain */
             double fadeBase = 0.0, fadeAmount = 0.0;
             bool fadeIn;
@@ -70,22 +67,26 @@ namespace Sourcehold
             void Pause();
             void Resume();
             void Stop();
-			void Rewind();
+            void Rewind();
             void SetFadeOut(double amount = 1.0);
             void SetFadeIn(double amount = 1.0);
             void UpdateFade();
-			void Destroy();
-			void Update();
+            void Destroy();
+            void Update();
 
             bool IsValid();
             bool IsPlaying();
             bool IsRepeating();
 
-            inline bool IsFading() { return fading; }
-            inline void SetGain(double g) { gain = g; }
+            inline bool IsFading() {
+                return fading;
+            }
+            inline void SetGain(double g) {
+                gain = g;
+            }
         protected:
-			bool InitFFmpeg();
-			void DestroyFFmpeg();
+            bool InitFFmpeg();
+            void DestroyFFmpeg();
         };
     }
 }

@@ -12,10 +12,8 @@
 
 #include <boost/filesystem.hpp>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         using namespace Rendering;
 
         /**
@@ -23,8 +21,7 @@ namespace Sourcehold
          * Creates an entry in TextureAtlas for every image collection (Building, unit, etc.)
          * and a Tileset depending on the stored type
          */
-        class Gm1File : private Parser
-        {
+        class Gm1File : private Parser {
         public:
             Gm1File();
             Gm1File(boost::filesystem::path path);
@@ -36,8 +33,12 @@ namespace Sourcehold
             void DumpInformation();
             void Free();
 
-            inline std::weak_ptr<Tileset> GetTileset() { return tileset; }
-            inline std::weak_ptr<TextureAtlas> GetTextureAtlas() { return textureAtlas; }
+            inline std::weak_ptr<Tileset> GetTileset() {
+                return tileset;
+            }
+            inline std::weak_ptr<TextureAtlas> GetTextureAtlas() {
+                return textureAtlas;
+            }
         protected:
             const uint32_t max_num = 2048;
             bool GetImage(uint32_t index);

@@ -24,10 +24,8 @@
 #include <Rendering/TextureAtlas.h>
 #include <Rendering/BinkVideo.h>
 
-namespace Sourcehold
-{
-    namespace GUI
-    {
+namespace Sourcehold {
+    namespace GUI {
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
@@ -35,8 +33,7 @@ namespace Sourcehold
         /**
          * Handles non game states - menus and intro sequence
          */
-        class Startup : protected EventConsumer<Mouse>
-        {
+        class Startup : protected EventConsumer<Mouse> {
             MainMenu mainMenu;
         public:
             Startup();

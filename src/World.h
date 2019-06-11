@@ -11,15 +11,12 @@
 #include <Events/Keyboard.h>
 #include <Events/Mouse.h>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         class TgxFile;
         class Gm1File;
     }
-    namespace Game
-    {
+    namespace Game {
         struct Scroll {
             bool shouldScroll = false;
             bool setByKeyboard = false;
@@ -43,8 +40,7 @@ namespace Sourcehold
          */
         class Building;
         class Entity;
-        class World : public GameMap, protected EventConsumer<Keyboard>, protected EventConsumer<Mouse>
-        {
+        class World : public GameMap, protected EventConsumer<Keyboard>, protected EventConsumer<Mouse> {
             std::shared_ptr<TgxFile> tgx_right, tgx_bar_bg;
             std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats;
             ScrollInformation scroll;
@@ -69,7 +65,7 @@ namespace Sourcehold
             World();
             World(const World&) = delete;
             ~World();
-            
+
             int Play();
         protected:
             void RenderQuickMenu();

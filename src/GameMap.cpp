@@ -35,7 +35,8 @@ GameMap::GameMap()
     }
 }
 
-void GameMap::Render() {
+void GameMap::Render()
+{
     mult = GetZoomLevel() == ZOOM_NEAR ? 2 : 1;
 
     for(uint32_t i = 0; i < tiles.size(); i++) {

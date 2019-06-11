@@ -30,15 +30,18 @@ Playlist::Playlist(const Playlist& list) :
     current(list.current)
 { }
 
-Playlist::~Playlist() {
+Playlist::~Playlist()
+{
     Clear();
 }
 
-void Playlist::Push(AudioSource &song) {
+void Playlist::Push(AudioSource &song)
+{
     songs.push_back(song);
 }
 
-void Playlist::Play(uint32_t index) {
+void Playlist::Play(uint32_t index)
+{
     /* Does the playlist contain any songs? */
     if(songs.empty()) {
         Logger::warning("AUDIO") << "No songs to play!" << std::endl;
@@ -62,37 +65,44 @@ void Playlist::Play(uint32_t index) {
     songs.at(index).Play();
 }
 
-void Playlist::Pause() {
+void Playlist::Pause()
+{
     playing = false;
     songs.at(current).Pause();
 }
 
-void Playlist::Resume() {
+void Playlist::Resume()
+{
     playing = true;
     songs.at(current).Resume();
 }
 
-void Playlist::Stop() {
+void Playlist::Stop()
+{
     playing = false;
     Clear();
 }
 
-void Playlist::Skip() {
+void Playlist::Skip()
+{
     if(current != songs.size()-1) {
         /* Skip to next song */
         Play(current + 1);
-    }else {
+    }
+    else {
         /* Else return to first or stop */
         if(repeat) Play(0);
         else Pause();
     }
 }
 
-void Playlist::Clear() {
+void Playlist::Clear()
+{
     songs.clear();
 }
 
-void Playlist::Update() {
+void Playlist::Update()
+{
     if(songs.empty() || !playing) return;
 
     if(!songs.front().IsPlaying()) {
@@ -101,14 +111,17 @@ void Playlist::Update() {
             if(current != songs.size()-1) {
                 /* No -> next one */
                 Play(current + 1);
-            }else {
+            }
+            else {
                 /* Yes -> Go back to the start */
                 Play(0);
             }
-        }else if(current != songs.size()-1) {
+        }
+        else if(current != songs.size()-1) {
             /* Not repeating, not at the end yet */
             Play(current + 1);
-        }else {
+        }
+        else {
             /* End of playlist */
             playing = false;
             current = 0;
@@ -116,14 +129,17 @@ void Playlist::Update() {
     }
 }
 
-bool Playlist::IsPlaying() {
+bool Playlist::IsPlaying()
+{
     return playing;
 }
 
-bool Playlist::IsRepeating() {
+bool Playlist::IsRepeating()
+{
     return repeat;
 }
 
-AudioSource& Playlist::GetCurrent() {
+AudioSource& Playlist::GetCurrent()
+{
     return songs.at(current);
 }

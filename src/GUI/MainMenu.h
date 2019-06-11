@@ -22,21 +22,18 @@
 
 #include <Audio/AudioSource.h>
 
-namespace Sourcehold
-{
-    namespace GUI
-    {
+namespace Sourcehold {
+    namespace GUI {
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
-		using namespace Audio;
+        using namespace Audio;
 
         /**
          * Handles the main menu and all submenus
          */
-        class MainMenu
-        {
-			StrongholdEdition edition;
+        class MainMenu {
+            StrongholdEdition edition;
             Credits cred;
         public:
             MainMenu();
@@ -103,8 +100,8 @@ namespace Sourcehold
 
             UIState currentState;
 
-			/* SFX */
-			AudioSource aud_greetings, aud_exit;
-		};
+            /* SFX */
+            AudioSource aud_greetings, aud_exit;
+        };
     }
 }

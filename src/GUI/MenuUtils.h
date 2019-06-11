@@ -9,10 +9,8 @@
 
 #include <Parsers/Gm1File.h>
 
-namespace Sourcehold
-{
-    namespace GUI
-    {
+namespace Sourcehold {
+    namespace GUI {
         using namespace Game;
         bool InitializeUtils() ;
         void RenderMenuText(const std::wstring &text);

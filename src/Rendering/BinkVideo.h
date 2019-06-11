@@ -19,15 +19,12 @@ extern "C" {
 
 #include <boost/filesystem.hpp>
 
-namespace Sourcehold
-{
-    namespace Rendering
-    {
+namespace Sourcehold {
+    namespace Rendering {
         /*
          * A single bink video file, exposes a texture as a frame buffer
          */
-        class BinkVideo : public Texture
-        {
+        class BinkVideo : public Texture {
             AVFormatContext *ic;
             AVCodec *decoder, *audioDecoder;
             AVPacket packet;
@@ -43,11 +40,11 @@ namespace Sourcehold
             ALuint alFormat;
             ALuint alSampleRate;
             char *audioBuffer;
-			int videoStream, audioStream, size;
+            int videoStream, audioStream, size;
             float fps;
-			uint32_t *framebuf;
-			int delayTimer;
-			bool packetFinished;
+            uint32_t *framebuf;
+            int delayTimer;
+            bool packetFinished;
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
             BinkVideo();
@@ -58,9 +55,11 @@ namespace Sourcehold
             void Close();
             void Update();
 
-            inline bool IsRunning() { return running; }
+            inline bool IsRunning() {
+                return running;
+            }
         protected:
-			void test();
+            void test();
         };
     }
 }

@@ -12,15 +12,18 @@ struct MlbFile::SectionHeader {
     uint32_t length;
 };
 
-MlbFile::MlbFile() : Parser() {
+MlbFile::MlbFile() : Parser()
+{
 
 }
 
-MlbFile::~MlbFile() {
+MlbFile::~MlbFile()
+{
     Clear();
 }
 
-bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
+bool MlbFile::LoadFromDisk(boost::filesystem::path path)
+{
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
         Logger::error("PARSERS")  << "Unable to load Mlb file " << path << " from data folder!" << std::endl;
         return false;
@@ -44,6 +47,7 @@ bool MlbFile::LoadFromDisk(boost::filesystem::path path) {
     return true;
 }
 
-void MlbFile::Clear() {
+void MlbFile::Clear()
+{
     field.clear();
 }

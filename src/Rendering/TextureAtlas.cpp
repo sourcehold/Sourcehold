@@ -5,16 +5,20 @@
 
 using namespace Sourcehold::Rendering;
 
-TextureAtlas::TextureAtlas() {
+TextureAtlas::TextureAtlas()
+{
 }
 
-TextureAtlas::TextureAtlas(const TextureAtlas &atlas) {
+TextureAtlas::TextureAtlas(const TextureAtlas &atlas)
+{
 }
 
-TextureAtlas::~TextureAtlas() {
+TextureAtlas::~TextureAtlas()
+{
 }
 
-void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries) {
+void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
+{
     if(!entries.size()) {
         return;
     }
@@ -35,9 +39,9 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
     std::sort(
         sorted.begin(),
         sorted.begin() + sorted.size(),
-        [](Elem& e1, Elem& e2) -> bool {
-            return e1.dim.first > e2.dim.first;
-        }
+    [](Elem& e1, Elem& e2) -> bool {
+        return e1.dim.first > e2.dim.first;
+    }
     );
 
     this->entries.resize(entries.size());
@@ -69,32 +73,39 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
     surf.AllocNew(width, height, SDL_PIXELFORMAT_RGBA4444);
 }
 
-void TextureAtlas::Create() {
+void TextureAtlas::Create()
+{
     Texture::AllocFromSurface(surf);
     surf.Destroy();
 }
 
-SDL_Rect TextureAtlas::Get(uint32_t index) {
+SDL_Rect TextureAtlas::Get(uint32_t index)
+{
     if(index < entries.size()) return entries[index];
     else return { 0, 0, 0, 0 };
 }
 
-void TextureAtlas::Clear() {
+void TextureAtlas::Clear()
+{
     Texture::Destroy();
 }
 
-void TextureAtlas::Lock() {
+void TextureAtlas::Lock()
+{
     surf.LockSurface();
 }
 
-void TextureAtlas::Unlock() {
+void TextureAtlas::Unlock()
+{
     surf.UnlockSurface();
 }
 
-Uint32 *TextureAtlas::GetData() {
+Uint32 *TextureAtlas::GetData()
+{
     return surf.GetData();
 }
 
-std::pair<uint32_t, uint32_t> TextureAtlas::IndexToCoords(uint32_t index) {
+std::pair<uint32_t, uint32_t> TextureAtlas::IndexToCoords(uint32_t index)
+{
     return std::pair<uint32_t, uint32_t>(0, 0);
 }

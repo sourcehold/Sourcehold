@@ -7,17 +7,14 @@
 #include <locale>
 #include <codecvt>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
 
         /*
         * Parser super class, provide an interface for file IO
         * TODO: DO __NOT__ assume everyone is using little-endian
         */
-        class Parser : protected std::fstream
-        {
+        class Parser : protected std::fstream {
             uint32_t length = 0;
         public:
             Parser();
@@ -45,7 +42,9 @@ namespace Sourcehold
             void WriteWord(uint16_t word);
             void WriteDWord(uint32_t dword);
 
-            inline uint32_t GetLength() { return length; }
+            inline uint32_t GetLength() {
+                return length;
+            }
         };
     }
 }

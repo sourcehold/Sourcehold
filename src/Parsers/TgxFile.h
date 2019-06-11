@@ -17,18 +17,15 @@
 
 using namespace Sourcehold::Rendering;
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         using Rendering::Texture;
 
         /*
          * File containing a single image, provides parsing functions
          * for GM1 files too
          */
-        class TgxFile : private Parser, public Texture
-        {
+        class TgxFile : private Parser, public Texture {
         public:
             TgxFile();
             TgxFile(boost::filesystem::path path);

@@ -7,19 +7,23 @@ Keyboard::Keyboard(std::list<EventType> types)
     this->types = types;
 }
 
-Keyboard::~Keyboard() {
+Keyboard::~Keyboard()
+{
 
 }
 
-SDL_Keysym Keyboard::Key() {
+SDL_Keysym Keyboard::Key()
+{
     return event.key.keysym;
 }
 
-EventType Keyboard::GetType() {
+EventType Keyboard::GetType()
+{
     return type;
 }
 
-void Keyboard::eventCallback(SDL_Event &event) {
+void Keyboard::eventCallback(SDL_Event &event)
+{
     this->event = event;
 
     Event::SetHandled(true);

@@ -5,24 +5,21 @@
 
 #include <Rendering/Renderer.h>
 
-namespace Sourcehold
-{
-    namespace System
-    {
-		enum StrongholdEdition {
-			STRONGHOLD_CLASSIC,
-			STRONGHOLD_COLLECTION,
-			STRONGHOLD_HD
-		};
+namespace Sourcehold {
+    namespace System {
+        enum StrongholdEdition {
+            STRONGHOLD_CLASSIC,
+            STRONGHOLD_COLLECTION,
+            STRONGHOLD_HD
+        };
 
-		using namespace Rendering;
-		
-		/**
+        using namespace Rendering;
+
+        /**
          * Game startup options, modified via config file
          * or command line arguments
          */
-        struct GameOptions
-        {
+        struct GameOptions {
             std::string config;
             std::string dataDir;
             bool debug = false;
@@ -32,8 +29,8 @@ namespace Sourcehold
             bool nosound = false;
             bool nograb = false;
             int color = -1;
-			Resolution resolution;
-			uint16_t ndisp;
+            Resolution resolution;
+            uint16_t ndisp;
         };
     }
 }

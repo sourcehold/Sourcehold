@@ -6,16 +6,13 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/Renderable.h>
 
-namespace Sourcehold
-{
-    namespace Rendering
-    {
+namespace Sourcehold {
+    namespace Rendering {
         /**
          * An SDL_Surface wrapper class. This is primarily used
          * to create static textures.
          */
-        class Surface : public Renderable
-        {
+        class Surface : public Renderable {
             SDL_Surface *surface;
             bool locked = false;
             bool valid = false;
@@ -34,11 +31,21 @@ namespace Sourcehold
             void Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
 
             Uint32 *GetData();
-            inline bool IsValid() { return valid; }
-            inline bool IsLocked() { return locked; }
-            inline SDL_Surface *GetSurface() { return surface; }
-            inline int GetWidth() { return width; }
-            inline int GetHeight() { return height; }
+            inline bool IsValid() {
+                return valid;
+            }
+            inline bool IsLocked() {
+                return locked;
+            }
+            inline SDL_Surface *GetSurface() {
+                return surface;
+            }
+            inline int GetWidth() {
+                return width;
+            }
+            inline int GetHeight() {
+                return height;
+            }
         protected:
             Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
         };

@@ -14,30 +14,27 @@
 #include <Audio/AudioSource.h>
 #include <Parsers/TgxFile.h>
 
-namespace Sourcehold
-{
-    namespace GUI
-    {
-    	using namespace Game;
-    	using namespace Audio;
-    	using namespace Events;
+namespace Sourcehold {
+    namespace GUI {
+        using namespace Game;
+        using namespace Audio;
+        using namespace Events;
 
-    	/**
-    	 * This handles the credits sequences,
-    	 * the one in the main menu and the endgame credits.
-    	 */
-    	class Credits : protected EventConsumer<Mouse>
-    	{
-    	public:
-    		Credits();
-    		Credits(const Credits&) = delete;
-    		~Credits();
+        /**
+         * This handles the credits sequences,
+         * the one in the main menu and the endgame credits.
+         */
+        class Credits : protected EventConsumer<Mouse> {
+        public:
+            Credits();
+            Credits(const Credits&) = delete;
+            ~Credits();
 
-    		bool Play(bool endgame, bool fadein, bool loop);
-    	protected:
-    		void onEventReceive(Mouse &event) override;
+            bool Play(bool endgame, bool fadein, bool loop);
+        protected:
+            void onEventReceive(Mouse &event) override;
 
             bool playing;
-    	};
+        };
     }
 }

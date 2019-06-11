@@ -4,12 +4,9 @@
 
 #include <GameMap.h>
 
-namespace Sourcehold
-{
-    namespace Game
-    {
-        class Entity
-        {
+namespace Sourcehold {
+    namespace Game {
+        class Entity {
         public:
             Entity() = default;
             Entity(const Entity&) = delete;

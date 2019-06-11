@@ -8,10 +8,8 @@
 
 #include <Rendering/Renderable.h>
 
-namespace Sourcehold
-{
-    namespace Rendering
-    {
+namespace Sourcehold {
+    namespace Rendering {
         /**
          * Texture wrapper class, able to create and modify
          * textures, external modification is possible
@@ -20,8 +18,7 @@ namespace Sourcehold
          */
         class Renderer;
         class Surface;
-        class Texture : public Renderable
-        {
+        class Texture : public Renderable {
             SDL_Texture *texture = nullptr;
             int width, height, pitch = 0;
             double angle;
@@ -70,12 +67,24 @@ namespace Sourcehold
             void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
 
             uint32_t *GetData();
-            inline bool IsLocked() { return locked; }
-            inline SDL_Texture *GetTexture() { return texture; }
-            inline int GetWidth() { return width; }
-            inline int GetHeight() { return height; }
-            inline double GetAngle() { return angle; }
-            inline SDL_RendererFlip GetFlip() { return flip; }
+            inline bool IsLocked() {
+                return locked;
+            }
+            inline SDL_Texture *GetTexture() {
+                return texture;
+            }
+            inline int GetWidth() {
+                return width;
+            }
+            inline int GetHeight() {
+                return height;
+            }
+            inline double GetAngle() {
+                return angle;
+            }
+            inline SDL_RendererFlip GetFlip() {
+                return flip;
+            }
         protected:
             Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
             void FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a);

@@ -26,6 +26,6 @@ namespace Sourcehold {
             TUTORIAL,
             CREDITS,
             EXIT_GAME
-        };        
+        };
     }
 }

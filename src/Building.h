@@ -7,18 +7,14 @@
 #include <Rendering/Renderer.h>
 #include <Rendering/Tileset.h>
 
-namespace Sourcehold
-{
-    namespace Parsers
-    {
+namespace Sourcehold {
+    namespace Parsers {
         class Gm1File;
     }
-    namespace Game
-    {
+    namespace Game {
         using namespace Parsers;
 
-        class Building
-        {
+        class Building {
             std::shared_ptr<Gm1File> gm1;
             std::vector<uint32_t> walkableTiles;
             uint32_t px, py, mapW, mapH;

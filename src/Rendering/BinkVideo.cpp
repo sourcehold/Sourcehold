@@ -23,7 +23,8 @@ BinkVideo::BinkVideo() : Texture()
     }
 }
 
-BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture() {
+BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture()
+{
     ic = avformat_alloc_context();
     if(!ic) {
         Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
@@ -32,19 +33,21 @@ BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture() {
     LoadFromDisk(path, looping);
 }
 
-BinkVideo::~BinkVideo() {
+BinkVideo::~BinkVideo()
+{
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
+bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping)
+{
     this->looping = looping;
 
     int out = avformat_open_input(
-        &ic,
-        path.string().c_str(),
-		Game::GetAVInputFormat(),
-        NULL
-    );
+                  &ic,
+                  path.string().c_str(),
+                  Game::GetAVInputFormat(),
+                  NULL
+              );
     if(out < 0) {
         return false;
     }
@@ -101,38 +104,39 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping) {
     }
 
     sws = sws_getContext(
-        codecCtx->width,
-        codecCtx->height,
-        codecCtx->pix_fmt,
-        640, 292,
-        AV_PIX_FMT_RGB32,
-        SWS_BILINEAR,
-        NULL,
-        NULL,
-        NULL
-    );
+              codecCtx->width,
+              codecCtx->height,
+              codecCtx->pix_fmt,
+              640, 292,
+              AV_PIX_FMT_RGB32,
+              SWS_BILINEAR,
+              NULL,
+              NULL,
+              NULL
+          );
     if(!sws) {
         return false;
     }
 
     Texture::AllocNewStreaming(640, 292, SDL_PIXELFORMAT_RGB888);
-	framebuf = (uint32_t*)malloc(640 * 292 * sizeof(uint32_t));
+    framebuf = (uint32_t*)malloc(640 * 292 * sizeof(uint32_t));
 
     valid = true;
     running = true;
-	packetFinished = true;
-	delayTimer = 0;
+    packetFinished = true;
+    delayTimer = 0;
 
     return true;
 }
 
-void BinkVideo::Close() {
+void BinkVideo::Close()
+{
     if(valid) {
         avformat_close_input(&ic);
         av_frame_free(&frame);
         decoder->close(codecCtx);
         av_free(codecCtx);
-		free(framebuf);
+        free(framebuf);
 
         if(hasAudio) {
             decoder->close(audioCtx);
@@ -145,171 +149,172 @@ void BinkVideo::Close() {
     }
 }
 
-void BinkVideo::Update() {
+void BinkVideo::Update()
+{
     if(!running || !valid) return;
 
-	av_init_packet(&packet);
+    av_init_packet(&packet);
 
-	int ret = 0;
-	if (av_read_frame(ic, &packet) < 0) {
-		if (looping) {
-			av_seek_frame(ic, -1, 0, 0);
-			if (av_read_frame(ic, &packet) < 0) {
-				return;
-			}
-		}
-		else {
-			running = false;
-			return;
-		}
-	}
+    int ret = 0;
+    if (av_read_frame(ic, &packet) < 0) {
+        if (looping) {
+            av_seek_frame(ic, -1, 0, 0);
+            if (av_read_frame(ic, &packet) < 0) {
+                return;
+            }
+        }
+        else {
+            running = false;
+            return;
+        }
+    }
 
-	if (packet.stream_index == videoStream) {
-		av_frame_unref(frame);
+    if (packet.stream_index == videoStream) {
+        av_frame_unref(frame);
 
-		/* Receive new packet on start or if the last one was processed */
-		if (packetFinished) {
-			if (avcodec_send_packet(codecCtx, &packet) < 0) return;
-		}
+        /* Receive new packet on start or if the last one was processed */
+        if (packetFinished) {
+            if (avcodec_send_packet(codecCtx, &packet) < 0) return;
+        }
 
-		/* TODO: don't block the thread by sleeping and use internal
-		  timer or callback instead */
-		double dur_ms = (double)packet.duration * av_q2d(audioCtx->time_base);
-		std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
+        /* TODO: don't block the thread by sleeping and use internal
+          timer or callback instead */
+        double dur_ms = (double)packet.duration * av_q2d(audioCtx->time_base);
+        std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
 
-		/* Receive one video frame */
-		ret = avcodec_receive_frame(codecCtx, frame);
-		if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-			return;
-		}
+        /* Receive one video frame */
+        ret = avcodec_receive_frame(codecCtx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return;
+        }
 
-		/* Decode video frame into framebuffer texture */
-		uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
-		int strides[3] = { 640 * 4, 0, 0 };
+        /* Decode video frame into framebuffer texture */
+        uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
+        int strides[3] = { 640 * 4, 0, 0 };
 
-		Texture::LockTexture();
+        Texture::LockTexture();
 
-		sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-		std::memcpy(Texture::GetData(), framebuf, 640 * 292 * 4);
+        sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
+        std::memcpy(Texture::GetData(), framebuf, 640 * 292 * 4);
 
-		Texture::UnlockTexture();
-	}
-	else if (packet.stream_index == audioStream && !IsOpenALMuted()) {
-		av_frame_unref(audioFrame);
+        Texture::UnlockTexture();
+    }
+    else if (packet.stream_index == audioStream && !IsOpenALMuted()) {
+        av_frame_unref(audioFrame);
 
-		/* Receive new packet on start or if the last one was processed */
-		if (packetFinished) {
-			ret = avcodec_send_packet(audioCtx, &packet);
-		}
+        /* Receive new packet on start or if the last one was processed */
+        if (packetFinished) {
+            ret = avcodec_send_packet(audioCtx, &packet);
+        }
 
-		double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
-		std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
+        double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
+        std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
 
-		while (ret >= 0) {
-			/* Receive one audio frame */
-			ret = avcodec_receive_frame(audioCtx, audioFrame);
-			if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
-				return;
-			}
+        while (ret >= 0) {
+            /* Receive one audio frame */
+            ret = avcodec_receive_frame(audioCtx, audioFrame);
+            if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+                return;
+            }
 
-			if (!audioInit) {
-				/* Init OpenAL stuff */
-				alGenSources(1, &alSource);
-				Audio::PrintError();
-				alGenBuffers(NUM_AUDIO_BUFFERS, alBuffers);
-				Audio::PrintError();
+            if (!audioInit) {
+                /* Init OpenAL stuff */
+                alGenSources(1, &alSource);
+                Audio::PrintError();
+                alGenBuffers(NUM_AUDIO_BUFFERS, alBuffers);
+                Audio::PrintError();
 
-				alSource3f(alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
-				alSource3f(alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-				alSourcef(alSource, AL_PITCH, 1.0f);
-				alSourcef(alSource, AL_GAIN, 1.0f);
+                alSource3f(alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
+                alSource3f(alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+                alSourcef(alSource, AL_PITCH, 1.0f);
+                alSourcef(alSource, AL_GAIN, 1.0f);
 
-				/* Determine number of channels and format */
-				if (audioFrame->channel_layout == AV_CH_LAYOUT_MONO) {
-					alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
-					alNumChannels = 1;
-				}
-				else if (audioFrame->channel_layout == AV_CH_LAYOUT_STEREO) {
-					alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
-					alNumChannels = 2;
-				}
-				else {
-					Logger::error("RENDERING") << "Bink audio channel layout is wrong!" << std::endl;
-					return;
-				}
+                /* Determine number of channels and format */
+                if (audioFrame->channel_layout == AV_CH_LAYOUT_MONO) {
+                    alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_MONO8 : AL_FORMAT_MONO16;
+                    alNumChannels = 1;
+                }
+                else if (audioFrame->channel_layout == AV_CH_LAYOUT_STEREO) {
+                    alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8) ? AL_FORMAT_STEREO8 : AL_FORMAT_STEREO16;
+                    alNumChannels = 2;
+                }
+                else {
+                    Logger::error("RENDERING") << "Bink audio channel layout is wrong!" << std::endl;
+                    return;
+                }
 
-				/* Setup audio queue */
-				alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-				for (int i = 0; i < NUM_AUDIO_BUFFERS; i++) {
-					alFreeBuffers[i] = alBuffers[i];
-				}
+                /* Setup audio queue */
+                alNumFreeBuffers = NUM_AUDIO_BUFFERS;
+                for (int i = 0; i < NUM_AUDIO_BUFFERS; i++) {
+                    alFreeBuffers[i] = alBuffers[i];
+                }
 
-				alSampleRate = audioFrame->sample_rate;
-				size = alNumChannels * audioFrame->nb_samples * 4;
-				audioBuffer = (char*)std::malloc(size);
+                alSampleRate = audioFrame->sample_rate;
+                size = alNumChannels * audioFrame->nb_samples * 4;
+                audioBuffer = (char*)std::malloc(size);
 
-				audioInit = true;
-			}
-			std::memset(audioBuffer, 0, size);
+                audioInit = true;
+            }
+            std::memset(audioBuffer, 0, size);
 
-			int buffersFinished = 0;
-			alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &buffersFinished);
-			Audio::PrintError();
+            int buffersFinished = 0;
+            alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &buffersFinished);
+            Audio::PrintError();
 
-			if (buffersFinished > 0) {
-				alSourceStop(alSource);
+            if (buffersFinished > 0) {
+                alSourceStop(alSource);
 
-				for (; buffersFinished > 0; buffersFinished--) {
-					ALuint buffer = 0;
-					alSourceUnqueueBuffers(alSource, 1, &buffer);
-					Audio::PrintError();
+                for (; buffersFinished > 0; buffersFinished--) {
+                    ALuint buffer = 0;
+                    alSourceUnqueueBuffers(alSource, 1, &buffer);
+                    Audio::PrintError();
 
-					if (buffer > 0) {
-						alFreeBuffers[alNumFreeBuffers] = buffer;
-						Audio::PrintError();
-						alNumFreeBuffers++;
-					}
-				}
+                    if (buffer > 0) {
+                        alFreeBuffers[alNumFreeBuffers] = buffer;
+                        Audio::PrintError();
+                        alNumFreeBuffers++;
+                    }
+                }
 
-				alSourcePlay(alSource);
-			}
+                alSourcePlay(alSource);
+            }
 
-			if (alNumFreeBuffers > 0) {
-				/**
-				* TODO: Other versions of Stronghold might include
-				* different audio formats (investigate!)
-				*/
-				if (audioFrame->format != AV_SAMPLE_FMT_FLT) {
-					return;
-				}
+            if (alNumFreeBuffers > 0) {
+                /**
+                * TODO: Other versions of Stronghold might include
+                * different audio formats (investigate!)
+                */
+                if (audioFrame->format != AV_SAMPLE_FMT_FLT) {
+                    return;
+                }
 
-				ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
-				uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
-				uint32_t dataSize = numSamples * 2;
+                ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
+                uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
+                uint32_t dataSize = numSamples * 2;
 
-				/* Convert samples */
-				float *src = (float*)audioFrame->extended_data[0];
-				short *dst = (short*)audioBuffer;
-				for (int i = 0; i < numSamples; i++) {
-					float v = src[i] * 32768.0f;
-					if (v > 32767.0f) v = 32767.0f;
-					if (v < -32768.0f) v = 32768.0f;
-					dst[i] = (short)v;
-				}
+                /* Convert samples */
+                float *src = (float*)audioFrame->extended_data[0];
+                short *dst = (short*)audioBuffer;
+                for (int i = 0; i < numSamples; i++) {
+                    float v = src[i] * 32768.0f;
+                    if (v > 32767.0f) v = 32767.0f;
+                    if (v < -32768.0f) v = 32768.0f;
+                    dst[i] = (short)v;
+                }
 
-				alSourceStop(alSource);
+                alSourceStop(alSource);
 
-				alBufferData(alBuffer, alFormat, audioBuffer, dataSize, alSampleRate);
-				Audio::PrintError();
-				alSourceQueueBuffers(alSource, 1, &alBuffer);
-				Audio::PrintError();
+                alBufferData(alBuffer, alFormat, audioBuffer, dataSize, alSampleRate);
+                Audio::PrintError();
+                alSourceQueueBuffers(alSource, 1, &alBuffer);
+                Audio::PrintError();
 
-				alSourcePlay(alSource);
-				
-				alNumFreeBuffers--;
-				alFreeBuffers[alNumFreeBuffers] = 0;
-			}
-		}
-	}
+                alSourcePlay(alSource);
+
+                alNumFreeBuffers--;
+                alFreeBuffers[alNumFreeBuffers] = 0;
+            }
+        }
+    }
 }
 

@@ -4,14 +4,11 @@
 #include <memory>
 #include <string>
 
-namespace Sourcehold
-{
-    namespace Game
-    {
+namespace Sourcehold {
+    namespace Game {
         class GameManager;
     }
-    namespace Rendering
-    {
+    namespace Rendering {
         enum Font : uint8_t {
             FONT_SLANTED = 0,
             FONT_SMALL = 1,

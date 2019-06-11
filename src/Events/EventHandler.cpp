@@ -2,7 +2,8 @@
 
 using namespace Sourcehold::Events;
 
-bool EventHandler::FetchEvents() {
+bool EventHandler::FetchEvents()
+{
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {
         /* Treat SDL_QUIT as a special case */
@@ -18,11 +19,13 @@ bool EventHandler::FetchEvents() {
     return true;
 }
 
-int EventHandler::AddListener(std::function<void(SDL_Event&)> fn) {
+int EventHandler::AddListener(std::function<void(SDL_Event&)> fn)
+{
     callbacks[callbacks.size()] = fn;
     return callbacks.size();
 }
 
-void EventHandler::RemoveListener(int id) {
+void EventHandler::RemoveListener(int id)
+{
     callbacks.erase(id);
 }

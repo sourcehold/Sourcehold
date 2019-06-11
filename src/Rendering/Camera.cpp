@@ -14,8 +14,9 @@ static int32_t momentumX, momentumY;
 static int32_t maxMomentum;
 static int32_t speed;
 
-SDL_Rect Rendering::GetVisibleArea() {
-	SDL_Rect rect = { };
+SDL_Rect Rendering::GetVisibleArea()
+{
+    SDL_Rect rect = { };
 
     /* TODO */
     int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);
@@ -23,27 +24,33 @@ SDL_Rect Rendering::GetVisibleArea() {
     return rect;
 }
 
-void Rendering::SetBounds(SDL_Rect bounds) {
+void Rendering::SetBounds(SDL_Rect bounds)
+{
     bounds = bounds;
 }
 
-void Rendering::MoveLeft() {
+void Rendering::MoveLeft()
+{
     if(momentumX > -maxMomentum) momentumX--;
 }
 
-void Rendering::MoveRight() {
+void Rendering::MoveRight()
+{
     if(momentumX < maxMomentum) momentumX++;
 }
 
-void Rendering::MoveUp() {
+void Rendering::MoveUp()
+{
     if(momentumY > -maxMomentum) momentumY--;
 }
 
-void Rendering::MoveDown() {
+void Rendering::MoveDown()
+{
     if(momentumY < maxMomentum) momentumY++;
 }
 
-void Rendering::UpdateCamera() {
+void Rendering::UpdateCamera()
+{
     /* TODO */
     int32_t px = speed * momentumX, py = speed * momentumY;
     TranslateCam(px, py);
@@ -54,56 +61,69 @@ void Rendering::UpdateCamera() {
     SDL_Rect area = GetVisibleArea();
 }
 
-ZoomLevel Rendering::GetZoomLevel() {
+ZoomLevel Rendering::GetZoomLevel()
+{
     return zoomLevel;
 }
 
-Rotation Rendering::GetRotation() {
+Rotation Rendering::GetRotation()
+{
     return rotation;
 }
 
-void Rendering::ZoomOut() {
+void Rendering::ZoomOut()
+{
     zoomLevel = ZOOM_FAR;
 }
 
-void Rendering::ZoomIn() {
+void Rendering::ZoomIn()
+{
     zoomLevel = ZOOM_NEAR;
 }
 
-int32_t Rendering::CamX() {
+int32_t Rendering::CamX()
+{
     return positionX;
 }
 
-int32_t Rendering::CamY() {
+int32_t Rendering::CamY()
+{
     return positionY;
 }
 
-void Rendering::SetCamX(int32_t pos) {
+void Rendering::SetCamX(int32_t pos)
+{
     positionX = pos;
 }
 
-void Rendering::SetCamY(int32_t pos) {
+void Rendering::SetCamY(int32_t pos)
+{
     positionY = pos;
 }
 
-void Rendering::ResetMomentum() {
+void Rendering::ResetMomentum()
+{
     momentumX = momentumY = 0;
 }
 
-void Rendering::SetCamPos(int32_t x, int32_t y) {
+void Rendering::SetCamPos(int32_t x, int32_t y)
+{
     positionX = x;
     positionY = y;
 }
 
-void Rendering::TranslateCam(int32_t x, int32_t y) {
+void Rendering::TranslateCam(int32_t x, int32_t y)
+{
     positionX += x;
     positionY += y;
 }
 
-int32_t Rendering::CamStepX() {
+int32_t Rendering::CamStepX()
+{
     return speed * momentumX;
 }
 
-int32_t Rendering::CamStepY() {
+int32_t Rendering::CamStepY()
+{
     return speed * momentumY;
 }

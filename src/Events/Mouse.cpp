@@ -2,57 +2,69 @@
 
 using namespace Sourcehold::Events;
 
-Mouse::Mouse(std::list<EventType> types) {
+Mouse::Mouse(std::list<EventType> types)
+{
 
 }
 
-Mouse::~Mouse() {
+Mouse::~Mouse()
+{
 
 }
 
-bool Mouse::LmbDown() {
+bool Mouse::LmbDown()
+{
     if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_LEFT) return true;
     return false;
 }
 
-bool Mouse::MmbDown() {
+bool Mouse::MmbDown()
+{
     if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_MIDDLE) return true;
     return false;
 }
 
-bool Mouse::RmbDown() {
+bool Mouse::RmbDown()
+{
     if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_RIGHT) return true;
     return false;
 }
 
-bool Mouse::LmbUp() {
+bool Mouse::LmbUp()
+{
     if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_LEFT) return true;
     return false;
 }
 
-bool Mouse::MmbUp() {
+bool Mouse::MmbUp()
+{
     if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_MIDDLE) return true;
     return false;
 }
 
-bool Mouse::RmbUp() {
+bool Mouse::RmbUp()
+{
     if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_RIGHT) return true;
     return false;
 }
 
-uint32_t Mouse::GetPosX() {
+uint32_t Mouse::GetPosX()
+{
     return event.motion.x;
 }
 
-uint32_t Mouse::GetPosY() {
+uint32_t Mouse::GetPosY()
+{
     return event.motion.y;
 }
 
-EventType Mouse::GetType() {
+EventType Mouse::GetType()
+{
     return type;
 }
 
-void Mouse::eventCallback(SDL_Event &event) {
+void Mouse::eventCallback(SDL_Event &event)
+{
     this->event = event;
 
     Event::SetHandled(true);
@@ -61,7 +73,7 @@ void Mouse::eventCallback(SDL_Event &event) {
         type == MOUSE_MOTION ||
         type == MOUSE_BUTTONDOWN ||
         type == MOUSE_BUTTONUP ||
-        type == MOUSE_WHEEL 
+        type == MOUSE_WHEEL
     ) {
         Event::SetHandled(false);
     }
