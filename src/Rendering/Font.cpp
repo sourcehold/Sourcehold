@@ -40,7 +40,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
 
     SDL_Rect glyph = {};
     for(wchar_t c : text) {
-        if(c < 0x20 || (c-0x20) > font->GetTextureAtlas().lock()->GetNumTextures()) continue;
+        if(c < 0x20) continue;
         /* Space */
         if(c == 0x20) {
             x += _table_width_height[type].first;
@@ -73,7 +73,7 @@ void Rendering::RenderText(const std::wstring& text, double x, double y, double 
 
     SDL_Rect glyph = {};
     for(wchar_t c : text) {
-        if(c < 0x20 || (c-0x20) > font->GetTextureAtlas().lock()->GetNumTextures()) continue;
+        if(c < 0x20) continue;
         /* Space */
         if(c == 0x20) {
             x += NormalizeX(_table_width_height[type].first);
