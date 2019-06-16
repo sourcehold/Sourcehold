@@ -177,7 +177,10 @@ UIState MainMenu::EnterMenu()
         RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, 1, FONT_SMALL);
 
         ResetTarget();
-        Render(screen, mx, my);
+        
+        if(edition == STRONGHOLD_HD) {
+            Render(screen, mx, my);
+        }
 
         /* Reset target first, then play credits and leave again */
         if(currentState == CREDITS) {

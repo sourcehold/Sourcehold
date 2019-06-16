@@ -66,34 +66,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
 
 void Rendering::RenderText(const std::wstring& text, double x, double y, double scaleFactor, Font type, bool illumination)
 {
-    auto font = _fonts[type];
-    if (illumination && text.size() != 1) {
-        return;
-    }
-
-    SDL_Rect glyph = {};
-    for(wchar_t c : text) {
-        if(c < 0x20) continue;
-        /* Space */
-        if(c == 0x20) {
-            x += NormalizeX(_table_width_height[type].first);
-        }
-        else {
-            glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
-            /* TODO possibly a table of some sort*/
-            int8_t lowercaseOffset = 0;
-            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 2); /* g p q y */
-            if(c == 0x6A) lowercaseOffset = _table_width_height[type].second / 2; /* j */
-            if(c == 0x2D) lowercaseOffset = FONT_SMALL ? -8 : -12; /* - */
-            if(c == 0x27) lowercaseOffset = FONT_SMALL ? -12 : -17; /* ' */
-            Render(*font->GetTextureAtlas().lock(),
-                   illumination ? (x + NormalizeX((13 - glyph.w)/2)) : x,
-                   double(NormalizeY(ToCoordY(y) + _table_width_height[type].second - glyph.h + lowercaseOffset)),
-                   double(NormalizeX(glyph.w)),
-                   double(NormalizeY(glyph.h)),
-                   &glyph);
-
-            x += NormalizeX(glyph.w+1);
-        }
-    }
+    int32_t rx = ToCoordX(GetTargetWidth() * x);
+    int32_t ry = ToCoordY(GetTargetHeight() * y);
+    RenderText(text, rx, ry, scaleFactor, type, illumination);
 }
