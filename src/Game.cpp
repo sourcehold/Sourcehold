@@ -70,6 +70,10 @@ int StartGame(GameOptions &opt)
     while(Running() && index < files.size()-1) {
         ClearDisplay();
 
+#if RENDER_LOADING_BORDER == 1
+        RenderMenuBorder();
+#endif
+
         /* Load a file */
         boost::filesystem::path path = files.at(index);
         Cache(path);

@@ -1,18 +1,11 @@
 #pragma once
 
-#include <GameManager.h>
-
-#include <Rendering/Renderer.h>
-#include <Rendering/Font.h>
-
-#include <GUI/StaticElement.h>
-
-#include <Parsers/Gm1File.h>
+#include <string>
 
 namespace Sourcehold {
     namespace GUI {
-        using namespace Game;
-        bool InitializeUtils() ;
+        bool InitializeUtils();
         void RenderMenuText(const std::wstring &text);
+        void RenderMenuBorder();
     }
 }

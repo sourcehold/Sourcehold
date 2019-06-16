@@ -20,3 +20,7 @@
 #define SOURCEHOLD_BUILD "Generic unix"
 #define SOURCEHOLD_UNIX 1
 #endif
+
+/* Configuration of hardcoded stuff */
+
+#define RENDER_LOADING_BORDER 0

@@ -45,7 +45,6 @@ MainMenu::MainMenu()
     edition = GetEdition();
 
     if (edition == STRONGHOLD_HD) {
-        tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
         screen.AllocNewTarget(1024, 768);
     }
 
@@ -64,15 +63,6 @@ MainMenu::MainMenu()
 
     aud_greetings.LoadEffect(GetGreetingsSound(), false);
     aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
-
-    /**
-    * Render the border 'zoomed in' so that the
-    * menu can be placed in the middle without scaling.
-    */
-    border_rect.x = (1920 - GetWidth()) / 2;
-    border_rect.y = (1200 - GetHeight()) / 2;
-    border_rect.w = GetWidth();
-    border_rect.h = GetHeight();
 
     mx = (GetWidth() - 1024) / 2;
     my = (GetHeight() - 768) / 2;
@@ -110,7 +100,7 @@ UIState MainMenu::EnterMenu()
         ClearDisplay();
 
         if(edition == STRONGHOLD_HD) {
-            Render(*tgx_border, &border_rect);
+            RenderMenuBorder();
             SetTarget(&screen, mx, my, 1024, 768);
         }
 
