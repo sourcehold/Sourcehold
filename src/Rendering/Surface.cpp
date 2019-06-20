@@ -4,7 +4,7 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Surface::Surface() : Renderable()
+Surface::Surface()
 {
 }
 

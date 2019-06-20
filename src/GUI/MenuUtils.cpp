@@ -41,7 +41,7 @@ void GUI::RenderMenuText(const std::wstring &text)
 {
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas().lock();
 	auto rect = interface_icons->Get(18);
-    Render(*interface_icons, 0.305, 0.52, &rect);
+    //Render(*interface_icons, 0.305, 0.52, &rect);
     RenderText(text.substr(0,1), 0.3095703125, 0.528, 0.5, FONT_SMALL, true);
     RenderText(text.substr(1,text.size()), 0.330078125, 0.528, 0.5, FONT_SMALL);
 }

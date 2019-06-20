@@ -14,30 +14,31 @@ struct MenuButtonInfo {
     double h;
     const wchar_t *text;
     bool hasGlare;
-    uint8_t index;
-    uint8_t glareIndex;
+    uint8_t index; /* Where is the button image in the file? */
+    uint8_t glareIndex; /* Where does the glare animation start? */
+    uint8_t atlasIndex; /* Which file is the button stored in? */
 };
 const static MenuButtonInfo lut_buttons[] = {
-    { 0.12, 0.67,0.17578125,0.234375, L"Exit Stronghold", false, 68, 0 },
-    { 0.423,0.774,0.1337890625,0.098958334, L"Credits", false, 77, 0 },
-    { 0.691,0.687,0.17578125,0.234375, L"Tutorial", false, 72, 0 },
-    { 0.183,0.276,0.17578125,0.234375, L"Combat-based games", true, 15, 1 },
-    { 0.336,0.276,0.17578125,0.234375, L"Economic-based games", true, 32, 18 },
-    { 0.492,0.276,0.17578125,0.234375, L"Map Editor", true, 49, 35 },
-    { 0.648,0.278,0.17578125,0.234375, L"Load a Saved Game", true, 66, 52 },
-    { 0.726,0.511,0.1,0.16, L"Options", false, 88, 0 },
-    { 0.183,0.276,0.17578125,0.234375, L"Play the Military Campaign", true, 15, 1 },
-    { 0.336,0.276,0.17578125,0.234375, L"Play a Siege", true, 32, 18 },
-    { 0.492,0.276,0.17578125,0.234375, L"Play an Invasion", true, 49, 35 },
-    { 0.648,0.276,0.17578125,0.234375, L"Play a Multiplayer Game", true, 66, 52 },
-    { 0.262,0.276,0.17578125,0.234375, L"Play the Economics Campaign", true, 15, 1 },
-    { 0.416,0.276,0.17578125,0.234375, L"Play an Economics Mission", true, 32, 18 },
-    { 0.571,0.276,0.17578125,0.234375, L"Free Build", true, 49, 35 },
-    { 0.183,0.276,0.17578125,0.234375, L"New Working Map", true, 15, 1 },
-    { 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18 },
-    { 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35 },
-    { 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52 },
-    { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0 }
+    { 0.12, 0.67,0.17578125,0.234375, L"Exit Stronghold", false, 68, 0, 0 },
+    { 0.423,0.774,0.1337890625,0.098958334, L"Credits", false, 77, 0, 1 },
+    { 0.691,0.687,0.17578125,0.234375, L"Tutorial", false, 72, 0, 0 },
+    { 0.183,0.276,0.17578125,0.234375, L"Combat-based games", true, 15, 1, 0 },
+    { 0.336,0.276,0.17578125,0.234375, L"Economic-based games", true, 32, 18, 0 },
+    { 0.492,0.276,0.17578125,0.234375, L"Map Editor", true, 49, 35, 0 },
+    { 0.648,0.278,0.17578125,0.234375, L"Load a Saved Game", true, 66, 52, 0 },
+    { 0.726,0.511,0.1,0.16, L"Options", false, 88, 0, 0 },
+    { 0.183,0.276,0.17578125,0.234375, L"Play the Military Campaign", true, 15, 1, 2 },
+    { 0.336,0.276,0.17578125,0.234375, L"Play a Siege", true, 32, 18, 2 },
+    { 0.492,0.276,0.17578125,0.234375, L"Play an Invasion", true, 49, 35, 2 },
+    { 0.648,0.276,0.17578125,0.234375, L"Play a Multiplayer Game", true, 66, 52, 2 },
+    { 0.262,0.276,0.17578125,0.234375, L"Play the Economics Campaign", true, 15, 1, 3 },
+    { 0.416,0.276,0.17578125,0.234375, L"Play an Economics Mission", true, 32, 18, 3 },
+    { 0.571,0.276,0.17578125,0.234375, L"Free Build", true, 49, 35, 3 },
+    { 0.183,0.276,0.17578125,0.234375, L"New Working Map", true, 15, 1, 4 },
+    { 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18, 4 },
+    { 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35, 4 },
+    { 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52, 4 },
+    { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0, 0 }
 };
 
 MainMenu::MainMenu()
@@ -50,8 +51,8 @@ MainMenu::MainMenu()
 
     aud_chantloop.LoadSong(GetDirectory() / "fx/music/chantloop1.raw", true);
 
-    gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1").lock();
+    gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_icons_combat = GetGm1(GetDirectory() / "gm/icons_front_end_combat.gm1").lock();
     gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1").lock();
     gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1").lock();
@@ -67,6 +68,14 @@ MainMenu::MainMenu()
     mx = (GetWidth() - 1024) / 2;
     my = (GetHeight() - 768) / 2;
 
+    /* Get textures */
+    ui_tex.resize(5);
+    ui_tex[0] = gm1_icons_main->GetTextureAtlas().lock();
+    ui_tex[1] = gm1_icons_additional->GetTextureAtlas().lock();
+    ui_tex[2] = gm1_icons_combat->GetTextureAtlas().lock();
+    ui_tex[3] = gm1_icons_economic->GetTextureAtlas().lock();
+    ui_tex[4] = gm1_icons_builder->GetTextureAtlas().lock();
+
     /* Allocate buttons */
     if(edition == STRONGHOLD_HD) SetTarget(&screen, mx, my, 1024, 768);
     ui_elems.resize(BUTTON_END);
@@ -74,6 +83,8 @@ MainMenu::MainMenu()
         const MenuButtonInfo *inf = &lut_buttons[i];
         ui_elems[i].Translate(inf->x, inf->y);
         ui_elems[i].Scale(inf->w, inf->h);
+        ui_elems[i].SetTexture(ui_tex[inf->atlasIndex].get());
+        ui_elems[i].TransparencyCheck(true);
     }
     ResetTarget();
 }
@@ -227,42 +238,39 @@ void MainMenu::RenderMain()
 
     Render(*tgx_bg_main);
 
-    auto icons_main = gm1_icons_main->GetTextureAtlas().lock();
-    auto icons_additional = gm1_icons_additional->GetTextureAtlas().lock();
     for(int i = MAIN_EXIT; i < MAIN_SETTINGS+1; i++) {
         ui_elems[i].Show();
         ui_elems[i].Render(
-        [&]() -> Texture& {
+        [&]() -> SDL_Rect {
             MenuButtonInfo inf = lut_buttons[i];
+            auto tex = ui_tex[inf.atlasIndex];
 
             if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
             /* Special case */
             if(i == MAIN_FIREFLY)
             {
                 if (ui_elems[i].IsMouseOver()) {
-                    icons_additional->SetRect(icons_additional->Get(inf.index + 1));
                     RenderMenuText(inf.text);
+                    return tex->Get(inf.index + 1);
                 }
                 else {
-                    icons_additional->SetRect(icons_additional->Get(inf.index));
+                    return tex->Get(inf.index);
                 }
-                return *icons_additional;
             }
             else
             {
                 if (ui_elems[i].IsMouseOver()) {
-                    icons_main->SetRect(icons_main->Get(inf.index + 1));
                     RenderMenuText(inf.text);
+                    return tex->Get(inf.index + 1);
                 }
                 else {
                     if(inf.hasGlare) {
-                        icons_main->SetRect(icons_main->Get(inf.glareIndex + (glareCounter % 14)));
+                        return tex->Get(inf.glareIndex + (glareCounter % 14));
                     }
                     else {
-                        icons_main->SetRect(icons_main->Get(inf.index));
+                        return tex->Get(inf.index);
                     }
                 }
-                return *icons_main;
             }
         });
     }
@@ -274,29 +282,28 @@ void MainMenu::RenderCombat()
 
     Render(*tgx_bg_combat);
 
-    auto icons_combat = gm1_icons_combat->GetTextureAtlas().lock();
     for(int i = COMBAT_CAMPAIGN; i < COMBAT_MULTIPLAYER+1; i++) {
         ui_elems[i].Show();
         ui_elems[i].Render(
-        [&]() -> Texture& {
+        [&]() -> SDL_Rect {
             MenuButtonInfo inf = lut_buttons[i];
+            auto tex = ui_tex[inf.atlasIndex];
 
             if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
             if (ui_elems[i].IsMouseOver())
             {
-                icons_combat->SetRect(icons_combat->Get(inf.index + 1));
                 RenderMenuText(inf.text);
+                return tex->Get(inf.index + 1);
             }
             else
             {
                 if(inf.hasGlare) {
-                    icons_combat->SetRect(icons_combat->Get(inf.glareIndex + (glareCounter % 14)));
+                    return tex->Get(inf.glareIndex + (glareCounter % 14));
                 }
                 else {
-                    icons_combat->SetRect(icons_combat->Get(inf.index));
+                    return tex->Get(inf.index);
                 }
             }
-            return *icons_combat;
         });
     }
 }
@@ -307,29 +314,28 @@ void MainMenu::RenderEconomic()
 
     Render(*tgx_bg_economic);
 
-    auto icons_economics = gm1_icons_economic->GetTextureAtlas().lock();
     for(int i = ECO_CAMPAIGN; i < ECO_FREEBUILD+1; i++) {
         ui_elems[i].Show();
         ui_elems[i].Render(
-        [&]() -> Texture& {
+        [&]() -> SDL_Rect {
             MenuButtonInfo inf = lut_buttons[i];
+            auto tex = ui_tex[inf.atlasIndex];
 
             if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
             if (ui_elems[i].IsMouseOver())
             {
-                icons_economics->SetRect(icons_economics->Get(inf.index + 1));
                 RenderMenuText(inf.text);
+                return tex->Get(inf.index + 1);
             }
             else
             {
                 if(inf.hasGlare) {
-                    icons_economics->SetRect(icons_economics->Get(inf.glareIndex + (glareCounter % 14)));
+                    return tex->Get(inf.glareIndex + (glareCounter % 14));
                 }
                 else {
-                    icons_economics->SetRect(icons_economics->Get(inf.index));
+                    return tex->Get(inf.index);
                 }
             }
-            return *icons_economics;
         });
     }
 }
@@ -340,51 +346,49 @@ void MainMenu::RenderBuilder()
 
     Render(*tgx_bg_builder);
 
-    auto icons_economics = gm1_icons_economic->GetTextureAtlas().lock();
     for(int i = BUILDER_WORKING_MAP; i < BUILDER_MULTIPLAYER+1; i++) {
         ui_elems[i].Show();
         ui_elems[i].Render(
-        [&]() -> Texture& {
+        [&]() -> SDL_Rect {
             MenuButtonInfo inf = lut_buttons[i];
+            auto tex = ui_tex[inf.atlasIndex];
 
             if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
             if (ui_elems[i].IsMouseOver())
             {
-                icons_economics->SetRect(icons_economics->Get(inf.index + 1));
                 RenderMenuText(inf.text);
+                return tex->Get(inf.index + 1);
             }
             else
             {
                 if(inf.hasGlare) {
-                    icons_economics->SetRect(icons_economics->Get(inf.glareIndex + (glareCounter % 14)));
+                    return tex->Get(inf.glareIndex + (glareCounter % 14));
                 }
                 else {
-                    icons_economics->SetRect(icons_economics->Get(inf.index));
+                    return tex->Get(inf.index);
                 }
             }
-            return *icons_economics;
         });
     }
 }
 
 void MainMenu::RenderBackToMain()
 {
-    auto icons_front_end = gm1_icons_main->GetTextureAtlas().lock();
     ui_elems[BACK_TO_MAIN].Show();
     ui_elems[BACK_TO_MAIN].Render(
-    [&]() -> Texture& {
+    [&]() -> SDL_Rect {
         MenuButtonInfo inf = lut_buttons[BACK_TO_MAIN];
+        auto tex = ui_tex[inf.atlasIndex];
+
         if(ui_elems[BACK_TO_MAIN].IsClicked()) selected = BACK_TO_MAIN;
         if (ui_elems[BACK_TO_MAIN].IsMouseOver())
         {
-            icons_front_end->SetRect(icons_front_end->Get(inf.index + 1));
             RenderMenuText(inf.text);
+            return tex->Get(inf.index + 1);
         }
-        else
-        {
-            icons_front_end->SetRect(icons_front_end->Get(inf.index));
+        else {
+            return tex->Get(inf.index);
         }
-        return *icons_front_end;
     });
 }
 

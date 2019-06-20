@@ -37,6 +37,7 @@ static std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
 static std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
 static std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;
 static std::unordered_map<std::string, std::shared_ptr<BinkVideo>> _bikFiles;
+static std::map<int, std::function<void(double)>> _tickFuncs;
 static std::shared_ptr<EventHandler> _eventHandler;
 static StrongholdEdition _edition;
 static bool _running = false;
@@ -105,6 +106,11 @@ static void UpdateGame()
 
     /* TODO: accuracy */
     _time = SDL_GetTicks() / 1000.0;
+
+    for(const auto & e : _tickFuncs) {
+        e.second(_time);
+    }
+
     UpdateCamera();
     UpdateRenderer();
 }
@@ -352,6 +358,18 @@ std::wstring Game::GetLocalizedString(LocalizedTextString index)
 {
     std::wstring str;
     return str;
+}
+
+int Game::RegisterFrameTick(std::function<void(double)> tick_fn)
+{
+    int ID = _tickFuncs.size();
+    _tickFuncs.insert(std::make_pair(ID, tick_fn));
+    return ID;
+}
+
+void Game::DeregisterFrameTick(int ID)
+{
+    _tickFuncs.erase(ID);
 }
 
 double Game::GetTime()

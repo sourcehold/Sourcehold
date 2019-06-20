@@ -41,6 +41,13 @@ World::World() :
     gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1").lock();
 
+    /* Init the buttons */
+    auto atlas = gm1_floats->GetTextureAtlas().lock();
+    ui_compass.SetTexture(atlas.get());
+    ui_hide.SetTexture(atlas.get());
+    ui_magnify.SetTexture(atlas.get());
+    ui_lower.SetTexture(atlas.get());
+
     menubar.AllocNewTarget(240 + 800 + 240, 200);
 
     SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
@@ -99,44 +106,40 @@ void World::RenderQuickMenu()
     ui_lower.Scale(rect.w, rect.h);
 
     ui_compass.Render(
-    [&]() -> Texture& {
+    [&]() -> SDL_Rect {
         if(ui_compass.IsMouseOver())
         {
             Rotation rota = GetRotation();
         }
-        atlas->SetRect(atlas->Get(37));
-        return *atlas;
+        return atlas->Get(37);
     });
 
     ui_hide.Render(
-    [&]() -> Texture& {
+    [&]() -> SDL_Rect {
         if(ui_hide.IsMouseOver())
         {
-            atlas->SetRect(atlas->Get(125));
             menubarShown = false;
+            return atlas->Get(125);
         }
         else
         {
-            atlas->SetRect(atlas->Get(124));
             menubarShown = true;
+            return atlas->Get(124);
         }
-        return *atlas;
     });
 
     ui_magnify.Render(
-    [&]() -> Texture& {
-        atlas->SetRect(atlas->Get(45));
-        return *atlas;
+    [&]() -> SDL_Rect {
+        return atlas->Get(45);
     });
 
     ui_lower.Render(
-    [&]() -> Texture& {
+    [&]() -> SDL_Rect {
         if(ui_lower.IsMouseOver())
         {
-            atlas->SetRect(atlas->Get(36));
+            return atlas->Get(36);
         }
-        else atlas->SetRect(atlas->Get(35));
-        return *atlas;
+        else return atlas->Get(35);
     });
 }
 
@@ -199,45 +202,42 @@ void World::UpdateMenubar()
 
     /* Render the menu buttons */
     ui_disk.Render(
-    [&]() -> Texture& {
-        if(ui_disk.IsMouseOver()) atlas->SetRect(atlas->Get(26));
-        else atlas->SetRect(atlas->Get(25));
-        return *atlas;
+    [&]() -> SDL_Rect {
+        if(ui_disk.IsMouseOver()) return atlas->Get(26);
+        else return atlas->Get(25);
     });
 
     ui_info.Render(
-    [&]() -> Texture& {
-        if(ui_info.IsMouseOver()) atlas->SetRect(atlas->Get(28));
-        else atlas->SetRect(atlas->Get(27));
-        return *atlas;
+    [&]() -> SDL_Rect {
+        if(ui_info.IsMouseOver()) return atlas->Get(28);
+        else return atlas->Get(27);
     });
 
     ui_delete.Render(
-    [&]() -> Texture& {
-        if(ui_delete.IsMouseOver()) atlas->SetRect(atlas->Get(30));
-        else atlas->SetRect(atlas->Get(29));
-        return *atlas;
+    [&]() -> SDL_Rect {
+        if(ui_delete.IsMouseOver()) return atlas->Get(30);
+        else return atlas->Get(29);
     });
 
     ui_revert.Render(
-    [&]() -> Texture& {
-        if(ui_revert.IsMouseOver()) atlas->SetRect(atlas->Get(69));
-        else atlas->SetRect(atlas->Get(68));
-        return *atlas;
+    [&]() -> SDL_Rect {
+        if(ui_revert.IsMouseOver()) return atlas->Get(69);
+        else return atlas->Get(68);
     });
 
     for(uint8_t i = 0; i < 6; i++) {
         ui_tabs[i].Render(
-        [&]() -> Texture& {
-            if(ui_tabs[i].IsMouseOver()) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][1]));
-            else atlas->SetRect(atlas->Get(_ui_tabs_indices[i][0]));
+        [&]() -> SDL_Rect {
             if(ui_tabs[i].IsClicked())
             {
                 currentTab = static_cast<MenuPage>(i);
+            }else {
+                if(ui_tabs[i].IsMouseOver())return atlas->Get(_ui_tabs_indices[i][1]);
+                else return atlas->Get(_ui_tabs_indices[i][0]);
             }
             /* Highlight the selected tab */
-            if(currentTab == i) atlas->SetRect(atlas->Get(_ui_tabs_indices[i][2]));
-            return *atlas;
+            if(currentTab == i) return atlas->Get(_ui_tabs_indices[i][2]);
+            return { 0, 0, 0, 0 };
         });
     }
 
@@ -247,7 +247,6 @@ void World::UpdateMenubar()
     } break;
     case MENU_INDUSTRY: {
     } break;
-
     case MENU_FARM: {
     } break;
     case MENU_TOWN: {

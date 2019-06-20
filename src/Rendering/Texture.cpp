@@ -8,7 +8,6 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
 Texture::Texture() :
-    Renderable(),
     angle(0.0),
     width(0),
     height(0),
@@ -17,7 +16,6 @@ Texture::Texture() :
 }
 
 Texture::Texture(const Texture &tex) :
-    Renderable(),
     angle(0.0),
     width(0),
     height(0),
@@ -60,6 +58,7 @@ bool Texture::AllocFromSurface(Surface &surface)
 {
     width = surface.GetWidth();
     height = surface.GetHeight();
+    access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
         Logger::error("RENDERING") << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
@@ -188,7 +187,7 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     }
 }
 
-uint32_t *Texture::GetData()
+Uint32 *Texture::GetData()
 {
     if(!locked) return nullptr;
     return pixels;

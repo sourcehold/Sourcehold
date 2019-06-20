@@ -25,14 +25,16 @@ namespace Sourcehold {
          * Use this for UI elements.
          */
         class StaticElement : public EventConsumer<Mouse> {
-            SDL_Rect rect;
+            Texture *tex;
             bool shown = true;
             bool clicked = false;
-            double nx, ny, nw, nh, tx, ty, tw, th;
-            int mouseX, mouseY;
+            bool mouseOver = false;
             bool scaled = false;
+            bool transCheck = false;
+            double nx, ny, nw, nh, tx, ty, tw, th;
+            int mouseX, mouseY, ID;
         public:
-            StaticElement(double x = 0.0, double y = 0.0, SDL_Rect r = { 0,0,0,0 });
+            StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
             StaticElement(const StaticElement &elem);
             ~StaticElement();
 
@@ -40,30 +42,38 @@ namespace Sourcehold {
             void Show();
             void Destroy();
 
+            void SetTexture(Texture *t);
             void Translate(int x, int y);
             void Translate(double x, double y);
             void Scale(int w, int h);
             void Scale(double w, double h);
 
             /**
+             * Checks for mouse input only for
+             * opaque areas of the image
+             */
+            void TransparencyCheck(bool check);
+
+            /**
              * Render the element returned by render_fn given the known
              * parameters. This is useful if the renderable may change,
              * E.g. a button is highlighted on mouseover
              */
-            void Render(std::function<Texture&()> render_fn);
+            void Render(std::function<SDL_Rect()> render_fn);
 
-            /**
-             * Render the element given the known parameters
-             */
-            void Render(Texture &elem, bool whole = false);
-            bool IsMouseOver();
             bool IsClicked();
 
             inline bool IsHidden() {
                 return !shown;
             }
+
+            inline bool IsMouseOver() {
+                return mouseOver;
+            }
         protected:
             void onEventReceive(Mouse &event) override;
+            /* Fairly complex, so only called once per frame */
+            bool IsMouseOverInternal();
         };
     }
 }

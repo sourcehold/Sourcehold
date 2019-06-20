@@ -6,8 +6,6 @@
 
 #include <SDL.h>
 
-#include <Rendering/Renderable.h>
-
 namespace Sourcehold {
     namespace Rendering {
         /**
@@ -18,7 +16,7 @@ namespace Sourcehold {
          */
         class Renderer;
         class Surface;
-        class Texture : public Renderable {
+        class Texture {
             SDL_Texture *texture = nullptr;
             int width, height, pitch = 0;
             double angle;
@@ -66,7 +64,8 @@ namespace Sourcehold {
             void SetAlphaMod(Uint8 alpha);
             void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
 
-            uint32_t *GetData();
+            Uint32 *GetData();
+
             inline bool IsLocked() {
                 return locked;
             }

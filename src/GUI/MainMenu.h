@@ -44,6 +44,7 @@ namespace Sourcehold {
         protected:
             boost::filesystem::path GetGreetingsSound();
 
+            /* TODO: merge into one function */
             void RenderMain();
             void RenderCombat();
             void RenderEconomic();
@@ -94,7 +95,9 @@ namespace Sourcehold {
             std::shared_ptr<TgxFile> tgx_bg_economic;
             std::shared_ptr<Gm1File> gm1_icons_builder;
             std::shared_ptr<TgxFile> tgx_bg_builder;
+
             std::vector<StaticElement> ui_elems;
+            std::vector<std::shared_ptr<TextureAtlas>> ui_tex;
 
             UIState currentState;
 

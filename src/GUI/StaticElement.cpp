@@ -3,28 +3,30 @@
 
 using namespace Sourcehold::Rendering;
 
-StaticElement::StaticElement(double x, double y, SDL_Rect r) :
+StaticElement::StaticElement(double x, double y, Texture *t) :
     EventConsumer<Mouse>(GetHandler())
 {
     nx = x;
     ny = y;
-    rect = r;
+    tex = t;
+    ID = RegisterFrameTick([&](double) { mouseOver = IsMouseOverInternal(); });
 }
 
 StaticElement::StaticElement(const StaticElement &elem) :
     EventConsumer<Mouse>(GetHandler())
 {
-    this->rect = elem.rect;
+    this->tex = elem.tex;
     this->shown = elem.shown;
     this->nx = elem.nx;
     this->ny = elem.ny;
     this->nw = elem.nw;
     this->nh = elem.nh;
+    ID = RegisterFrameTick([&](double) { mouseOver = IsMouseOverInternal(); });
 }
 
 StaticElement::~StaticElement()
 {
-
+    DeregisterFrameTick(ID);
 }
 
 void StaticElement::Hide()
@@ -40,6 +42,12 @@ void StaticElement::Show()
 void StaticElement::Destroy()
 {
 
+}
+
+void StaticElement::SetTexture(Texture *t)
+{
+    /* TODO: check pointer, reference? */
+    tex = t;
 }
 
 void StaticElement::Translate(int x, int y)
@@ -78,34 +86,17 @@ void StaticElement::Scale(double w, double h)
     scaled = true;
 }
 
-void StaticElement::Render(std::function<Texture&()> render_fn)
+void StaticElement::TransparencyCheck(bool check)
+{
+    transCheck = check;
+}
+
+void StaticElement::Render(std::function<SDL_Rect()> render_fn)
 {
     if(!shown) return;
 
-    Texture &elem = render_fn();
-    SDL_Rect r = elem.GetRect();
-    Rendering::Render(elem, nx, ny, nw, nh, &r);
-}
-
-void StaticElement::Render(Texture &elem, bool whole)
-{
-    if(!shown) return;
-
-    SDL_Rect r = elem.GetRect();
-    Rendering::Render(elem, nx, ny, nw, nh, whole ? nullptr : &r);
-}
-
-bool StaticElement::IsMouseOver()
-{
-    if(!shown) return false;
-
-    int rw = ToCoordX(tw) * GetTargetWidth();
-    int rh = ToCoordY(th) * GetTargetHeight();
-    int rx = ToCoordX(GetTargetX()) + tx * (double)ToCoordX(GetTargetWidth());
-    int ry = ToCoordY(GetTargetY()) + ty * (double)ToCoordY(GetTargetHeight());
-
-    if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) return true;
-    return false;
+    SDL_Rect elem = render_fn();
+    Rendering::Render(*tex, nx, ny, nw, nh, &elem);
 }
 
 bool StaticElement::IsClicked()
@@ -125,6 +116,38 @@ void StaticElement::onEventReceive(Mouse &event)
         mouseY = event.GetPosY();
     }
     else if(type == MOUSE_BUTTONDOWN) {
-        if(IsMouseOver() && shown) clicked = true;
+        if(mouseOver && shown) clicked = true;
     }
+}
+
+bool StaticElement::IsMouseOverInternal()
+{
+    if(!shown) return false;
+
+    int rw = ToCoordX(tw) * GetTargetWidth();
+    int rh = ToCoordY(th) * GetTargetHeight();
+    int rx = ToCoordX(GetTargetX()) + tx * (double)ToCoordX(GetTargetWidth());
+    int ry = ToCoordY(GetTargetY()) + ty * (double)ToCoordY(GetTargetHeight());
+
+    if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) {
+        if(transCheck) {
+            /* TODO */
+            return true;
+
+            /* Get cursor position on image */
+            int ix = mouseX - rx;
+            int iy = mouseY - ry;
+
+            /* Check pixel at position */
+            if(ix < tex->GetWidth() && iy < tex->GetHeight()) {
+                //Uint32 pixel = tex->GetPixel(ix, iy);
+                //return !(pixel & (uint32_t)0xFF);
+            }
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    return false;
 }

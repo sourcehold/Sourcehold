@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <utility>
+#include <map>
 #include <unordered_map>
+#include <functional>
 #include <boost/filesystem.hpp>
 
 #include <Assets.h>
@@ -86,6 +88,15 @@ namespace Sourcehold {
          */
         std::wstring GetLocalizedDescription(LocalizedMissionDescription index);
         std::wstring GetLocalizedString(LocalizedTextString index);
+
+        /**
+         * Register a function which will tick every frame
+         * Passes the time in seconds
+         * Returns function ID
+         * TODO: replace ID with smart ptr to avoid crashes
+         */
+        int RegisterFrameTick(std::function<void(double)> tick_fn);
+        void DeregisterFrameTick(int ID);
 
         double GetTime();
         std::shared_ptr<EventHandler> GetHandler();

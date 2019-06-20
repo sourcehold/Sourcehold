@@ -316,3 +316,4 @@ void Gm1File::ReadPalette()
         Parser::Close();
     }
 }
+

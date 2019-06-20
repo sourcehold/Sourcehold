@@ -4,7 +4,6 @@
 #include <SDL.h>
 
 #include <Rendering/Renderer.h>
-#include <Rendering/Renderable.h>
 
 namespace Sourcehold {
     namespace Rendering {
@@ -12,7 +11,7 @@ namespace Sourcehold {
          * An SDL_Surface wrapper class. This is primarily used
          * to create static textures.
          */
-        class Surface : public Renderable {
+        class Surface {
             SDL_Surface *surface;
             bool locked = false;
             bool valid = false;
