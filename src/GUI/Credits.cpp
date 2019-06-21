@@ -79,6 +79,7 @@ Credits::~Credits()
 
 bool Credits::Play(bool endgame, bool fadein, bool loop)
 {
+    endgame = true;
     playing = true;
     uint8_t currentImage = 0;
 

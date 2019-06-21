@@ -46,11 +46,31 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
             x += _table_width_height[type].first;
         }
         else {
+            /* Calculate lowercase offset */
             int8_t lowercaseOffset = 0;
-            if(c == 0x67 || c == 0x70 || c == 0x71 || c == 0x79) lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5); /*g p q y*/
-            if(c == 0x6A) lowercaseOffset = _table_width_height[type].second / 2; /*j*/
-            if(c == 0x2D) lowercaseOffset = FONT_SMALL ? -8 : -12;
-            if(c == 0x27) lowercaseOffset = FONT_SMALL ? -12 : -17;
+            switch(c) {
+            case 0x67: /* g */
+            case 0x70: /* p */
+            case 0x71: /* q */
+            case 0x79: /* y */
+            case 0x51: /* Q */
+            {
+                lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
+            } break;
+            case 0x6A: /* j */
+            {
+                lowercaseOffset = _table_width_height[type].second / 2;    
+            } break;
+            case 0x2D: /* - */
+            {
+                lowercaseOffset = FONT_SMALL ? -8 : -12;
+            } break;
+            case 0x27: /* ' */
+            {
+                lowercaseOffset = FONT_SMALL ? -12 : -17;
+            } break;
+            default: break;
+            }
             glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
             Render(*font->GetTextureAtlas().lock(),
                    illumination ? (x + (13 - glyph.w)/2) : x,
