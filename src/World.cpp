@@ -41,6 +41,16 @@ World::World() :
     gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1").lock();
 
+    /* Init the on-screen menu */
+    menubar.AllocNewTarget(240 + 800 + 240, 200);
+
+    menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
+    menuY = GetHeight() - menubar.GetHeight();
+    menuW = menubar.GetWidth();
+    menuH = menubar.GetHeight();
+
+    SetTarget(&menubar, menuX, menuY, menuW, menuH);
+
     /* Init the buttons */
     auto atlas = gm1_floats->GetTextureAtlas().lock();
     ui_compass.SetTexture(atlas.get());
@@ -48,7 +58,47 @@ World::World() :
     ui_magnify.SetTexture(atlas.get());
     ui_lower.SetTexture(atlas.get());
 
-    menubar.AllocNewTarget(240 + 800 + 240, 200);
+    atlas = gm1_icons->GetTextureAtlas().lock();
+    SDL_Rect rect = atlas->Get(25);
+    ui_disk.Translate(753, 72);
+    ui_disk.Scale(rect.w, rect.h);
+    ui_disk.SetTexture(atlas.get());
+
+    rect = atlas->Get(27);
+    ui_info.Translate(753, 110);
+    ui_info.Scale(rect.w, rect.h);
+    ui_info.SetTexture(atlas.get());
+
+    rect = atlas->Get(29);
+    ui_delete.Translate(753, 142);
+    ui_delete.Scale(rect.w, rect.h);
+    ui_delete.SetTexture(atlas.get());
+
+    rect = atlas->Get(68);
+    ui_revert.Translate(753, 168);
+    ui_revert.Scale(rect.w, rect.h);
+    ui_revert.SetTexture(atlas.get());
+
+    ui_tabs[0].Translate(264, 165);
+    ui_tabs[0].Scale(30, 35);
+    ui_tabs[0].SetTexture(atlas.get());
+    ui_tabs[1].Translate(300, 165);
+    ui_tabs[1].Scale(30, 35);
+    ui_tabs[1].SetTexture(atlas.get());
+    ui_tabs[2].Translate(336, 165);
+    ui_tabs[2].Scale(30, 35);
+    ui_tabs[2].SetTexture(atlas.get());
+    ui_tabs[3].Translate(372, 165);
+    ui_tabs[3].Scale(30, 35);
+    ui_tabs[3].SetTexture(atlas.get());
+    ui_tabs[4].Translate(408, 165);
+    ui_tabs[4].Scale(30, 35);
+    ui_tabs[4].SetTexture(atlas.get());
+    ui_tabs[5].Translate(444, 165);
+    ui_tabs[5].Scale(30, 35);
+    ui_tabs[5].SetTexture(atlas.get());
+
+    ResetTarget();
 
     SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
     SetCamPos(15, 8);
@@ -151,11 +201,6 @@ void World::RenderMenubar()
 
 void World::UpdateMenubar()
 {
-    menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
-    menuY = GetHeight() - menubar.GetHeight();
-    menuW = menubar.GetWidth();
-    menuH = menubar.GetHeight();
-
     SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
@@ -172,33 +217,6 @@ void World::UpdateMenubar()
     Rendering::Render(*tgx_bar_bg, 0, height - tgx_bar_bg->GetHeight());
 
     atlas = gm1_icons->GetTextureAtlas().lock();
-
-    /* Init menu buttons */
-    rect = atlas->Get(25);
-    ui_disk.Translate(753, 72);
-    ui_disk.Scale(rect.w, rect.h);
-    rect = atlas->Get(27);
-    ui_info.Translate(753, 110);
-    ui_info.Scale(rect.w, rect.h);
-    rect = atlas->Get(29);
-    ui_delete.Translate(753, 142);
-    ui_delete.Scale(rect.w, rect.h);
-    rect = atlas->Get(68);
-    ui_revert.Translate(753, 168);
-    ui_revert.Scale(rect.w, rect.h);
-
-    ui_tabs[0].Translate(264, 165);
-    ui_tabs[0].Scale(30, 35);
-    ui_tabs[1].Translate(300, 165);
-    ui_tabs[1].Scale(30, 35);
-    ui_tabs[2].Translate(336, 165);
-    ui_tabs[2].Scale(30, 35);
-    ui_tabs[3].Translate(372, 165);
-    ui_tabs[3].Scale(30, 35);
-    ui_tabs[4].Translate(408, 165);
-    ui_tabs[4].Scale(30, 35);
-    ui_tabs[5].Translate(444, 165);
-    ui_tabs[5].Scale(30, 35);
 
     /* Render the menu buttons */
     ui_disk.Render(

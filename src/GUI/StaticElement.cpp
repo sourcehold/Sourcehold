@@ -93,7 +93,7 @@ void StaticElement::TransparencyCheck(bool check)
 
 void StaticElement::Render(std::function<SDL_Rect()> render_fn)
 {
-    if(!shown) return;
+    if(!shown || !tex) return;
 
     SDL_Rect elem = render_fn();
     Rendering::Render(*tex, nx, ny, nw, nh, &elem);

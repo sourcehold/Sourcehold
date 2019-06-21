@@ -51,6 +51,8 @@ void GameMap::Render()
         Rendering::Render(
             *tileset,
             int(mult * x - CamX()), int(mult * y - CamY()),
+            30*mult,
+            16*mult,
             &clip
         );
     }

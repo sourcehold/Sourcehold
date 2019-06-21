@@ -96,14 +96,14 @@ int StartGame(GameOptions &opt)
 
     if(Running()) {
         /* Start the intro sequence and the main menu */
-        int ret = menu.Begin();
-        if (ret != EXIT_SUCCESS) {
-            Cleanup();
-            return ret;
-        }
+        //int ret = menu.Begin();
+        //if (ret != EXIT_SUCCESS) {
+        //    Cleanup();
+        //    return ret;
+        //}
 
         /* ------ Alpha testing ------ */
-        AudioSource aud(GetDirectory() / "fx/music/sadtimesa.raw", true);
+        //AudioSource aud(GetDirectory() / "fx/music/underanoldtree.raw", true);
         //aud.Play();
 
         World world;

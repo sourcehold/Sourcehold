@@ -9,10 +9,10 @@ static SDL_Rect bounds;
 static Rotation rotation = UP;
 static ZoomLevel zoomLevel = ZOOM_FAR;
 static const uint8_t zoomStep = 2;
-static int32_t positionX, positionY;
-static int32_t momentumX, momentumY;
-static int32_t maxMomentum;
-static int32_t speed;
+static int32_t positionX = 0, positionY = 0;
+static int32_t momentumX = 0, momentumY = 0;
+static int32_t maxMomentum = 8;
+static int32_t speed = 2;
 
 SDL_Rect Rendering::GetVisibleArea()
 {

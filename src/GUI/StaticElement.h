@@ -25,7 +25,7 @@ namespace Sourcehold {
          * Use this for UI elements.
          */
         class StaticElement : public EventConsumer<Mouse> {
-            Texture *tex;
+            Texture *tex = nullptr;
             bool shown = true;
             bool clicked = false;
             bool mouseOver = false;
