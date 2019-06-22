@@ -460,13 +460,12 @@ void AudioSource::DestroyFFmpeg()
 {
     if (!ffmpegInited) return;
 
-    avformat_close_input(&ic);
-    av_frame_free(&audioFrame);
-    audioDecoder->close(audioCtx);
-    av_free(audioCtx);
-
     alSourceStop(source);
     alDeleteBuffers(NUM_AUDIO_BUFFERS, alBuffers);
+
+    avformat_close_input(&ic);
+    av_frame_free(&audioFrame);
+    av_free(audioCtx);
 
     ffmpegInited = false;
 }
