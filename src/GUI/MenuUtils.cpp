@@ -54,8 +54,8 @@ bool GUI::InitializeUtils()
 
 	atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 
-    _border_load.AllocNewTarget(30*24, 17*24);
-    SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
+	_border_load.AllocNewTarget(30*24, 17*24);
+	SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
 
 	DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
 

@@ -67,6 +67,7 @@ int StartGame(GameOptions &opt)
     int px = (GetWidth() / 2) - (1024 / 2);
     int py = (GetHeight() / 2) - (768 / 2);
 
+    ResetTarget();
     while(Running() && index < files.size()-1) {
         ClearDisplay();
 
@@ -86,9 +87,9 @@ int StartGame(GameOptions &opt)
         Render(*tgx_loading, px, py);
 
         /* Render the loading bar */
-        DrawRect(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 128, true);
-        DrawRect(0.3, 0.75, 0.4, 0.04, 0, 0, 0, 255, false);
-        DrawRect(0.305, 0.755, 0.39 * progress, 0.03, 0, 0, 0, 255, true);
+        DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 128, true);
+        DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 255, false);
+        DrawRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int((double)440*progress), 25, 0, 0, 0, 255, true);
 
         FlushDisplay();
         SyncDisplay();
@@ -96,11 +97,11 @@ int StartGame(GameOptions &opt)
 
     if(Running()) {
         /* Start the intro sequence and the main menu */
-        //int ret = menu.Begin();
-        //if (ret != EXIT_SUCCESS) {
-        //    Cleanup();
-        //    return ret;
-        //}
+        int ret = menu.Begin();
+        if (ret != EXIT_SUCCESS) {
+            Cleanup();
+            return ret;
+        }
 
         /* ------ Alpha testing ------ */
         //AudioSource aud(GetDirectory() / "fx/music/underanoldtree.raw", true);

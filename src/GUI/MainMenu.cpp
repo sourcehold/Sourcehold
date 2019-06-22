@@ -117,28 +117,63 @@ UIState MainMenu::EnterMenu()
 
         /* Render the current menu on top of the background */
         HideAll();
+
+        int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
         switch(currentState) {
         case MAIN_MENU: {
-            RenderMain();
+            Render(*tgx_bg_main);
+            buttonEnd = COMBAT_CAMPAIGN;
         }
         break;
         case COMBAT_MENU: {
-            RenderCombat();
-            RenderBackToMain();
+            Render(*tgx_bg_combat);
+            buttonEnd = ECO_CAMPAIGN;
+            buttonStart = COMBAT_CAMPAIGN;
         }
         break;
         case ECONOMICS_MENU: {
-            RenderEconomic();
-            RenderBackToMain();
+            Render(*tgx_bg_economic);
+            buttonEnd = BUILDER_WORKING_MAP;
+            buttonStart = ECO_CAMPAIGN;
         }
         break;
         case BUILDER_MENU: {
-            RenderBuilder();
-            RenderBackToMain();
+            Render(*tgx_bg_builder);
+            buttonStart = BUILDER_WORKING_MAP;
         }
         break;
         default:
             break;
+        }
+
+        selected = BUTTON_END;
+        for(int i = buttonStart; i < buttonEnd; i++) {
+            ui_elems[i].Show();
+            ui_elems[i].Render(
+            [&]() -> SDL_Rect {
+                MenuButtonInfo inf = lut_buttons[i];
+                auto tex = ui_tex[inf.atlasIndex];
+
+                if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
+                {
+                    if (ui_elems[i].IsMouseOver()) {
+                        RenderMenuText(inf.text);
+                        return tex->Get(inf.index + 1);
+                    }
+                    else {
+                        if(inf.hasGlare) {
+                            return tex->Get(inf.glareIndex + (glareCounter % 14));
+                        }
+                        else {
+                            return tex->Get(inf.index);
+                        }
+                    }
+                }
+            });
+        }
+
+        if(currentState != MAIN_MENU) {
+            RenderBackToMain();
         }
 
         /* Check buttons */
@@ -229,147 +264,6 @@ boost::filesystem::path MainMenu::GetGreetingsSound()
     }
 
     return snd;
-}
-
-void MainMenu::RenderMain()
-{
-    /* Render the buttons */
-    selected = BUTTON_END;
-
-    Render(*tgx_bg_main);
-
-    for(int i = MAIN_EXIT; i < MAIN_SETTINGS+1; i++) {
-        ui_elems[i].Show();
-        ui_elems[i].Render(
-        [&]() -> SDL_Rect {
-            MenuButtonInfo inf = lut_buttons[i];
-            auto tex = ui_tex[inf.atlasIndex];
-
-            if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-            /* Special case */
-            if(i == MAIN_FIREFLY)
-            {
-                if (ui_elems[i].IsMouseOver()) {
-                    RenderMenuText(inf.text);
-                    return tex->Get(inf.index + 1);
-                }
-                else {
-                    return tex->Get(inf.index);
-                }
-            }
-            else
-            {
-                if (ui_elems[i].IsMouseOver()) {
-                    RenderMenuText(inf.text);
-                    return tex->Get(inf.index + 1);
-                }
-                else {
-                    if(inf.hasGlare) {
-                        return tex->Get(inf.glareIndex + (glareCounter % 14));
-                    }
-                    else {
-                        return tex->Get(inf.index);
-                    }
-                }
-            }
-        });
-    }
-}
-
-void MainMenu::RenderCombat()
-{
-    selected = BUTTON_END;
-
-    Render(*tgx_bg_combat);
-
-    for(int i = COMBAT_CAMPAIGN; i < COMBAT_MULTIPLAYER+1; i++) {
-        ui_elems[i].Show();
-        ui_elems[i].Render(
-        [&]() -> SDL_Rect {
-            MenuButtonInfo inf = lut_buttons[i];
-            auto tex = ui_tex[inf.atlasIndex];
-
-            if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-            if (ui_elems[i].IsMouseOver())
-            {
-                RenderMenuText(inf.text);
-                return tex->Get(inf.index + 1);
-            }
-            else
-            {
-                if(inf.hasGlare) {
-                    return tex->Get(inf.glareIndex + (glareCounter % 14));
-                }
-                else {
-                    return tex->Get(inf.index);
-                }
-            }
-        });
-    }
-}
-
-void MainMenu::RenderEconomic()
-{
-    selected = BUTTON_END;
-
-    Render(*tgx_bg_economic);
-
-    for(int i = ECO_CAMPAIGN; i < ECO_FREEBUILD+1; i++) {
-        ui_elems[i].Show();
-        ui_elems[i].Render(
-        [&]() -> SDL_Rect {
-            MenuButtonInfo inf = lut_buttons[i];
-            auto tex = ui_tex[inf.atlasIndex];
-
-            if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-            if (ui_elems[i].IsMouseOver())
-            {
-                RenderMenuText(inf.text);
-                return tex->Get(inf.index + 1);
-            }
-            else
-            {
-                if(inf.hasGlare) {
-                    return tex->Get(inf.glareIndex + (glareCounter % 14));
-                }
-                else {
-                    return tex->Get(inf.index);
-                }
-            }
-        });
-    }
-}
-
-void MainMenu::RenderBuilder()
-{
-    selected = BUTTON_END;
-
-    Render(*tgx_bg_builder);
-
-    for(int i = BUILDER_WORKING_MAP; i < BUILDER_MULTIPLAYER+1; i++) {
-        ui_elems[i].Show();
-        ui_elems[i].Render(
-        [&]() -> SDL_Rect {
-            MenuButtonInfo inf = lut_buttons[i];
-            auto tex = ui_tex[inf.atlasIndex];
-
-            if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-            if (ui_elems[i].IsMouseOver())
-            {
-                RenderMenuText(inf.text);
-                return tex->Get(inf.index + 1);
-            }
-            else
-            {
-                if(inf.hasGlare) {
-                    return tex->Get(inf.glareIndex + (glareCounter % 14));
-                }
-                else {
-                    return tex->Get(inf.index);
-                }
-            }
-        });
-    }
 }
 
 void MainMenu::RenderBackToMain()

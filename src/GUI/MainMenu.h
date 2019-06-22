@@ -45,10 +45,6 @@ namespace Sourcehold {
             boost::filesystem::path GetGreetingsSound();
 
             /* TODO: merge into one function */
-            void RenderMain();
-            void RenderCombat();
-            void RenderEconomic();
-            void RenderBuilder();
             void RenderBackToMain();
             void HideAll();
 
