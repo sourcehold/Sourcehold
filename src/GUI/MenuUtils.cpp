@@ -4,6 +4,7 @@
 #include <GUI/StaticElement.h>
 
 #include <Rendering/Renderer.h>
+#include <Rendering/Texture.h>
 #include <Rendering/Font.h>
 
 #include <Parsers/Gm1File.h>
@@ -17,6 +18,7 @@ static std::shared_ptr<Gm1File> _gm_interface_icons3;
 static std::shared_ptr<TgxFile> _tgx_border;
 static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
+static Texture _border_load;
 
 bool GUI::InitializeUtils()
 {
@@ -34,6 +36,63 @@ bool GUI::InitializeUtils()
 	    _border_rect.h = GetHeight();
     }
 
+    auto atlas = _gm_interface_icons3->GetTextureAtlas().lock();
+
+	/* Precalculate blending */
+	Texture deco;
+	deco.AllocNewTarget(27, 44);
+
+	SetTarget(&deco, 0.0, 0.0, NormalizeX(27), NormalizeY(44));
+
+	SDL_Rect rect = atlas->Get(91);
+	Render(*atlas, &rect);
+
+	atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+
+	rect = atlas->Get(90);
+	Render(*atlas, &rect);
+
+	atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
+
+    _border_load.AllocNewTarget(30*24, 17*24);
+    SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
+
+	DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
+
+	/* Corners */
+	rect = atlas->Get(0); 
+	Render(*atlas, 0, 0, &rect);
+	rect = atlas->Get(12);
+	Render(*atlas, 0, 16*24, &rect);
+	rect = atlas->Get(2);
+	Render(*atlas, 29*24, 0, &rect);
+	rect = atlas->Get(14);
+	Render(*atlas, 29*24, 16*24, &rect);
+
+	/* Edges */
+	for(int ix = 24; ix < 29*24; ix+=24) {
+		rect = atlas->Get(1);
+		Render(*atlas, ix, 0, &rect);
+		rect = atlas->Get(13);
+		Render(*atlas, ix, 16*24, &rect);
+	}
+	for(int iy = 24; iy < 16*24; iy+=24) {
+		rect = atlas->Get(6);
+		Render(*atlas, 0, iy, &rect);
+		rect = atlas->Get(8);
+		Render(*atlas, 29*24, iy, &rect);
+	}
+
+	/* Title box */
+	DrawRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
+	DrawRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
+
+	/* Decoration, TODO */
+	Render(deco, 11, 17);
+	Render(deco, 266, 17);
+
+    ResetTarget();
+
     return true;
 }
 
@@ -46,8 +105,38 @@ void GUI::RenderMenuText(const std::wstring &text)
     RenderText(text.substr(1,text.size()), 0.330078125, 0.528, 0.5, FONT_SMALL);
 }
 
-void GUI::RenderMenuBorder() {
+void GUI::RenderMenuBorder()
+{
 	if(_ed == STRONGHOLD_HD) {
 	    Render(*_tgx_border, &_border_rect);
+	}
+}
+
+void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)
+{
+	SDL_Rect rect;
+	int x, y;
+
+	switch(style)
+	{
+	case MENUBOX_LOAD_GAME: {
+		x = ToCoordX(0.0);
+		y = ToCoordY(0.0);
+
+		Render(_border_load, x, y);
+	} break;
+	case MENUBOX_BUILDER: {
+
+	} break;
+	case MENUBOX_CAMPAIGN: {
+
+	} break;
+	case MENUBOX_ENDGAME: {
+
+	} break;
+	case MENUBOX_ESC: {
+
+	} break;
+	default: break;
 	}
 }

@@ -4,6 +4,10 @@
 
 namespace Sourcehold {
     namespace GUI {
+        /**
+         * Init menu-related stuff which will remain loaded
+         * for the entire duration of the game
+         */
         bool InitializeUtils();
 
         /**
@@ -14,10 +18,23 @@ namespace Sourcehold {
         void RenderMenuText(const std::wstring &text);
 
         /**
-         * Render the border around the screen. This asset
+         * Renders the border around the screen. This asset
          * only exists for the HD edition to prevent scaling
          * the interface to fit the screen.
          */
         void RenderMenuBorder();
+
+        /**
+         * Renders every style of ingame menu box, in which
+         * text and / or the menu can be placed.
+         */
+        enum MenuBox {
+            MENUBOX_LOAD_GAME, /* Load a map or savegame */
+            MENUBOX_BUILDER, /* The title box for builder menu pages */
+            MENUBOX_CAMPAIGN, /* Combat or economics campaign selection */
+            MENUBOX_ENDGAME, /* 'Victory' or 'Defeat' screen */
+            MENUBOX_ESC /* The ingame Esc-menu */
+        };
+        void RenderMenuBox(MenuBox style, const std::wstring &title);
     }
 }

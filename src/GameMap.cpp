@@ -35,6 +35,11 @@ GameMap::GameMap()
     }
 }
 
+void GameMap::LoadFromDisk(boost::filesystem::path path)
+{
+    /* TODO */
+}
+
 void GameMap::Render()
 {
     mult = GetZoomLevel() == ZOOM_NEAR ? 2 : 1;

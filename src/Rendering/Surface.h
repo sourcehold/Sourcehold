@@ -28,6 +28,7 @@ namespace Sourcehold {
             void UnlockSurface();
             void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
             void Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
+            void Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
             Uint32 *GetData();
             inline bool IsValid() {

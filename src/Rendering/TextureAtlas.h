@@ -13,9 +13,10 @@
 namespace Sourcehold {
     namespace Rendering {
         /**
-         * Merge multiple textures
-         *
-         * TODO: Better space usage
+         * Merge multiple textures. First, give it a list of image dimensions
+         * to handle, then use the offsets returned by Get() to write to the
+         * intermediate surface. When done, call Create() to convert the surface
+         * to a static texture.
          */
         class TextureAtlas : public Texture {
             uint32_t num;

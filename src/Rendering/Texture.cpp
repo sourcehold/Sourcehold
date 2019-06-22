@@ -187,6 +187,11 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     }
 }
 
+void Texture::SetBlendMode(SDL_BlendMode mode)
+{
+    SDL_SetTextureBlendMode(texture, mode);
+}
+
 Uint32 *Texture::GetData()
 {
     if(!locked) return nullptr;

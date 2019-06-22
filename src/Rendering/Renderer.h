@@ -28,7 +28,9 @@ namespace Sourcehold {
         void ClearDisplay();
         void FlushDisplay();
 
-        /* Redirects all rendering operations to the target */
+        /**
+         * Redirect all rendering operations to the target
+         */
         void SetTarget(Texture *target, double x, double y, double w, double h);
         void SetTarget(Texture *target, int x, int y, int w, int h);
         void ResetTarget();
@@ -46,8 +48,8 @@ namespace Sourcehold {
         void Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip = nullptr);
 
         /**
-        * Render a texture to the whole screen
-        */
+         * Render a texture to the whole screen
+         */
         void Render(Texture &texture, SDL_Rect *clip = nullptr);
 
         void DrawRect(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);

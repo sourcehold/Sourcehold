@@ -8,7 +8,10 @@
 #include <Rendering/Font.h>
 #include <Rendering/Camera.h>
 
+#include <GUI/MenuUtils.h>
+
 using namespace Sourcehold::Game;
+using namespace Sourcehold::GUI;
 
 /**
  * Indices into the texture atlas for every user interface tab.

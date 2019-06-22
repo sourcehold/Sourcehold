@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 
+#include <boost/filesystem.hpp>
+
 #include <Rendering/Tileset.h>
 #include <Rendering/Renderer.h>
 
@@ -16,13 +18,15 @@ namespace Sourcehold {
         class TgxFile;
     }
     namespace Game {
+        enum MapDimension : uint8_t {
+            WORLD_160,
+            WORLD_200,
+            WORLD_300,
+            WORLD_400
+        };
+
         struct WorldInformation {
-            enum Dimensions : uint8_t {
-                WORLD_160,
-                WORLD_200,
-                WORLD_300,
-                WORLD_400
-            } type;
+            MapDimension type;
             std::map<uint16_t, bool> unlockedAssets;
         };
 
@@ -44,6 +48,7 @@ namespace Sourcehold {
             GameMap(const GameMap&) = delete;
             ~GameMap() = default;
 
+            void LoadFromDisk(boost::filesystem::path path);
             void Render();
         protected:
             WorldInformation _worldInfo;

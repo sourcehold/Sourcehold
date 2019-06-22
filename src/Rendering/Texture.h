@@ -63,9 +63,13 @@ namespace Sourcehold {
             void FlipNone();
             void SetAlphaMod(Uint8 alpha);
             void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
+            void SetBlendMode(SDL_BlendMode mode);
 
             Uint32 *GetData();
 
+            inline bool IsValid() {
+                return valid;
+            }
             inline bool IsLocked() {
                 return locked;
             }

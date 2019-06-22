@@ -85,6 +85,11 @@ void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     }
 }
 
+void Surface::Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
+{
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, r, g, b, a));
+}
+
 Uint32* Surface::GetData()
 {
     if(!locked) return nullptr;
