@@ -56,6 +56,10 @@ void StaticElement::Translate(int x, int y)
     ny = NormalizeY(y);
     tx = NormalizeTargetX(x);
     ty = NormalizeTargetY(y);
+    tpX = GetTargetX();
+    tpY = GetTargetY();
+    tdW = GetTargetWidth();
+    tdH = GetTargetHeight();
 }
 
 void StaticElement::Translate(double x, double y)
@@ -64,6 +68,10 @@ void StaticElement::Translate(double x, double y)
     ty = y;
     nx = GetTargetWidth() * x;
     ny = GetTargetHeight() * y;
+    tpX = GetTargetX();
+    tpY = GetTargetY();
+    tdW = GetTargetWidth();
+    tdH = GetTargetHeight();
 }
 
 void StaticElement::Scale(int w, int h)
@@ -124,10 +132,11 @@ bool StaticElement::IsMouseOverInternal()
 {
     if(!shown) return false;
 
-    int rw = ToCoordX(tw) * GetTargetWidth();
-    int rh = ToCoordY(th) * GetTargetHeight();
-    int rx = ToCoordX(GetTargetX()) + tx * (double)ToCoordX(GetTargetWidth());
-    int ry = ToCoordY(GetTargetY()) + ty * (double)ToCoordY(GetTargetHeight());
+    /* Target x/y/w/h unknown, since called as tick function */
+    int rw = ToCoordX(tw) * tdW;
+    int rh = ToCoordY(th) * tdH;
+    int rx = ToCoordX(tpX) + tx * (double)ToCoordX(tdW);
+    int ry = ToCoordY(tpY) + ty * (double)ToCoordY(tdH);
 
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) {
         if(transCheck) {

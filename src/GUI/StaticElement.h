@@ -32,6 +32,7 @@ namespace Sourcehold {
             bool scaled = false;
             bool transCheck = false;
             double nx, ny, nw, nh, tx, ty, tw, th;
+            double tpX, tpY, tdW, tdH;
             int mouseX, mouseY, ID;
         public:
             StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
