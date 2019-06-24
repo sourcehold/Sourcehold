@@ -38,15 +38,20 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18, 4 },
     { 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35, 4 },
     { 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52, 4 },
-    { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0, 0 }
+    { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0, 0 },
+    { 0.74,0.67,0.17578125,0.234375, L"", false, 70, 0, 2 }
 };
 
 MainMenu::MainMenu()
 {
     edition = GetEdition();
 
+    mx = (GetWidth() - 1024) / 2;
+    my = (GetHeight() - 768) / 2;
+
     if (edition == STRONGHOLD_HD) {
         screen.AllocNewTarget(1024, 768);
+        SetTarget(&screen, mx, my, 1024, 768);
     }
 
     aud_chantloop.LoadSong(GetDirectory() / "fx/music/chantloop1.raw", true);
@@ -57,16 +62,13 @@ MainMenu::MainMenu()
     gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1").lock();
     gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1").lock();
 
-    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx").lock();
-    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx").lock();
-    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx").lock();
-    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx").lock();
+    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx").lock();
+    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx").lock();
+    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx").lock();
+    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder2.tgx").lock();
 
     aud_greetings.LoadEffect(GetGreetingsSound(), false);
     aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
-
-    mx = (GetWidth() - 1024) / 2;
-    my = (GetHeight() - 768) / 2;
 
     /* Get textures */
     ui_tex.resize(5);
@@ -77,7 +79,6 @@ MainMenu::MainMenu()
     ui_tex[4] = gm1_icons_builder->GetTextureAtlas().lock();
 
     /* Allocate buttons */
-    if(edition == STRONGHOLD_HD) SetTarget(&screen, mx, my, 1024, 768);
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
         const MenuButtonInfo *inf = &lut_buttons[i];
@@ -91,17 +92,10 @@ MainMenu::MainMenu()
 
 MainMenu::~MainMenu()
 {
-
 }
 
 UIState MainMenu::EnterMenu()
 {
-    if(edition == STRONGHOLD_HD) {
-        SetTarget(&screen, mx, my, 1024, 768);
-    }
-
-    ResetTarget();
-
     currentState = MAIN_MENU;
 
     aud_chantloop.Play();
@@ -120,6 +114,7 @@ UIState MainMenu::EnterMenu()
 
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
         switch(currentState) {
+        default:
         case MAIN_MENU: {
             Render(*tgx_bg_main);
             buttonEnd = COMBAT_CAMPAIGN;
@@ -127,23 +122,31 @@ UIState MainMenu::EnterMenu()
         break;
         case COMBAT_MENU: {
             Render(*tgx_bg_combat);
+            RenderBackToMain();
             buttonEnd = ECO_CAMPAIGN;
             buttonStart = COMBAT_CAMPAIGN;
         }
         break;
         case ECONOMICS_MENU: {
             Render(*tgx_bg_economic);
+            RenderBackToMain();
             buttonEnd = BUILDER_WORKING_MAP;
             buttonStart = ECO_CAMPAIGN;
         }
         break;
         case BUILDER_MENU: {
             Render(*tgx_bg_builder);
+            RenderBackToMain();
             buttonStart = BUILDER_WORKING_MAP;
         }
         break;
-        default:
-            break;
+        case MILITARY_CAMPAIGN_MENU: {
+            Render(*tgx_bg_combat);
+            RenderBackToMain();
+            RenderNext();
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        break;
         }
 
         selected = BUTTON_END;
@@ -172,12 +175,9 @@ UIState MainMenu::EnterMenu()
             });
         }
 
-        if(currentState != MAIN_MENU) {
-            RenderBackToMain();
-        }
-
         /* Check buttons */
         switch(selected) {
+        /* Main menu */
         case MAIN_EXIT: {
             // TODO: exit prompt
             aud_chantloop.Stop();
@@ -216,8 +216,42 @@ UIState MainMenu::EnterMenu()
             currentState = SETTINGS_MENU;
         }
         break;
-        default:
-            break;
+        /* Combat menu */
+        case COMBAT_CAMPAIGN: {
+            currentState = MILITARY_CAMPAIGN_MENU;
+        }
+        break;
+        case COMBAT_SIEGE: {
+        }
+        break;
+        case COMBAT_INVASION: {
+        }
+        break;
+        /* Economics menu */
+        case ECO_CAMPAIGN: {
+        }
+        break;
+        case ECO_MISSION: {
+        }
+        break;
+        case ECO_FREEBUILD: {
+        }
+        break;
+        /* Builder menu */
+        case BUILDER_WORKING_MAP: {
+        }
+        break;
+        case BUILDER_STANDALONE: {
+        }
+        break;
+        case BUILDER_SIEGE: {
+        }
+        break;
+        case BUILDER_MULTIPLAYER: {
+        }
+        break;
+        case COMBAT_MULTIPLAYER: /* unsupported (yet) */
+        default: break;
         }
 
         RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, 1, FONT_SMALL);
@@ -276,6 +310,26 @@ void MainMenu::RenderBackToMain()
 
         if(ui_elems[BACK_TO_MAIN].IsClicked()) selected = BACK_TO_MAIN;
         if (ui_elems[BACK_TO_MAIN].IsMouseOver())
+        {
+            RenderMenuText(inf.text);
+            return tex->Get(inf.index + 1);
+        }
+        else {
+            return tex->Get(inf.index);
+        }
+    });
+}
+
+void MainMenu::RenderNext()
+{
+    ui_elems[NEXT].Show();
+    ui_elems[NEXT].Render(
+    [&]() -> SDL_Rect {
+        MenuButtonInfo inf = lut_buttons[NEXT];
+        auto tex = ui_tex[inf.atlasIndex];
+
+        if(ui_elems[NEXT].IsClicked()) selected = NEXT;
+        if (ui_elems[NEXT].IsMouseOver())
         {
             RenderMenuText(inf.text);
             return tex->Get(inf.index + 1);

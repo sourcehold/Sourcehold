@@ -128,7 +128,7 @@ int World::Play()
             RenderMenubar();
             UpdateMenubar();
         }
-
+        
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
         FlushDisplay();

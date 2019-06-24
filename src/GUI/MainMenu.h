@@ -46,6 +46,7 @@ namespace Sourcehold {
 
             /* TODO: merge into one function */
             void RenderBackToMain();
+            void RenderNext();
             void HideAll();
 
             /* Common resources */
@@ -80,6 +81,7 @@ namespace Sourcehold {
                 BUILDER_SIEGE,
                 BUILDER_MULTIPLAYER,
                 BACK_TO_MAIN,
+                NEXT,
                 BUTTON_END
             } selected = BUTTON_END;
 

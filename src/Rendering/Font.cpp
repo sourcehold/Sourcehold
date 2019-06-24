@@ -54,6 +54,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
             case 0x71: /* q */
             case 0x79: /* y */
             case 0x51: /* Q */
+            case 0x4A: /* J */
             {
                 lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
             } break;

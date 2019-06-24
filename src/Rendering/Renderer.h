@@ -51,12 +51,19 @@ namespace Sourcehold {
          * Render a texture to the whole screen
          */
         void Render(Texture &texture, SDL_Rect *clip = nullptr);
+        void Fill(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255);
 
         void DrawRect(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
         void DrawRect(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
         void DrawLine(int x1, int y1, int x2, int y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
         void DrawLine(double x1, double y1, double x2, double y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+
+        /**
+         * Get custom blend mode for keying out
+         * certain pixels based on src
+         */
+        SDL_BlendMode GetAlphaKeyBlendMode();
 
         /**
          * Normalize based on the dimensions of

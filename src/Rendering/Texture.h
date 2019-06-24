@@ -18,7 +18,7 @@ namespace Sourcehold {
         class Surface;
         class Texture {
             SDL_Texture *texture = nullptr;
-            int width, height, pitch = 0;
+            int width, height, pitch = 0, format;
             double angle;
             bool locked = false, target = false, valid = false;
             Uint32* pixels = nullptr;

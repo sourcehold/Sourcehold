@@ -47,6 +47,7 @@ bool GUI::InitializeUtils()
 	SDL_Rect rect = atlas->Get(91);
 	Render(*atlas, &rect);
 
+	//SDL_BlendMode mode = GetAlphaKeyBlendMode();
 	atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
 	rect = atlas->Get(90);
@@ -55,6 +56,7 @@ bool GUI::InitializeUtils()
 	atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 
 	_border_load.AllocNewTarget(30*24, 17*24);
+
 	SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
 
 	DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
@@ -98,9 +100,11 @@ bool GUI::InitializeUtils()
 
 void GUI::RenderMenuText(const std::wstring &text)
 {
+	if(text.empty()) return;
+
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas().lock();
 	auto rect = interface_icons->Get(18);
-    //Render(*interface_icons, 0.305, 0.52, &rect);
+    Render(*interface_icons, 0.305, 0.52, &rect);
     RenderText(text.substr(0,1), 0.3095703125, 0.528, 0.5, FONT_SMALL, true);
     RenderText(text.substr(1,text.size()), 0.330078125, 0.528, 0.5, FONT_SMALL);
 }
@@ -129,7 +133,6 @@ void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)
 
 	} break;
 	case MENUBOX_CAMPAIGN: {
-
 	} break;
 	case MENUBOX_ENDGAME: {
 

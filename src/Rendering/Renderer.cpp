@@ -54,7 +54,9 @@ void Rendering::SetTarget(Texture *target, double x, double y, double w, double 
     th = h;
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
+#if 0 // Creates an issue with directX when window out of focus
         Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+#endif
     }
 }
 
@@ -66,7 +68,9 @@ void Rendering::SetTarget(Texture *target, int x, int y, int w, int h)
     th = NormalizeY(h);
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
+#if 0
         Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+#endif
     }
 }
 
@@ -75,7 +79,7 @@ void Rendering::ResetTarget()
     _target = nullptr;
     tx = ty = 0.0;
     tw = th = 1.0;
-    SDL_SetRenderTarget(_renderer, NULL);
+    SDL_SetRenderTarget(_renderer, nullptr);
 }
 
 void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip)
@@ -97,7 +101,7 @@ void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip)
         clip,
         &rect,
         texture.GetAngle(),
-        NULL,
+        nullptr,
         texture.GetFlip()
     );
 }
@@ -119,7 +123,7 @@ void Rendering::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *c
         clip,
         &rect,
         texture.GetAngle(),
-        NULL,
+        nullptr,
         texture.GetFlip()
     );
 }
@@ -146,11 +150,17 @@ void Rendering::Render(Texture &texture, SDL_Rect *clip)
         _renderer,
         texture.GetTexture(),
         clip,
-        NULL,
+        nullptr,
         texture.GetAngle(),
-        NULL,
+        nullptr,
         texture.GetFlip()
     );
+}
+
+void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
+{
+   SDL_SetRenderDrawColor(_renderer, r, g, b, a);
+   SDL_RenderFillRect(_renderer, nullptr);
 }
 
 void Rendering::DrawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
@@ -202,6 +212,18 @@ void Rendering::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Ui
         (int)ToCoordX(x2),
         (int)ToCoordY(y2),
         r,g,b
+    );
+}
+
+SDL_BlendMode Rendering::GetAlphaKeyBlendMode()
+{
+    return SDL_ComposeCustomBlendMode(
+        SDL_BLENDFACTOR_ONE, /* The original image */
+        SDL_BLENDFACTOR_ZERO, /* The color mask */
+        SDL_BLENDOPERATION_SUBTRACT,
+        SDL_BLENDFACTOR_ONE,
+        SDL_BLENDFACTOR_ONE,
+        SDL_BLENDOPERATION_ADD
     );
 }
 

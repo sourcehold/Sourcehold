@@ -35,6 +35,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format)
 {
     this->width = width;
     this->height = height;
+    this->format = format;
     access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
                   GetRenderer(),
@@ -58,6 +59,7 @@ bool Texture::AllocFromSurface(Surface &surface)
 {
     width = surface.GetWidth();
     height = surface.GetHeight();
+    this->format = format;
     access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
@@ -75,6 +77,7 @@ bool Texture::AllocNewTarget(int width, int height, int format)
 {
     this->width = width;
     this->height = height;
+    this->format = format;
     access = SDL_TEXTUREACCESS_TARGET;
     texture = SDL_CreateTexture(
                   GetRenderer(),
