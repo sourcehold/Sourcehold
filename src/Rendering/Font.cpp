@@ -54,23 +54,24 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
             case 0x71: /* q */
             case 0x79: /* y */
             case 0x51: /* Q */
-            case 0x4A: /* J */
-            {
+            case 0x4A: { /* J */
                 lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
-            } break;
-            case 0x6A: /* j */
-            {
-                lowercaseOffset = _table_width_height[type].second / 2;    
-            } break;
-            case 0x2D: /* - */
-            {
+            }
+            break;
+            case 0x6A: { /* j */
+                lowercaseOffset = _table_width_height[type].second / 2;
+            }
+            break;
+            case 0x2D: { /* - */
                 lowercaseOffset = FONT_SMALL ? -8 : -12;
-            } break;
-            case 0x27: /* ' */
-            {
+            }
+            break;
+            case 0x27: { /* ' */
                 lowercaseOffset = FONT_SMALL ? -12 : -17;
-            } break;
-            default: break;
+            }
+            break;
+            default:
+                break;
             }
             glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
             Render(*font->GetTextureAtlas().lock(),

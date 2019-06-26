@@ -52,7 +52,7 @@ namespace Sourcehold {
 
 
 
-/* Number of entries */
+                /* Number of entries */
                 uint32_t num;
                 /* Unknown */
                 uint32_t u1;

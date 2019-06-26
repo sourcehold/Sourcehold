@@ -159,8 +159,8 @@ void Rendering::Render(Texture &texture, SDL_Rect *clip)
 
 void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-   SDL_SetRenderDrawColor(_renderer, r, g, b, a);
-   SDL_RenderFillRect(_renderer, nullptr);
+    SDL_SetRenderDrawColor(_renderer, r, g, b, a);
+    SDL_RenderFillRect(_renderer, nullptr);
 }
 
 void Rendering::DrawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
@@ -219,13 +219,13 @@ SDL_BlendMode Rendering::GetAlphaKeyBlendMode()
 {
 #if 0
     return SDL_ComposeCustomBlendMode(
-        SDL_BLENDFACTOR_ONE, /* The original image */
-        SDL_BLENDFACTOR_ZERO, /* The color mask */
-        SDL_BLENDOPERATION_SUBTRACT,
-        SDL_BLENDFACTOR_ONE,
-        SDL_BLENDFACTOR_ONE,
-        SDL_BLENDOPERATION_ADD
-    );
+               SDL_BLENDFACTOR_ONE, /* The original image */
+               SDL_BLENDFACTOR_ZERO, /* The color mask */
+               SDL_BLENDOPERATION_SUBTRACT,
+               SDL_BLENDFACTOR_ONE,
+               SDL_BLENDFACTOR_ONE,
+               SDL_BLENDOPERATION_ADD
+           );
 #else
     return SDL_BLENDMODE_BLEND;
 #endif

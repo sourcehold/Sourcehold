@@ -192,7 +192,7 @@ bool Game::InitManager(GameOptions &opt)
     auto dim = ResolutionToDim(_opt.resolution);
 
     InitDisplay(
-        "Sourcehold version " SOURCEHOLD_VERSION_STRING,
+        "Sourcehold version " SOURCEHOLD_VERSION_STRING " - " SOURCEHOLD_BUILD,
         dim.first,
         dim.second,
         _opt.ndisp,

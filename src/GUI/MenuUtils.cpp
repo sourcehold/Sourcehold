@@ -25,73 +25,74 @@ bool GUI::InitializeUtils()
     _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1").lock();
     _ed = GetEdition();
     if(_ed == STRONGHOLD_HD) {
-    	_tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
-		/**
-	     * Render the border 'zoomed in' so that the
-	     * menu can be placed in the middle without scaling.
-	     */
-	    _border_rect.x = (1920 - GetWidth()) / 2;
-	    _border_rect.y = (1200 - GetHeight()) / 2;
-	    _border_rect.w = GetWidth();
-	    _border_rect.h = GetHeight();
+        _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
+        /**
+         * Render the border 'zoomed in' so that the
+         * menu can be placed in the middle without scaling.
+         */
+        _border_rect.x = (1920 - GetWidth()) / 2;
+        _border_rect.y = (1200 - GetHeight()) / 2;
+        _border_rect.w = GetWidth();
+        _border_rect.h = GetHeight();
     }
 
     auto atlas = _gm_interface_icons3->GetTextureAtlas().lock();
 
-	/* Precalculate blending */
-	Texture deco;
-	deco.AllocNewTarget(27, 44);
+    /* Precalculate blending */
+    Texture deco;
+    deco.AllocNewTarget(27, 44);
 
-	SetTarget(&deco, 0.0, 0.0, NormalizeX(27), NormalizeY(44));
+    SetTarget(&deco, 0.0, 0.0, NormalizeX(27), NormalizeY(44));
 
-	SDL_Rect rect = atlas->Get(91);
-	Render(*atlas, &rect);
+    SDL_Rect rect = atlas->Get(91);
+    Render(*atlas, &rect);
 
-	//SDL_BlendMode mode = GetAlphaKeyBlendMode();
-	atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+    //SDL_BlendMode mode = GetAlphaKeyBlendMode();
+    atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
-	rect = atlas->Get(90);
-	Render(*atlas, &rect);
+    rect = atlas->Get(90);
+    Render(*atlas, &rect);
 
-	atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
+    atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 
-	_border_load.AllocNewTarget(30*24, 17*24);
+    _border_load.AllocNewTarget(30*24, 17*24);
 
-	SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
+    SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
 
-	DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
+    DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
 
-	/* Corners */
-	rect = atlas->Get(0); 
-	Render(*atlas, 0, 0, &rect);
-	rect = atlas->Get(12);
-	Render(*atlas, 0, 16*24, &rect);
-	rect = atlas->Get(2);
-	Render(*atlas, 29*24, 0, &rect);
-	rect = atlas->Get(14);
-	Render(*atlas, 29*24, 16*24, &rect);
+    /* Corners */
+    rect = atlas->Get(0);
+    Render(*atlas, 0, 0, &rect);
+    rect = atlas->Get(12);
+    Render(*atlas, 0, 16*24, &rect);
+    rect = atlas->Get(2);
+    Render(*atlas, 29*24, 0, &rect);
+    rect = atlas->Get(14);
+    Render(*atlas, 29*24, 16*24, &rect);
 
-	/* Edges */
-	for(int ix = 24; ix < 29*24; ix+=24) {
-		rect = atlas->Get(1);
-		Render(*atlas, ix, 0, &rect);
-		rect = atlas->Get(13);
-		Render(*atlas, ix, 16*24, &rect);
-	}
-	for(int iy = 24; iy < 16*24; iy+=24) {
-		rect = atlas->Get(6);
-		Render(*atlas, 0, iy, &rect);
-		rect = atlas->Get(8);
-		Render(*atlas, 29*24, iy, &rect);
-	}
 
-	/* Title box */
-	DrawRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
-	DrawRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
+    /* Edges */
+    for(int ix = 24; ix < 29*24; ix+=24) {
+        rect = atlas->Get(1);
+        Render(*atlas, ix, 0, &rect);
+        rect = atlas->Get(13);
+        Render(*atlas, ix, 16*24, &rect);
+    }
+    for(int iy = 24; iy < 16*24; iy+=24) {
+        rect = atlas->Get(6);
+        Render(*atlas, 0, iy, &rect);
+        rect = atlas->Get(8);
+        Render(*atlas, 29*24, iy, &rect);
+    }
 
-	/* Decoration, TODO */
-	Render(deco, 11, 17);
-	Render(deco, 266, 17);
+    /* Title box */
+    DrawRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
+    DrawRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
+
+    /* Decoration, TODO */
+    Render(deco, 11, 17);
+    Render(deco, 266, 17);
 
     ResetTarget();
 
@@ -100,10 +101,10 @@ bool GUI::InitializeUtils()
 
 void GUI::RenderMenuText(const std::wstring &text)
 {
-	if(text.empty()) return;
+    if(text.empty()) return;
 
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas().lock();
-	auto rect = interface_icons->Get(18);
+    auto rect = interface_icons->Get(18);
     Render(*interface_icons, 0.305, 0.52, &rect);
     RenderText(text.substr(0,1), 0.3095703125, 0.528, 0.5, FONT_SMALL, true);
     RenderText(text.substr(1,text.size()), 0.330078125, 0.528, 0.5, FONT_SMALL);
@@ -111,35 +112,36 @@ void GUI::RenderMenuText(const std::wstring &text)
 
 void GUI::RenderMenuBorder()
 {
-	if(_ed == STRONGHOLD_HD) {
-	    Render(*_tgx_border, &_border_rect);
-	}
+    if(_ed == STRONGHOLD_HD) {
+        Render(*_tgx_border, &_border_rect);
+    }
 }
 
 void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)
 {
-	SDL_Rect rect;
-	int x, y;
+    SDL_Rect rect;
+    int x, y;
 
-	switch(style)
-	{
-	case MENUBOX_LOAD_GAME: {
-		x = ToCoordX(0.0);
-		y = ToCoordY(0.0);
+    switch(style) {
+    case MENUBOX_LOAD_GAME: {
+        x = ToCoordX(0.0);
+        y = ToCoordY(0.0);
 
-		Render(_border_load, x, y);
-	} break;
-	case MENUBOX_BUILDER: {
+        Render(_border_load, x, y);
+    }
+    break;
+    case MENUBOX_BUILDER: {
 
-	} break;
-	case MENUBOX_CAMPAIGN: {
-	} break;
-	case MENUBOX_ENDGAME: {
+    } break;
+    case MENUBOX_CAMPAIGN: {
+    } break;
+    case MENUBOX_ENDGAME: {
 
-	} break;
-	case MENUBOX_ESC: {
+    } break;
+    case MENUBOX_ESC: {
 
-	} break;
-	default: break;
-	}
+    } break;
+    default:
+        break;
+    }
 }

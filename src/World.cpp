@@ -128,7 +128,7 @@ int World::Play()
             RenderMenubar();
             UpdateMenubar();
         }
-        
+
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, 0.5, FONT_SMALL);
 
         FlushDisplay();
@@ -252,7 +252,9 @@ void World::UpdateMenubar()
             if(ui_tabs[i].IsClicked())
             {
                 currentTab = static_cast<MenuPage>(i);
-            }else {
+            }
+            else
+            {
                 if(ui_tabs[i].IsMouseOver())return atlas->Get(_ui_tabs_indices[i][1]);
                 else return atlas->Get(_ui_tabs_indices[i][0]);
             }

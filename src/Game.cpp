@@ -89,7 +89,7 @@ int StartGame(GameOptions &opt)
         /* Render the loading bar */
         DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 128, true);
         DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 255, false);
-        DrawRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int((double)440*progress), 25, 0, 0, 0, 255, true);
+        DrawRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25, 0, 0, 0, 255, true);
 
         FlushDisplay();
         SyncDisplay();

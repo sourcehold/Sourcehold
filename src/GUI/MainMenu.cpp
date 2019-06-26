@@ -39,7 +39,7 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35, 4 },
     { 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52, 4 },
     { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0, 0 },
-    { 0.74,0.67,0.17578125,0.234375, L"", false, 70, 0, 2 }
+    { 0.70,0.67,0.17578125,0.234375, L"", false, 70, 0, 2 }
 };
 
 MainMenu::MainMenu()
@@ -112,6 +112,7 @@ UIState MainMenu::EnterMenu()
         /* Render the current menu on top of the background */
         HideAll();
 
+        selected = BUTTON_END;
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
         switch(currentState) {
         default:
@@ -149,7 +150,6 @@ UIState MainMenu::EnterMenu()
         break;
         }
 
-        selected = BUTTON_END;
         for(int i = buttonStart; i < buttonEnd; i++) {
             ui_elems[i].Show();
             ui_elems[i].Render(
@@ -159,11 +159,13 @@ UIState MainMenu::EnterMenu()
 
                 if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
                 {
-                    if (ui_elems[i].IsMouseOver()) {
+                    if (ui_elems[i].IsMouseOver())
+                    {
                         RenderMenuText(inf.text);
                         return tex->Get(inf.index + 1);
                     }
-                    else {
+                    else
+                    {
                         if(inf.hasGlare) {
                             return tex->Get(inf.glareIndex + (glareCounter % 14));
                         }
@@ -251,13 +253,14 @@ UIState MainMenu::EnterMenu()
         }
         break;
         case COMBAT_MULTIPLAYER: /* unsupported (yet) */
-        default: break;
+        default:
+            break;
         }
 
         RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, 1, FONT_SMALL);
 
         ResetTarget();
-        
+
         if(edition == STRONGHOLD_HD) {
             Render(screen, mx, my);
         }
@@ -314,7 +317,8 @@ void MainMenu::RenderBackToMain()
             RenderMenuText(inf.text);
             return tex->Get(inf.index + 1);
         }
-        else {
+        else
+        {
             return tex->Get(inf.index);
         }
     });
@@ -334,7 +338,8 @@ void MainMenu::RenderNext()
             RenderMenuText(inf.text);
             return tex->Get(inf.index + 1);
         }
-        else {
+        else
+        {
             return tex->Get(inf.index);
         }
     });

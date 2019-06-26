@@ -9,7 +9,9 @@ StaticElement::StaticElement(double x, double y, Texture *t) :
     nx = x;
     ny = y;
     tex = t;
-    ID = RegisterFrameTick([&](double) { mouseOver = IsMouseOverInternal(); });
+    ID = RegisterFrameTick([&](double) {
+        mouseOver = IsMouseOverInternal();
+    });
 }
 
 StaticElement::StaticElement(const StaticElement &elem) :
@@ -21,7 +23,9 @@ StaticElement::StaticElement(const StaticElement &elem) :
     this->ny = elem.ny;
     this->nw = elem.nw;
     this->nh = elem.nh;
-    ID = RegisterFrameTick([&](double) { mouseOver = IsMouseOverInternal(); });
+    ID = RegisterFrameTick([&](double) {
+        mouseOver = IsMouseOverInternal();
+    });
 }
 
 StaticElement::~StaticElement()
@@ -153,7 +157,8 @@ bool StaticElement::IsMouseOverInternal()
                 //return !(pixel & (uint32_t)0xFF);
             }
             return false;
-        }else {
+        }
+        else {
             return true;
         }
     }

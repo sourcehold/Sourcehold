@@ -23,4 +23,4 @@
 
 /* Configuration of hardcoded stuff */
 
-#define RENDER_LOADING_BORDER 0
+#define RENDER_LOADING_BORDER 1
