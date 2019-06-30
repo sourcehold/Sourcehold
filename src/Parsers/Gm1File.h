@@ -49,9 +49,6 @@ namespace Sourcehold {
             struct Gm1Header {
                 /* Unknown */
                 uint32_t u0[3];
-
-
-
                 /* Number of entries */
                 uint32_t num;
                 /* Unknown */
@@ -79,8 +76,6 @@ namespace Sourcehold {
             std::shared_ptr<TextureAtlas> textureAtlas;
             std::shared_ptr<Tileset> tileset;
             boost::filesystem::path path;
-            /* Color palette for tgx image entries */
-            uint16_t palette[2560];
             /* Offset of data section */
             uint32_t offData;
             /* If tileset, how many actual entries does it contain? */

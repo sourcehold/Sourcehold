@@ -38,6 +38,9 @@ struct Gm1File::ImageHeader {
     uint8_t color;
 };
 
+/* Will be overwritten when loading a new file. Not needed at runtime */
+static uint16_t palette[2560];
+
 struct Gm1File::Gm1Entry {
     ImageHeader header;
     uint32_t size;
@@ -198,6 +201,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded)
     }
 
     delete [] imgdata;
+
     return true;
 }
 
