@@ -22,7 +22,6 @@ namespace Sourcehold {
         public:
             Building(uint32_t mw = 160, uint32_t mh = 160);
             Building(std::weak_ptr<Gm1File> file, uint32_t x = 0, uint32_t y = 0, uint32_t mw = 160, uint32_t mh = 160);
-            Building(Building&) = delete;
             ~Building();
 
             /**

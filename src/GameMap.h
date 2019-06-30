@@ -18,16 +18,11 @@ namespace Sourcehold {
         class TgxFile;
     }
     namespace Game {
-        enum MapDimension : uint8_t {
-            WORLD_160,
-            WORLD_200,
-            WORLD_300,
-            WORLD_400
-        };
+        using namespace Assets;
 
         struct WorldInformation {
             MapDimension type;
-            std::map<uint16_t, bool> unlockedAssets;
+            std::map<Building, bool> unlockedBuildings;
         };
 
         struct MapTile {
