@@ -42,3 +42,8 @@ data
 ├── jester.ani
 └── sword.ani
 ```
+
+## Configuration
+This is either done by reading an existing Stronghold config file, found in your documents folder
+under `Stronghold/stronghold.cfg`, via command line or both. Options from the command line will
+overwrite the ones from the config. Available options are listed with the `--help` argument.
