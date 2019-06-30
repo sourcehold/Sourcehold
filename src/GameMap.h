@@ -26,7 +26,8 @@ namespace Sourcehold {
         };
 
         struct MapTile {
-            uint16_t tileset;
+            uint8_t tileset;
+            uint8_t height;
         };
 
         using namespace Rendering;
@@ -34,8 +35,7 @@ namespace Sourcehold {
 
         class GameMap {
             int mult = 1;
-            uint16_t maypole;
-            std::shared_ptr<Gm1File> gm1_tile, gm1_maypole, gm1_churches, gm1_anim;
+            std::shared_ptr<Gm1File> gm1_tile;
             std::shared_ptr<Tileset> tileset;
             std::vector<SDL_Rect> tiles;
         public:

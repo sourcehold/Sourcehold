@@ -72,6 +72,7 @@ namespace Sourcehold {
             void RenderMenubar();
             void UpdateMenubar();
             void UpdateCamera();
+            void LoadMenuAssets();
             void onEventReceive(Keyboard &keyEvent) override;
             void onEventReceive(Mouse &mouseEvent) override;
         };

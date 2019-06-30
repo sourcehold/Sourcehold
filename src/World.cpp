@@ -33,16 +33,12 @@ World::World() :
     EventConsumer<Keyboard>(),
     EventConsumer<Mouse>()
 {
-    /* The repeating, wooden background of the menu bar */
-    tgx_bar_bg = GetTgx(GetDirectory() / "gfx/1280r.tgx").lock();
-    /* The right side of the scribe/book */
-    tgx_right = GetTgx(GetDirectory() / "gfx/edge1280r.tgx").lock();
     /* The scribe's facial animation */
     gm1_scribe = GetGm1(GetDirectory() / "gm/scribe.gm1").lock();
-    /* The menu faces */
-    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1").lock();
     gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
     gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1").lock();
+
+    LoadMenuAssets();
 
     /* Init the on-screen menu */
     menubar.AllocNewTarget(240 + 800 + 240, 200);
@@ -199,7 +195,7 @@ void World::RenderQuickMenu()
 
 void World::RenderMenubar()
 {
-    Rendering::Render(menubar, menuX, menuY, menuW, menuH);
+    //Rendering::Render(menubar, menuX, menuY, menuW, menuH);
 }
 
 void World::UpdateMenubar()
@@ -291,6 +287,31 @@ void World::UpdateCamera()
     if(scroll.right) MoveRight();
     if(scroll.up) MoveUp();
     if(scroll.down) MoveDown();
+}
+
+static const char* _res_to_edge[][2] = {
+    { "edge1280", "edge_military_1280" },
+    { "edge1024", "edge_military_1024" },
+    { "edge1280", "edge_military_1280" },
+    { "edge1280", "edge_military_1280" },
+    { "edge1360", "edge_military_1360" },
+    { "edge1366", "edge_military_1366" },
+    { "edge1440", "edge_military_1440" },
+    { "edge1600", "edge_military_1600" },
+    { "edge1600", "edge_military_1600" },
+    { "edge1680", "edge_military_1680" },
+    { "edge1920", "edge_military_1920" }
+};
+
+void World::LoadMenuAssets()
+{
+    Resolution res = GetResolution();
+    std::string base(_res_to_edge[res][0]);
+
+    tgx_right = GetTgx(GetDirectory() / std::string("gfx/" + base + "r.tgx")).lock();
+    tgx_bar_bg = GetTgx(GetDirectory() / std::string("gfx/" + base + "l.tgx")).lock();
+
+    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1").lock();
 }
 
 void World::onEventReceive(Keyboard &keyEvent)
