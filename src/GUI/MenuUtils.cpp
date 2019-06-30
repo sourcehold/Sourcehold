@@ -18,12 +18,14 @@ static std::shared_ptr<Gm1File> _gm_interface_icons3;
 static std::shared_ptr<TgxFile> _tgx_border;
 static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
+static Resolution _res;
 static Texture _border_load;
 
 bool GUI::InitializeUtils()
 {
     _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1").lock();
     _ed = GetEdition();
+    _res = GetResolution();
     if(_ed == STRONGHOLD_HD) {
         _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
         /**
@@ -59,7 +61,7 @@ bool GUI::InitializeUtils()
 
     SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
 
-    DrawRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
+    RenderRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
 
     /* Corners */
     rect = atlas->Get(0);
@@ -87,8 +89,8 @@ bool GUI::InitializeUtils()
     }
 
     /* Title box */
-    DrawRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
-    DrawRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
+    RenderRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
+    RenderRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
 
     /* Decoration, TODO */
     Render(deco, 11, 17);
@@ -112,9 +114,7 @@ void GUI::RenderMenuText(const std::wstring &text)
 
 void GUI::RenderMenuBorder()
 {
-    if(_ed == STRONGHOLD_HD) {
-        Render(*_tgx_border, &_border_rect);
-    }
+    Render(*_tgx_border, &_border_rect);
 }
 
 void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)

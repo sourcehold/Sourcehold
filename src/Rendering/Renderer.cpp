@@ -163,7 +163,7 @@ void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     SDL_RenderFillRect(_renderer, nullptr);
 }
 
-void Rendering::DrawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
+void Rendering::RenderRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
 {
     SDL_SetRenderDrawColor(
         _renderer,
@@ -189,24 +189,24 @@ void Rendering::DrawRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, 
     }
 }
 
-void Rendering::DrawRect(double x, double y, double w, double h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
+void Rendering::RenderRect(double x, double y, double w, double h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
 {
     int ix = ToCoordX(x);
     int iy = ToCoordY(y);
     int sx = ToCoordX(w);
     int sy = ToCoordY(h);
-    DrawRect(ix, iy, sx, sy, r, g, b, a, solid);
+    RenderRect(ix, iy, sx, sy, r, g, b, a, solid);
 }
 
-void Rendering::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b)
+void Rendering::RenderLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
     int err = SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
 }
 
-void Rendering::DrawLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b)
+void Rendering::RenderLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b)
 {
-    DrawLine(
+    RenderLine(
         (int)ToCoordX(x1),
         (int)ToCoordY(y1),
         (int)ToCoordX(x2),

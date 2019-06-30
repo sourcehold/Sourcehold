@@ -36,6 +36,8 @@ int Startup::Begin()
     Uint8 alpha = 255;
     double fadeBase = startTime;
     Resolution res = GetResolution();
+    StrongholdEdition ed = GetEdition();
+
     while(Running()) {
         ClearDisplay();
 
@@ -72,6 +74,14 @@ int Startup::Begin()
             */
             int px = (GetWidth() / 2) - (1024 / 2);
             int py = (GetHeight() / 2) - (768 / 2);
+
+#if RENDER_LOADING_BORDER == 1
+            if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
+                RenderMenuBorder();
+                RenderRect(px, py, 1024, 768, 0, 0, 0, 255, true);
+            }
+#endif
+
             if(currentStartupState == STARTUP_FIREFLY_LOGO) {
                 tgx_firefly->SetAlphaMod(alpha);
                 if (res == RESOLUTION_800x600) {

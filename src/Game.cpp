@@ -68,11 +68,17 @@ int StartGame(GameOptions &opt)
     int py = (GetHeight() / 2) - (768 / 2);
 
     ResetTarget();
+
+    Resolution res = GetResolution();
+    StrongholdEdition ed = GetEdition();
+
     while(Running() && index < files.size()-1) {
         ClearDisplay();
 
 #if RENDER_LOADING_BORDER == 1
-        RenderMenuBorder();
+        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
+            RenderMenuBorder();
+        }
 #endif
 
         /* Load a file */
@@ -87,9 +93,9 @@ int StartGame(GameOptions &opt)
         Render(*tgx_loading, px, py);
 
         /* Render the loading bar */
-        DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 128, true);
-        DrawRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 255, false);
-        DrawRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25, 0, 0, 0, 255, true);
+        RenderRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 128, true);
+        RenderRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 255, false);
+        RenderRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25, 0, 0, 0, 255, true);
 
         FlushDisplay();
         SyncDisplay();

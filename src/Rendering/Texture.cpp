@@ -59,7 +59,6 @@ bool Texture::AllocFromSurface(Surface &surface)
 {
     width = surface.GetWidth();
     height = surface.GetHeight();
-    this->format = format;
     access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
