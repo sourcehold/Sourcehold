@@ -6,12 +6,15 @@
 
 #include <Parsers/Gm1File.h>
 #include <Parsers/TgxFile.h>
+
 #include <System/Logger.h>
+#include <System/Config.h>
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
+#pragma pack(push, 1)
 struct Gm1File::ImageHeader {
     /* Image dimensions */
     uint16_t width;
@@ -36,18 +39,21 @@ struct Gm1File::ImageHeader {
     uint8_t partWidth;
     /* Color */
     uint8_t color;
-};
+} ATTRIB_PACKED;
+#pragma pack(pop)
 
 /* Will be overwritten when loading a new file. Not needed at runtime */
 static uint16_t palette[2560];
 
+#pragma pack(push, 1)
 struct Gm1File::Gm1Entry {
     ImageHeader header;
     uint32_t size;
     uint32_t offset;
     uint16_t collection;
     uint16_t offX, offY, tileX, tileY;
-};
+} ATTRIB_PACKED;
+#pragma pack(pop)
 
 Gm1File::Gm1File() : Parser()
 {
@@ -187,7 +193,9 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded)
         /* Allocate images */
         std::vector<std::pair<uint32_t, uint32_t>> entryDims(header.num);
         for(n = 0; n < header.num; n++) {
-            std::pair<uint32_t, uint32_t> dim(entries[n].header.width, entries[n].header.height);
+            int w = entries[n].header.width;
+            int h = entries[n].header.height;
+            std::pair<uint32_t, uint32_t> dim(w, h);
             entryDims[n] = dim;
         }
         textureAtlas->Allocate(entryDims);

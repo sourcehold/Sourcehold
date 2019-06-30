@@ -1,14 +1,17 @@
 #include <Parsers/TgxFile.h>
+#include <System/Config.h>
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
+#pragma pack(push, 1)
 struct TgxFile::TgxHeader {
     uint16_t width;
     uint16_t u0;
     uint16_t height;
     uint16_t u1;
-};
+} ATTRIB_PACKED;
+#pragma pack(pop)
 
 TgxFile::TgxFile()
 {

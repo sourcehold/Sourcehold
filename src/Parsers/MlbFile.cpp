@@ -3,6 +3,7 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
+#pragma pack(push, 1)
 struct MlbFile::SectionHeader {
     uint32_t f1;
     uint32_t f2;
@@ -11,6 +12,7 @@ struct MlbFile::SectionHeader {
     /* Length of the following string (in characters) */
     uint32_t length;
 };
+#pragma pack(pop)
 
 MlbFile::MlbFile() : Parser()
 {
