@@ -38,7 +38,6 @@ static std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
 static std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;
 static std::unordered_map<std::string, std::shared_ptr<BinkVideo>> _bikFiles;
 static std::map<int, std::function<void(double)>> _tickFuncs;
-static std::shared_ptr<EventHandler> _eventHandler;
 static StrongholdEdition _edition;
 static bool _running = false;
 static double _time = 0.0;
@@ -102,7 +101,7 @@ static void DetectUsername()
 
 static void UpdateGame()
 {
-    if(!IsDisplayOpen() || !_eventHandler->FetchEvents()) _running = false;
+    if(!IsDisplayOpen() || !FetchEvents()) _running = false;
 
     /* TODO: accuracy */
     _time = SDL_GetTicks() / 1000.0;
@@ -208,7 +207,6 @@ bool Game::InitManager(GameOptions &opt)
         MuteOpenAL();
     }
 
-    _eventHandler = std::make_shared<EventHandler>();
     _running = true;
 
     return true;
@@ -375,11 +373,6 @@ void Game::DeregisterFrameTick(int ID)
 double Game::GetTime()
 {
     return _time;
-}
-
-std::shared_ptr<EventHandler> Game::GetHandler()
-{
-    return _eventHandler;
 }
 
 boost::filesystem::path Game::GetDirectory()

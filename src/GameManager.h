@@ -99,7 +99,6 @@ namespace Sourcehold {
         void DeregisterFrameTick(int ID);
 
         double GetTime();
-        std::shared_ptr<EventHandler> GetHandler();
         boost::filesystem::path GetDirectory();
         StrongholdEdition GetEdition();
         Resolution GetResolution();

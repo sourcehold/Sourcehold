@@ -1,8 +1,13 @@
+#include <SDL.h>
+#include <map>
+
 #include <Events/EventHandler.h>
 
-using namespace Sourcehold::Events;
+using namespace Sourcehold;
 
-bool EventHandler::FetchEvents()
+static std::map<int, std::function<void(SDL_Event&)>> _callbacks;
+
+bool Events::FetchEvents()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0) {
@@ -11,7 +16,7 @@ bool EventHandler::FetchEvents()
             return false;
         }
 
-        for(auto const& fn : callbacks) {
+        for(auto const& fn : _callbacks) {
             fn.second(event);
         }
     }
@@ -19,13 +24,13 @@ bool EventHandler::FetchEvents()
     return true;
 }
 
-int EventHandler::AddListener(std::function<void(SDL_Event&)> fn)
+int Events::AddEventListener(std::function<void(SDL_Event&)> fn)
 {
-    callbacks[callbacks.size()] = fn;
-    return callbacks.size();
+    _callbacks[_callbacks.size()] = fn;
+    return _callbacks.size();
 }
 
-void EventHandler::RemoveListener(int id)
+void Events::RemoveEventListener(int id)
 {
-    callbacks.erase(id);
+    _callbacks.erase(id);
 }

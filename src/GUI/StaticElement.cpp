@@ -4,7 +4,7 @@
 using namespace Sourcehold::Rendering;
 
 StaticElement::StaticElement(double x, double y, Texture *t) :
-    EventConsumer<Mouse>(GetHandler())
+    EventConsumer<Mouse>()
 {
     nx = x;
     ny = y;
@@ -15,7 +15,7 @@ StaticElement::StaticElement(double x, double y, Texture *t) :
 }
 
 StaticElement::StaticElement(const StaticElement &elem) :
-    EventConsumer<Mouse>(GetHandler())
+    EventConsumer<Mouse>()
 {
     this->tex = elem.tex;
     this->shown = elem.shown;

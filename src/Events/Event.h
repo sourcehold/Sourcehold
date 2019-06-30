@@ -66,18 +66,16 @@ namespace Sourcehold {
          */
         template<class T>
         class EventConsumer {
-            std::shared_ptr<EventHandler> _handler;
             T event;
             int id = 0;
         public:
             ~EventConsumer() {
-                _handler->RemoveListener(id);
+                RemoveEventListener(id);
             };
             EventConsumer(const EventConsumer &) = delete;
-            EventConsumer(std::shared_ptr<EventHandler> handler, std::list<EventType> types = { DUMMY }) : event(types) {
-                _handler = handler;
+            EventConsumer(std::list<EventType> types = { DUMMY }) : event(types) {
                 std::function<void(SDL_Event&)> fn(std::bind(&EventConsumer::_callback, this, std::placeholders::_1));
-                id = handler->AddListener(fn);
+                id = AddEventListener(fn);
             }
         protected:
             void _callback(SDL_Event &ev) {

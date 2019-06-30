@@ -30,8 +30,8 @@ static uint16_t _ui_tabs_indices[6][3] = {
 };
 
 World::World() :
-    EventConsumer<Keyboard>(GetHandler()),
-    EventConsumer<Mouse>(GetHandler())
+    EventConsumer<Keyboard>(),
+    EventConsumer<Mouse>()
 {
     /* The repeating, wooden background of the menu bar */
     tgx_bar_bg = GetTgx(GetDirectory() / "gfx/1280r.tgx").lock();

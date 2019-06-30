@@ -6,7 +6,7 @@ using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
 Startup::Startup() :
-    EventConsumer<Mouse>(GetHandler())
+    EventConsumer<Mouse>()
 {
 }
 

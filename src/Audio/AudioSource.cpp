@@ -225,9 +225,9 @@ void AudioSource::Destroy()
         }
 
         alDeleteSources(1, &source);
-        Audio::PrintError();
+        //Audio::PrintError();
         alDeleteBuffers(1, &buffer);
-        Audio::PrintError();
+        //Audio::PrintError();
 
         if (ffmpegRunning || mode == MODE_PCM) {
             free(ptr);

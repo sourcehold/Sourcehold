@@ -69,7 +69,7 @@ const static wchar_t *credit_lines_firefly[] = {
 };
 
 Credits::Credits() :
-    EventConsumer<Mouse>(GetHandler())
+    EventConsumer<Mouse>()
 {
 }
 
