@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <vector>
-#include <thread>
-#include <atomic>
 #include <climits>
 
 #include <Parsers/Gm1File.h>
@@ -66,7 +64,7 @@ Gm1File::Gm1File(boost::filesystem::path path) : Parser()
     textureAtlas = std::make_shared<TextureAtlas>();
     tileset = std::make_shared<Tileset>();
 
-    this->LoadFromDisk(path, false);
+    this->LoadFromDisk(path);
 }
 
 Gm1File::~Gm1File()
@@ -74,7 +72,7 @@ Gm1File::~Gm1File()
 
 }
 
-bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded)
+bool Gm1File::LoadFromDisk(boost::filesystem::path path)
 {
     this->path = path;
 
@@ -152,7 +150,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool threaded)
             uint32_t cnt = uint32_t(entries[currentEntry].header.parts);
 
             /* Go through every entry and find the image bounds */
-            for(int i = currentEntry; i < currentEntry + cnt; i++) {
+            for(uint32_t i = currentEntry; i < currentEntry + cnt; i++) {
                 uint32_t x = entries[i].header.offsetX;
                 uint32_t y = entries[i].header.offsetY;
                 uint32_t w = entries[i].header.width;
@@ -235,12 +233,12 @@ bool Gm1File::GetImage(uint32_t index)
     case Gm1Header::TYPE_FONT:
     case Gm1Header::TYPE_CONSTSIZE: {
         SDL_Rect part = textureAtlas->Get(index);
-        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, nullptr, 0);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, nullptr, 0);
     }
     break;
     case Gm1Header::TYPE_ANIMATION: {
         SDL_Rect part = textureAtlas->Get(index);
-        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, part.w, part.h, palette, entries[index].header.color % 10);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, palette, entries[index].header.color % 10);
     }
     break;
     case Gm1Header::TYPE_TILE: {
@@ -253,8 +251,6 @@ bool Gm1File::GetImage(uint32_t index)
                          entries[index].size-512,
                          part.x + entries[index].offX,
                          part.y + entries[index].offY,
-                         part.w,
-                         part.h,
                          nullptr,
                          0);
 

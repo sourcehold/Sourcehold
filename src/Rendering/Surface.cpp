@@ -17,6 +17,7 @@ bool Surface::AllocNew(int width, int height, int format)
 {
     this->width = width;
     this->height = height;
+    this->format = format;
     surface = SDL_CreateRGBSurface(
                   0,
                   width,

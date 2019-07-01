@@ -257,7 +257,7 @@ UIState MainMenu::EnterMenu()
             break;
         }
 
-        RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, 1, FONT_SMALL);
+        RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, FONT_SMALL);
 
         ResetTarget();
 

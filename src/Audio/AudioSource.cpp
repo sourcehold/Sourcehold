@@ -302,7 +302,7 @@ void AudioSource::Update()
 
                     /* Setup audio queue */
                     alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-                    for (int i = 0; i < NUM_AUDIO_BUFFERS; i++) {
+                    for (uint32_t i = 0; i < NUM_AUDIO_BUFFERS; i++) {
                         alFreeBuffers[i] = alBuffers[i];
                     }
 
@@ -354,12 +354,11 @@ void AudioSource::Update()
 
                         ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
                         uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
-                        uint32_t dataSize = numSamples * 2;
 
                         /* Convert samples */
                         unsigned short* src = (unsigned short*)audioFrame->extended_data[0];
                         int16_t *dst = (int16_t*)ptr;
-                        for (int i = 0; i < numSamples; i++)
+                        for (uint32_t i = 0; i < numSamples; i++)
                             dst[i] = src[i];
 
                         alSourceStop(source);

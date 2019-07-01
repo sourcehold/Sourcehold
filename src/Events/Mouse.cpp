@@ -2,7 +2,7 @@
 
 using namespace Sourcehold::Events;
 
-Mouse::Mouse(std::list<EventType> types)
+Mouse::Mouse()
 {
 
 }

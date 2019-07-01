@@ -119,7 +119,6 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
         ClearDisplay();
 
         double now = GetTime();
-        double delta = now - fadeBase;
 
         if(now < fadeBase + 2.0) {
             alpha = Uint8(((now - fadeBase) * 255.0) / 2.0);
@@ -181,11 +180,11 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
         Render(*tgx_firefly, sx, sy);
         sy += 122 + 30;
 
-        for(int i = 0;
+        for(uint32_t i = 0;
                 sy < GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
                 i++, sy += 46) {
             const wchar_t *line = credit_lines_firefly[i];
-            RenderText(line, sx, sy, 1, FONT_SMALL);
+            RenderText(line, sx, sy, FONT_SMALL);
         }
 
         // TODO: Rest of credits, colored titles

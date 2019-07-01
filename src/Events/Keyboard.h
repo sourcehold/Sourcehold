@@ -12,11 +12,10 @@ namespace Sourcehold {
          * Keyboard event handler
          */
         class Keyboard : public Event {
-            std::list<EventType> types;
             SDL_Event event;
             EventType type;
         public:
-            Keyboard(std::list<EventType> types);
+            Keyboard();
             Keyboard(const Keyboard &key) = delete;
             ~Keyboard();
 

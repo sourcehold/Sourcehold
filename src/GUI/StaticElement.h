@@ -37,7 +37,7 @@ namespace Sourcehold {
         public:
             StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
             StaticElement(const StaticElement &elem);
-            ~StaticElement();
+            virtual ~StaticElement();
 
             void Hide();
             void Show();

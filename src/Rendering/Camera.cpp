@@ -5,7 +5,7 @@
 using namespace Sourcehold;
 using namespace Rendering;
 
-static SDL_Rect bounds;
+static SDL_Rect _bounds;
 static Rotation rotation = UP;
 static ZoomLevel zoomLevel = ZOOM_FAR;
 static const uint8_t zoomStep = 2;
@@ -26,7 +26,7 @@ SDL_Rect Rendering::GetVisibleArea()
 
 void Rendering::SetBounds(SDL_Rect bounds)
 {
-    bounds = bounds;
+    _bounds = bounds;
 }
 
 void Rendering::MoveLeft()
@@ -55,8 +55,8 @@ void Rendering::UpdateCamera()
     int32_t px = speed * momentumX, py = speed * momentumY;
     TranslateCam(px, py);
 
-    if(positionX < bounds.x) positionX = bounds.x;
-    if(positionY < bounds.y) positionY = bounds.y;
+    if(positionX < _bounds.x) positionX = _bounds.x;
+    if(positionY < _bounds.y) positionY = _bounds.y;
 
     SDL_Rect area = GetVisibleArea();
 }

@@ -17,7 +17,7 @@ namespace Sourcehold {
 
         bool LoadFonts();
         void UnloadFonts();
-        void RenderText(const std::wstring& text, int32_t x, int32_t y, double scaleFactor = 1, Font type = FONT_SMALL, bool illumination = false);
-        void RenderText(const std::wstring& text, double x, double y, double scaleFactor = 1, Font type = FONT_SMALL, bool illumination = false);
+        void RenderText(const std::wstring& text, int32_t x, int32_t y, Font type = FONT_SMALL, bool illumination = false);
+        void RenderText(const std::wstring& text, double x, double y, Font type = FONT_SMALL, bool illumination = false);
     }
 }

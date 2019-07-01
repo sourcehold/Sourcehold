@@ -201,7 +201,7 @@ void Rendering::RenderRect(double x, double y, double w, double h, Uint8 r, Uint
 void Rendering::RenderLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
-    int err = SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
 }
 
 void Rendering::RenderLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b)

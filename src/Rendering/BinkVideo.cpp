@@ -13,8 +13,6 @@ using namespace System;
 using namespace Audio;
 using namespace Rendering;
 
-static AVCodec *bink_codec;
-
 BinkVideo::BinkVideo() : Texture()
 {
     ic = avformat_alloc_context();
@@ -245,7 +243,7 @@ void BinkVideo::Update()
 
                 /* Setup audio queue */
                 alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-                for (int i = 0; i < NUM_AUDIO_BUFFERS; i++) {
+                for (uint32_t i = 0; i < NUM_AUDIO_BUFFERS; i++) {
                     alFreeBuffers[i] = alBuffers[i];
                 }
 
@@ -295,7 +293,7 @@ void BinkVideo::Update()
                 /* Convert samples */
                 float *src = (float*)audioFrame->extended_data[0];
                 short *dst = (short*)audioBuffer;
-                for (int i = 0; i < numSamples; i++) {
+                for (uint32_t i = 0; i < numSamples; i++) {
                     float v = src[i] * 32768.0f;
                     if (v > 32767.0f) v = 32767.0f;
                     if (v < -32768.0f) v = 32768.0f;

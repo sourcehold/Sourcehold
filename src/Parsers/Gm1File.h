@@ -29,7 +29,7 @@ namespace Sourcehold {
             Gm1File& operator=(const Gm1File&)= delete;
             ~Gm1File();
 
-            bool LoadFromDisk(boost::filesystem::path path, bool threaded = false);
+            bool LoadFromDisk(boost::filesystem::path path);
             void DumpInformation();
             void Free();
 

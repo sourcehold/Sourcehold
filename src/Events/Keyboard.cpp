@@ -2,14 +2,12 @@
 
 using namespace Sourcehold::Events;
 
-Keyboard::Keyboard(std::list<EventType> types)
+Keyboard::Keyboard()
 {
-    this->types = types;
 }
 
 Keyboard::~Keyboard()
 {
-
 }
 
 SDL_Keysym Keyboard::Key()

@@ -8,17 +8,17 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
 Texture::Texture() :
-    angle(0.0),
     width(0),
     height(0),
+    angle(0.0),
     flip(SDL_FLIP_NONE)
 {
 }
 
 Texture::Texture(const Texture &tex) :
-    angle(0.0),
     width(0),
     height(0),
+    angle(0.0),
     flip(SDL_FLIP_NONE)
 {
     this->texture = tex.texture;
@@ -171,7 +171,7 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
         oh = rect->h;
     }
 
-    if( x + ow > width || y + oh > height ) {
+    if( int(x + ow) > width || int(y + oh) > height ) {
         Logger::error("RENDERING") << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
         return;
     }

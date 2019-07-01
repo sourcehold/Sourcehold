@@ -31,7 +31,7 @@ void Rendering::UnloadFonts()
     _fonts[2].reset();
 }
 
-void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, double scaleFactor, Font type, bool illumination)
+void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font type, bool illumination)
 {
     auto font = _fonts[type];
     if (illumination && text.size() != 1) {
@@ -86,9 +86,9 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, doubl
     }
 }
 
-void Rendering::RenderText(const std::wstring& text, double x, double y, double scaleFactor, Font type, bool illumination)
+void Rendering::RenderText(const std::wstring& text, double x, double y, Font type, bool illumination)
 {
     int32_t rx = ToCoordX(GetTargetWidth() * x);
     int32_t ry = ToCoordY(GetTargetHeight() * y);
-    RenderText(text, rx, ry, scaleFactor, type, illumination);
+    RenderText(text, rx, ry, type, illumination);
 }

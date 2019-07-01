@@ -1,7 +1,5 @@
 #pragma once
 
-#include <list>
-
 #include <SDL.h>
 
 #include <Events/Event.h>
@@ -12,11 +10,10 @@ namespace Sourcehold {
          * Mouse event handler
          */
         class Mouse : public Event {
-            std::list<EventType> types;
             SDL_Event event;
             EventType type;
         public:
-            Mouse(std::list<EventType> types);
+            Mouse();
             Mouse(const Mouse &mouse) = delete;
             ~Mouse();
 

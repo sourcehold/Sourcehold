@@ -15,6 +15,7 @@ namespace Sourcehold {
             SDL_Surface *surface;
             bool locked = false;
             bool valid = false;
+            int format;
             Uint32 *pixels = nullptr;
             uint32_t width, height;
         public:

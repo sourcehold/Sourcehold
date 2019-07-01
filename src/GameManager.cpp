@@ -84,7 +84,7 @@ static void DetectUsername()
         }
     }
     /* Look-up the name and store the index */
-    for(int i = 0; i < lut_names.size(); i++) {
+    for(size_t i = 0; i < lut_names.size(); i++) {
         const wchar_t *name = lut_names[i];
         if(!wcscmp(name, boost::to_upper_copy<std::wstring>(username).c_str())) {
             /* Prevent names like 'Lord Cindy' or 'Lady Aaron', no offense */

@@ -73,7 +73,7 @@ namespace Sourcehold {
                 RemoveEventListener(id);
             };
             EventConsumer(const EventConsumer &) = delete;
-            EventConsumer(std::list<EventType> types = { DUMMY }) : event(types) {
+            EventConsumer() : event() {
                 std::function<void(SDL_Event&)> fn(std::bind(&EventConsumer::_callback, this, std::placeholders::_1));
                 id = AddEventListener(fn);
             }

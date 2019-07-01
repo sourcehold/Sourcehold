@@ -76,7 +76,7 @@ if(MSVC)
 		set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
-	add_definitions(-Wno-reorder -pedantic-errors -Ofast)
+	add_definitions(-Wno-reorder -pedantic-errors -Ofast -Wall -Wextra)
 endif()
 
 add_executable(Stronghold ${SOURCES} ${HEADERS})
