@@ -123,6 +123,13 @@ namespace Sourcehold {
             PORTABLE_SHIELD
         };
 
+        enum class MapType : uint8_t {
+            SIEGE = 0x00,
+            INVASION,
+            ECONOMIC,
+            LANDSCAPE
+        };
+
         // ----------------------------------------------------
         // Text-related
 
