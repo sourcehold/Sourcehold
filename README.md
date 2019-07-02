@@ -1,5 +1,4 @@
-Sourcehold [![Build Status](https://travis-ci.org/metalvoidzz/Sourcehold.svg?branch=master)](https://travis-ci.org/metalvoidzz/Sourcehold)
-======
+# Sourcehold [![Build Status](https://travis-ci.org/metalvoidzz/Sourcehold.svg?branch=master)](https://travisci.org/metalvoidzz/Sourcehold) [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://www.discord.gg/736X9H)
 
 Open source engine implementation of Stronghold by Firefly Studios. This project is currently in an early stage of development. Once completed, it should be able to replace all editions of classic Stronghold, including the HD remaster.
 
