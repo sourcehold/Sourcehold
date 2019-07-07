@@ -23,13 +23,13 @@ void Startup::PlayMusic()
 
 int Startup::Begin()
 {
-    tgx_firefly = GetTgx(GetDirectory() / "gfx/logo1.tgx").lock();
-    tgx_taketwo = GetTgx(GetDirectory() / "gfx/logo2.tgx").lock();
-    tgx_present = GetTgx(GetDirectory() / "gfx/logo3.tgx").lock();
-    tgx_logo = GetTgx(GetDirectory() / "gfx/startup screen.tgx").lock();
-    tgx_firefly_front = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
+    tgx_firefly = GetTgx(GetDirectory() / "gfx/logo1.tgx");
+    tgx_taketwo = GetTgx(GetDirectory() / "gfx/logo2.tgx");
+    tgx_present = GetTgx(GetDirectory() / "gfx/logo3.tgx");
+    tgx_logo = GetTgx(GetDirectory() / "gfx/startup screen.tgx");
+    tgx_firefly_front = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx");
 
-    intro = GetBik(GetDirectory() / "binks/intro.bik").lock();
+    intro = GetBik(GetDirectory() / "binks/intro.bik");
 
     startTime = GetTime();
 

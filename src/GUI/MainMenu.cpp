@@ -56,27 +56,27 @@ MainMenu::MainMenu()
 
     aud_chantloop.LoadSong(GetDirectory() / "fx/music/chantloop1.raw", true);
 
-    gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1").lock();
-    gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
-    gm1_icons_combat = GetGm1(GetDirectory() / "gm/icons_front_end_combat.gm1").lock();
-    gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1").lock();
-    gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1").lock();
+    gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1");
+    gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
+    gm1_icons_combat = GetGm1(GetDirectory() / "gm/icons_front_end_combat.gm1");
+    gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1");
+    gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1");
 
-    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx").lock();
-    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx").lock();
-    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx").lock();
-    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder2.tgx").lock();
+    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx");
+    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
+    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx");
+    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder2.tgx");
 
     aud_greetings.LoadEffect(GetGreetingsSound(), false);
     aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 
     /* Get textures */
     ui_tex.resize(5);
-    ui_tex[0] = gm1_icons_main->GetTextureAtlas().lock();
-    ui_tex[1] = gm1_icons_additional->GetTextureAtlas().lock();
-    ui_tex[2] = gm1_icons_combat->GetTextureAtlas().lock();
-    ui_tex[3] = gm1_icons_economic->GetTextureAtlas().lock();
-    ui_tex[4] = gm1_icons_builder->GetTextureAtlas().lock();
+    ui_tex[0] = gm1_icons_main->GetTextureAtlas();
+    ui_tex[1] = gm1_icons_additional->GetTextureAtlas();
+    ui_tex[2] = gm1_icons_combat->GetTextureAtlas();
+    ui_tex[3] = gm1_icons_economic->GetTextureAtlas();
+    ui_tex[4] = gm1_icons_builder->GetTextureAtlas();
 
     /* Allocate buttons */
     ui_elems.resize(BUTTON_END);

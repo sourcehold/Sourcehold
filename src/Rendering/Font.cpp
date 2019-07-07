@@ -17,9 +17,9 @@ static std::pair<uint8_t, uint8_t> _table_width_height[3] = {
 
 bool Rendering::LoadFonts()
 {
-    _fonts[0] = GetGm1(GetDirectory() / "gm/font_slanted.gm1").lock();
-    _fonts[1] = GetGm1(GetDirectory() / "gm/font_stronghold.gm1").lock();
-    _fonts[2] = GetGm1(GetDirectory() / "gm/font_stronghold_aa.gm1").lock();
+    _fonts[0] = GetGm1(GetDirectory() / "gm/font_slanted.gm1");
+    _fonts[1] = GetGm1(GetDirectory() / "gm/font_stronghold.gm1");
+    _fonts[2] = GetGm1(GetDirectory() / "gm/font_stronghold_aa.gm1");
 
     return true;
 }
@@ -73,8 +73,8 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
             default:
                 break;
             }
-            glyph = font->GetTextureAtlas().lock()->Get(c - 0x21);
-            Render(*font->GetTextureAtlas().lock(),
+            glyph = font->GetTextureAtlas()->Get(c - 0x21);
+            Render(*font->GetTextureAtlas(),
                    illumination ? (x + (13 - glyph.w)/2) : x,
                    y + _table_width_height[type].second - glyph.h + lowercaseOffset,
                    glyph.w,

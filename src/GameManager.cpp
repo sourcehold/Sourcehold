@@ -15,6 +15,7 @@
 #include <Parsers/TgxFile.h>
 #include <Parsers/Gm1File.h>
 #include <Parsers/AniFile.h>
+#include <Parsers/HlpFile.h>
 
 #include <Audio/Audio.h>
 
@@ -266,8 +267,9 @@ bool Game::LoadGameData()
     }
 
     /* Load special files */
-    if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
+    //if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
     if(!_cfg.LoadFromDisk(cfgPath)) return false;
+    if(!LoadStrongholdHlp()) return false;
 
     DetectEdition();
     DetectUsername();
@@ -395,7 +397,7 @@ int Game::GetUsernameIndex()
     return _usernameIndex;
 }
 
-std::weak_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
+std::shared_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
 {
     if(_tgxFiles.count(filename.string())) {
         return _tgxFiles.at(filename.string());
@@ -405,7 +407,7 @@ std::weak_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
     return iter.first->second;
 }
 
-std::weak_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
+std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
 {
     if(_gm1Files.count(filename.string())) {
         return _gm1Files.at(filename.string());
@@ -415,7 +417,7 @@ std::weak_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
     return iter.first->second;
 }
 
-std::weak_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
+std::shared_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
 {
     if(_aniFiles.count(filename.string())) {
         return _aniFiles.at(filename.string());
@@ -425,7 +427,7 @@ std::weak_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
     return iter.first->second;
 }
 
-std::weak_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
+std::shared_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
 {
     if(_bikFiles.count(filename.string())) {
         return _bikFiles.at(filename.string());

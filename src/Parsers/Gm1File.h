@@ -33,10 +33,10 @@ namespace Sourcehold {
             void DumpInformation();
             void Free();
 
-            inline std::weak_ptr<Tileset> GetTileset() {
+            inline std::shared_ptr<Tileset> GetTileset() {
                 return tileset;
             }
-            inline std::weak_ptr<TextureAtlas> GetTextureAtlas() {
+            inline std::shared_ptr<TextureAtlas> GetTextureAtlas() {
                 return textureAtlas;
             }
         protected:

@@ -23,11 +23,11 @@ static Texture _border_load;
 
 bool GUI::InitializeUtils()
 {
-    _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1").lock();
+    _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1");
     _ed = GetEdition();
     _res = GetResolution();
     if(_ed == STRONGHOLD_HD) {
-        _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx").lock();
+        _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx");
         /**
          * Render the border 'zoomed in' so that the
          * menu can be placed in the middle without scaling.
@@ -38,7 +38,7 @@ bool GUI::InitializeUtils()
         _border_rect.h = GetHeight();
     }
 
-    auto atlas = _gm_interface_icons3->GetTextureAtlas().lock();
+    auto atlas = _gm_interface_icons3->GetTextureAtlas();
 
     /* Precalculate blending */
     Texture deco;
@@ -105,7 +105,7 @@ void GUI::RenderMenuText(const std::wstring &text)
 {
     if(text.empty()) return;
 
-    std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas().lock();
+    std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
     Render(*interface_icons, 0.305, 0.52, &rect);
     RenderText(text.substr(0,1), 0.3095703125, 0.528, FONT_SMALL, true);

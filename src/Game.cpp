@@ -31,34 +31,16 @@ void Cleanup()
     DestroyManager();
 }
 
-int StartGame(GameOptions &opt)
+int EnterLoadingScreen()
 {
-    if(!InitManager(opt) || !LoadGameData()) {
-        Logger::error("GAME") << "Error while initializing game!" << std::endl;
-        return EXIT_FAILURE;
-    }
+    std::shared_ptr<TgxFile> tgx_loading = GetTgx(GetDirectory() / "gfx/frontend_loading.tgx");
 
     /* Get the assets */
-    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(opt.dataDir, ".tgx");
+    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
     if(files.empty()) {
         Logger::error("GAME") << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
         return EXIT_FAILURE;
     }
-
-    if(!LoadFonts()) {
-        Logger::error("GAME") << "Error while loading fonts!" << std::endl;
-        return EXIT_FAILURE;
-    }
-    if(!InitializeUtils()) {
-        Logger::error("GAME") << "Error while initializing menu utils!" << std::endl;
-        return EXIT_FAILURE;
-    }
-
-    std::shared_ptr<TgxFile> tgx_loading = GetTgx(GetDirectory() / "gfx/frontend_loading.tgx").lock();
-
-    /* Init the menu */
-    Startup menu;
-    menu.PlayMusic();
 
     /* Preload some assets */
     uint32_t index = 0;
@@ -101,21 +83,36 @@ int StartGame(GameOptions &opt)
         SyncDisplay();
     }
 
-    if(Running()) {
-        /* Start the intro sequence and the main menu */
-        int ret = menu.Begin();
-        if (ret != EXIT_SUCCESS) {
-            Cleanup();
-            return ret;
-        }
+    return Running() ? EXIT_SUCCESS : EXIT_FAILURE;
+}
 
-        /* ------ Alpha testing ------ */
-        //AudioSource aud(GetDirectory() / "fx/music/underanoldtree.raw", true);
-        //aud.Play();
+int StartGame(GameOptions &opt)
+{
+    if(!InitManager(opt) || !LoadGameData()) {
+        Logger::error("GAME") << "Error while initializing game!" << std::endl;
+        return EXIT_FAILURE;
+    }
+    if(!LoadFonts()) {
+        Logger::error("GAME") << "Error while loading fonts!" << std::endl;
+        return EXIT_FAILURE;
+    }
+    if(!InitializeUtils()) {
+        Logger::error("GAME") << "Error while initializing menu utils!" << std::endl;
+        return EXIT_FAILURE;
+    }
 
-        World world;
-        world.Play();
-        /* ------ Alpha testing ------ */
+    /* Init the startup sequence */
+    Startup start;
+    start.PlayMusic();
+
+    int ret = EnterLoadingScreen();
+    if(ret != EXIT_SUCCESS) return ret;
+
+    /* Start the intro sequence and the main menu */
+    ret = start.Begin();
+    if (ret != EXIT_SUCCESS) {
+        Cleanup();
+        return ret;
     }
 
     Cleanup();

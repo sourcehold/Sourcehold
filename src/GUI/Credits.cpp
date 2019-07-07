@@ -87,17 +87,17 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
 
     if(endgame) {
         music.LoadSong(GetDirectory() / "fx/music/Glory_06.raw", true);
-        tgx_credits = GetTgx(GetDirectory() / "gfx/end_credit.tgx").lock();
+        tgx_credits = GetTgx(GetDirectory() / "gfx/end_credit.tgx");
     }
     else {
         music.LoadSong(GetDirectory() / "fx/music/castlejam.raw", true);
-        tgx_1 = GetTgx(GetDirectory() / "gfx/credits_1.tgx").lock();
-        tgx_2 = GetTgx(GetDirectory() / "gfx/credits_2.tgx").lock();
-        tgx_3 = GetTgx(GetDirectory() / "gfx/credits_3.tgx").lock();
-        tgx_4 = GetTgx(GetDirectory() / "gfx/credits_4.tgx").lock();
+        tgx_1 = GetTgx(GetDirectory() / "gfx/credits_1.tgx");
+        tgx_2 = GetTgx(GetDirectory() / "gfx/credits_2.tgx");
+        tgx_3 = GetTgx(GetDirectory() / "gfx/credits_3.tgx");
+        tgx_4 = GetTgx(GetDirectory() / "gfx/credits_4.tgx");
     }
 
-    tgx_firefly = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx").lock();
+    tgx_firefly = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx");
 
     music.Play();
 

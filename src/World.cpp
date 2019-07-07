@@ -34,9 +34,9 @@ World::World() :
     EventConsumer<Mouse>()
 {
     /* The scribe's facial animation */
-    gm1_scribe = GetGm1(GetDirectory() / "gm/scribe.gm1").lock();
-    gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1").lock();
-    gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1").lock();
+    gm1_scribe = GetGm1(GetDirectory() / "gm/scribe.gm1");
+    gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
+    gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1");
 
     LoadMenuAssets();
 
@@ -51,13 +51,13 @@ World::World() :
     SetTarget(&menubar, menuX, menuY, menuW, menuH);
 
     /* Init the buttons */
-    auto atlas = gm1_floats->GetTextureAtlas().lock();
+    auto atlas = gm1_floats->GetTextureAtlas();
     ui_compass.SetTexture(atlas.get());
     ui_hide.SetTexture(atlas.get());
     ui_magnify.SetTexture(atlas.get());
     ui_lower.SetTexture(atlas.get());
 
-    atlas = gm1_icons->GetTextureAtlas().lock();
+    atlas = gm1_icons->GetTextureAtlas();
     SDL_Rect rect = atlas->Get(25);
     ui_disk.Translate(753, 72);
     ui_disk.Scale(rect.w, rect.h);
@@ -136,7 +136,7 @@ int World::Play()
 
 void World::RenderQuickMenu()
 {
-    auto atlas = gm1_floats->GetTextureAtlas().lock();
+    auto atlas = gm1_floats->GetTextureAtlas();
 
     SDL_Rect rect = atlas->Get(37);
     ui_compass.Translate(int(mouseX - (rect.w / 2)), int(mouseY - rect.h - 25));
@@ -205,17 +205,17 @@ void World::UpdateMenubar()
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
 
     /* TODO: Less hardcoding */
-    auto atlas = gm1_face->GetTextureAtlas().lock();
+    auto atlas = gm1_face->GetTextureAtlas();
     SDL_Rect rect = atlas->Get(0);
     Rendering::Render(*atlas, width - 800 - 240, height - rect.h, &rect);
 
-    atlas = gm1_scribe->GetTextureAtlas().lock();
+    atlas = gm1_scribe->GetTextureAtlas();
     rect = atlas->Get(0);
     Rendering::Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);
     Rendering::Render(*tgx_right, width - tgx_right->GetWidth(), height - tgx_right->GetHeight());
     Rendering::Render(*tgx_bar_bg, 0, height - tgx_bar_bg->GetHeight());
 
-    atlas = gm1_icons->GetTextureAtlas().lock();
+    atlas = gm1_icons->GetTextureAtlas();
 
     /* Render the menu buttons */
     ui_disk.Render(
@@ -308,10 +308,10 @@ void World::LoadMenuAssets()
     Resolution res = GetResolution();
     std::string base(_res_to_edge[res][0]);
 
-    tgx_right = GetTgx(GetDirectory() / std::string("gfx/" + base + "r.tgx")).lock();
-    tgx_bar_bg = GetTgx(GetDirectory() / std::string("gfx/" + base + "l.tgx")).lock();
+    tgx_right = GetTgx(GetDirectory() / std::string("gfx/" + base + "r.tgx"));
+    tgx_bar_bg = GetTgx(GetDirectory() / std::string("gfx/" + base + "l.tgx"));
 
-    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1").lock();
+    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1");
 }
 
 void World::onEventReceive(Keyboard &keyEvent)

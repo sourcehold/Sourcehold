@@ -107,9 +107,9 @@ namespace Sourcehold {
         /**
          * Asset getter functions
          */
-        std::weak_ptr<TgxFile> GetTgx(boost::filesystem::path filename);
-        std::weak_ptr<Gm1File> GetGm1(boost::filesystem::path filename);
-        std::weak_ptr<AniFile> GetAni(boost::filesystem::path filename);
-        std::weak_ptr<BinkVideo> GetBik(boost::filesystem::path filename);
+        std::shared_ptr<TgxFile> GetTgx(boost::filesystem::path filename);
+        std::shared_ptr<Gm1File> GetGm1(boost::filesystem::path filename);
+        std::shared_ptr<AniFile> GetAni(boost::filesystem::path filename);
+        std::shared_ptr<BinkVideo> GetBik(boost::filesystem::path filename);
     }
 }
