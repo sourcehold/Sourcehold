@@ -1,4 +1,4 @@
-# Sourcehold [![Build Status](https://travis-ci.org/metalvoidzz/Sourcehold.svg?branch=master)](https://travisci.org/metalvoidzz/Sourcehold) [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://www.discord.gg/736X9H)
+# Sourcehold [![Build Status](https://travis-ci.org/sourcehold/Sourcehold.svg?branch=master)](https://travisci.org/sourcehold/Sourcehold) [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://www.discord.gg/736X9H)
 
 Open source engine implementation of Stronghold by Firefly Studios. This project is currently in an early stage of development. Once completed, it should be able to replace all editions of classic Stronghold, including the HD remaster.
 
@@ -24,7 +24,8 @@ Sourcehold depends on the following libraries:
 * Boost (filesystem)
 
 ## Running
-Copy the following files into the `data` folder:  
+Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy
+the files to a directory called `data` in the main folder of Sourcehold. The directory should look like this:
 
 ```
 data
@@ -33,6 +34,7 @@ data
 ├── gfx/
 ├── gfx8/
 ├── gm/
+├── help/
 ├── maps/
 ├── stronghold.mlb
 ├── sh.tex
