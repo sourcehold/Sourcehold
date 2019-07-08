@@ -82,15 +82,15 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
     playing = true;
     uint8_t currentImage = 0;
 
-    AudioSource music;
+    Song music;
     std::shared_ptr<TgxFile> tgx_credits, tgx_1, tgx_2, tgx_3, tgx_4, tgx_firefly;
 
     if(endgame) {
-        music.LoadSong(GetDirectory() / "fx/music/Glory_06.raw", true);
+        music.Load(GetDirectory() / "fx/music/Glory_06.raw", true);
         tgx_credits = GetTgx(GetDirectory() / "gfx/end_credit.tgx");
     }
     else {
-        music.LoadSong(GetDirectory() / "fx/music/castlejam.raw", true);
+        music.Load(GetDirectory() / "fx/music/castlejam.raw", true);
         tgx_1 = GetTgx(GetDirectory() / "gfx/credits_1.tgx");
         tgx_2 = GetTgx(GetDirectory() / "gfx/credits_2.tgx");
         tgx_3 = GetTgx(GetDirectory() / "gfx/credits_3.tgx");

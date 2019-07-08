@@ -17,7 +17,7 @@ Startup::~Startup()
 
 void Startup::PlayMusic()
 {
-    aud_startup.LoadSong(GetDirectory() / "/fx/music/stainedglass1.raw");
+    aud_startup.Load(GetDirectory() / "/fx/music/stainedglass1.raw");
     aud_startup.Play();
 }
 

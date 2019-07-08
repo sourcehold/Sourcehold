@@ -20,7 +20,7 @@
 
 #include <Rendering/Texture.h>
 
-#include <Audio/AudioSource.h>
+#include <Audio/Song.h>
 
 namespace Sourcehold {
     namespace GUI {
@@ -50,7 +50,7 @@ namespace Sourcehold {
             void HideAll();
 
             /* Common resources */
-            AudioSource aud_chantloop;
+            Song aud_chantloop;
             Texture screen;
             int mx, my;
             int glareCounter;
@@ -100,7 +100,7 @@ namespace Sourcehold {
             UIState currentState;
 
             /* SFX */
-            AudioSource aud_greetings, aud_exit;
+            Song aud_greetings, aud_exit;
         };
     }
 }

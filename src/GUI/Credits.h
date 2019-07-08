@@ -11,7 +11,7 @@
 #include <Rendering/Texture.h>
 #include <Rendering/Font.h>
 
-#include <Audio/AudioSource.h>
+#include <Audio/Song.h>
 #include <Parsers/TgxFile.h>
 
 namespace Sourcehold {

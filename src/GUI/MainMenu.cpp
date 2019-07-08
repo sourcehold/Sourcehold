@@ -54,7 +54,9 @@ MainMenu::MainMenu()
         SetTarget(&screen, mx, my, 1024, 768);
     }
 
-    aud_chantloop.LoadSong(GetDirectory() / "fx/music/chantloop1.raw", true);
+    aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
+    //aud_greetings.LoadEffect(GetGreetingsSound(), false);
+    //aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 
     gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1");
     gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
@@ -66,9 +68,6 @@ MainMenu::MainMenu()
     tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
     tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx");
     tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder2.tgx");
-
-    aud_greetings.LoadEffect(GetGreetingsSound(), false);
-    aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
 
     /* Get textures */
     ui_tex.resize(5);
@@ -275,8 +274,6 @@ UIState MainMenu::EnterMenu()
 
             currentState = MAIN_MENU;
         }
-
-        aud_greetings.Update();
 
         glareCounter = (int)(GetTime() * 10.0);
 

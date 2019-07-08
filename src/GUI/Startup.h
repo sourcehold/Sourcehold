@@ -11,7 +11,7 @@
 #include <GUI/UIState.h>
 #include <GUI/MainMenu.h>
 
-#include <Audio/AudioSource.h>
+#include <Audio/Song.h>
 
 #include <Events/Event.h>
 #include <Events/Mouse.h>
@@ -46,7 +46,7 @@ namespace Sourcehold {
             void onEventReceive(Mouse &event) override;
 
             double startTime = 0.0, fadeBase = 0.0;
-            AudioSource aud_startup;
+            Song aud_startup;
 
             /* Resources */
             std::shared_ptr<TgxFile> tgx_firefly, tgx_taketwo, tgx_present, tgx_logo, tgx_firefly_front;
