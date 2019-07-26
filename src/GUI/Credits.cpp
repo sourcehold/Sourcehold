@@ -1,75 +1,14 @@
 #include <GUI/Credits.h>
+
 #include <Rendering/Font.h>
 #include <Rendering/Renderer.h>
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-/* Not translated, thus hardcoded */
-const static wchar_t *credit_lines_firefly[] = {
-    L"Game Design",
-    L"Simon Bradbury",
-    L"",
-    L"Additional Design",
-    L"Eric Oulette",
-    L"",
-    L"Game Programming",
-    L"Simon Bradbury",
-    L"Andrew Prime",
-    L"Andrew McNab",
-    L"",
-    L"Executive Producer",
-    L"Eric Oulette",
-    L"",
-    L"Art Director",
-    L"Michael Best",
-    L"",
-    L"Artists",
-    L"Jorge Cameo",
-    L"Robert Thornley",
-    L"Darren White",
-    L"",
-    L"Multiplayer Programming",
-    L"Andrew Prime",
-    L"",
-    L"Sound Design and Original",
-    L"Music composed by",
-    L"Robert L. Euvino",
-    L"",
-    L"Manual and Story Writer",
-    L"Casimir C. Windsor",
-    L"",
-    L"Quality Assurance Manager",
-    L"Darren Thompson",
-    L"",
-    L"Firefly Testing",
-    L"Phil Busuttil",
-    L"Casimir C. Windsor",
-    L"",
-    L"Mandolin",
-    L"Matthew Finck",
-    L"",
-    L"Voice Actors",
-    L"Ray Greenoaken",
-    L"Jerry Kersey",
-    L"James Lawson",
-    L"Anthony Mulligan",
-    L"John Tearney",
-    L"",
-    L"Additional Vocals",
-    L"Lydia Pidlusky",
-    L"",
-    L"Scenario Creatorss",
-    L"Phil Busuttil",
-    L"Eric Oulette",
-    L"Darren Thompson",
-    L"",
-    L"Special Thanks To",
-    L"Davis Lester",
-};
-
 Credits::Credits() :
     EventConsumer<Mouse>()
+//    layout(GetHlpSection(L"credits.hlp"), { 0.5, 0.0, 0.5, 1.0 })
 {
 }
 
@@ -176,16 +115,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
         int sy = GetHeight() - scrollOffset;
         scrollOffset = int((now - startTime) * 60.0);
 
-        /* Firefly Studios */
-        Render(*tgx_firefly, sx, sy);
-        sy += 122 + 30;
-
-        for(uint32_t i = 0;
-                sy < GetHeight() && i < sizeof(credit_lines_firefly) / sizeof(credit_lines_firefly[0]);
-                i++, sy += 46) {
-            const wchar_t *line = credit_lines_firefly[i];
-            RenderText(line, sx, sy, FONT_SMALL);
-        }
+        layout.Render(sx, sy);
 
         // TODO: Rest of credits, colored titles
 

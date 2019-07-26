@@ -98,11 +98,6 @@ void StaticElement::Scale(double w, double h)
     scaled = true;
 }
 
-void StaticElement::TransparencyCheck(bool check)
-{
-    transCheck = check;
-}
-
 void StaticElement::Render(std::function<SDL_Rect()> render_fn)
 {
     if(!shown || !tex) return;
@@ -143,24 +138,7 @@ bool StaticElement::IsMouseOverInternal()
     int ry = ToCoordY(tpY) + ty * (double)ToCoordY(tdH);
 
     if(mouseX > rx && mouseY > ry && mouseX < rx+rw && mouseY < ry+rh) {
-        if(transCheck) {
-            /* TODO */
-            return true;
-
-            /* Get cursor position on image */
-            int ix = mouseX - rx;
-            int iy = mouseY - ry;
-
-            /* Check pixel at position */
-            if(ix < tex->GetWidth() && iy < tex->GetHeight()) {
-                //Uint32 pixel = tex->GetPixel(ix, iy);
-                //return !(pixel & (uint32_t)0xFF);
-            }
-            return false;
-        }
-        else {
-            return true;
-        }
+        return true;
     }
 
     return false;

@@ -4,14 +4,10 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-#pragma pack(push, 1)
 struct TgxFile::TgxHeader {
-    uint16_t width;
-    uint16_t u0;
-    uint16_t height;
-    uint16_t u1;
-} ATTRIB_PACKED;
-#pragma pack(pop)
+    uint32_t width;
+    uint32_t height;
+};
 
 TgxFile::TgxFile()
 {
@@ -35,10 +31,8 @@ bool TgxFile::LoadFromDisk(boost::filesystem::path path)
     }
 
     TgxHeader header;
-    if(!Parser::GetData(&header, sizeof(TgxHeader))) {
-        Logger::error("PARSERS") << "Unable to load Tgx file header from '" << path << "'!" << std::endl;
-        return false;
-    }
+    header.width = GetDWord();
+    header.height = GetDWord();
 
     /* Allocate image */
     Surface surf;
@@ -81,6 +75,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
 
         switch(flag) {
         case 0b000: {
+            // pixel
             for(uint8_t i = 0; i < len; ++i,++x) {
                 uint16_t pixelColor;
                 if(pal) {
@@ -99,11 +94,13 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
         }
         break;
         case 0b100: {
+            // line break
             y++;
             x = 0;
         }
         break;
         case 0b010: {
+            // repeated pixel
             uint16_t pixelColor;
             if(pal) {
                 uint8_t index = *(uint8_t*)buf;
@@ -123,6 +120,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
         }
         break;
         case 0b001: {
+            // transparent pixels
             for(uint8_t i = 0; i < len; i++, x++) {
                 tex.SetPixel(x+offX, y+offY, 0, 0, 0, 0);
             }

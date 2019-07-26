@@ -48,7 +48,7 @@ World::World() :
     menuW = menubar.GetWidth();
     menuH = menubar.GetHeight();
 
-    SetTarget(&menubar, menuX, menuY, menuW, menuH);
+    SetTarget(&menubar, Rect<int>{ menuX, menuY, menuW, menuH });
 
     /* Init the buttons */
     auto atlas = gm1_floats->GetTextureAtlas();
@@ -200,7 +200,7 @@ void World::RenderMenubar()
 
 void World::UpdateMenubar()
 {
-    SetTarget(&menubar, menuX, menuY, menuW, menuH);
+    SetTarget(&menubar, Rect<int>{ menuX, menuY, menuW, menuH });
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
 
@@ -245,12 +245,10 @@ void World::UpdateMenubar()
     for(uint8_t i = 0; i < 6; i++) {
         ui_tabs[i].Render(
         [&]() -> SDL_Rect {
-            if(ui_tabs[i].IsClicked())
-            {
+            if(ui_tabs[i].IsClicked()) {
                 currentTab = static_cast<MenuPage>(i);
             }
-            else
-            {
+            else {
                 if(ui_tabs[i].IsMouseOver())return atlas->Get(_ui_tabs_indices[i][1]);
                 else return atlas->Get(_ui_tabs_indices[i][0]);
             }

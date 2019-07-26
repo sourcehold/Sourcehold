@@ -29,7 +29,7 @@ bool GUI::InitializeUtils()
     if(_ed == STRONGHOLD_HD) {
         _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx");
         /**
-         * Render the border 'zoomed in' so that the
+         * Render the border 'zoomed in' so that theP
          * menu can be placed in the middle without scaling.
          */
         _border_rect.x = (1920 - GetWidth()) / 2;
@@ -44,7 +44,7 @@ bool GUI::InitializeUtils()
     Texture deco;
     deco.AllocNewTarget(27, 44);
 
-    SetTarget(&deco, 0.0, 0.0, NormalizeX(27), NormalizeY(44));
+    SetTarget(&deco, Rect<double>{ 0.0, 0.0, NormalizeX(27), NormalizeY(44) });
 
     SDL_Rect rect = atlas->Get(91);
     Render(*atlas, &rect);
@@ -59,9 +59,9 @@ bool GUI::InitializeUtils()
 
     _border_load.AllocNewTarget(30*24, 17*24);
 
-    SetTarget(&_border_load, 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24));
+    SetTarget(&_border_load, Rect<double>{ 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24) });
 
-    RenderRect(0, 0, 30*24, 17*24, 0, 0, 0, 127, true);
+    RenderRect(Rect<int>{ 0, 0, 30*24, 17*24 }, 0, 0, 0, 127, true);
 
     /* Corners */
     rect = atlas->Get(0);
@@ -72,7 +72,6 @@ bool GUI::InitializeUtils()
     Render(*atlas, 29*24, 0, &rect);
     rect = atlas->Get(14);
     Render(*atlas, 29*24, 16*24, &rect);
-
 
     /* Edges */
     for(int ix = 24; ix < 29*24; ix+=24) {
@@ -89,8 +88,8 @@ bool GUI::InitializeUtils()
     }
 
     /* Title box */
-    RenderRect(8, 8, 8+288, 8+64, 24, 80, 24, 152, true);
-    RenderRect(8, 8, 8+288, 8+64, 247, 235, 198, 255, false);
+    RenderRect(Rect<int>{ 8, 8, 8+288, 8+64 }, 24, 80, 24, 152, true);
+    RenderRect(Rect<int>{ 8, 8, 8+288, 8+64 }, 247, 235, 198, 255, false);
 
     /* Decoration, TODO */
     Render(deco, 11, 17);
@@ -115,6 +114,11 @@ void GUI::RenderMenuText(const std::wstring &text)
 void GUI::RenderMenuBorder()
 {
     Render(*_tgx_border, &_border_rect);
+}
+
+bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
+{
+    return false;
 }
 
 void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)

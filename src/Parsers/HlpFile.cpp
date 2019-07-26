@@ -169,8 +169,6 @@ bool Parsers::LoadStrongholdHlp()
             }else {
                 Logger::warning("PARSERS") << "Unknown comand in help file at pos " << it - fb.begin() << std::endl;
             }
-        }else {
-
         }
     }
 
@@ -181,3 +179,12 @@ void Parsers::UnloadStrongholdHlp()
 {
     _sections.clear();
 }
+
+HlpSection *Parsers::GetHlpSection(std::wstring name)
+{
+    // TODO: speed up
+    for(std::vector<HlpSection>::iterator it = _sections.begin(); it != _sections.end(); ++it) {
+        if(it->name == name) return &(*it);
+    }
+}
+

@@ -25,10 +25,12 @@
 #include <Rendering/BinkVideo.h>
 
 namespace Sourcehold {
-    namespace GUI {
+    namespace Game
+    {
         using namespace Events;
         using namespace Parsers;
         using namespace Rendering;
+        using namespace GUI;
 
         /**
          * Handles non game states - menus and intro sequence

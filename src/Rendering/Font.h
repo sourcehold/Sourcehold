@@ -3,6 +3,7 @@
 #include <cinttypes>
 #include <memory>
 #include <string>
+#include <utility>
 
 namespace Sourcehold {
     namespace Game {
@@ -19,5 +20,6 @@ namespace Sourcehold {
         void UnloadFonts();
         void RenderText(const std::wstring& text, int32_t x, int32_t y, Font type = FONT_SMALL, bool illumination = false);
         void RenderText(const std::wstring& text, double x, double y, Font type = FONT_SMALL, bool illumination = false);
+        std::pair<uint32_t, uint32_t> GetStringPixelDim(const std::wstring& text, Font type);
     }
 }

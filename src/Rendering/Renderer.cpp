@@ -9,7 +9,7 @@ using namespace System;
 static SDL_Renderer *_renderer;
 static SDL_Window *_window;
 static Texture *_target = nullptr;
-static double tx,ty,tw,th;
+static Rect<double> _tr;
 
 bool Rendering::InitRenderer()
 {
@@ -46,12 +46,9 @@ void Rendering::FlushDisplay()
     SDL_RenderPresent(_renderer);
 }
 
-void Rendering::SetTarget(Texture *target, double x, double y, double w, double h)
+void Rendering::SetTarget(Texture *target, Rect<double> rect)
 {
-    tx = x;
-    ty = y;
-    tw = w;
-    th = h;
+    _tr = rect;
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
 #if 0 // Creates an issue with directX when window out of focus
@@ -60,12 +57,12 @@ void Rendering::SetTarget(Texture *target, double x, double y, double w, double 
     }
 }
 
-void Rendering::SetTarget(Texture *target, int x, int y, int w, int h)
+void Rendering::SetTarget(Texture *target, Rect<int> rect)
 {
-    tx = NormalizeX(x);
-    ty = NormalizeY(y);
-    tw = NormalizeX(w);
-    th = NormalizeY(h);
+    _tr.x = NormalizeX(rect.x);
+    _tr.y = NormalizeY(rect.y);
+    _tr.w = NormalizeX(rect.w);
+    _tr.h = NormalizeY(rect.h);
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
 #if 0
@@ -77,8 +74,7 @@ void Rendering::SetTarget(Texture *target, int x, int y, int w, int h)
 void Rendering::ResetTarget()
 {
     _target = nullptr;
-    tx = ty = 0.0;
-    tw = th = 1.0;
+    _tr = { 0.0, 0.0, 1.0, 1.0 };
     SDL_SetRenderTarget(_renderer, nullptr);
 }
 
@@ -163,54 +159,55 @@ void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
     SDL_RenderFillRect(_renderer, nullptr);
 }
 
-void Rendering::RenderRect(int x, int y, int w, int h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
+void Rendering::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
 {
     SDL_SetRenderDrawColor(
         _renderer,
         r, g, b, a
     );
 
-    SDL_Rect rect = {
-        x, y,
-        w, h
-    };
-
     if(solid) {
         SDL_RenderFillRect(
             _renderer,
-            &rect
+            (SDL_Rect*)&rect
         );
     }
     else {
         SDL_RenderDrawRect(
             _renderer,
-            &rect
+            (SDL_Rect*)&rect
         );
     }
 }
 
-void Rendering::RenderRect(double x, double y, double w, double h, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
+void Rendering::RenderRect(Rect<double> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool solid)
 {
-    int ix = ToCoordX(x);
-    int iy = ToCoordY(y);
-    int sx = ToCoordX(w);
-    int sy = ToCoordY(h);
-    RenderRect(ix, iy, sx, sy, r, g, b, a, solid);
+    Rect<int> realR = {
+        ToCoordX(rect.x),
+        ToCoordY(rect.y),
+        ToCoordX(rect.w),
+        ToCoordY(rect.h)
+    };
+    RenderRect(realR, r, g, b, a, solid);
 }
 
-void Rendering::RenderLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b)
+void Rendering::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b)
 {
     SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(_renderer, line.x1, line.y1, line.x2, line.y2);
 }
 
-void Rendering::RenderLine(double x1, double y1, double x2, double y2, Uint8 r, Uint8 g, Uint8 b)
+void Rendering::RenderLine(Line<double> line, Uint8 r, Uint8 g, Uint8 b)
 {
+    Line<int> realL = {
+        ToCoordX(line.x1),
+        ToCoordY(line.y1),
+        ToCoordX(line.x2),
+        ToCoordY(line.y2)
+    };
+
     RenderLine(
-        (int)ToCoordX(x1),
-        (int)ToCoordY(y1),
-        (int)ToCoordX(x2),
-        (int)ToCoordY(y2),
+        realL,
         r,g,b
     );
 }
@@ -288,25 +285,25 @@ int32_t Rendering::ToTargetCoordY(double c)
 double Rendering::GetTargetWidth()
 {
     if(!_target) return 1.0;
-    return tw;
+    return _tr.w;
 }
 
 double Rendering::GetTargetHeight()
 {
     if(!_target) return 1.0;
-    return th;
+    return _tr.h;
 }
 
 double Rendering::GetTargetX()
 {
     if(!_target) return 0.0;
-    return tx;
+    return _tr.x;
 }
 
 double Rendering::GetTargetY()
 {
     if(!_target) return 0.0;
-    return ty;
+    return _tr.y;
 }
 
 SDL_Renderer *Rendering::GetRenderer()

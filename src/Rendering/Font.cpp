@@ -92,3 +92,56 @@ void Rendering::RenderText(const std::wstring& text, double x, double y, Font ty
     int32_t ry = ToCoordY(GetTargetHeight() * y);
     RenderText(text, rx, ry, type, illumination);
 }
+
+std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(const std::wstring& text, Font type)
+{
+    std::pair<uint32_t, uint32_t> dim = {
+        _table_width_height[type].first,
+        _table_width_height[type].second + 6 // todo
+    };
+
+    auto font = _fonts[type];
+
+    SDL_Rect glyph = {};
+    for(wchar_t c : text) {
+        if(c < 0x20) continue;
+        /* Space */
+        if(c == 0x20) {
+            dim.first += _table_width_height[type].first;
+        }
+        else {
+            /* Calculate lowercase offset */
+            int8_t lowercaseOffset = 0;
+            switch(c) {
+            case 0x67: /* g */
+            case 0x70: /* p */
+            case 0x71: /* q */
+            case 0x79: /* y */
+            case 0x51: /* Q */
+            case 0x4A: { /* J */
+                lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
+            }
+            break;
+            case 0x6A: { /* j */
+                lowercaseOffset = _table_width_height[type].second / 2;
+            }
+            break;
+            case 0x2D: { /* - */
+                lowercaseOffset = FONT_SMALL ? -8 : -12;
+            }
+            break;
+            case 0x27: { /* ' */
+                lowercaseOffset = FONT_SMALL ? -12 : -17;
+            }
+            break;
+            default:
+                break;
+            }
+            glyph = font->GetTextureAtlas()->Get(c - 0x21);
+
+            dim.first += glyph.w +1;
+        }
+    }
+
+    return dim;
+}

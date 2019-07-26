@@ -154,6 +154,7 @@ AssetType ExtToType(const std::string &ext)
     }
 
     return type;
+
 }
 
 std::pair<int, int> ResolutionToDim(Resolution res)
@@ -267,9 +268,12 @@ bool Game::LoadGameData()
     }
 
     /* Load special files */
-    //if(!_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb")) return false;
-    if(!_cfg.LoadFromDisk(cfgPath)) return false;
-    if(!LoadStrongholdHlp()) return false;
+    if( !_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb") ||
+        !_cfg.LoadFromDisk(cfgPath) ||
+        !LoadStrongholdHlp()
+        ) {
+        return false;
+    }
 
     DetectEdition();
     DetectUsername();

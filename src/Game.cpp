@@ -7,8 +7,8 @@
 
 #include <World.h>
 #include <GameManager.h>
+#include <Startup.h>
 
-#include <GUI/Startup.h>
 #include <Rendering/Font.h>
 #include <Parsers/MlbFile.h>
 
@@ -75,9 +75,9 @@ int EnterLoadingScreen()
         Render(*tgx_loading, px, py);
 
         /* Render the loading bar */
-        RenderRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 128, true);
-        RenderRect(px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35, 0, 0, 0, 255, false);
-        RenderRect(px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25, 0, 0, 0, 255, true);
+        RenderRect(Rect<int>{ px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35 }, 0, 0, 0, 128, true);
+        RenderRect(Rect<int>{ px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35 }, 0, 0, 0, 255, false);
+        RenderRect(Rect<int>{ px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25 }, 0, 0, 0, 255, true);
 
         FlushDisplay();
         SyncDisplay();

@@ -5,6 +5,7 @@
 #include <SDL.h>
 
 #include <Rendering/Texture.h>
+#include <Rendering/Shapes.h>
 
 namespace Sourcehold {
     namespace Rendering {
@@ -31,8 +32,8 @@ namespace Sourcehold {
         /**
          * Redirect all rendering operations to the target
          */
-        void SetTarget(Texture *target, double x, double y, double w, double h);
-        void SetTarget(Texture *target, int x, int y, int w, int h);
+        void SetTarget(Texture *target, Rect<double> rect);
+        void SetTarget(Texture *target, Rect<int> rect);
         void ResetTarget();
 
         /**
@@ -53,11 +54,11 @@ namespace Sourcehold {
         void Render(Texture &texture, SDL_Rect *clip = nullptr);
         void Fill(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255);
 
-        void RenderRect(int x, int y, int w, int h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
-        void RenderRect(double x, double y, double w, double h, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
+        void RenderRect(Rect<int> rect, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
+        void RenderRect(Rect<double> rect, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
 
-        void RenderLine(int x1, int y1, int x2, int y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
-        void RenderLine(double x1, double y1, double x2, double y2, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+        void RenderLine(Line<int> line, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+        void RenderLine(Line<double> line, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
 
         /**
          * Get custom blend mode for keying out

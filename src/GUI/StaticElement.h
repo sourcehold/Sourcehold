@@ -30,7 +30,6 @@ namespace Sourcehold {
             bool clicked = false;
             bool mouseOver = false;
             bool scaled = false;
-            bool transCheck = false;
             double nx, ny, nw, nh, tx, ty, tw, th;
             double tpX, tpY, tdW, tdH;
             int mouseX, mouseY, ID;
@@ -48,12 +47,6 @@ namespace Sourcehold {
             void Translate(double x, double y);
             void Scale(int w, int h);
             void Scale(double w, double h);
-
-            /**
-             * Checks for mouse input only for
-             * opaque areas of the image
-             */
-            void TransparencyCheck(bool check);
 
             /**
              * Render the element returned by render_fn given the known

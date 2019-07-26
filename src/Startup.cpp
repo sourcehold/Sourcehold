@@ -1,7 +1,8 @@
-#include <GUI/Startup.h>
+#include <Startup.h>
 
 #include <System/Logger.h>
 
+using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
@@ -78,7 +79,7 @@ int Startup::Begin()
 #if RENDER_LOADING_BORDER == 1
             if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
                 RenderMenuBorder();
-                RenderRect(px, py, 1024, 768, 0, 0, 0, 255, true);
+                RenderRect(Rect<int>{ px, py, 1024, 768 }, 0, 0, 0, 255, true);
             }
 #endif
 

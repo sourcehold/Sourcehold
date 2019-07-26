@@ -51,7 +51,7 @@ MainMenu::MainMenu()
 
     if (edition == STRONGHOLD_HD) {
         screen.AllocNewTarget(1024, 768);
-        SetTarget(&screen, mx, my, 1024, 768);
+        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
     }
 
     aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
@@ -64,10 +64,10 @@ MainMenu::MainMenu()
     gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1");
     gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1");
 
-    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx");
-    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
-    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx");
-    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder2.tgx");
+    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx");
+    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx");
+    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx");
+    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx");
 
     /* Get textures */
     ui_tex.resize(5);
@@ -84,7 +84,6 @@ MainMenu::MainMenu()
         ui_elems[i].Translate(inf->x, inf->y);
         ui_elems[i].Scale(inf->w, inf->h);
         ui_elems[i].SetTexture(ui_tex[inf->atlasIndex].get());
-        ui_elems[i].TransparencyCheck(true);
     }
     ResetTarget();
 }
@@ -105,7 +104,7 @@ UIState MainMenu::EnterMenu()
 
         if(edition == STRONGHOLD_HD) {
             RenderMenuBorder();
-            SetTarget(&screen, mx, my, 1024, 768);
+            SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
         }
 
         /* Render the current menu on top of the background */

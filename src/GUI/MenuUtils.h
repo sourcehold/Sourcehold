@@ -25,6 +25,13 @@ namespace Sourcehold {
         void RenderMenuBorder();
 
         /**
+         * Given the mouse position relative to the button,
+         * check if the mouse collides with the actual
+         * image and not the transparent background
+         */
+        bool CheckButtonCollision(uint32_t rx, uint32_t ry);
+
+        /**
          * Renders every style of ingame menu box, in which
          * text and / or the menu can be placed.
          */
