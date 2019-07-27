@@ -64,6 +64,7 @@ namespace Sourcehold {
             std::vector<LayoutElement> elems;
             Font currentFont = FONT_SMALL;
             uint32_t width = 0, height = 0;
+            std::vector<std::shared_ptr<TgxFile>> pics;
         };
     }
 }

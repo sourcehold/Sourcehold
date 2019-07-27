@@ -93,7 +93,7 @@ bool Parsers::LoadStrongholdHlp()
                 std::wstring pos = cts.at(2);
 
                 HlpSection sec;
-                sec.type = HlpSection::PIC;
+                sec.type = SectionType::PIC;
                 sec.args.push_back(num);
                 sec.args.push_back(pos);
 
@@ -103,7 +103,7 @@ bool Parsers::LoadStrongholdHlp()
                 std::wstring num = cts.at(1);
 
                 HlpSection sec;
-                sec.type = HlpSection::FONT;
+                sec.type = SectionType::FONT;
                 sec.args.push_back(num);
 
                 currentSec.children.push_back(sec);
@@ -112,7 +112,7 @@ bool Parsers::LoadStrongholdHlp()
                 std::wstring num = cts.at(1);
 
                 HlpSection sec;
-                sec.type = HlpSection::COLOUR;
+                sec.type = SectionType::COLOUR;
                 sec.args.push_back(num);
 
                 currentSec.children.push_back(sec);
@@ -128,43 +128,43 @@ bool Parsers::LoadStrongholdHlp()
                     std::wstring name = boost::algorithm::split(cts, contents, boost::algorithm::is_any_of("\"")).at(1);
 
                     currentSec.name = name;
-                    currentSec.type = HlpSection::SECTION;
+                    currentSec.type = SectionType::SECTION;
                 }
             }else if(ident == L"LOADPIC") {
                 std::wstring name = boost::algorithm::split(cts, contents, boost::algorithm::is_any_of("\"")).at(1);
 
                 HlpSection sec;
                 sec.name = name;
-                sec.type = HlpSection::SECTION;
+                sec.type = SectionType::LOADPIC;
 
                 currentSec.children.push_back(sec);
             }else if(ident == L"HEADER") {
                 HlpSection sec;
-                sec.type = isEndOfBlock ? HlpSection::ENDHEADER : HlpSection::HEADER;
+                sec.type = isEndOfBlock ? SectionType::ENDHEADER : SectionType::HEADER;
                 currentSec.children.push_back(sec);
             }else if(ident == L"BODY") {
                 HlpSection sec;
-                sec.type = isEndOfBlock ? HlpSection::ENDBODY : HlpSection::BODY;
+                sec.type = isEndOfBlock ? SectionType::ENDBODY : SectionType::BODY;
                 currentSec.children.push_back(sec);
             }else if(ident == L"INCLUDE") {
                 std::wstring name = boost::algorithm::split(cts, contents, boost::algorithm::is_any_of("\"")).at(1);
 
                 HlpSection sec;
                 sec.name = name;
-                sec.type = HlpSection::INCLUDE;
+                sec.type = SectionType::INCLUDE;
 
                 currentSec.children.push_back(sec);
             }else if(ident == L"NEWPARAGRAPH") {
                 HlpSection sec;
-                sec.type = HlpSection::NEWPARAGRAPH;
+                sec.type = SectionType::NEWPARAGRAPH;
                 currentSec.children.push_back(sec);
             }else if(ident == L"LINK") {
                 HlpSection sec;
-                sec.type = isEndOfBlock ? HlpSection::ENDLINK : HlpSection::LINK;
+                sec.type = isEndOfBlock ? SectionType::ENDLINK : SectionType::LINK;
                 currentSec.children.push_back(sec);
             }else if(ident == L"CENTRE") {
                 HlpSection sec;
-                sec.type = isEndOfBlock ? HlpSection::ENDCENTRE : HlpSection::CENTRE;
+                sec.type = isEndOfBlock ? SectionType::ENDCENTRE : SectionType::CENTRE;
                 currentSec.children.push_back(sec);
             }else {
                 Logger::warning("PARSERS") << "Unknown comand in help file at pos " << it - fb.begin() << std::endl;

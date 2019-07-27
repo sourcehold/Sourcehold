@@ -7,8 +7,8 @@ using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
 Credits::Credits() :
-    EventConsumer<Mouse>()
-//    layout(GetHlpSection(L"credits.hlp"), { 0.5, 0.0, 0.5, 1.0 })
+    EventConsumer<Mouse>(),
+    layout(GetHlpSection(L"credits.hlp"), { 0.5, 0.0, 0.5, 1.0 })
 {
 }
 

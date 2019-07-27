@@ -1,5 +1,7 @@
 #include <algorithm>
 
+#include <GameManager.h>
+
 #include <GUI/Layout.h>
 
 #include <Rendering/Renderer.h>
@@ -7,6 +9,7 @@
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
+using namespace Sourcehold::Game;
 
 Layout::Layout()
 {
@@ -25,6 +28,57 @@ Layout::~Layout()
 
 void Layout::CreateFromHlp(HlpSection *hlp)
 {
+    for(int i = 0; i < hlp->children.size(); i++) {
+        HlpSection &sect = hlp->children[i];
+
+        switch(sect.type) {
+        case SectionType::PIC : {
+            int arg0 = sect.GetIntArg(0);
+            std::wstring arg1 = sect.GetStrArg(1);
+
+            PicPosition pos;
+            if(arg1 == L"LEFT") {
+                pos = PicPosition::LEFT;
+            }else if(arg1 == L"RIGHT") {
+                pos = PicPosition::RIGHT;
+            }else if(arg1 == L"CENTRE") {
+                pos = PicPosition::CENTRE;
+            }
+
+            if(arg0 < pics.size()) {
+                AddPic(pics[arg0], pos);
+            }
+        } break;
+        case SectionType::FONT : {
+            int arg0 = sect.GetIntArg(0);
+            SetFont((Font)arg0);
+        } break;
+        case SectionType::COLOUR : {
+        } break;
+        case SectionType::LOADPIC : {
+            if(sect.name.empty()) continue;
+
+            auto pic = GetTgx(GetDirectory() / boost::filesystem::path("gfx/") / boost::filesystem::path(sect.name));
+            pics.push_back(pic);
+        } break;
+        case SectionType::SECTION : {
+            pics.clear();
+        } break;
+        case SectionType::HEADER : {
+        } break;
+        case SectionType::BODY : {
+        } break;
+        case SectionType::INCLUDE : {
+        } break;
+        case SectionType::NEWPARAGRAPH : {
+        } break;
+        case SectionType::LINK : {
+        } break;
+        case SectionType::CENTRE : {
+        } break;
+        default: break;
+        }
+    }
 }
 
 void Layout::Destroy()
