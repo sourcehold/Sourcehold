@@ -124,13 +124,15 @@ bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
 void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)
 {
     int x, y;
+    auto dim = GetStringPixelDim(title, FONT_LARGE);
 
     switch(style) {
     case MENUBOX_LOAD_GAME: {
-        x = ToCoordX(0.0);
-        y = ToCoordY(0.0);
+        x = (1024 / 2) - (30*24 / 2);
+        y = (768  / 2) - (17*24 / 2);
 
         Render(_border_load, x, y);
+        RenderText(title, x + 20 + (288 / 2) - (dim.first / 2), y+25, FONT_LARGE);
     }
     break;
     case MENUBOX_BUILDER: {

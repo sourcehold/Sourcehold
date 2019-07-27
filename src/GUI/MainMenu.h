@@ -87,6 +87,7 @@ namespace Sourcehold {
 
             std::shared_ptr<Gm1File> gm1_icons_main;
             std::shared_ptr<TgxFile> tgx_bg_main;
+            std::shared_ptr<TgxFile> tgx_bg_main2;
             std::shared_ptr<Gm1File> gm1_icons_combat;
             std::shared_ptr<TgxFile> tgx_bg_combat;
             std::shared_ptr<Gm1File> gm1_icons_economic;

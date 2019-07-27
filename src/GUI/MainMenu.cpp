@@ -65,6 +65,7 @@ MainMenu::MainMenu()
     gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1");
 
     tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx");
+    tgx_bg_main2 = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx");
     tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx");
     tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx");
     tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx");
@@ -143,6 +144,11 @@ UIState MainMenu::EnterMenu()
             Render(*tgx_bg_combat);
             RenderBackToMain();
             RenderNext();
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        case LOAD_SAVED_MENU: {
+            Render(*tgx_bg_main2);
+            RenderMenuBox(MENUBOX_LOAD_GAME, L"Load");
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
@@ -250,8 +256,7 @@ UIState MainMenu::EnterMenu()
             break;
         }
 
-        RenderText(L"V" SOURCEHOLD_VERSION_STRING, 4, 4, FONT_SMALL);
-
+        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_SMALL);
         ResetTarget();
 
         if(edition == STRONGHOLD_HD) {
