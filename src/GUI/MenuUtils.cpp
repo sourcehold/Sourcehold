@@ -106,9 +106,9 @@ void GUI::RenderMenuText(const std::wstring &text)
 
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
-    Render(*interface_icons, 0.305, 0.52, &rect);
-    RenderText(text.substr(0,1), 0.3095703125, 0.528, FONT_SMALL, true);
-    RenderText(text.substr(1,text.size()), 0.330078125, 0.528, FONT_SMALL);
+    Render(*interface_icons, 312, 400, &rect);
+    RenderText(text.substr(0,1), 317, 406, FONT_SMALL, true);
+    RenderText(text.substr(1,text.size()), 338, 406, FONT_SMALL);
 }
 
 void GUI::RenderMenuBorder()

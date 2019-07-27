@@ -53,7 +53,7 @@ namespace Sourcehold {
             Song aud_chantloop;
             Texture screen;
             int mx, my;
-            int glareCounter;
+            int glareTicks;
             std::shared_ptr<Gm1File> gm1_icons_additional;
 
             enum MenuButton : uint8_t {

@@ -156,20 +156,15 @@ UIState MainMenu::EnterMenu()
                 auto tex = ui_tex[inf.atlasIndex];
 
                 if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-                {
-                    if (ui_elems[i].IsMouseOver())
-                    {
-                        RenderMenuText(inf.text);
-                        return tex->Get(inf.index + 1);
+                if (ui_elems[i].IsMouseOver()) {
+                    RenderMenuText(inf.text);
+                    return tex->Get(inf.index + 1);
+                } else {
+                    if(inf.hasGlare) {
+                        return tex->Get(inf.glareIndex + glareTicks);
                     }
-                    else
-                    {
-                        if(inf.hasGlare) {
-                            return tex->Get(inf.glareIndex + (glareCounter % 14));
-                        }
-                        else {
-                            return tex->Get(inf.index);
-                        }
+                    else {
+                        return tex->Get(inf.index);
                     }
                 }
             });
@@ -274,7 +269,7 @@ UIState MainMenu::EnterMenu()
             currentState = MAIN_MENU;
         }
 
-        glareCounter = (int)(GetTime() * 10.0);
+        glareTicks = (int)(GetTime() * 10.0) % 14;
 
         FlushDisplay();
         SyncDisplay();
