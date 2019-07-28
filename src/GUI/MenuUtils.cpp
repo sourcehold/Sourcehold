@@ -25,7 +25,7 @@ static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
 static Texture _border_load;
-static Table _table;
+static Table _table_load;
 
 bool GUI::InitializeUtils()
 {
@@ -103,6 +103,10 @@ bool GUI::InitializeUtils()
 
     ResetTarget();
 
+    _table_load.Create(2, 16);
+    _table_load.SetRowName(0, L"Name");
+    _table_load.SetRowName(1, L"Date");
+
     return true;
 }
 
@@ -141,7 +145,7 @@ enum DialogButton : uint8_t {
 };
 
 // !hack!
-class ButtonEventListener : protected EventConsumer<Mouse> {
+static class ButtonEventListener : protected EventConsumer<Mouse> {
 public:
     bool clicked;
 protected:
@@ -215,6 +219,8 @@ DialogResult GUI::LoadDialog(std::string &name)
     if(RenderButton(BUTTON_3, L"Back", x+52, y+340)) {
         return BACK;
     }
+
+    _table_load.Render(x + 325, y + 50);
 
     return IDLE;
 }
