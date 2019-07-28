@@ -153,13 +153,20 @@ UIState MainMenu::EnterMenu()
         break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
-            RenderMenuBox(MENUBOX_LOAD_GAME, L"Load");
+            std::string file;
+            DialogResult res = LoadDialog(file);
+            if(res == LOAD && !file.empty()) {
+                // TODO
+            } else if(res == BACK) {
+                currentState = MAIN_MENU;
+            }
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
         }
 
-        if(glareTicks == 13) glareCounter = (glareCounter + 1) % 4;
+        int glareTicks = (int)(GetTime() * 10.0) % 14;
+        if(glareTicks == 13) ++glareCounter %= 4;
 
         for(int i = buttonStart; i < buttonEnd; i++) {
             ui_elems[i].Show();
@@ -173,7 +180,7 @@ UIState MainMenu::EnterMenu()
                     RenderMenuText(inf.text);
                     return tex->Get(inf.index + 1);
                 } else {
-                    if(inf.hasGlare && glareCounter == inf.glareOrder) {
+                    if(inf.hasGlare && inf.glareOrder == glareCounter) {
                         return tex->Get(inf.glareIndex + glareTicks);
                     }
                     else {
@@ -280,8 +287,6 @@ UIState MainMenu::EnterMenu()
 
             currentState = MAIN_MENU;
         }
-
-        glareTicks = (int)(GetTime() * 10.0) % 14;
 
         FlushDisplay();
         SyncDisplay();

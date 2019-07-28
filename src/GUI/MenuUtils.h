@@ -31,17 +31,15 @@ namespace Sourcehold {
          */
         bool CheckButtonCollision(uint32_t rx, uint32_t ry);
 
-        /**
-         * Renders every style of ingame menu box, in which
-         * text and / or the menu can be placed.
-         */
-        enum MenuBox {
-            MENUBOX_LOAD_GAME, /* Load a map or savegame */
-            MENUBOX_BUILDER, /* The title box for builder menu pages */
-            MENUBOX_CAMPAIGN, /* Combat or economics campaign selection */
-            MENUBOX_ENDGAME, /* 'Victory' or 'Defeat' screen */
-            MENUBOX_ESC /* The ingame Esc-menu */
+        /* Ingame dialog windows */
+        enum DialogResult {
+            IDLE,
+            LOAD,
+            BACK,
+            QUIT
         };
-        void RenderMenuBox(MenuBox style, const std::wstring &title);
+
+        DialogResult QuitDialog();
+        DialogResult LoadDialog(std::string &name);
     }
 }

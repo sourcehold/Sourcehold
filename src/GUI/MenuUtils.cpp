@@ -2,6 +2,7 @@
 
 #include <GUI/MenuUtils.h>
 #include <GUI/StaticElement.h>
+#include <GUI/Table.h>
 
 #include <Rendering/Renderer.h>
 #include <Rendering/Texture.h>
@@ -10,9 +11,13 @@
 #include <Parsers/Gm1File.h>
 #include <Parsers/TgxFile.h>
 
+#include <Events/Event.h>
+#include <Events/Mouse.h>
+
 using namespace Sourcehold;
 using namespace Rendering;
 using namespace Game;
+using namespace GUI;
 
 static std::shared_ptr<Gm1File> _gm_interface_icons3;
 static std::shared_ptr<TgxFile> _tgx_border;
@@ -20,6 +25,7 @@ static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
 static Texture _border_load;
+static Table _table;
 
 bool GUI::InitializeUtils()
 {
@@ -118,35 +124,97 @@ void GUI::RenderMenuBorder()
 
 bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
 {
+    // todo
     return false;
 }
 
-void GUI::RenderMenuBox(MenuBox style, const std::wstring &title)
+// TODO: names?
+enum DialogButton : uint8_t {
+    BUTTON_1 = 0,
+    BUTTON_2,
+    BUTTON_3,
+    BUTTON_4,
+    BUTTON_5,
+    BUTTON_6,
+    BUTTON_7,
+    BUTTON_8
+};
+
+// !hack!
+class ButtonEventListener : protected EventConsumer<Mouse> {
+public:
+    bool clicked;
+protected:
+    void onEventReceive(Mouse &event) override {
+        if(event.GetType() == MOUSE_BUTTONDOWN) {
+            clicked = true;
+        }else if(event.GetType() == MOUSE_BUTTONUP) {
+            clicked = false;
+        }
+    }
+} listener;
+
+bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y)
 {
-    int x, y;
-    auto dim = GetStringPixelDim(title, FONT_LARGE);
+    const static int button_indices[8] = {
+        20, 23, 29, 32, 35, 38, 41, 44
+    };
 
-    switch(style) {
-    case MENUBOX_LOAD_GAME: {
-        x = (1024 / 2) - (30*24 / 2);
-        y = (768  / 2) - (17*24 / 2);
+    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+    auto dim = GetStringPixelDim(text, FONT_SMALL);
+    SDL_Rect rect = atlas->Get(button_indices[style]);;
 
-        Render(_border_load, x, y);
-        RenderText(title, x + 20 + (288 / 2) - (dim.first / 2), y+25, FONT_LARGE);
+    int mx = GetMouseX();
+    int my = GetMouseY();
+
+    // highlight
+    int rw = GetTargetWidth() * rect.w;
+    int rh = GetTargetHeight() * rect.h;
+    int rx = ToCoordX(GetTargetX()) + x;
+    int ry = ToCoordY(GetTargetY()) + y;
+
+    bool clicked = false;
+    if(mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
+        rect = atlas->Get(button_indices[style] + 1);
+        Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
+        // TODO: blending doesn't work, this is only a white texture for _some_ reason
+        atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+        rect = atlas->Get(button_indices[style] + 2);
+        Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
+        atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
+        clicked = listener.clicked;
     }
-    break;
-    case MENUBOX_BUILDER: {
 
-    } break;
-    case MENUBOX_CAMPAIGN: {
-    } break;
-    case MENUBOX_ENDGAME: {
+    rect = atlas->Get(button_indices[style]);
 
-    } break;
-    case MENUBOX_ESC: {
+    // button
+    Render(*atlas.get(), int(x), int(y), &rect);
 
-    } break;
-    default:
-        break;
+    // text
+    RenderText(text, int(x + (rect.w / 2) - (dim.first / 2)), int(y + (rect.h / 2) - (dim.second / 2))+2, FONT_SMALL);
+
+    return clicked;
+}
+
+DialogResult GUI::QuitDialog()
+{
+    return IDLE;
+}
+
+DialogResult GUI::LoadDialog(std::string &name)
+{
+    int x = (1024 / 2) - (30*24 / 2);
+    int y = (768  / 2) - (17*24 / 2);
+
+    auto dim = GetStringPixelDim(L"Load", FONT_LARGE);
+
+    Render(_border_load, x, y);
+    RenderText(L"Load", x + 20 + (288 / 2) - (dim.first / 2), y+25, FONT_LARGE);
+
+    RenderButton(BUTTON_3, L"Load", x+52, y+300);
+    if(RenderButton(BUTTON_3, L"Back", x+52, y+340)) {
+        return BACK;
     }
+
+    return IDLE;
 }
