@@ -10,36 +10,36 @@ using namespace Sourcehold::Rendering;
 struct MenuButtonInfo {
     double x;
     double y;
-    double w;
-    double h;
     const wchar_t *text;
     bool hasGlare;
-    uint8_t index; /* Where is the button image in the file? */
-    uint8_t glareIndex; /* Where does the glare animation start? */
-    uint8_t atlasIndex; /* Which file is the button stored in? */
+    uint8_t index;
+    uint8_t glareIndex;
+    uint8_t glareOrder;
+    uint8_t atlasIndex;
 };
+
 const static MenuButtonInfo lut_buttons[] = {
-    { 0.12, 0.67,0.17578125,0.234375, L"Exit Stronghold", false, 68, 0, 0 },
-    { 0.423,0.774,0.1337890625,0.098958334, L"Credits", false, 77, 0, 1 },
-    { 0.691,0.687,0.17578125,0.234375, L"Tutorial", false, 72, 0, 0 },
-    { 0.183,0.276,0.17578125,0.234375, L"Combat-based games", true, 15, 1, 0 },
-    { 0.336,0.276,0.17578125,0.234375, L"Economic-based games", true, 32, 18, 0 },
-    { 0.492,0.276,0.17578125,0.234375, L"Map Editor", true, 49, 35, 0 },
-    { 0.648,0.278,0.17578125,0.234375, L"Load a Saved Game", true, 66, 52, 0 },
-    { 0.726,0.511,0.1,0.16, L"Options", false, 88, 0, 0 },
-    { 0.183,0.276,0.17578125,0.234375, L"Play the Military Campaign", true, 15, 1, 2 },
-    { 0.336,0.276,0.17578125,0.234375, L"Play a Siege", true, 32, 18, 2 },
-    { 0.492,0.276,0.17578125,0.234375, L"Play an Invasion", true, 49, 35, 2 },
-    { 0.648,0.276,0.17578125,0.234375, L"Play a Multiplayer Game", true, 66, 52, 2 },
-    { 0.262,0.276,0.17578125,0.234375, L"Play the Economics Campaign", true, 15, 1, 3 },
-    { 0.416,0.276,0.17578125,0.234375, L"Play an Economics Mission", true, 32, 18, 3 },
-    { 0.571,0.276,0.17578125,0.234375, L"Free Build", true, 49, 35, 3 },
-    { 0.183,0.276,0.17578125,0.234375, L"New Working Map", true, 15, 1, 4 },
-    { 0.336,0.276,0.17578125,0.234375, L"New Stand-Alone Mission", true, 32, 18, 4 },
-    { 0.492,0.276,0.17578125,0.234375, L"New 'Siege That' Mission", true, 49, 35, 4 },
-    { 0.648,0.276,0.17578125,0.234375, L"New Multiplayer Mission", true, 66, 52, 4 },
-    { 0.12,0.67,0.17578125,0.234375, L"Back to Main Menu", false, 70, 0, 0 },
-    { 0.70,0.67,0.17578125,0.234375, L"", false, 70, 0, 2 }
+    {  0.12, 0.67, L"Exit Stronghold", false, 68, 0, 0, 0 },
+    { 0.423,0.774, L"Credits", false, 77, 0, 0, 1 },
+    { 0.691,0.687, L"Tutorial", false, 72, 0, 0, 0 },
+    { 0.183,0.276, L"Combat-based games", true, 15, 1, 0, 0 },
+    { 0.336,0.276, L"Economic-based games", true, 32, 18, 1, 0 },
+    { 0.492,0.276, L"Map Editor", true, 49, 35, 2, 0 },
+    { 0.648,0.278, L"Load a Saved Game", true, 66, 52, 3, 0 },
+    { 0.726,0.511, L"Options", false, 88, 0, 0, 0 },
+    { 0.183,0.276, L"Play the Military Campaign", true, 15, 1, 0, 2 },
+    { 0.336,0.276, L"Play a Siege", true, 32, 18, 1, 2 },
+    { 0.492,0.276, L"Play an Invasion", true, 49, 35, 2, 2 },
+    { 0.648,0.276, L"Play a Multiplayer Game", true, 66, 52, 3, 2 },
+    { 0.262,0.276, L"Play the Economics Campaign", true, 15, 1, 0, 3 },
+    { 0.416,0.276, L"Play an Economics Mission", true, 32, 18, 1, 3 },
+    { 0.571,0.276, L"Free Build", true, 49, 35, 2, 3 },
+    { 0.183,0.276, L"New Working Map", true, 15, 1, 0, 4 },
+    { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
+    { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
+    { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
+    {  0.12, 0.67, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {  0.70, 0.67, L"", false, 70, 0, 0, 2 }
 };
 
 MainMenu::MainMenu()
@@ -67,6 +67,7 @@ MainMenu::MainMenu()
     tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx");
     tgx_bg_main2 = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx");
     tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx");
+    tgx_bg_combat2 = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
     tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx");
     tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx");
 
@@ -82,9 +83,12 @@ MainMenu::MainMenu()
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
         const MenuButtonInfo *inf = &lut_buttons[i];
+        auto atlas = ui_tex[inf->atlasIndex];
+        auto rect = atlas->Get(inf->index);
+
         ui_elems[i].Translate(inf->x, inf->y);
-        ui_elems[i].Scale(inf->w, inf->h);
-        ui_elems[i].SetTexture(ui_tex[inf->atlasIndex].get());
+        ui_elems[i].Scale(rect.w, rect.w);
+        ui_elems[i].SetTexture(atlas.get());
     }
     ResetTarget();
 }
@@ -141,11 +145,12 @@ UIState MainMenu::EnterMenu()
         }
         break;
         case MILITARY_CAMPAIGN_MENU: {
-            Render(*tgx_bg_combat);
+            Render(*tgx_bg_combat2);
             RenderBackToMain();
             RenderNext();
             buttonStart = buttonEnd = MAIN_EXIT;
         }
+        break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
             RenderMenuBox(MENUBOX_LOAD_GAME, L"Load");
@@ -153,6 +158,8 @@ UIState MainMenu::EnterMenu()
         }
         break;
         }
+
+        if(glareTicks == 13) glareCounter = (glareCounter + 1) % 4;
 
         for(int i = buttonStart; i < buttonEnd; i++) {
             ui_elems[i].Show();
@@ -166,7 +173,7 @@ UIState MainMenu::EnterMenu()
                     RenderMenuText(inf.text);
                     return tex->Get(inf.index + 1);
                 } else {
-                    if(inf.hasGlare) {
+                    if(inf.hasGlare && glareCounter == inf.glareOrder) {
                         return tex->Get(inf.glareIndex + glareTicks);
                     }
                     else {

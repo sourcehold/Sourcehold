@@ -53,7 +53,7 @@ namespace Sourcehold {
             Song aud_chantloop;
             Texture screen;
             int mx, my;
-            int glareTicks;
+            int glareTicks, glareCounter=0;
             std::shared_ptr<Gm1File> gm1_icons_additional;
 
             enum MenuButton : uint8_t {
@@ -86,10 +86,9 @@ namespace Sourcehold {
             } selected = BUTTON_END;
 
             std::shared_ptr<Gm1File> gm1_icons_main;
-            std::shared_ptr<TgxFile> tgx_bg_main;
-            std::shared_ptr<TgxFile> tgx_bg_main2;
+            std::shared_ptr<TgxFile> tgx_bg_main, tgx_bg_main2;
             std::shared_ptr<Gm1File> gm1_icons_combat;
-            std::shared_ptr<TgxFile> tgx_bg_combat;
+            std::shared_ptr<TgxFile> tgx_bg_combat, tgx_bg_combat2;
             std::shared_ptr<Gm1File> gm1_icons_economic;
             std::shared_ptr<TgxFile> tgx_bg_economic;
             std::shared_ptr<Gm1File> gm1_icons_builder;
