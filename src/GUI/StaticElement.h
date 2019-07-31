@@ -29,10 +29,7 @@ namespace Sourcehold {
             bool shown = true;
             bool clicked = false;
             bool mouseOver = false;
-            bool scaled = false;
             double nx, ny, nw, nh, tx, ty, tw, th;
-            double tpX, tpY, tdW, tdH;
-            int mouseX, mouseY, ID;
         public:
             StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
             StaticElement(const StaticElement &elem);
@@ -40,8 +37,6 @@ namespace Sourcehold {
 
             void Hide();
             void Show();
-            void Destroy();
-
             void SetTexture(Texture *t);
             void Translate(int x, int y);
             void Translate(double x, double y);
@@ -66,8 +61,7 @@ namespace Sourcehold {
             }
         protected:
             void onEventReceive(Mouse &event) override;
-            /* Fairly complex, so only called once per frame */
-            bool IsMouseOverInternal();
+            void DetectMouseOver();
         };
     }
 }
