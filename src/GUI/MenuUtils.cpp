@@ -24,7 +24,7 @@ static std::shared_ptr<TgxFile> _tgx_border;
 static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
-static Texture _border_load;
+static Texture _deco;
 static Table _table_load;
 
 bool GUI::InitializeUtils()
@@ -47,10 +47,9 @@ bool GUI::InitializeUtils()
     auto atlas = _gm_interface_icons3->GetTextureAtlas();
 
     /* Precalculate blending */
-    Texture deco;
-    deco.AllocNewTarget(27, 44);
+    _deco.AllocNewTarget(27, 44);
 
-    SetTarget(&deco, Rect<double>{ 0.0, 0.0, NormalizeX(27), NormalizeY(44) });
+    SetTarget(&_deco, Rect<double>{ 0.0, 0.0, NormalizeX(27), NormalizeY(44) });
 
     SDL_Rect rect = atlas->Get(91);
     Render(*atlas, &rect);
@@ -63,44 +62,6 @@ bool GUI::InitializeUtils()
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 
-    _border_load.AllocNewTarget(30*24, 17*24);
-
-    SetTarget(&_border_load, Rect<double>{ 0.0, 0.0, NormalizeX(30*24), NormalizeY(17*24) });
-
-    RenderRect(Rect<int>{ 0, 0, 30*24, 17*24 }, 0, 0, 0, 127, true);
-
-    /* Corners */
-    rect = atlas->Get(0);
-    Render(*atlas, 0, 0, &rect);
-    rect = atlas->Get(12);
-    Render(*atlas, 0, 16*24, &rect);
-    rect = atlas->Get(2);
-    Render(*atlas, 29*24, 0, &rect);
-    rect = atlas->Get(14);
-    Render(*atlas, 29*24, 16*24, &rect);
-
-    /* Edges */
-    for(int ix = 24; ix < 29*24; ix+=24) {
-        rect = atlas->Get(1);
-        Render(*atlas, ix, 0, &rect);
-        rect = atlas->Get(13);
-        Render(*atlas, ix, 16*24, &rect);
-    }
-    for(int iy = 24; iy < 16*24; iy+=24) {
-        rect = atlas->Get(6);
-        Render(*atlas, 0, iy, &rect);
-        rect = atlas->Get(8);
-        Render(*atlas, 29*24, iy, &rect);
-    }
-
-    /* Title box */
-    RenderRect(Rect<int>{ 8, 8, 8+288, 8+64 }, 24, 80, 24, 152, true);
-    RenderRect(Rect<int>{ 8, 8, 8+288, 8+64 }, 247, 235, 198, 255, false);
-
-    /* Decoration, TODO */
-    Render(deco, 11, 17);
-    Render(deco, 266, 17);
-
     ResetTarget();
 
     _table_load.Create(2, 16);
@@ -109,6 +70,10 @@ bool GUI::InitializeUtils()
 
     return true;
 }
+
+
+/* Main menu functions */
+
 
 void GUI::RenderMenuText(const std::wstring &text)
 {
@@ -131,6 +96,10 @@ bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
     // todo
     return false;
 }
+
+
+/* Dialog functions */
+
 
 // TODO: names?
 enum DialogButton : uint8_t {
@@ -200,8 +169,68 @@ bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint
     return clicked;
 }
 
+void RenderDialogBorder(int x, int y, int nx, int ny)
+{
+    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+    SDL_Rect rect;
+
+    /* Corners */
+    rect = atlas->Get(0);
+    Render(*atlas, x, y, &rect);
+    rect = atlas->Get(12);
+    Render(*atlas, x, y+ny*24, &rect);
+    rect = atlas->Get(2);
+    Render(*atlas, x+nx*24, y, &rect);
+    rect = atlas->Get(14);
+    Render(*atlas, x+nx*24, y+ny*24, &rect);
+
+    /* Edges */
+    for(int ix = x+24; ix < x+nx*24; ix+=24) {
+        rect = atlas->Get(1);
+        Render(*atlas, ix, y, &rect);
+        rect = atlas->Get(13);
+        Render(*atlas, ix, y+ny*24, &rect);
+    }
+    for(int iy = y+24; iy < y+ny*24; iy+=24) {
+        rect = atlas->Get(6);
+        Render(*atlas, x, iy, &rect);
+        rect = atlas->Get(8);
+        Render(*atlas, x+nx*24, iy, &rect);
+    }
+
+    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 127, true);
+}
+
+void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco = false)
+{
+    RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 24, 80, 24, 152, true);
+    RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 247, 235, 198, 255, false);
+
+    auto dim = GetStringPixelDim(text, FONT_LARGE);
+    RenderText(text, x + 20 + (w / 2) - (dim.first / 2), y+25, FONT_LARGE);
+
+    if(deco) {
+        Render(_deco, x+11,  y+17);
+        Render(_deco, x+(w-16), y+(h-47));
+    }
+}
+
 DialogResult GUI::QuitDialog()
 {
+    int x = (1024 / 2) - (18*24 / 2);
+    int y = (768  / 2) - (7*24  / 2);
+
+    RenderDialogBorder(x, y, 18, 6);
+    RenderDialogTextBox(x, y, 433, 64, L"Exit Stronghold", true);
+
+    if(RenderButton(BUTTON_4, L"Yes", x+105, y+105)) {
+        return QUIT;
+    }
+
+    if(RenderButton(BUTTON_4, L"No", x+245, y+105)) {
+        return BACK;
+    }
+
     return IDLE;
 }
 
@@ -210,12 +239,12 @@ DialogResult GUI::LoadDialog(std::string &name)
     int x = (1024 / 2) - (30*24 / 2);
     int y = (768  / 2) - (17*24 / 2);
 
-    auto dim = GetStringPixelDim(L"Load", FONT_LARGE);
+    RenderDialogBorder(x, y, 30, 17);
+    RenderDialogTextBox(x, y, 288, 64, L"Load", true);
 
-    Render(_border_load, x, y);
-    RenderText(L"Load", x + 20 + (288 / 2) - (dim.first / 2), y+25, FONT_LARGE);
-
-    RenderButton(BUTTON_3, L"Load", x+52, y+300);
+    if(RenderButton(BUTTON_3, L"Load", x+52, y+300)) {
+        // todo
+    }
     if(RenderButton(BUTTON_3, L"Back", x+52, y+340)) {
         return BACK;
     }

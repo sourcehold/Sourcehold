@@ -163,6 +163,19 @@ UIState MainMenu::EnterMenu()
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
+        case EXIT_GAME: {
+            Render(*tgx_bg_main2);
+            DialogResult res = QuitDialog();
+            if(res == QUIT) {
+                aud_chantloop.Stop();
+                return EXIT_GAME;
+            } else if(res == BACK) {
+                currentState = MAIN_MENU;
+            }
+
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        break;
         }
 
         int glareTicks = (int)(GetTime() * 10.0) % 14;
@@ -194,9 +207,7 @@ UIState MainMenu::EnterMenu()
         switch(selected) {
         /* Main menu */
         case MAIN_EXIT: {
-            // TODO: exit prompt
-            aud_chantloop.Stop();
-            return EXIT_GAME;
+            currentState = EXIT_GAME;
         }
         break;
         case MAIN_COMBAT: {
