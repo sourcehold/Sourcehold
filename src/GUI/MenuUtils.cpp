@@ -25,7 +25,7 @@ static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
 static Texture _deco;
-static Table _table_load;
+static Table _table_load, _table_combat;
 
 bool GUI::InitializeUtils()
 {
@@ -67,6 +67,10 @@ bool GUI::InitializeUtils()
     _table_load.Create(2, 16);
     _table_load.SetRowName(0, L"Name");
     _table_load.SetRowName(1, L"Date");
+
+    _table_combat.Create(1, 21);
+    _table_combat.Scrollable(false);
+    _table_combat.RenderNames(false);
 
     return true;
 }
@@ -210,8 +214,8 @@ void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, b
     RenderText(text, x + 20 + (w / 2) - (dim.first / 2), y+25, FONT_LARGE);
 
     if(deco) {
-        Render(_deco, x+11,  y+17);
-        Render(_deco, x+(w-16), y+(h-47));
+        Render(_deco, x   +11 , y+(h/2)-11);
+        Render(_deco, x+(w-16), y+(h/2)-11);
     }
 }
 
@@ -253,3 +257,16 @@ DialogResult GUI::LoadDialog(std::string &name)
 
     return IDLE;
 }
+
+DialogResult GUI::CombatMenuDialog()
+{
+    int x = (1024 / 2) - (416 / 2);
+    int y = (768  / 2) - (493 / 2);
+
+    RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
+
+    _table_combat.Render(x + 37, y + 71);
+
+    return IDLE;
+}
+

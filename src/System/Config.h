@@ -2,7 +2,7 @@
 
 #define SOURCEHOLD_VERSION_MAJOR 0
 #define SOURCEHOLD_VERSION_MINOR 1
-#define SOURCEHOLD_VERSION_STRING "0.1.2"
+#define SOURCEHOLD_VERSION_STRING "0.1.3"
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(win32)
 #if defined(__GNUC__) || defined(__MINGW32__)

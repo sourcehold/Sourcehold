@@ -148,6 +148,8 @@ UIState MainMenu::EnterMenu()
             Render(*tgx_bg_combat2);
             RenderBackToMain();
             RenderNext();
+
+            DialogResult res = CombatMenuDialog();
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;

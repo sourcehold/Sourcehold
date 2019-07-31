@@ -41,5 +41,6 @@ namespace Sourcehold {
 
         DialogResult QuitDialog();
         DialogResult LoadDialog(std::string &name);
+        DialogResult CombatMenuDialog();
     }
 }
