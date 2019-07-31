@@ -214,6 +214,7 @@ void Rendering::RenderLine(Line<double> line, Uint8 r, Uint8 g, Uint8 b)
 
 SDL_BlendMode Rendering::GetAlphaKeyBlendMode()
 {
+#if 0
     return SDL_ComposeCustomBlendMode(
                SDL_BLENDFACTOR_ONE,
                SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR,
@@ -222,6 +223,9 @@ SDL_BlendMode Rendering::GetAlphaKeyBlendMode()
                SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR,
                SDL_BLENDOPERATION_SUBTRACT
            );
+#else
+    return SDL_BLENDMODE_BLEND;
+#endif
 }
 
 double Rendering::NormalizeX(int32_t c)

@@ -6,6 +6,9 @@
 
 #include <Parsers/Gm1File.h>
 
+#include <Events/Event.h>
+#include <Events/Mouse.h>
+
 namespace Sourcehold {
     namespace GUI {
         struct Row {
@@ -13,7 +16,9 @@ namespace Sourcehold {
             std::vector<std::wstring> cols;
         };
 
-        class Table {
+        using namespace Events;
+
+        class Table : protected EventConsumer<Mouse> {
         public:
             Table() = default;
             Table(uint32_t rows, uint32_t columns);
@@ -31,9 +36,13 @@ namespace Sourcehold {
             inline void Scrollable(bool b) { scrollbar = true; }
             inline void RenderNames(bool b) { renderNames = b; }
         protected:
+            void onEventReceive(Mouse &mouse) override;
+
             std::vector<Row> rows;
             bool scrollbar = true;
             bool renderNames = true;
+            uint32_t numCols = 0;
+            int highlight = -1, selected = -1;
         };
     }
 }

@@ -7,7 +7,8 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-Table::Table(uint32_t rows, uint32_t columns)
+Table::Table(uint32_t rows, uint32_t columns) :
+    EventConsumer<Mouse>()
 {
     Create(rows, columns);
 }
@@ -30,17 +31,15 @@ void Table::Render(int x, int y, int w)
     // TODO: multiple rows
     Row &row = rows[0];
 
-    int highlight = -1;
-
     int mx = GetMouseX();
     int my = GetMouseY();
 
     int rx = ToCoordX(GetTargetX()) + x;
     int ry = ToCoordY(GetTargetY()) + y + (renderNames ? 20 : 0);
 
-    if(mx > rx && mx < rx + w && my > ry && my < ry+20*row.cols.size()) {
+    if(mx > rx && mx < rx + w && my > ry && my < ry+20*numCols) {
         highlight = (my - ry) / 20;
-    }
+    }else highlight = -1;
 
     if(renderNames) {
         RenderRect(Rect<int>(x, y, w, 20), 104, 120, 88, 152, true);
@@ -52,7 +51,7 @@ void Table::Render(int x, int y, int w)
     for(int i = 0; i < row.cols.size(); i++) {
         std::wstring &col = row.cols[i];
 
-        if(i == highlight) {
+        if(i == highlight || i == selected) {
             RenderRect(Rect<int>(x, y+20*i, w, 20), 144, 160, 136, 152, true);
             RenderRect(Rect<int>(x, y+20*i, w, 20), 239, 239, 189, 255, false);
         }else {
@@ -72,7 +71,7 @@ void Table::Render(int x, int y, int w)
         RenderText(col, x + 10, 2+y+20*i, FONT_SMALL);
     }
 
-    RenderRect(Rect<int>(x, y, w, 20*row.cols.size()), 239, 239, 189, 255, false);
+    RenderRect(Rect<int>(x, y, w, 20*numCols), 239, 239, 189, 255, false);
 }
 
 void Table::SetNumRows(uint32_t n)
@@ -85,6 +84,7 @@ void Table::SetNumCols(uint32_t n)
     for(auto & r : rows) {
         r.cols.resize(n);
     }
+    numCols = n;
 }
 
 void Table::SetRowName(uint32_t n, const std::wstring& name)
@@ -101,5 +101,13 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring& text)
         r.cols.at(col) = text;
     } catch(std::out_of_range &ex) {
         return;
+    }
+}
+
+void Table::onEventReceive(Mouse &mouse)
+{
+    if(!rows.size() || highlight > numCols) return;
+    if(!rows[0].cols[highlight].empty() && mouse.type == MOUSE_BUTTONDOWN) {
+        selected = highlight;
     }
 }

@@ -11,7 +11,6 @@ namespace Sourcehold {
          */
         class Mouse : public Event {
             SDL_Event event;
-            EventType type;
         public:
             Mouse();
             Mouse(const Mouse &mouse) = delete;
@@ -30,6 +29,8 @@ namespace Sourcehold {
             uint32_t GetPosY();
 
             EventType GetType();
+            EventType type;
+
             void eventCallback(SDL_Event &event) override;
         };
     }
