@@ -21,7 +21,7 @@ namespace Sourcehold {
 
             void Create(uint32_t rows, uint32_t columns);
             void Destroy();
-            void Render(int x, int y);
+            void Render(int x, int y, int w);
 
             void SetNumRows(uint32_t n);
             void SetNumCols(uint32_t n);

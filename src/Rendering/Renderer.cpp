@@ -214,18 +214,14 @@ void Rendering::RenderLine(Line<double> line, Uint8 r, Uint8 g, Uint8 b)
 
 SDL_BlendMode Rendering::GetAlphaKeyBlendMode()
 {
-#if 0
     return SDL_ComposeCustomBlendMode(
-               SDL_BLENDFACTOR_ONE, /* The original image */
-               SDL_BLENDFACTOR_ZERO, /* The color mask */
-               SDL_BLENDOPERATION_SUBTRACT,
                SDL_BLENDFACTOR_ONE,
-               SDL_BLENDFACTOR_ONE,
-               SDL_BLENDOPERATION_ADD
+               SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR,
+               SDL_BLENDOPERATION_ADD,
+               SDL_BLENDFACTOR_SRC_ALPHA,
+               SDL_BLENDFACTOR_ONE_MINUS_DST_COLOR,
+               SDL_BLENDOPERATION_SUBTRACT
            );
-#else
-    return SDL_BLENDMODE_BLEND;
-#endif
 }
 
 double Rendering::NormalizeX(int32_t c)

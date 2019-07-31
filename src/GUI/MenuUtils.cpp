@@ -253,7 +253,7 @@ DialogResult GUI::LoadDialog(std::string &name)
         return BACK;
     }
 
-    _table_load.Render(x + 325, y + 50);
+    _table_load.Render(x + 330, y + 28, 363);
 
     return IDLE;
 }
@@ -261,11 +261,11 @@ DialogResult GUI::LoadDialog(std::string &name)
 DialogResult GUI::CombatMenuDialog()
 {
     int x = (1024 / 2) - (416 / 2);
-    int y = (768  / 2) - (493 / 2);
+    int y = 100;
 
     RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
 
-    _table_combat.Render(x + 37, y + 71);
+    _table_combat.Render(x + 37, y + 100, 363);
 
     return IDLE;
 }
