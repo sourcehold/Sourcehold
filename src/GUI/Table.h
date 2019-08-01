@@ -33,6 +33,9 @@ namespace Sourcehold {
             void SetRowName(uint32_t n, const std::wstring& name);
             void SetText(uint32_t row, uint32_t col, const std::wstring& text);
 
+            inline int GetSelected() { return selected; }
+            inline int GetHighlight() { return highlight; }
+
             inline void Scrollable(bool b) { scrollbar = true; }
             inline void RenderNames(bool b) { renderNames = b; }
         protected:

@@ -38,8 +38,8 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
     { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
     { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
-    {  0.12, 0.67, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {  0.70, 0.67, L"", false, 70, 0, 0, 2 }
+    {  0.1, 0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {  0.76, 0.7, L"", false, 70, 0, 0, 2 }
 };
 
 MainMenu::MainMenu()
@@ -142,6 +142,7 @@ UIState MainMenu::EnterMenu()
             Render(*tgx_bg_builder);
             RenderBackToMain();
             buttonStart = BUILDER_WORKING_MAP;
+            buttonEnd = BACK_TO_MAIN;
         }
         break;
         case MILITARY_CAMPAIGN_MENU: {
@@ -372,3 +373,4 @@ void MainMenu::HideAll()
         e.Hide();
     }
 }
+

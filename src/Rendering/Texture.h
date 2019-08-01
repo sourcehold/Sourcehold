@@ -62,6 +62,7 @@ namespace Sourcehold {
             void FlipVertical();
             void FlipNone();
             void SetAlphaMod(Uint8 alpha);
+            void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
             void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
             void SetBlendMode(SDL_BlendMode mode);
 

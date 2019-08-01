@@ -24,7 +24,6 @@ static std::shared_ptr<TgxFile> _tgx_border;
 static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
-static Texture _deco;
 static Table _table_load, _table_combat;
 
 bool GUI::InitializeUtils()
@@ -45,24 +44,6 @@ bool GUI::InitializeUtils()
     }
 
     auto atlas = _gm_interface_icons3->GetTextureAtlas();
-
-    /* Precalculate blending */
-    _deco.AllocNewTarget(27, 44);
-
-    SetTarget(&_deco, Rect<double>{ 0.0, 0.0, NormalizeX(27), NormalizeY(44) });
-
-    SDL_Rect rect = atlas->Get(91);
-    Render(*atlas, &rect);
-
-    //SDL_BlendMode mode = GetAlphaKeyBlendMode();
-    atlas->SetBlendMode(SDL_BLENDMODE_MOD);
-
-    rect = atlas->Get(90);
-    Render(*atlas, &rect);
-
-    atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
-
-    ResetTarget();
 
     _table_load.Create(2, 16);
     _table_load.SetRowName(0, L"Name");
@@ -152,13 +133,18 @@ bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint
 
     bool clicked = false;
     if(mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
+        atlas->SetBlendMode(SDL_BLENDMODE_ADD);
+
         rect = atlas->Get(button_indices[style] + 1);
         Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
-        // TODO: blending doesn't work, this is only a white texture for _some_ reason
+
         atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+
         rect = atlas->Get(button_indices[style] + 2);
         Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
+
         atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
+
         clicked = listener.clicked;
     }
 
@@ -178,7 +164,39 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
     auto atlas = _gm_interface_icons3->GetTextureAtlas();
     SDL_Rect rect;
 
-    /* Corners */
+    /* Render alpha masks */
+
+    atlas->SetBlendMode(SDL_BLENDMODE_ADD);
+
+    // corners
+    rect = atlas->Get(3);
+    Render(*atlas, x, y, &rect);
+    rect = atlas->Get(15);
+    Render(*atlas, x, y+ny*24, &rect);
+    rect = atlas->Get(5);
+    Render(*atlas, x+nx*24, y, &rect);
+    rect = atlas->Get(17);
+    Render(*atlas, x+nx*24, y+ny*24, &rect);
+
+    // edges
+    for(int ix = x+24; ix < x+nx*24; ix+=24) {
+        rect = atlas->Get(4);
+        Render(*atlas, ix, y, &rect);
+        rect = atlas->Get(16);
+        Render(*atlas, ix, y+ny*24, &rect);
+    }
+    for(int iy = y+24; iy < y+ny*24; iy+=24) {
+        rect = atlas->Get(9);
+        Render(*atlas, x, iy, &rect);
+        rect = atlas->Get(11);
+        Render(*atlas, x+nx*24, iy, &rect);
+    }
+
+    /* Render color */
+
+    atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+
+    // corners
     rect = atlas->Get(0);
     Render(*atlas, x, y, &rect);
     rect = atlas->Get(12);
@@ -188,7 +206,7 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
     rect = atlas->Get(14);
     Render(*atlas, x+nx*24, y+ny*24, &rect);
 
-    /* Edges */
+    // edges
     for(int ix = x+24; ix < x+nx*24; ix+=24) {
         rect = atlas->Get(1);
         Render(*atlas, ix, y, &rect);
@@ -202,7 +220,31 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
         Render(*atlas, x+nx*24, iy, &rect);
     }
 
-    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 127, true);
+    atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
+
+    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 128, true);
+}
+
+enum class Deco {
+    LARGE,
+    SMALL
+};
+
+void RenderDeco(Deco type, int x, int y)
+{
+    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+
+    atlas->SetBlendMode(SDL_BLENDMODE_ADD);
+
+    SDL_Rect rect = atlas->Get(91);
+    Render(*atlas, x, y, &rect);
+
+    atlas->SetBlendMode(SDL_BLENDMODE_MOD);
+
+    rect = atlas->Get(90);
+    Render(*atlas, x, y, &rect);
+
+    atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 }
 
 void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco = false)
@@ -214,8 +256,8 @@ void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, b
     RenderText(text, x + 20 + (w / 2) - (dim.first / 2), y+25, FONT_LARGE);
 
     if(deco) {
-        Render(_deco, x   +11 , y+(h/2)-11);
-        Render(_deco, x+(w-16), y+(h/2)-11);
+        RenderDeco(Deco::LARGE,      x + 11 , y + (h/2)-11);
+        RenderDeco(Deco::LARGE, x + (w - 16), y + (h/2)-11);
     }
 }
 
@@ -261,11 +303,11 @@ DialogResult GUI::LoadDialog(std::string &name)
 DialogResult GUI::CombatMenuDialog()
 {
     int x = (1024 / 2) - (416 / 2);
-    int y = 100;
+    int y = 90;
 
     RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
 
-    _table_combat.Render(x + 37, y + 100, 363);
+    _table_combat.Render(x + 37, y + 90, 363);
 
     return IDLE;
 }

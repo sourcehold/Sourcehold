@@ -156,6 +156,11 @@ void Texture::SetAlphaMod(Uint8 alpha)
     SDL_SetTextureAlphaMod(texture, alpha);
 }
 
+void Texture::SetColorMod(Uint8 r, Uint8 g, Uint8 b)
+{
+    SDL_SetTextureColorMod(texture, r, g, b);
+}
+
 void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
 {
     if(!locked || !other.IsLocked()) {
