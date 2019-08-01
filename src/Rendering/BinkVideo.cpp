@@ -248,7 +248,7 @@ void BinkVideo::Update()
                 }
 
                 alSampleRate = audioFrame->sample_rate;
-                size = alNumChannels * audioFrame->nb_samples * 4;
+                size = alNumChannels * audioFrame->nb_samples * 2;
                 audioBuffer = (char*)std::malloc(size);
 
                 audioInit = true;
@@ -315,4 +315,3 @@ void BinkVideo::Update()
         }
     }
 }
-

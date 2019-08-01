@@ -20,7 +20,7 @@
 
 #include <Rendering/Texture.h>
 
-#include <Audio/Song.h>
+#include <Audio/Effect.h>
 
 namespace Sourcehold {
     namespace GUI {
@@ -102,7 +102,7 @@ namespace Sourcehold {
             UIState currentState;
 
             /* SFX */
-            Song aud_greetings, aud_exit;
+            Effect aud_greetings, aud_exit;
         };
     }
 }

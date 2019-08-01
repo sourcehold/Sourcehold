@@ -3,6 +3,7 @@
 extern "C" {
 #include <libavutil/opt.h>
 #include <libswscale/swscale.h>
+#include <libswresample/swresample.h>
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 }

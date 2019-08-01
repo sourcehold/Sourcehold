@@ -79,9 +79,14 @@ MainMenu::MainMenu()
         SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
     }
 
-    aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
-    //aud_greetings.LoadEffect(GetGreetingsSound(), false);
-    //aud_exit.LoadEffect(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
+    bool success = true;
+    success &= aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
+    success &= aud_greetings.Load(GetGreetingsSound(), false);
+    success &= aud_exit.Load(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
+    if(!success) {
+        Logger::error(Subsystem::GUI) << "Unable to initialize main menu: failed to load SFX!" << std::endl;
+        return;
+    }
 
     gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1");
     gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
@@ -128,7 +133,7 @@ UIState MainMenu::EnterMenu()
     currentState = MAIN_MENU;
 
     aud_chantloop.Play();
-    aud_greetings.Play();
+    //aud_greetings.Play();
 
     while (Running()) {
         ClearDisplay();
@@ -272,6 +277,8 @@ UIState MainMenu::EnterMenu()
         if(edition == STRONGHOLD_HD) {
             Render(screen, mx, my);
         }
+
+        //aud_greetings.Update();
 
         /* Reset target first, then play credits and leave again */
         if(currentState == CREDITS) {
