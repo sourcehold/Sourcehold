@@ -20,13 +20,18 @@ EventType Keyboard::GetType()
     return type;
 }
 
+SDL_Event Keyboard::Get()
+{
+    return event;
+}
+
 void Keyboard::eventCallback(SDL_Event &event)
 {
     this->event = event;
 
     Event::SetHandled(true);
     type = ConvertTypes(event.type);
-    if(type == KEYBOARD_KEYDOWN || type == KEYBOARD_KEYUP) {
+    if(type == KEYBOARD_KEYDOWN || type == KEYBOARD_KEYUP || type == KEYBOARD_TEXTINPUT) {
         Event::SetHandled(false);
     }
 }

@@ -219,7 +219,6 @@ UIState MainMenu::EnterMenu()
             } else if(res == BACK) {
                 currentState = MAIN_MENU;
             }
-
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
@@ -229,7 +228,6 @@ UIState MainMenu::EnterMenu()
             if(res == BACK) {
                 currentState = MAIN_MENU;
             }
-
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
@@ -261,7 +259,11 @@ UIState MainMenu::EnterMenu()
         }
 
         if(selected != BUTTON_END) {
-            currentState = actions.at(selected);
+            try {
+                currentState = actions.at(selected);
+            } catch(std::out_of_range & ex) {
+                currentState = MAIN_MENU;
+            }
         }
 
         RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_SMALL);

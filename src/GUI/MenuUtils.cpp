@@ -3,6 +3,7 @@
 #include <GUI/MenuUtils.h>
 #include <GUI/StaticElement.h>
 #include <GUI/Table.h>
+#include <GUI/LineEdit.h>
 
 #include <Rendering/Renderer.h>
 #include <Rendering/Texture.h>
@@ -26,6 +27,7 @@ static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
 static Table _table_load, _table_combat, _table_eco;
+static LineEdit _name_edit;
 
 bool GUI::InitializeUtils()
 {
@@ -44,8 +46,6 @@ bool GUI::InitializeUtils()
         _border_rect.h = GetHeight();
     }
 
-    auto atlas = _gm_interface_icons3->GetTextureAtlas();
-
     _table_load.Create(2, 16);
     _table_load.SetRowName(0, L"Name");
     _table_load.SetRowName(1, L"Date");
@@ -57,6 +57,11 @@ bool GUI::InitializeUtils()
     _table_eco.Create(1, 5);
     _table_eco.Scrollable(false);
     _table_eco.RenderNames(false);
+
+    CfgFile &cfg = GetCfg();
+
+    _name_edit.Init();
+    _name_edit.SetLine(cfg.username);
 
     return true;
 }
@@ -108,7 +113,7 @@ enum DialogButton : uint8_t {
 // !hack!
 static class ButtonEventListener : protected EventConsumer<Mouse> {
 public:
-    bool clicked;
+    bool clicked = false;
 protected:
     void onEventReceive(Mouse &event) override {
         if(event.GetType() == MOUSE_BUTTONDOWN) {
@@ -364,6 +369,7 @@ DialogResult GUI::SettingsDialog()
             state = SOUND_OPTIONS;
         }
         if(RenderButton(BUTTON_1, L"Change your name", x + 110, y + 215)) {
+            _name_edit.BeginInput();
             state = CHANGE_NAME;
         }
         if(RenderButton(BUTTON_1, L"Back", x + 110, y + 260)) {
@@ -407,8 +413,11 @@ DialogResult GUI::SettingsDialog()
         RenderDialogTextBox(x, y, 505, 64, L"Change your name", true);
 
         if(RenderButton(BUTTON_3, L"Back", x + 260, y + 170)) {
+            _name_edit.EndInput();
             state = GAME_OPTIONS;
         }
+
+        _name_edit.Render(x+85, y+110, 34);
     } break;
     default: break;
     }

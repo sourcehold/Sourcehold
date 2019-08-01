@@ -8,12 +8,8 @@
 
 namespace Sourcehold {
     namespace Events {
-        /*
-         * Keyboard event handler
-         */
         class Keyboard : public Event {
             SDL_Event event;
-            EventType type;
         public:
             Keyboard();
             Keyboard(const Keyboard &key) = delete;
@@ -21,9 +17,10 @@ namespace Sourcehold {
 
             SDL_Keysym Key();
             EventType GetType();
+            SDL_Event Get();
+            EventType type;
 
             void eventCallback(SDL_Event &event) override;
-        protected:
         };
     }
 }

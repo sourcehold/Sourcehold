@@ -14,6 +14,7 @@ namespace Sourcehold {
             DUMMY,
             KEYBOARD_KEYDOWN,
             KEYBOARD_KEYUP,
+            KEYBOARD_TEXTINPUT,
             MOUSE_MOTION,
             MOUSE_BUTTONDOWN,
             MOUSE_BUTTONUP,
@@ -43,6 +44,8 @@ namespace Sourcehold {
                     return KEYBOARD_KEYDOWN;
                 case SDL_KEYUP:
                     return KEYBOARD_KEYUP;
+                case SDL_TEXTINPUT:
+                    return KEYBOARD_TEXTINPUT;
                 case SDL_MOUSEMOTION:
                     return MOUSE_MOTION;
                 case SDL_MOUSEBUTTONDOWN:
