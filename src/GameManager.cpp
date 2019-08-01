@@ -32,6 +32,7 @@ static int _usernameIndex = -1;
 static GameOptions _opt;
 static MlbFile _mlb;
 static CfgFile _cfg;
+static boost::filesystem::path _cfgPath;
 static boost::filesystem::path _dataFolder;
 static boost::filesystem::path _saveFolder;
 static std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
@@ -260,8 +261,8 @@ bool Game::LoadGameData()
     CreateFolder(_saveFolder);
 
     /* Create default config */
-    boost::filesystem::path cfgPath = _saveFolder / "../stronghold.cfg";
-    if(!DoesFileExist(cfgPath)) {
+    _cfgPath = _saveFolder / "../stronghold.cfg";
+    if(!DoesFileExist(_cfgPath)) {
         Logger::message("PARSERS") << "Cfg file not found, creating one!" << std::endl;
         _cfg.SetDefaultValues();
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
@@ -269,7 +270,7 @@ bool Game::LoadGameData()
 
     /* Load special files */
     if( !_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb") ||
-        !_cfg.LoadFromDisk(cfgPath) ||
+        !_cfg.LoadFromDisk(_cfgPath) ||
         !LoadStrongholdHlp()
         ) {
         return false;
@@ -350,6 +351,11 @@ void Game::DeleteCacheEntry(boost::filesystem::path filename)
     default:
         break;
     }
+}
+
+void Game::SaveConfig()
+{
+    _cfg.WriteToDisk(_cfgPath);
 }
 
 std::wstring Game::GetLocalizedDescription(LocalizedMissionDescription index)

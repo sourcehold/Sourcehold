@@ -82,6 +82,8 @@ namespace Sourcehold {
          */
         void DeleteCacheEntry(boost::filesystem::path filename);
 
+        void SaveConfig();
+
         /**
          * Localization functions. These will get
          * a text string from the 'stronghold.mlb'

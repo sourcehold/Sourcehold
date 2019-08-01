@@ -26,6 +26,7 @@ using namespace Sourcehold::GUI;
 
 void Cleanup()
 {
+    SaveConfig();
     UnloadFonts();
     ClearFileCache();
     DestroyManager();

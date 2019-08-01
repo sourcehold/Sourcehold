@@ -121,7 +121,9 @@ void Parser::WriteBytes(uint8_t byte, size_t num)
 
 void Parser::WriteUTF16(std::wstring str)
 {
-    write((const char*)str.c_str(), str.length() * sizeof(wchar_t));
+    for(wchar_t c : str) {
+        write((const char*)&c, 2);
+    }
 }
 
 void Parser::WriteByte(uint8_t byte)

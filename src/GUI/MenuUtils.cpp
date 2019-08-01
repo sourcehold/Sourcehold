@@ -414,6 +414,10 @@ DialogResult GUI::SettingsDialog()
 
         if(RenderButton(BUTTON_3, L"Back", x + 260, y + 170)) {
             _name_edit.EndInput();
+
+            CfgFile &cfg = GetCfg();
+            cfg.username = _name_edit.GetLine();
+
             state = GAME_OPTIONS;
         }
 
