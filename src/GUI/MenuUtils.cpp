@@ -353,19 +353,19 @@ DialogResult GUI::SettingsDialog()
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, L"Game Options", true);
 
-        if(RenderButton(BUTTON_1, L"Game Play Options", x + 100, y + 110)) {
+        if(RenderButton(BUTTON_1, L"Game Play Options", x + 110, y + 110)) {
             state = GAMEPLAY_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Video Options",     x + 100, y + 145)) {
+        if(RenderButton(BUTTON_1, L"Video Options", x + 110, y + 145)) {
             state = VIDEO_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Sound Options",     x + 100, y + 180)) {
+        if(RenderButton(BUTTON_1, L"Sound Options", x + 110, y + 180)) {
             state = SOUND_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Change your name",  x + 100, y + 215)) {
+        if(RenderButton(BUTTON_1, L"Change your name", x + 110, y + 215)) {
             state = CHANGE_NAME;
         }
-        if(RenderButton(BUTTON_1, L"Back",              x + 100, y + 260)) {
+        if(RenderButton(BUTTON_1, L"Back", x + 110, y + 260)) {
             return BACK;
         }
     } break;

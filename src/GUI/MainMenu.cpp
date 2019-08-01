@@ -210,8 +210,8 @@ UIState MainMenu::EnterMenu()
         break;
         }
 
-        int glareTicks = (int)(GetTime() * 10.0) % 14;
-        if(glareTicks == 13) ++glareCounter %= 4;
+        int glareTicks = (int)(GetTime() * 10.0);
+        glareCounter = (glareTicks / 14) % 4;
 
         for(int i = buttonStart; i < buttonEnd; i++) {
             ui_elems[i].Show();
@@ -226,7 +226,7 @@ UIState MainMenu::EnterMenu()
                     return tex->Get(inf.index + 1);
                 } else {
                     if(inf.hasGlare && inf.glareOrder == glareCounter) {
-                        return tex->Get(inf.glareIndex + glareTicks);
+                        return tex->Get(inf.glareIndex + (glareTicks % 14));
                     }
                     else {
                         return tex->Get(inf.index);
