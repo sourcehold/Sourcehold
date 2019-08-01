@@ -39,7 +39,7 @@ int EnterLoadingScreen()
     /* Get the assets */
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
     if(files.empty()) {
-        Logger::error("GAME") << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
+        Logger::error(GAME) << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -90,15 +90,15 @@ int EnterLoadingScreen()
 int StartGame(GameOptions &opt)
 {
     if(!InitManager(opt) || !LoadGameData()) {
-        Logger::error("GAME") << "Error while initializing game!" << std::endl;
+        Logger::error(GAME) << "Error while initializing game!" << std::endl;
         return EXIT_FAILURE;
     }
     if(!LoadFonts()) {
-        Logger::error("GAME") << "Error while loading fonts!" << std::endl;
+        Logger::error(GAME) << "Error while loading fonts!" << std::endl;
         return EXIT_FAILURE;
     }
     if(!InitializeUtils()) {
-        Logger::error("GAME") << "Error while initializing menu utils!" << std::endl;
+        Logger::error(GAME) << "Error while initializing menu utils!" << std::endl;
         return EXIT_FAILURE;
     }
 

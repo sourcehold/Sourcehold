@@ -29,7 +29,7 @@ bool Surface::AllocNew(int width, int height, int format)
                   Uint32(0x000000FF)  // a
               );
     if(!surface) {
-        Logger::error("RENDERING") << "Unable to create surface: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to create surface: " << SDL_GetError() << std::endl;
         valid = false;
         return false;
     }
@@ -81,7 +81,7 @@ void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect)
                   &dest
               );
     if(err < 0) {
-        Logger::error("RENDERING") << "Unable to blit surface: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to blit surface: " << SDL_GetError() << std::endl;
         return;
     }
 }

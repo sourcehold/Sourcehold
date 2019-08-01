@@ -25,7 +25,7 @@ void CfgFile::SetDefaultValues()
 bool CfgFile::LoadFromDisk(boost::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
-        Logger::error("PARSERS") << "Unable to read cfg " << path << std::endl;
+        Logger::error(PARSERS) << "Unable to read cfg " << path << std::endl;
         return false;
     }
 
@@ -59,7 +59,7 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path)
 bool CfgFile::WriteToDisk(boost::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ofstream::out)) {
-        Logger::error("PARSERS") << "Unable to write cfg " << path << std::endl;
+        Logger::error(PARSERS) << "Unable to write cfg " << path << std::endl;
         return false;
     }
 

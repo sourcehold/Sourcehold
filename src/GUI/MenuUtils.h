@@ -13,7 +13,6 @@ namespace Sourcehold {
         /**
          * Renders the given string to fit the main menu
          * rectangle.
-         * TODO: replace with complete text box function
          */
         void RenderMenuText(const std::wstring &text);
 

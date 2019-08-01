@@ -77,19 +77,19 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
     this->path = path;
 
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;
+        Logger::error(PARSERS)  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;
         return false;
     }
 
     if(!Parser::GetData(&header, sizeof(Gm1Header))) {
-        Logger::error("PARSERS") << "Unable to load Gm1 file header from '" << path.string() << "'!" << std::endl;
+        Logger::error(PARSERS) << "Unable to load Gm1 file header from '" << path.string() << "'!" << std::endl;
         Parser::Close();
         return false;
     }
 
     /* Boundary check */
     if(header.num > max_num) {
-        Logger::error("PARSERS") << "Gm1 file header from '" << path.string() << "' contains too many images!" << std::endl;
+        Logger::error(PARSERS) << "Gm1 file header from '" << path.string() << "' contains too many images!" << std::endl;
         Parser::Close();
         return false;
     }
@@ -213,7 +213,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
 
 void Gm1File::DumpInformation()
 {
-    Logger::message("PARSERS") << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
+    Logger::message(PARSERS) << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
 }
 
 void Gm1File::Free()
@@ -309,7 +309,7 @@ bool Gm1File::GetImage(uint32_t index)
     }
     break;
     default: {
-        Logger::error("PARSERS") << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
+        Logger::error(PARSERS) << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
         return false;
     }
     }
@@ -320,7 +320,7 @@ bool Gm1File::GetImage(uint32_t index)
 void Gm1File::ReadPalette()
 {
     if(!Parser::GetData(palette, sizeof(palette))) {
-        Logger::error("PARSERS") << "Unable to read palette from Gm1!" << std::endl;
+        Logger::error(PARSERS) << "Unable to read palette from Gm1!" << std::endl;
         Parser::Close();
     }
 }

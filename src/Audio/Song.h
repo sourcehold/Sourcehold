@@ -14,14 +14,13 @@
 namespace Sourcehold {
     namespace Audio {
         class Song {
-            const static uint32_t NUM_AUDIO_BUFFERS = 4;
             const static uint32_t SAMPLING_RATE = 44100;
             ALuint source;
             ALuint buffer;
             uint8_t *ptr;
             size_t size;
             bool repeat, valid = false, fading = false;
-            float gain; /* Current gain */
+            float gain;
             double fadeBase = 0.0, fadeAmount = 0.0;
             bool fadeIn;
         public:

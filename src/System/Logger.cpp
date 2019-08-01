@@ -13,7 +13,7 @@ Logger::~Logger()
 {
 }
 
-std::ostream &Logger::log(LogType type, const std::string subsystem)
+std::ostream &Logger::log(LogType type, const std::string& subsystem)
 {
     std::string msg = "";
     if(coloredOutput) {
@@ -51,24 +51,24 @@ std::ostream &Logger::log(LogType type, const std::string subsystem)
     return std::cout << msg;
 }
 
-std::ostream &Logger::error(const std::string subsystem)
+std::ostream &Logger::error(Subsystem subsystem)
 {
-    return log(ERROR, subsystem);
+    return log(ERROR, SubsystemName(subsystem));
 }
 
-std::ostream &Logger::warning(const std::string subsystem)
+std::ostream &Logger::warning(Subsystem subsystem)
 {
-    return log(WARNING, subsystem);
+    return log(WARNING, SubsystemName(subsystem));
 }
 
-std::ostream &Logger::message(const std::string subsystem)
+std::ostream &Logger::message(Subsystem subsystem)
 {
-    return log(MESSAGE, subsystem);
+    return log(MESSAGE, SubsystemName(subsystem));
 }
 
-std::ostream &Logger::success(const std::string subsystem)
+std::ostream &Logger::success(Subsystem subsystem)
 {
-    return log(SUCCESS, subsystem);
+    return log(SUCCESS, SubsystemName(subsystem));
 }
 
 void Logger::SetColorOutput(bool a)
@@ -79,4 +79,36 @@ void Logger::SetColorOutput(bool a)
 bool Logger::GetColorOutput()
 {
     return coloredOutput;
+}
+
+std::string Logger::SubsystemName(Subsystem sys)
+{
+    std::string s;
+
+    switch(sys) {
+    case AUDIO:
+        s = "AUDIO";
+        break;
+    case EVENTS:
+        s = "EVENTS";
+        break;
+    case GUI:
+        s = "GUI";
+        break;
+    case PARSERS:
+        s = "PARSERS";
+        break;
+    case RENDERING:
+        s = "RENDERING";
+        break;
+    case GAME:
+        s = "GAME";
+        break;
+    case SOURCEHOLD:
+    default:
+        s = "UNKNOWN";
+        break;
+    }
+
+    return s;
 }

@@ -83,5 +83,5 @@ void Audio::PrintError()
         break;
     }
 
-    Logger::error("AUDIO") << str << std::endl;
+    Logger::error(AUDIO) << str << std::endl;
 }

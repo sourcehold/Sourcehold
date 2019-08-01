@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cinttypes>
 #include <fstream>
 #include <sstream>
 
@@ -8,6 +9,16 @@
 
 namespace Sourcehold {
     namespace System {
+        enum Subsystem : uint8_t {
+            AUDIO,
+            EVENTS,
+            GUI,
+            PARSERS,
+            RENDERING,
+            GAME,
+            SOURCEHOLD
+        };
+
         /*
          * Logger class, redirects logging messages to a file,
          * stdout or any ostream provider (TODO!)
@@ -24,15 +35,16 @@ namespace Sourcehold {
                 SUCCESS
             };
 
-            static std::ostream &log(LogType type, const std::string subsystem);
-            static std::ostream &error(const std::string subsystem);
-            static std::ostream &warning(const std::string subsystem);
-            static std::ostream &message(const std::string subsystem);
-            static std::ostream &success(const std::string subsystem);
+            static std::ostream &log(LogType type, const std::string& subsystem);
+            static std::ostream &error(Subsystem subsystem = SOURCEHOLD);
+            static std::ostream &warning(Subsystem subsystem = SOURCEHOLD);
+            static std::ostream &message(Subsystem subsystem = SOURCEHOLD);
+            static std::ostream &success(Subsystem subsystem = SOURCEHOLD);
 
             static void SetColorOutput(bool a);
             static bool GetColorOutput();
         private:
+            static std::string SubsystemName(Subsystem sys);
         };
     }
 }

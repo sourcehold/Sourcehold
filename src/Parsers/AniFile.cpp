@@ -38,7 +38,7 @@ AniFile::~AniFile()
 bool AniFile::LoadFromDisk(boost::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
-        Logger::error("PARSERS")  << "Unable to load ani file '" << path.string() << "' from data folder!" << std::endl;
+        Logger::error(PARSERS)  << "Unable to load ani file '" << path.string() << "' from data folder!" << std::endl;
         return false;
     }
 
@@ -49,7 +49,7 @@ bool AniFile::LoadFromDisk(boost::filesystem::path path)
         header.filesize != Parser::GetLength() || /* Wrong filesize encoded */
         header.type != 1313817409 /* Should be 'ACON' */
     ) {
-        Logger::error("PARSERS")  << "Ani file error!" << std::endl;
+        Logger::error(PARSERS)  << "Ani file error!" << std::endl;
         Parser::Close();
         return false;
     }

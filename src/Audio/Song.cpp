@@ -22,7 +22,7 @@ Song::Song(boost::filesystem::path path, bool repeat) :
     valid(false)
 {
     if(!Load(path, repeat)) {
-        Logger::error("AUDIO") << "Song::Song() argument 'path' resulted in an error!" << std::endl;
+        Logger::error(AUDIO) << "Song::Song() argument 'path' resulted in an error!" << std::endl;
     }
 }
 
@@ -55,7 +55,7 @@ bool Song::Load(boost::filesystem::path path, bool repeat)
     /* Read raw file into buffer */
     FILE *fp = std::fopen(path.string().c_str(), "rb");
     if(!fp) {
-        Logger::error("AUDIO") << "Unable to open song '" << path << "'!" << std::endl;
+        Logger::error(AUDIO) << "Unable to open song '" << path << "'!" << std::endl;
         return false;
     }
     fseek(fp, 0, SEEK_END);

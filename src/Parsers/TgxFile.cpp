@@ -26,7 +26,7 @@ TgxFile::~TgxFile()
 bool TgxFile::LoadFromDisk(boost::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
-        Logger::error("PARSERS")  << "Unable to open Tgx file '" << path << "'!" << std::endl;
+        Logger::error(PARSERS)  << "Unable to open Tgx file '" << path << "'!" << std::endl;
         return false;
     }
 
@@ -127,7 +127,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
         }
         break;
         default: {
-            Logger::warning("PARSERS") << "Unknown token in tgx!" << std::endl;
+            Logger::warning(PARSERS) << "Unknown token in tgx!" << std::endl;
             return;
         }
         break;

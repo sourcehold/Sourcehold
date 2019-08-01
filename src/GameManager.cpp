@@ -251,7 +251,7 @@ bool Game::LoadGameData()
             _saveFolder = np;
         }
         else {
-            Logger::warning("GAME") << "Location for save files could not be determined!" << std::endl;
+            Logger::warning(GAME) << "Location for save files could not be determined!" << std::endl;
             return false;
         }
     }
@@ -263,7 +263,7 @@ bool Game::LoadGameData()
     /* Create default config */
     _cfgPath = _saveFolder / "../stronghold.cfg";
     if(!DoesFileExist(_cfgPath)) {
-        Logger::message("PARSERS") << "Cfg file not found, creating one!" << std::endl;
+        Logger::message(GAME) << "Cfg file not found, creating one!" << std::endl;
         _cfg.SetDefaultValues();
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }
@@ -294,7 +294,7 @@ void Game::Cache(boost::filesystem::path filename)
 {
     std::string ext = GetFileExtension(filename);
     if(filename.empty() || ext.empty()) {
-        Logger::warning("ASSETS") << "Unable to cache asset: '" << filename << "'" << std::endl;
+        Logger::warning(GAME) << "Unable to cache asset: '" << filename << "'" << std::endl;
         return;
     }
 
@@ -316,7 +316,7 @@ void Game::Cache(boost::filesystem::path filename)
     }
     break;
     case UNKNOWN: {
-        Logger::warning("ASSETS") << "Unknown asset type cached: '" << filename << "'" << std::endl;
+        Logger::warning(GAME) << "Unknown asset type cached: '" << filename << "'" << std::endl;
     }
     break;
     default:

@@ -17,7 +17,7 @@ BinkVideo::BinkVideo() : Texture()
 {
     ic = avformat_alloc_context();
     if(!ic) {
-        Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
+        Logger::error(RENDERING) << "Unable to allocate input format context!" << std::endl;
     }
 }
 
@@ -25,7 +25,7 @@ BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture()
 {
     ic = avformat_alloc_context();
     if(!ic) {
-        Logger::error("RENDERING") << "Unable to allocate input format context!" << std::endl;
+        Logger::error(RENDERING) << "Unable to allocate input format context!" << std::endl;
     }
 
     LoadFromDisk(path, looping);
@@ -237,7 +237,7 @@ void BinkVideo::Update()
                     alNumChannels = 2;
                 }
                 else {
-                    Logger::error("RENDERING") << "Bink audio channel layout is wrong!" << std::endl;
+                    Logger::error(RENDERING) << "Bink audio channel layout is wrong!" << std::endl;
                     return;
                 }
 

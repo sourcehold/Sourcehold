@@ -29,7 +29,7 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276, L"Economic-based games", true, 32, 18, 1, 0 },
     { 0.492,0.276, L"Map Editor", true, 49, 35, 2, 0 },
     { 0.648,0.278, L"Load a Saved Game", true, 66, 52, 3, 0 },
-    { 0.732,0.54, L"Options", false, 88, 0, 0, 1 },
+    { 0.732, 0.54, L"Options", false, 88, 0, 0, 1 },
     { 0.183,0.276, L"Play the Military Campaign", true, 15, 1, 0, 2 },
     { 0.336,0.276, L"Play a Siege", true, 32, 18, 1, 2 },
     { 0.492,0.276, L"Play an Invasion", true, 49, 35, 2, 2 },
@@ -41,8 +41,8 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
     { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
     { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
-    {   0.1, 0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {  0.73, 0.7, L"", false, 70, 0, 0, 2 }
+    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {  0.73,  0.7, L"", false, 70, 0, 0, 2 }
 };
 
 const static std::map<MenuButton, UIState> actions = boost::assign::map_list_of

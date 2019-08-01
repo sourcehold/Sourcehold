@@ -16,7 +16,7 @@ bool Rendering::InitRenderer()
     _window = GetWindow();
     _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
     if(!_renderer) {
-        Logger::error("GAME")  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING)  << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -52,7 +52,7 @@ void Rendering::SetTarget(Texture *target, Rect<double> rect)
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
 #if 0 // Creates an issue with directX when window out of focus
-        Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
 #endif
     }
 }
@@ -66,7 +66,7 @@ void Rendering::SetTarget(Texture *target, Rect<int> rect)
     _target = target;
     if(SDL_SetRenderTarget(_renderer, target->GetTexture()) < 0) {
 #if 0
-        Logger::error("RENDERING") << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
 #endif
     }
 }

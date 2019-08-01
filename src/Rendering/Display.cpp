@@ -27,7 +27,7 @@ static int ResizeEventWatcher(void *data, SDL_Event *event)
 bool Rendering::InitDisplay(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb)
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
-        Logger::error("RENDERING") << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -63,7 +63,7 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
                   param
               );
     if(!_window) {
-        Logger::error("GAME") << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
 
     delete [] displayBounds;
@@ -89,7 +89,7 @@ void Rendering::ToggleFullscreen()
 {
     int err = SDL_SetWindowFullscreen(_window, _fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
     if(err < 0) {
-        Logger::error("GAME")  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING)  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
     _fullscreen = !_fullscreen;
 }

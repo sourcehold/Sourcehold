@@ -47,7 +47,7 @@ bool Parsers::LoadStrongholdHlp()
         std::ios::binary
         );
     if(!ws.is_open()) {
-        Logger::error("PARSERS") << "Unable to load help file from " << path.string() << std::endl;
+        Logger::error(PARSERS) << "Unable to load help file from " << path.string() << std::endl;
         return false;
     }
 
@@ -167,7 +167,7 @@ bool Parsers::LoadStrongholdHlp()
                 sec.type = isEndOfBlock ? SectionType::ENDCENTRE : SectionType::CENTRE;
                 currentSec.children.push_back(sec);
             }else {
-                Logger::warning("PARSERS") << "Unknown comand in help file at pos " << it - fb.begin() << std::endl;
+                Logger::warning(PARSERS) << "Unknown comand in help file at pos " << it - fb.begin() << std::endl;
             }
         }
     }

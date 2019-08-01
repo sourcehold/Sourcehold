@@ -44,7 +44,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format)
                   width, height
               );
     if(!texture) {
-        Logger::error("RENDERING") << "Unable to create streaming texture: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to create streaming texture: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -62,7 +62,7 @@ bool Texture::AllocFromSurface(Surface &surface)
     access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
-        Logger::error("RENDERING") << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -85,7 +85,7 @@ bool Texture::AllocNewTarget(int width, int height, int format)
                   width, height
               );
     if(!texture) {
-        Logger::error("RENDERING") << "Unable to create target texture: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to create target texture: " << SDL_GetError() << std::endl;
         return false;
     }
 
@@ -111,7 +111,7 @@ void Texture::LockTexture()
 {
     if(locked || access != SDL_TEXTUREACCESS_STREAMING) return;
     if(SDL_LockTexture(texture, nullptr, (void**)&pixels, &pitch)) {
-        Logger::error("RENDERING") << "Unable to lock texture: " << SDL_GetError() << std::endl;
+        Logger::error(RENDERING) << "Unable to lock texture: " << SDL_GetError() << std::endl;
         locked = false;
     }
     else locked = true;
@@ -164,7 +164,7 @@ void Texture::SetColorMod(Uint8 r, Uint8 g, Uint8 b)
 void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
 {
     if(!locked || !other.IsLocked()) {
-        Logger::error("RENDERING") << "Lock the texture before copying from or to it!" << std::endl;
+        Logger::error(RENDERING) << "Lock the texture before copying from or to it!" << std::endl;
         return;
     }
 
@@ -177,7 +177,7 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     }
 
     if( int(x + ow) > width || int(y + oh) > height ) {
-        Logger::error("RENDERING") << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
+        Logger::error(RENDERING) << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
         return;
     }
 
