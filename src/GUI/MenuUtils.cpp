@@ -24,7 +24,7 @@ static std::shared_ptr<TgxFile> _tgx_border;
 static SDL_Rect _border_rect;
 static StrongholdEdition _ed;
 static Resolution _res;
-static Table _table_load, _table_combat;
+static Table _table_load, _table_combat, _table_eco;
 
 bool GUI::InitializeUtils()
 {
@@ -52,6 +52,10 @@ bool GUI::InitializeUtils()
     _table_combat.Create(1, 21);
     _table_combat.Scrollable(false);
     _table_combat.RenderNames(false);
+
+    _table_eco.Create(1, 5);
+    _table_eco.Scrollable(false);
+    _table_eco.RenderNames(false);
 
     return true;
 }
@@ -308,6 +312,23 @@ DialogResult GUI::CombatMenuDialog()
     RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
 
     _table_combat.Render(x + 37, y + 90, 363);
+
+    return IDLE;
+}
+
+DialogResult GUI::SiegeMenuDialog()
+{
+    return IDLE;
+}
+
+DialogResult GUI::EconomicsMenuDialog()
+{
+    int x = (1024 / 2) - (416 / 2);
+    int y = 250;
+
+    RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
+
+    _table_eco.Render(x + 37, y + 90, 363);
 
     return IDLE;
 }

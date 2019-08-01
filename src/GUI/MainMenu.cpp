@@ -38,8 +38,8 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
     { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
     { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
-    {  0.1, 0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {  0.76, 0.7, L"", false, 70, 0, 0, 2 }
+    {   0.1, 0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {  0.73, 0.7, L"", false, 70, 0, 0, 2 }
 };
 
 MainMenu::MainMenu()
@@ -69,6 +69,7 @@ MainMenu::MainMenu()
     tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx");
     tgx_bg_combat2 = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
     tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx");
+    tgx_bg_economic2 = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx");
     tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx");
 
     /* Get textures */
@@ -138,6 +139,15 @@ UIState MainMenu::EnterMenu()
             buttonStart = ECO_CAMPAIGN;
         }
         break;
+        case ECONOMICS_CAMPAIGN_MENU: {
+            Render(*tgx_bg_economic2);
+            RenderBackToMain();
+            RenderNext();
+
+            DialogResult res = EconomicsMenuDialog();
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        break;
         case BUILDER_MENU: {
             Render(*tgx_bg_builder);
             RenderBackToMain();
@@ -151,6 +161,15 @@ UIState MainMenu::EnterMenu()
             RenderNext();
 
             DialogResult res = CombatMenuDialog();
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        break;
+        case SIEGE_MENU: {
+            Render(*tgx_bg_combat2);
+            RenderBackToMain();
+            RenderNext();
+
+            DialogResult res = SiegeMenuDialog();
             buttonStart = buttonEnd = MAIN_EXIT;
         }
         break;
@@ -206,7 +225,7 @@ UIState MainMenu::EnterMenu()
             });
         }
 
-        /* Check buttons */
+        /* Check buttons, TODO: replace with table */
         switch(selected) {
         /* Main menu */
         case MAIN_EXIT: {
@@ -251,6 +270,7 @@ UIState MainMenu::EnterMenu()
         }
         break;
         case COMBAT_SIEGE: {
+            currentState = SIEGE_MENU;
         }
         break;
         case COMBAT_INVASION: {
@@ -258,6 +278,7 @@ UIState MainMenu::EnterMenu()
         break;
         /* Economics menu */
         case ECO_CAMPAIGN: {
+            currentState = ECONOMICS_CAMPAIGN_MENU;
         }
         break;
         case ECO_MISSION: {
