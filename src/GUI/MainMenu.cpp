@@ -1,3 +1,6 @@
+#include <map>
+#include <boost/assign.hpp>
+
 #include <GUI/MainMenu.h>
 #include <Rendering/Font.h>
 #include <System/Config.h>
@@ -41,6 +44,28 @@ const static MenuButtonInfo lut_buttons[] = {
     {   0.1, 0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
     {  0.73, 0.7, L"", false, 70, 0, 0, 2 }
 };
+
+const static std::map<MenuButton, UIState> actions = boost::assign::map_list_of
+    (MAIN_EXIT, EXIT_GAME)
+    (MAIN_FIREFLY, CREDITS)
+    (MAIN_TUTORIAL, TUTORIAL)
+    (MAIN_COMBAT, COMBAT_MENU)
+    (MAIN_ECONOMIC, ECONOMICS_MENU)
+    (MAIN_BUILDER, BUILDER_MENU)
+    (MAIN_LOAD, LOAD_SAVED_MENU)
+    (MAIN_SETTINGS, SETTINGS_MENU)
+    (COMBAT_CAMPAIGN, MILITARY_CAMPAIGN_MENU)
+    (COMBAT_SIEGE, SIEGE_MENU)
+    (COMBAT_INVASION, INVASION_MENU)
+    (COMBAT_MULTIPLAYER, MULTIPLAYER_MENU)
+    (ECO_CAMPAIGN, ECONOMICS_CAMPAIGN_MENU)
+    (ECO_MISSION, ECONOMICS_MISSION_MENU)
+    (ECO_FREEBUILD, FREE_BUILD_MENU)
+    (BUILDER_WORKING_MAP, WORKING_MAP_MENU)
+    (BUILDER_STANDALONE, STAND_ALONE_MISSION_MENU)
+    (BUILDER_SIEGE, SIEGE_THAT_MENU)
+    (BUILDER_MULTIPLAYER, MULTIPLAYER_MAP_MENU)
+    (BACK_TO_MAIN, MAIN_MENU);
 
 MainMenu::MainMenu()
 {
@@ -235,84 +260,8 @@ UIState MainMenu::EnterMenu()
             });
         }
 
-        /* Check buttons, TODO: replace with table */
-        switch(selected) {
-        /* Main menu */
-        case MAIN_EXIT: {
-            currentState = EXIT_GAME;
-        }
-        break;
-        case MAIN_COMBAT: {
-            currentState = COMBAT_MENU;
-        }
-        break;
-        case MAIN_ECONOMIC: {
-            currentState = ECONOMICS_MENU;
-        }
-        break;
-        case MAIN_BUILDER: {
-            currentState = BUILDER_MENU;
-        }
-        break;
-        case MAIN_LOAD: {
-            currentState = LOAD_SAVED_MENU;
-        }
-        break;
-        case MAIN_TUTORIAL: {
-            currentState = TUTORIAL;
-        }
-        break;
-        case MAIN_FIREFLY: {
-            currentState = CREDITS;
-        }
-        break;
-        case BACK_TO_MAIN: {
-            currentState = MAIN_MENU;
-        }
-        break;
-        case MAIN_SETTINGS: {
-            currentState = SETTINGS_MENU;
-        }
-        break;
-        /* Combat menu */
-        case COMBAT_CAMPAIGN: {
-            currentState = MILITARY_CAMPAIGN_MENU;
-        }
-        break;
-        case COMBAT_SIEGE: {
-            currentState = SIEGE_MENU;
-        }
-        break;
-        case COMBAT_INVASION: {
-        }
-        break;
-        /* Economics menu */
-        case ECO_CAMPAIGN: {
-            currentState = ECONOMICS_CAMPAIGN_MENU;
-        }
-        break;
-        case ECO_MISSION: {
-        }
-        break;
-        case ECO_FREEBUILD: {
-        }
-        break;
-        /* Builder menu */
-        case BUILDER_WORKING_MAP: {
-        }
-        break;
-        case BUILDER_STANDALONE: {
-        }
-        break;
-        case BUILDER_SIEGE: {
-        }
-        break;
-        case BUILDER_MULTIPLAYER: {
-        }
-        break;
-        case COMBAT_MULTIPLAYER: /* unsupported (yet) */
-        default:
-            break;
+        if(selected != BUTTON_END) {
+            currentState = actions.at(selected);
         }
 
         RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_SMALL);

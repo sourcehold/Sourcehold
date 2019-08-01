@@ -29,6 +29,35 @@ namespace Sourcehold {
         using namespace Rendering;
         using namespace Audio;
 
+        enum MenuButton : uint8_t {
+            /* Main */
+            MAIN_EXIT,
+            MAIN_FIREFLY,
+            MAIN_TUTORIAL,
+            MAIN_COMBAT,
+            MAIN_ECONOMIC,
+            MAIN_BUILDER,
+            MAIN_LOAD,
+            MAIN_SETTINGS,
+            /* Combat */
+            COMBAT_CAMPAIGN,
+            COMBAT_SIEGE,
+            COMBAT_INVASION,
+            COMBAT_MULTIPLAYER,
+            /* Economic */
+            ECO_CAMPAIGN,
+            ECO_MISSION,
+            ECO_FREEBUILD,
+            /* Builder */
+            BUILDER_WORKING_MAP,
+            BUILDER_STANDALONE,
+            BUILDER_SIEGE,
+            BUILDER_MULTIPLAYER,
+            BACK_TO_MAIN,
+            NEXT,
+            BUTTON_END
+        };
+
         /**
          * Handles the main menu and all submenus
          */
@@ -56,34 +85,7 @@ namespace Sourcehold {
             int glareCounter=0;
             std::shared_ptr<Gm1File> gm1_icons_additional;
 
-            enum MenuButton : uint8_t {
-                /* Main */
-                MAIN_EXIT,
-                MAIN_FIREFLY,
-                MAIN_TUTORIAL,
-                MAIN_COMBAT,
-                MAIN_ECONOMIC,
-                MAIN_BUILDER,
-                MAIN_LOAD,
-                MAIN_SETTINGS,
-                /* Combat */
-                COMBAT_CAMPAIGN,
-                COMBAT_SIEGE,
-                COMBAT_INVASION,
-                COMBAT_MULTIPLAYER,
-                /* Economic */
-                ECO_CAMPAIGN,
-                ECO_MISSION,
-                ECO_FREEBUILD,
-                /* Builder */
-                BUILDER_WORKING_MAP,
-                BUILDER_STANDALONE,
-                BUILDER_SIEGE,
-                BUILDER_MULTIPLAYER,
-                BACK_TO_MAIN,
-                NEXT,
-                BUTTON_END
-            } selected = BUTTON_END;
+            MenuButton selected = BUTTON_END;
 
             std::shared_ptr<Gm1File> gm1_icons_main;
             std::shared_ptr<TgxFile> tgx_bg_main, tgx_bg_main2;

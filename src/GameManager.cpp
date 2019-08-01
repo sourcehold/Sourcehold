@@ -401,6 +401,11 @@ int Game::GetUsernameIndex()
     return _usernameIndex;
 }
 
+CfgFile &Game::GetCfg()
+{
+    return _cfg;
+}
+
 std::shared_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
 {
     if(_tgxFiles.count(filename.string())) {

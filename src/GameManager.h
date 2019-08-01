@@ -26,6 +26,7 @@ namespace Sourcehold {
         class TgxFile;
         class Gm1File;
         class AniFile;
+        class CfgFile;
     }
 
     namespace Rendering {
@@ -103,6 +104,7 @@ namespace Sourcehold {
         StrongholdEdition GetEdition();
         Resolution GetResolution();
         int GetUsernameIndex();
+        CfgFile &GetCfg();
 
         /**
          * Asset getter functions

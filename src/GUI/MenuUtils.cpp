@@ -10,6 +10,7 @@
 
 #include <Parsers/Gm1File.h>
 #include <Parsers/TgxFile.h>
+#include <Parsers/CfgFile.h>
 
 #include <Events/Event.h>
 #include <Events/Mouse.h>
