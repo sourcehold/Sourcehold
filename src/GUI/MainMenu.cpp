@@ -26,7 +26,7 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.336,0.276, L"Economic-based games", true, 32, 18, 1, 0 },
     { 0.492,0.276, L"Map Editor", true, 49, 35, 2, 0 },
     { 0.648,0.278, L"Load a Saved Game", true, 66, 52, 3, 0 },
-    { 0.726,0.511, L"Options", false, 88, 0, 0, 0 },
+    { 0.732,0.54, L"Options", false, 88, 0, 0, 1 },
     { 0.183,0.276, L"Play the Military Campaign", true, 15, 1, 0, 2 },
     { 0.336,0.276, L"Play a Siege", true, 32, 18, 1, 2 },
     { 0.492,0.276, L"Play an Invasion", true, 49, 35, 2, 2 },
@@ -192,6 +192,16 @@ UIState MainMenu::EnterMenu()
                 aud_chantloop.Stop();
                 return EXIT_GAME;
             } else if(res == BACK) {
+                currentState = MAIN_MENU;
+            }
+
+            buttonStart = buttonEnd = MAIN_EXIT;
+        }
+        break;
+        case SETTINGS_MENU: {
+            Render(*tgx_bg_main2);
+            DialogResult res = SettingsDialog();
+            if(res == BACK) {
                 currentState = MAIN_MENU;
             }
 

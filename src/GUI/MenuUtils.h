@@ -44,5 +44,6 @@ namespace Sourcehold {
         DialogResult CombatMenuDialog();
         DialogResult SiegeMenuDialog();
         DialogResult EconomicsMenuDialog();
+        DialogResult SettingsDialog();
     }
 }

@@ -66,7 +66,8 @@ bool GUI::InitializeUtils()
 
 void GUI::RenderMenuText(const std::wstring &text)
 {
-    if(text.empty()) return;
+    if(text.empty()
+        ) return;
 
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
@@ -99,7 +100,8 @@ enum DialogButton : uint8_t {
     BUTTON_5,
     BUTTON_6,
     BUTTON_7,
-    BUTTON_8
+    BUTTON_8,
+    BUTTON_9
 };
 
 // !hack!
@@ -118,8 +120,8 @@ protected:
 
 bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y)
 {
-    const static int button_indices[8] = {
-        20, 23, 29, 32, 35, 38, 41, 44
+    const static int button_indices[] = {
+        20, 23, 29, 32, 35, 38, 41, 44, 96,
     };
 
     auto atlas = _gm_interface_icons3->GetTextureAtlas();
@@ -333,3 +335,82 @@ DialogResult GUI::EconomicsMenuDialog()
     return IDLE;
 }
 
+DialogResult GUI::SettingsDialog()
+{
+    static enum Settings {
+        GAME_OPTIONS,
+        GAMEPLAY_OPTIONS,
+        VIDEO_OPTIONS,
+        SOUND_OPTIONS,
+        CHANGE_NAME
+    } state = GAME_OPTIONS;
+
+    int x = (1024 / 2) - (21*24 / 2);
+    int y = (768  / 2) - (15*24 / 2);
+
+    switch(state) {
+    case GAME_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, L"Game Options", true);
+
+        if(RenderButton(BUTTON_1, L"Game Play Options", x + 100, y + 110)) {
+            state = GAMEPLAY_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, L"Video Options",     x + 100, y + 145)) {
+            state = VIDEO_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, L"Sound Options",     x + 100, y + 180)) {
+            state = SOUND_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, L"Change your name",  x + 100, y + 215)) {
+            state = CHANGE_NAME;
+        }
+        if(RenderButton(BUTTON_1, L"Back",              x + 100, y + 260)) {
+            return BACK;
+        }
+    } break;
+    case GAMEPLAY_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, L"Game Play Options", true);
+
+        if(RenderButton(BUTTON_3, L"Apply", x + 45, y + 235)) {
+            state = GAME_OPTIONS;
+        }
+        if(RenderButton(BUTTON_3, L"Back", x + 265, y + 235)) {
+            state = GAME_OPTIONS;
+        }
+    } break;
+    case VIDEO_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, L"Video Options", true);
+
+        if(RenderButton(BUTTON_3, L"Apply", x + 45, y + 265)) {
+            state = GAME_OPTIONS;
+        }
+        if(RenderButton(BUTTON_3, L"Back", x + 265, y + 265)) {
+            state = GAME_OPTIONS;
+        }
+    } break;
+    case SOUND_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, L"Sound Options", true);
+
+        if(RenderButton(BUTTON_1, L"Back", x + 110, y + 265)) {
+            state = GAME_OPTIONS;
+        }
+    } break;
+    case CHANGE_NAME: {
+        y = (768  / 2) - (8*24 / 2);
+
+        RenderDialogBorder(x, y, 21, 9);
+        RenderDialogTextBox(x, y, 505, 64, L"Change your name", true);
+
+        if(RenderButton(BUTTON_3, L"Back", x + 260, y + 170)) {
+            state = GAME_OPTIONS;
+        }
+    } break;
+    default: break;
+    }
+
+    return IDLE;
+}
