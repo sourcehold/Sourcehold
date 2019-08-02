@@ -110,12 +110,13 @@ int StartGame(GameOptions &opt)
     if(ret != EXIT_SUCCESS) return ret;
 
     /* Start the intro sequence and the main menu */
-    ret = start.Begin();
-    if (ret != EXIT_SUCCESS) {
-        Cleanup();
-        return ret;
+    UIState state = start.Begin();
+    switch(state) {
+    case EXIT_GAME: goto exit;
+    default: break;
     }
 
+exit:
     Cleanup();
     return EXIT_SUCCESS;
 }

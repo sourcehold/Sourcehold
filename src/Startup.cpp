@@ -22,7 +22,7 @@ void Startup::PlayMusic()
     aud_startup.Play();
 }
 
-int Startup::Begin()
+UIState Startup::Begin()
 {
     tgx_firefly = GetTgx(GetDirectory() / "gfx/logo1.tgx");
     tgx_taketwo = GetTgx(GetDirectory() / "gfx/logo2.tgx");
@@ -42,8 +42,9 @@ int Startup::Begin()
     while(Running()) {
         ClearDisplay();
 
-        if(currentUIState == INTRO_SEQUENCE) {
-            /* Logo switching */
+        switch(currentUIState) {
+        case INTRO_SEQUENCE: {
+                        /* Logo switching */
             double now = GetTime();
             double delta = now - startTime;
 
@@ -136,20 +137,16 @@ int Startup::Begin()
                 aud_startup.Stop();
                 currentUIState = MAIN_MENU;
             }
+        } break;
+        case MAIN_MENU: {
+            return mainMenu.EnterMenu();
+        } break;
         }
-        else if(currentUIState == MAIN_MENU) {
-            currentUIState = mainMenu.EnterMenu();
-        }
-        else if (currentUIState == EXIT_GAME) {
-            return EXIT_FAILURE;
-        }
-        else {
-            return EXIT_SUCCESS;
-        }
+
         FlushDisplay();
         SyncDisplay();
     }
-    return EXIT_FAILURE;
+    return EXIT_GAME;
 }
 
 void Startup::onEventReceive(Mouse &event)

@@ -4,7 +4,9 @@
 #include <GUI/MainMenu.h>
 #include <Rendering/Font.h>
 #include <System/Config.h>
+
 #include <Assets.h>
+#include <World.h>
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -72,7 +74,7 @@ const static std::map<MenuButton, UIState> actions = boost::assign::map_list_of
     (COMBAT_MULTIPLAYER, MULTIPLAYER_MENU)
     (COMBAT_BACK_TO_MAIN, MAIN_MENU)
     (COMBAT_CAMPAIGN_BACK, COMBAT_MENU)
-    (COMBAT_CAMPAIGN_NEXT, MILITARY_CAMPAIGN_MENU) // todo
+    (COMBAT_CAMPAIGN_NEXT, MILITARY_CAMPAIGN_MISSION)
     // ECONOMICS_MENU //
     (ECO_CAMPAIGN, ECONOMICS_CAMPAIGN_MENU)
     (ECO_MISSION, ECONOMICS_MISSION_MENU)
@@ -166,6 +168,11 @@ UIState MainMenu::EnterMenu()
         /* Render the current menu on top of the background */
         HideAll();
 
+        /**
+         * Handle the current UIState.
+         * buttonEnd and buttonStart define the range of
+         * buttons to be rendered for the menu page.
+         */
         selected = BUTTON_END;
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
         switch(currentState) {
@@ -173,49 +180,51 @@ UIState MainMenu::EnterMenu()
         case MAIN_MENU: {
             Render(*tgx_bg_main);
             buttonEnd = COMBAT_CAMPAIGN;
-        }
-        break;
+        } break;
         case COMBAT_MENU: {
             Render(*tgx_bg_combat);
             buttonEnd = COMBAT_BACK_TO_MAIN+1;
             buttonStart = COMBAT_CAMPAIGN;
-        }
-        break;
-        case ECONOMICS_MENU: {
-            Render(*tgx_bg_economic);
-            buttonEnd = ECO_BACK_TO_MAIN+1;
-            buttonStart = ECO_CAMPAIGN;
-        }
-        break;
-        case ECONOMICS_CAMPAIGN_MENU: {
-            Render(*tgx_bg_economic2);
-
-            DialogResult res = EconomicsMenuDialog();
-            buttonEnd = ECO_CAMPAIGN_NEXT+1;
-            buttonStart = ECO_CAMPAIGN_BACK;
-        }
-        break;
-        case BUILDER_MENU: {
-            Render(*tgx_bg_builder);
-            buttonEnd = BUILDER_BACK_TO_MAIN+1;
-            buttonStart = BUILDER_WORKING_MAP;
-        }
-        break;
+        } break;
         case MILITARY_CAMPAIGN_MENU: {
             Render(*tgx_bg_combat2);
 
             DialogResult res = CombatMenuDialog();
+            if(res == LOAD) {
+                // Double-click on mission -> start mission
+                return MILITARY_CAMPAIGN_MISSION;
+            }
+
             buttonEnd = COMBAT_CAMPAIGN_NEXT+1;
             buttonStart = COMBAT_CAMPAIGN_BACK;
-        }
-        break;
+        } break;
         case SIEGE_MENU: {
             Render(*tgx_bg_combat2);
 
             DialogResult res = SiegeMenuDialog();
             buttonStart = buttonEnd = MAIN_EXIT;
-        }
-        break;
+        } break;
+        case ECONOMICS_MENU: {
+            Render(*tgx_bg_economic);
+            buttonEnd = ECO_BACK_TO_MAIN+1;
+            buttonStart = ECO_CAMPAIGN;
+        } break;
+        case ECONOMICS_CAMPAIGN_MENU: {
+            Render(*tgx_bg_economic2);
+
+            DialogResult res = EconomicsMenuDialog();
+            if(res == LOAD) {
+                return ECONOMICS_CAMPAIGN_MISSION;
+            }
+
+            buttonEnd = ECO_CAMPAIGN_NEXT+1;
+            buttonStart = ECO_CAMPAIGN_BACK;
+        } break;
+        case BUILDER_MENU: {
+            Render(*tgx_bg_builder);
+            buttonEnd = BUILDER_BACK_TO_MAIN+1;
+            buttonStart = BUILDER_WORKING_MAP;
+        } break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
             std::string file;
@@ -226,8 +235,7 @@ UIState MainMenu::EnterMenu()
                 currentState = MAIN_MENU;
             }
             buttonStart = buttonEnd = MAIN_EXIT;
-        }
-        break;
+        } break;
         case EXIT_GAME: {
             Render(*tgx_bg_main2);
             DialogResult res = QuitDialog();
@@ -238,8 +246,7 @@ UIState MainMenu::EnterMenu()
                 currentState = MAIN_MENU;
             }
             buttonStart = buttonEnd = MAIN_EXIT;
-        }
-        break;
+        } break;
         case SETTINGS_MENU: {
             Render(*tgx_bg_main2);
             DialogResult res = SettingsDialog();
@@ -247,8 +254,7 @@ UIState MainMenu::EnterMenu()
                 currentState = MAIN_MENU;
             }
             buttonStart = buttonEnd = MAIN_EXIT;
-        }
-        break;
+        } break;
         }
 
         int glareTicks = (int)(GetTime() * 10.0);

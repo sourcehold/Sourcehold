@@ -43,7 +43,7 @@ namespace Sourcehold {
             ~Startup();
 
             void PlayMusic();
-            int Begin();
+            UIState Begin();
         protected:
             void onEventReceive(Mouse &event) override;
 
