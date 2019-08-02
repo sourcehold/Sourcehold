@@ -44,17 +44,22 @@ namespace Sourcehold {
             COMBAT_SIEGE,
             COMBAT_INVASION,
             COMBAT_MULTIPLAYER,
+            COMBAT_BACK_TO_MAIN,
+            COMBAT_CAMPAIGN_BACK,
+            COMBAT_CAMPAIGN_NEXT,
             /* Economic */
             ECO_CAMPAIGN,
             ECO_MISSION,
             ECO_FREEBUILD,
+            ECO_BACK_TO_MAIN,
+            ECO_CAMPAIGN_BACK,
+            ECO_CAMPAIGN_NEXT,
             /* Builder */
             BUILDER_WORKING_MAP,
             BUILDER_STANDALONE,
             BUILDER_SIEGE,
             BUILDER_MULTIPLAYER,
-            BACK_TO_MAIN,
-            NEXT,
+            BUILDER_BACK_TO_MAIN,
             BUTTON_END
         };
 
@@ -73,9 +78,6 @@ namespace Sourcehold {
         protected:
             boost::filesystem::path GetGreetingsSound();
 
-            /* TODO: merge into one function */
-            void RenderBackToMain();
-            void RenderNext();
             void HideAll();
 
             /* Common resources */

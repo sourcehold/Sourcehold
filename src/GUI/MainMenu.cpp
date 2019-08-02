@@ -22,6 +22,7 @@ struct MenuButtonInfo {
 };
 
 const static MenuButtonInfo lut_buttons[] = {
+    // MAIN_MENU //
     {  0.12, 0.67, L"Exit Stronghold", false, 68, 0, 0, 0 },
     { 0.423,0.774, L"Credits", false, 77, 0, 0, 1 },
     { 0.691,0.687, L"Tutorial", false, 72, 0, 0, 0 },
@@ -30,22 +31,32 @@ const static MenuButtonInfo lut_buttons[] = {
     { 0.492,0.276, L"Map Editor", true, 49, 35, 2, 0 },
     { 0.648,0.278, L"Load a Saved Game", true, 66, 52, 3, 0 },
     { 0.732, 0.54, L"Options", false, 88, 0, 0, 1 },
+    // COMBAT_MENU //
     { 0.183,0.276, L"Play the Military Campaign", true, 15, 1, 0, 2 },
     { 0.336,0.276, L"Play a Siege", true, 32, 18, 1, 2 },
     { 0.492,0.276, L"Play an Invasion", true, 49, 35, 2, 2 },
     { 0.648,0.276, L"Play a Multiplayer Game", true, 66, 52, 3, 2 },
+    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {   0.1,  0.7, L"", false, 68, 0, 0, 2 }, // back
+    {  0.73,  0.7, L"", false, 70, 0, 0, 2 }, // next
+    // ECONOMICS_MENU //
     { 0.262,0.276, L"Play the Economics Campaign", true, 15, 1, 0, 3 },
     { 0.416,0.276, L"Play an Economics Mission", true, 32, 18, 1, 3 },
     { 0.571,0.276, L"Free Build", true, 49, 35, 2, 3 },
+    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
+    {   0.1,  0.7, L"", false, 51, 0, 0, 3 }, // back
+    {  0.73,  0.7, L"", false, 53, 0, 0, 3 }, // next
+    // BUILDER_MENU //
     { 0.183,0.276, L"New Working Map", true, 15, 1, 0, 4 },
     { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
     { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
     { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
-    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {  0.73,  0.7, L"", false, 70, 0, 0, 2 }
+    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 4 }
 };
 
+/* Connects a button to a UIState */
 const static std::map<MenuButton, UIState> actions = boost::assign::map_list_of
+    // MAIN_MENU //
     (MAIN_EXIT, EXIT_GAME)
     (MAIN_FIREFLY, CREDITS)
     (MAIN_TUTORIAL, TUTORIAL)
@@ -54,18 +65,27 @@ const static std::map<MenuButton, UIState> actions = boost::assign::map_list_of
     (MAIN_BUILDER, BUILDER_MENU)
     (MAIN_LOAD, LOAD_SAVED_MENU)
     (MAIN_SETTINGS, SETTINGS_MENU)
+    // COMBAT_MENU //
     (COMBAT_CAMPAIGN, MILITARY_CAMPAIGN_MENU)
     (COMBAT_SIEGE, SIEGE_MENU)
     (COMBAT_INVASION, INVASION_MENU)
     (COMBAT_MULTIPLAYER, MULTIPLAYER_MENU)
+    (COMBAT_BACK_TO_MAIN, MAIN_MENU)
+    (COMBAT_CAMPAIGN_BACK, COMBAT_MENU)
+    (COMBAT_CAMPAIGN_NEXT, MILITARY_CAMPAIGN_MENU) // todo
+    // ECONOMICS_MENU //
     (ECO_CAMPAIGN, ECONOMICS_CAMPAIGN_MENU)
     (ECO_MISSION, ECONOMICS_MISSION_MENU)
     (ECO_FREEBUILD, FREE_BUILD_MENU)
+    (ECO_BACK_TO_MAIN, MAIN_MENU)
+    (ECO_CAMPAIGN_BACK, ECONOMICS_MENU)
+    (ECO_CAMPAIGN_NEXT, ECONOMICS_CAMPAIGN_MENU) // todo
+    // BUILDER_MENU //
     (BUILDER_WORKING_MAP, WORKING_MAP_MENU)
     (BUILDER_STANDALONE, STAND_ALONE_MISSION_MENU)
     (BUILDER_SIEGE, SIEGE_THAT_MENU)
     (BUILDER_MULTIPLAYER, MULTIPLAYER_MAP_MENU)
-    (BACK_TO_MAIN, MAIN_MENU);
+    (BUILDER_BACK_TO_MAIN, MAIN_MENU);
 
 MainMenu::MainMenu()
 {
@@ -157,47 +177,40 @@ UIState MainMenu::EnterMenu()
         break;
         case COMBAT_MENU: {
             Render(*tgx_bg_combat);
-            RenderBackToMain();
-            buttonEnd = ECO_CAMPAIGN;
+            buttonEnd = COMBAT_BACK_TO_MAIN+1;
             buttonStart = COMBAT_CAMPAIGN;
         }
         break;
         case ECONOMICS_MENU: {
             Render(*tgx_bg_economic);
-            RenderBackToMain();
-            buttonEnd = BUILDER_WORKING_MAP;
+            buttonEnd = ECO_BACK_TO_MAIN+1;
             buttonStart = ECO_CAMPAIGN;
         }
         break;
         case ECONOMICS_CAMPAIGN_MENU: {
             Render(*tgx_bg_economic2);
-            RenderBackToMain();
-            RenderNext();
 
             DialogResult res = EconomicsMenuDialog();
-            buttonStart = buttonEnd = MAIN_EXIT;
+            buttonEnd = ECO_CAMPAIGN_NEXT+1;
+            buttonStart = ECO_CAMPAIGN_BACK;
         }
         break;
         case BUILDER_MENU: {
             Render(*tgx_bg_builder);
-            RenderBackToMain();
+            buttonEnd = BUILDER_BACK_TO_MAIN+1;
             buttonStart = BUILDER_WORKING_MAP;
-            buttonEnd = BACK_TO_MAIN;
         }
         break;
         case MILITARY_CAMPAIGN_MENU: {
             Render(*tgx_bg_combat2);
-            RenderBackToMain();
-            RenderNext();
 
             DialogResult res = CombatMenuDialog();
-            buttonStart = buttonEnd = MAIN_EXIT;
+            buttonEnd = COMBAT_CAMPAIGN_NEXT+1;
+            buttonStart = COMBAT_CAMPAIGN_BACK;
         }
         break;
         case SIEGE_MENU: {
             Render(*tgx_bg_combat2);
-            RenderBackToMain();
-            RenderNext();
 
             DialogResult res = SiegeMenuDialog();
             buttonStart = buttonEnd = MAIN_EXIT;
@@ -314,52 +327,11 @@ boost::filesystem::path MainMenu::GetGreetingsSound()
     return snd;
 }
 
-void MainMenu::RenderBackToMain()
-{
-    ui_elems[BACK_TO_MAIN].Show();
-    ui_elems[BACK_TO_MAIN].Render(
-    [&]() -> SDL_Rect {
-        MenuButtonInfo inf = lut_buttons[BACK_TO_MAIN];
-        auto tex = ui_tex[inf.atlasIndex];
-
-        if(ui_elems[BACK_TO_MAIN].IsClicked()) selected = BACK_TO_MAIN;
-        if (ui_elems[BACK_TO_MAIN].IsMouseOver())
-        {
-            RenderMenuText(inf.text);
-            return tex->Get(inf.index + 1);
-        }
-        else
-        {
-            return tex->Get(inf.index);
-        }
-    });
-}
-
-void MainMenu::RenderNext()
-{
-    ui_elems[NEXT].Show();
-    ui_elems[NEXT].Render(
-    [&]() -> SDL_Rect {
-        MenuButtonInfo inf = lut_buttons[NEXT];
-        auto tex = ui_tex[inf.atlasIndex];
-
-        if(ui_elems[NEXT].IsClicked()) selected = NEXT;
-        if (ui_elems[NEXT].IsMouseOver())
-        {
-            RenderMenuText(inf.text);
-            return tex->Get(inf.index + 1);
-        }
-        else
-        {
-            return tex->Get(inf.index);
-        }
-    });
-}
-
 void MainMenu::HideAll()
 {
     for(auto & e : ui_elems) {
         e.Hide();
     }
 }
+
 
