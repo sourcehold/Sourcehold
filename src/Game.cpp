@@ -118,7 +118,7 @@ int StartGame(GameOptions &opt)
         if(index == 0) {
             World world;
             world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
-            world.Play();
+            state = world.Play();
         }
     } break;
     case EXIT_GAME: goto exit;

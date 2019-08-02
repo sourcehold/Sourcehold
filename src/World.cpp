@@ -11,7 +11,6 @@
 #include <GUI/MenuUtils.h>
 
 using namespace Sourcehold::Game;
-using namespace Sourcehold::GUI;
 
 /**
  * Indices into the texture atlas for every user interface tab.
@@ -107,7 +106,7 @@ World::~World()
 {
 }
 
-int World::Play()
+UIState World::Play()
 {
     while(Running()) {
         ClearDisplay();
@@ -125,13 +124,24 @@ int World::Play()
             UpdateMenubar();
         }
 
+        if(escMenu) {
+            DialogResult res = EscMenu();
+            if(res == BACK) escMenu = false;
+            else if(res == QUIT) {
+                return EXIT_GAME;
+            }else if(res == QUIT_MISSION) {
+                // TODO
+                return EXIT_GAME;
+            }
+        }
+
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
 
         FlushDisplay();
         SyncDisplay();
     }
 
-    return 0;
+    return EXIT_GAME;
 }
 
 void World::RenderQuickMenu()
@@ -340,7 +350,7 @@ void World::onEventReceive(Keyboard &keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
-            ReleaseMouse();
+            escMenu = !escMenu;
             break;
         default:
             break;

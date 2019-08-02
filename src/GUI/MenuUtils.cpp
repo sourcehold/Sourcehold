@@ -278,8 +278,11 @@ void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, b
 
 DialogResult GUI::QuitDialog()
 {
-    int x = (1024 / 2) - (18*24 / 2);
-    int y = (768  / 2) - (7*24  / 2);
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (18*24 / 2);
+    int y = (h / 2) - (7*24  / 2);
 
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, L"Exit Stronghold", true);
@@ -295,10 +298,35 @@ DialogResult GUI::QuitDialog()
     return IDLE;
 }
 
+DialogResult QuitMissionDialog()
+{
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (18*24 / 2);
+    int y = (h / 2) - (7*24  / 2);
+
+    RenderDialogBorder(x, y, 18, 6);
+    RenderDialogTextBox(x, y, 433, 64, L"Quit Mission", true);
+
+    if(RenderButton(BUTTON_4, L"Yes", x+105, y+105)) {
+        return QUIT_MISSION;
+    }
+
+    if(RenderButton(BUTTON_4, L"No", x+245, y+105)) {
+        return BACK;
+    }
+
+    return IDLE;
+}
+
 DialogResult GUI::LoadDialog(std::string &name)
 {
-    int x = (1024 / 2) - (30*24 / 2);
-    int y = (768  / 2) - (17*24 / 2);
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (30*24 / 2);
+    int y = (h / 2) - (17*24 / 2);
 
     RenderDialogBorder(x, y, 30, 17);
     RenderDialogTextBox(x, y, 288, 64, L"Load", true);
@@ -354,8 +382,11 @@ DialogResult GUI::SettingsDialog()
         CHANGE_NAME
     } state = GAME_OPTIONS;
 
-    int x = (1024 / 2) - (21*24 / 2);
-    int y = (768  / 2) - (15*24 / 2);
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (21*24 / 2);
+    int y = (h / 2) - (15*24 / 2);
 
     switch(state) {
     case GAME_OPTIONS: {
@@ -427,6 +458,79 @@ DialogResult GUI::SettingsDialog()
         _name_edit.Render(x+85, y+110, 34);
     } break;
     default: break;
+    }
+
+    return IDLE;
+}
+
+DialogResult GUI::EscMenu()
+{
+    static enum Options {
+        GAME_OPTIONS,
+        SAVE,
+        LOAD,
+        OPTIONS,
+        HELP,
+        RESTART_MISSION,
+        QUIT_MISSION,
+        EXIT_STRONGHOLD
+    } state = GAME_OPTIONS;
+
+    int w = GetWidth();
+    int h = GetHeight();
+
+    int x = (w / 2) - (21*24 / 2);
+    int y = (h / 2) - (15*24 / 2);
+
+    if(state == GAME_OPTIONS) {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, L"Game Options", true);
+
+        if(RenderButton(BUTTON_1, L"Save", x + 110, y + 90)) {
+        }
+        if(RenderButton(BUTTON_1, L"Load", x + 110, y + 122)) {
+            state = LOAD;
+        }
+        if(RenderButton(BUTTON_1, L"Options", x + 110, y + 152)) {
+            state = OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, L"Help", x + 110, y + 182)) {
+        }
+        if(RenderButton(BUTTON_1, L"Restart Mission", x + 110, y + 212)) {
+        }
+        if(RenderButton(BUTTON_1, L"Quit Mission", x + 110, y + 242)) {
+            state = QUIT_MISSION;
+        }
+        if(RenderButton(BUTTON_1, L"Exit Stronghold", x + 110, y + 272)) {
+            state = EXIT_STRONGHOLD;
+        }
+        if(RenderButton(BUTTON_1, L"Resume", x + 110, y + 302)) {
+            return BACK;
+        }
+    }else if(state == EXIT_STRONGHOLD) {
+        DialogResult res = QuitDialog();
+        if(res == QUIT) {
+            return QUIT;
+        }else if(res == BACK) {
+            state = GAME_OPTIONS;
+        }
+    }else if(state == OPTIONS) {
+        DialogResult res = SettingsDialog();
+        if(res == BACK) state = GAME_OPTIONS;
+    }else if(state == LOAD) {
+        std::string file;
+        DialogResult res = LoadDialog(file);
+        if(res == BACK) state = GAME_OPTIONS;
+        else if(res == DialogResult::LOAD) {
+            // TODO
+        }
+    }else if(state == QUIT_MISSION) {
+        DialogResult res = QuitMissionDialog();
+        if(res == DialogResult::QUIT_MISSION) {
+            return DialogResult::QUIT_MISSION;
+        }else if(res == BACK) {
+            state = GAME_OPTIONS;
+        }
     }
 
     return IDLE;

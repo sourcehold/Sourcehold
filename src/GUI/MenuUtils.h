@@ -34,8 +34,10 @@ namespace Sourcehold {
         enum DialogResult {
             IDLE,
             LOAD,
+            SAVE,
             BACK,
-            QUIT
+            QUIT,
+            QUIT_MISSION
         };
 
         DialogResult QuitDialog();
@@ -44,6 +46,7 @@ namespace Sourcehold {
         DialogResult SiegeMenuDialog();
         DialogResult EconomicsMenuDialog();
         DialogResult SettingsDialog();
+        DialogResult EscMenu();
 
         int GetMilitaryCampaignIndex();
         int GetEconomicsCampaignIndex();

@@ -5,6 +5,7 @@
 #include <GameMap.h>
 
 #include <GUI/StaticElement.h>
+#include <GUI/UIState.h>
 
 #include <Rendering/Texture.h>
 
@@ -34,6 +35,8 @@ namespace Sourcehold {
             Scroll left;
         };
 
+        using namespace GUI;
+
         /**
          * Handles everything related to the game world, including
          * loading, rendering and moving the camera
@@ -60,13 +63,14 @@ namespace Sourcehold {
             /* Quick menu */
             StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
             bool rmbHolding = false;
+            bool escMenu = false;
             Uint32 mouseX, mouseY;
         public:
             World();
             World(const World&) = delete;
             ~World();
 
-            int Play();
+            UIState Play();
         protected:
             void RenderQuickMenu();
             void RenderMenubar();
