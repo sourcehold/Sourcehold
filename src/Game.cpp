@@ -112,6 +112,15 @@ int StartGame(GameOptions &opt)
     /* Start the intro sequence and the main menu */
     UIState state = start.Begin();
     switch(state) {
+    case MILITARY_CAMPAIGN_MISSION: {
+        int index = GetMilitaryCampaignIndex();
+        // TODO
+        if(index == 0) {
+            World world;
+            world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
+            world.Play();
+        }
+    } break;
     case EXIT_GAME: goto exit;
     default: break;
     }

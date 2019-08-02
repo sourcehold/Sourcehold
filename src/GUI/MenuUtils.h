@@ -44,5 +44,8 @@ namespace Sourcehold {
         DialogResult SiegeMenuDialog();
         DialogResult EconomicsMenuDialog();
         DialogResult SettingsDialog();
+
+        int GetMilitaryCampaignIndex();
+        int GetEconomicsCampaignIndex();
     }
 }

@@ -4,9 +4,7 @@
 #include <GUI/MainMenu.h>
 #include <Rendering/Font.h>
 #include <System/Config.h>
-
 #include <Assets.h>
-#include <World.h>
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -198,6 +196,11 @@ UIState MainMenu::EnterMenu()
             buttonEnd = COMBAT_CAMPAIGN_NEXT+1;
             buttonStart = COMBAT_CAMPAIGN_BACK;
         } break;
+        case MILITARY_CAMPAIGN_MISSION: {
+            // TODO
+            if(GetMilitaryCampaignIndex() >= 0) return MILITARY_CAMPAIGN_MISSION;
+            else currentState = MILITARY_CAMPAIGN_MENU;
+        }
         case SIEGE_MENU: {
             Render(*tgx_bg_combat2);
 

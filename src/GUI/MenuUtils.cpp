@@ -56,8 +56,6 @@ bool GUI::InitializeUtils()
 
     /* Add some test maps */
     _table_combat.SetText(0, 0, L"mission0");
-    _table_combat.SetText(0, 1, L"mission1");
-    _table_combat.SetText(0, 2, L"mission2");
 
     _table_eco.Create(1, 5);
     _table_eco.Scrollable(false);
@@ -433,3 +431,14 @@ DialogResult GUI::SettingsDialog()
 
     return IDLE;
 }
+
+int GUI::GetMilitaryCampaignIndex()
+{
+    return _table_combat.GetSelected();
+}
+
+int GUI::GetEconomicsCampaignIndex()
+{
+    return _table_eco.GetSelected();
+}
+
