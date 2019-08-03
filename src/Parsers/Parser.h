@@ -29,6 +29,7 @@ namespace Sourcehold {
 
             bool GetData(void *buf, size_t bufsize);
             bool GetWhole(void *buf);
+            std::wstring GetUTF16(uint32_t len);
             std::wstring GetUTF16();
             std::string GetLine();
             uint8_t GetByte();

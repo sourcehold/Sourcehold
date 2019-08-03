@@ -62,6 +62,24 @@ bool Parser::GetWhole(void *buf)
     return true;
 }
 
+std::wstring Parser::GetUTF16(uint32_t len)
+{
+    std::wstring ws;
+
+    while(Ok() && ws.length() < len) {
+        uint16_t word = GetWord();
+
+        uint8_t lo = word & 0xFF;
+        uint8_t hi = word >> 8;
+
+        int byte = hi << 8 | lo;
+
+        ws.push_back(byte);
+    }
+
+    return ws;
+}
+
 std::wstring Parser::GetUTF16()
 {
     std::wstring ws;
@@ -73,7 +91,7 @@ std::wstring Parser::GetUTF16()
         uint8_t hi = word >> 8;
 
         int byte = hi << 8 | lo;
-        if(byte == 0) break;
+        if(!byte) break;
 
         ws.push_back(byte);
     }

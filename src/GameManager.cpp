@@ -16,6 +16,7 @@
 #include <Parsers/Gm1File.h>
 #include <Parsers/AniFile.h>
 #include <Parsers/HlpFile.h>
+#include <Parsers/TexFile.h>
 
 #include <Audio/Audio.h>
 
@@ -32,6 +33,7 @@ static int _usernameIndex = -1;
 static GameOptions _opt;
 static MlbFile _mlb;
 static CfgFile _cfg;
+static TexFile _tex;
 static boost::filesystem::path _cfgPath;
 static boost::filesystem::path _dataFolder;
 static boost::filesystem::path _saveFolder;
@@ -270,6 +272,7 @@ bool Game::LoadGameData()
 
     /* Load special files */
     if( !_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb") ||
+        !_tex.LoadFromDisk(_dataFolder / "sh.tex") ||
         !_cfg.LoadFromDisk(_cfgPath) ||
         !LoadStrongholdHlp()
         ) {
