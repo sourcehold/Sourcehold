@@ -89,8 +89,8 @@ namespace Sourcehold {
          * a text string from the 'stronghold.mlb'
          * and 'sh.tex' files.
          */
-        std::wstring GetLocalizedDescription(LocalizedMissionDescription index);
-        std::wstring GetLocalizedString(LocalizedTextString index);
+        std::wstring GetDescription(MissionDescription index);
+        std::wstring GetString(TextSection sec, uint16_t index);
 
         /**
          * Register a function which will tick every frame

@@ -361,15 +361,15 @@ void Game::SaveConfig()
     _cfg.WriteToDisk(_cfgPath);
 }
 
-std::wstring Game::GetLocalizedDescription(LocalizedMissionDescription index)
+std::wstring Game::GetDescription(MissionDescription index)
 {
     std::wstring& str = _mlb.GetString(index);
     return str;
 }
 
-std::wstring Game::GetLocalizedString(LocalizedTextString index)
+std::wstring Game::GetString(TextSection sec, uint16_t index)
 {
-    std::wstring str;
+    std::wstring str = _tex.GetString(sec, index);
     return str;
 }
 

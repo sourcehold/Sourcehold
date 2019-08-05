@@ -26,7 +26,7 @@ namespace Sourcehold {
             bool LoadFromDisk(boost::filesystem::path path);
             void Clear();
 
-            inline std::wstring& GetString(Assets::LocalizedMissionDescription index) {
+            inline std::wstring& GetString(Assets::MissionDescription index) {
                 return field.at(index);
             }
         protected:

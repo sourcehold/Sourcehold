@@ -20,14 +20,25 @@ bool TexFile::LoadFromDisk(boost::filesystem::path path)
     Parser::GetData(&offsets, sizeof(offsets));
     Parser::SeekG(0x3e8);
 
-    for(uint32_t i = 0; i < 250; i++) {
+    for(uint32_t i = 0; i < 249; i++) {
         uint32_t fp = 0x3e8 + (offsets[i] << 1);
+        uint32_t end = 0x3e8 + (offsets[i+1] << 1) - 9;
         Parser::SeekG(fp);
 
-        std::wstring sectionDesc = Parser::GetUTF16();
-        // TODO
+        while(Parser::Ok() && fp < end) {
+            std::wstring str = Parser::GetUTF16();
+            fp += str.size()*2 + 4;
+            Parser::SeekG(fp);
+
+            strings[(TextSection)i].push_back(str);
+        }
     }
 
     Parser::Close();
     return true;
+}
+
+std::wstring &TexFile::GetString(TextSection sec, uint16_t index)
+{
+    return strings.at(sec)[index];
 }

@@ -285,13 +285,13 @@ DialogResult GUI::QuitDialog()
     int y = (h / 2) - (7*24  / 2);
 
     RenderDialogBorder(x, y, 18, 6);
-    RenderDialogTextBox(x, y, 433, 64, L"Exit Stronghold", true);
+    RenderDialogTextBox(x, y, 433, 64, GetString(T_MAIN_MENU, 5), true);
 
-    if(RenderButton(BUTTON_4, L"Yes", x+105, y+105)) {
+    if(RenderButton(BUTTON_4, GetString(T_GAME_OPTIONS, 22), x+105, y+105)) {
         return QUIT;
     }
 
-    if(RenderButton(BUTTON_4, L"No", x+245, y+105)) {
+    if(RenderButton(BUTTON_4, GetString(T_GAME_OPTIONS, 23), x+245, y+105)) {
         return BACK;
     }
 
@@ -501,7 +501,7 @@ DialogResult GUI::EscMenu()
         if(RenderButton(BUTTON_1, L"Quit Mission", x + 110, y + 242)) {
             state = QUIT_MISSION;
         }
-        if(RenderButton(BUTTON_1, L"Exit Stronghold", x + 110, y + 272)) {
+        if(RenderButton(BUTTON_1, GetString(T_MAIN_MENU, 5), x + 110, y + 272)) {
             state = EXIT_STRONGHOLD;
         }
         if(RenderButton(BUTTON_1, L"Resume", x + 110, y + 302)) {
