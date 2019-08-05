@@ -56,10 +56,11 @@ namespace Sourcehold {
 
             enum StartupSequence : uint8_t {
                 STARTUP_FIREFLY_LOGO = 0,
-                STARTUP_TAKETWO_LOGO = 1,
-                STARTUP_PRESENT = 2,
-                STARTUP_STRONGHOLD_LOGO = 3,
-                STARTUP_INTRO = 4
+                STARTUP_TAKETWO_LOGO,
+                STARTUP_PRESENT,
+                STARTUP_STRONGHOLD_LOGO,
+                STARTUP_MULTIPLAYER_INFO,
+                STARTUP_INTRO
             };
 
             UIState currentUIState = UIState::INTRO_SEQUENCE;

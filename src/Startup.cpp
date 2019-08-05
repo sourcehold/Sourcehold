@@ -1,5 +1,5 @@
 #include <Startup.h>
-
+#include <Rendering/Font.h>
 #include <System/Logger.h>
 
 using namespace Sourcehold::Game;
@@ -34,6 +34,12 @@ UIState Startup::Begin()
 
     startTime = GetTime();
 
+    const std::wstring &startupStr = GetString(T_START_TEXT, 1);
+    auto font = GetGm1(GetDirectory() / "gm/font_stronghold_aa.gm1")->GetTextureAtlas();
+    auto dim = GetStringPixelDim(startupStr, FONT_LARGE);
+    dim.first *= 0.7;
+    dim.second *= 0.7;
+
     Uint8 alpha = 255;
     double fadeBase = startTime;
     Resolution res = GetResolution();
@@ -44,12 +50,12 @@ UIState Startup::Begin()
 
         switch(currentUIState) {
         case INTRO_SEQUENCE: {
-                        /* Logo switching */
+            /* Logo switching */
             double now = GetTime();
             double delta = now - startTime;
 
             /* Logo fading */
-            if(currentStartupState < STARTUP_STRONGHOLD_LOGO) {
+            if(currentStartupState < STARTUP_STRONGHOLD_LOGO || currentStartupState == STARTUP_MULTIPLAYER_INFO) {
                 if(delta > 5.0) {
                     currentStartupState++;
                     startTime = now;
@@ -120,7 +126,16 @@ UIState Startup::Begin()
                     Render(*tgx_logo, px, py);
                 }
             }
+            else if(currentStartupState == STARTUP_MULTIPLAYER_INFO) {
+                int tx = (GetWidth() / 2) - (dim.first / 2);
+                int ty = (GetHeight() / 2) - (dim.second / 2);
+
+                font->SetAlphaMod(alpha);
+                RenderText(startupStr, tx, ty, FONT_LARGE, false, 0.7);
+            }
             else if(currentStartupState == STARTUP_INTRO) {
+                font->SetAlphaMod(255);
+
                 aud_startup.SetFadeOut(1.0);
                 aud_startup.UpdateFade();
                 intro->Update();

@@ -38,6 +38,8 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
         return;
     }
 
+    font->GetTextureAtlas()->SetColorMod(248, 240, 184);
+
     SDL_Rect glyph = {};
     for(wchar_t c : text) {
         if(c < 0x20) continue;
