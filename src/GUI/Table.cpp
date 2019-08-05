@@ -68,7 +68,7 @@ void Table::Render(int x, int y, int w)
             RenderRect(Rect<int>(x, y+20*i, w, 20), r, g, b, 152, true);
         }
 
-        RenderText(col, x + 10, 2+y+20*i, FONT_SMALL);
+        RenderText(col, Rect<int>(x + 10, 2+y+20*i, w, 20), Align::LEFT, FONT_LARGE, false);
     }
 
     RenderRect(Rect<int>(x, y, w, 20*numCols), 239, 239, 189, 255, false);

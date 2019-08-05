@@ -47,15 +47,17 @@ bool GUI::InitializeUtils()
     }
 
     _table_load.Create(2, 16);
-    _table_load.SetRowName(0, L"Name");
-    _table_load.SetRowName(1, L"Date");
+    _table_load.SetRowName(0, GetString(T_GAME_OPTIONS, 27));
+    _table_load.SetRowName(1, GetString(T_GAME_OPTIONS, 28));
 
     _table_combat.Create(1, 21);
     _table_combat.Scrollable(false);
     _table_combat.RenderNames(false);
 
     /* Add some test maps */
-    _table_combat.SetText(0, 0, L"mission0");
+    for(int i = 0; i < 21; i++) {
+        _table_combat.SetText(0, i, std::to_wstring(i+1) + L" " + GetString(T_MISSION_NAMES, 1+i));
+    }
 
     _table_eco.Create(1, 5);
     _table_eco.Scrollable(false);
@@ -75,8 +77,7 @@ bool GUI::InitializeUtils()
 
 void GUI::RenderMenuText(const std::wstring &text)
 {
-    if(text.empty()
-        ) return;
+    if(text.empty()) return;
 
     std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
@@ -169,7 +170,7 @@ bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint
     Render(*atlas.get(), int(x), int(y), &rect);
 
     // text
-    RenderText(text, int(x + (rect.w / 2) - (dim.first / 2)), int(y + (rect.h / 2) - (dim.second / 2))+2, FONT_SMALL);
+    RenderText(text, Rect<int>(x+4, y+4, rect.w-4, rect.h-4), Align::CENTER, FONT_LARGE, false);
 
     return clicked;
 }
@@ -307,13 +308,13 @@ DialogResult QuitMissionDialog()
     int y = (h / 2) - (7*24  / 2);
 
     RenderDialogBorder(x, y, 18, 6);
-    RenderDialogTextBox(x, y, 433, 64, L"Quit Mission", true);
+    RenderDialogTextBox(x, y, 433, 64, GetString(T_GAME_OPTIONS, 7), true);
 
-    if(RenderButton(BUTTON_4, L"Yes", x+105, y+105)) {
+    if(RenderButton(BUTTON_4, GetString(T_GAME_OPTIONS, 22), x+105, y+105)) {
         return QUIT_MISSION;
     }
 
-    if(RenderButton(BUTTON_4, L"No", x+245, y+105)) {
+    if(RenderButton(BUTTON_4, GetString(T_GAME_OPTIONS, 23), x+245, y+105)) {
         return BACK;
     }
 
@@ -328,13 +329,15 @@ DialogResult GUI::LoadDialog(std::string &name)
     int x = (w / 2) - (30*24 / 2);
     int y = (h / 2) - (17*24 / 2);
 
-    RenderDialogBorder(x, y, 30, 17);
-    RenderDialogTextBox(x, y, 288, 64, L"Load", true);
+    const std::wstring &load = GetString(T_GAME_OPTIONS, 2);
 
-    if(RenderButton(BUTTON_3, L"Load", x+52, y+300)) {
+    RenderDialogBorder(x, y, 30, 17);
+    RenderDialogTextBox(x, y, 288, 64, load, true);
+
+    if(RenderButton(BUTTON_3, load, x+52, y+300)) {
         // todo
     }
-    if(RenderButton(BUTTON_3, L"Back", x+52, y+340)) {
+    if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x+52, y+340)) {
         return BACK;
     }
 
@@ -348,7 +351,7 @@ DialogResult GUI::CombatMenuDialog()
     int x = (1024 / 2) - (416 / 2);
     int y = 90;
 
-    RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
+    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
 
     _table_combat.Render(x + 37, y + 90, 363);
 
@@ -365,7 +368,7 @@ DialogResult GUI::EconomicsMenuDialog()
     int x = (1024 / 2) - (416 / 2);
     int y = 250;
 
-    RenderDialogTextBox(x, y, 416, 64, L"Mission", true);
+    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
 
     _table_eco.Render(x + 37, y + 90, 363);
 
@@ -391,52 +394,52 @@ DialogResult GUI::SettingsDialog()
     switch(state) {
     case GAME_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, L"Game Options", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
 
-        if(RenderButton(BUTTON_1, L"Game Play Options", x + 110, y + 110)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 25), x + 110, y + 110)) {
             state = GAMEPLAY_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Video Options", x + 110, y + 145)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 4), x + 110, y + 145)) {
             state = VIDEO_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Sound Options", x + 110, y + 180)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 5), x + 110, y + 180)) {
             state = SOUND_OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Change your name", x + 110, y + 215)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 45), x + 110, y + 215)) {
             _name_edit.BeginInput();
             state = CHANGE_NAME;
         }
-        if(RenderButton(BUTTON_1, L"Back", x + 110, y + 260)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 260)) {
             return BACK;
         }
     } break;
     case GAMEPLAY_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, L"Game Play Options", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 25), true);
 
-        if(RenderButton(BUTTON_3, L"Apply", x + 45, y + 235)) {
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 235)) {
             state = GAME_OPTIONS;
         }
-        if(RenderButton(BUTTON_3, L"Back", x + 265, y + 235)) {
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 235)) {
             state = GAME_OPTIONS;
         }
     } break;
     case VIDEO_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, L"Video Options", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 4), true);
 
-        if(RenderButton(BUTTON_3, L"Apply", x + 45, y + 265)) {
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 265)) {
             state = GAME_OPTIONS;
         }
-        if(RenderButton(BUTTON_3, L"Back", x + 265, y + 265)) {
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 265)) {
             state = GAME_OPTIONS;
         }
     } break;
     case SOUND_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, L"Sound Options", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 5), true);
 
-        if(RenderButton(BUTTON_1, L"Back", x + 110, y + 265)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 265)) {
             state = GAME_OPTIONS;
         }
     } break;
@@ -444,9 +447,9 @@ DialogResult GUI::SettingsDialog()
         y = (768  / 2) - (8*24 / 2);
 
         RenderDialogBorder(x, y, 21, 9);
-        RenderDialogTextBox(x, y, 505, 64, L"Change your name", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 45), true);
 
-        if(RenderButton(BUTTON_3, L"Back", x + 260, y + 170)) {
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 260, y + 170)) {
             _name_edit.EndInput();
 
             CfgFile &cfg = GetCfg();
@@ -484,27 +487,27 @@ DialogResult GUI::EscMenu()
 
     if(state == GAME_OPTIONS) {
         RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, L"Game Options", true);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
 
-        if(RenderButton(BUTTON_1, L"Save", x + 110, y + 90)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 3), x + 110, y + 90)) {
         }
-        if(RenderButton(BUTTON_1, L"Load", x + 110, y + 122)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 2), x + 110, y + 122)) {
             state = LOAD;
         }
-        if(RenderButton(BUTTON_1, L"Options", x + 110, y + 152)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 24), x + 110, y + 152)) {
             state = OPTIONS;
         }
-        if(RenderButton(BUTTON_1, L"Help", x + 110, y + 182)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 26), x + 110, y + 182)) {
         }
-        if(RenderButton(BUTTON_1, L"Restart Mission", x + 110, y + 212)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 34), x + 110, y + 212)) {
         }
-        if(RenderButton(BUTTON_1, L"Quit Mission", x + 110, y + 242)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 7), x + 110, y + 242)) {
             state = QUIT_MISSION;
         }
-        if(RenderButton(BUTTON_1, GetString(T_MAIN_MENU, 5), x + 110, y + 272)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 9), x + 110, y + 272)) {
             state = EXIT_STRONGHOLD;
         }
-        if(RenderButton(BUTTON_1, L"Resume", x + 110, y + 302)) {
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 10), x + 110, y + 302)) {
             return BACK;
         }
     }else if(state == EXIT_STRONGHOLD) {

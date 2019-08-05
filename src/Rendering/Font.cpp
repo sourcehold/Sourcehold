@@ -31,7 +31,7 @@ void Rendering::UnloadFonts()
     _fonts[2].reset();
 }
 
-void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font type, bool illumination)
+void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font type, bool illumination, double scaleFactor)
 {
     auto font = _fonts[type];
     if (illumination && text.size() != 1) {
@@ -43,7 +43,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
         if(c < 0x20) continue;
         /* Space */
         if(c == 0x20) {
-            x += _table_width_height[type].first;
+            x += _table_width_height[type].first*scaleFactor;
         }
         else {
             /* Calculate lowercase offset */
@@ -76,21 +76,36 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
             glyph = font->GetTextureAtlas()->Get(c - 0x21);
             Render(*font->GetTextureAtlas(),
                    illumination ? (x + (13 - glyph.w)/2) : x,
-                   y + _table_width_height[type].second - glyph.h + lowercaseOffset,
-                   glyph.w,
-                   glyph.h,
+                   y + int(_table_width_height[type].second*scaleFactor)- int(glyph.h*scaleFactor) + int(lowercaseOffset*scaleFactor),
+                   int(glyph.w*scaleFactor),
+                   int(glyph.h*scaleFactor),
                    &glyph);
-
-            x += glyph.w +1;
+            x += glyph.w*scaleFactor+1;
         }
     }
 }
 
-void Rendering::RenderText(const std::wstring& text, double x, double y, Font type, bool illumination)
+void Rendering::RenderText(const std::wstring& text, Rect<int> bounds, Align al, Font type, bool illumination)
 {
-    int32_t rx = ToCoordX(GetTargetWidth() * x);
-    int32_t ry = ToCoordY(GetTargetHeight() * y);
-    RenderText(text, rx, ry, type, illumination);
+    auto dim = GetStringPixelDim(text, type);
+
+    double factor = (double(bounds.h) / dim.second) * 0.75;
+
+    dim.first *= factor;
+    dim.second *= factor;
+
+    int x=0, y=0;
+    if(al == Align::CENTER) {
+        x = bounds.x + bounds.w/2 - dim.first/2;
+    } else if(al == Align::LEFT) {
+        x = bounds.x + 4;
+    } else if(al == Align::RIGHT) {
+        x = bounds.x + bounds.w - dim.first - 4;
+    }
+
+    y = bounds.y + bounds.h/2 - dim.second/2;
+
+    RenderText(text, x, y, type, illumination, factor);
 }
 
 std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(const std::wstring& text, Font type)

@@ -13,8 +13,10 @@ using namespace Sourcehold::Rendering;
 struct MenuButtonInfo {
     double x;
     double y;
-    const wchar_t *text;
+    TextSection sec;
+    uint16_t textIndex;
     bool hasGlare;
+    bool hasText;
     uint8_t index;
     uint8_t glareIndex;
     uint8_t glareOrder;
@@ -23,35 +25,35 @@ struct MenuButtonInfo {
 
 const static MenuButtonInfo lut_buttons[] = {
     // MAIN_MENU //
-    {  0.12, 0.67, L"Exit Stronghold", false, 68, 0, 0, 0 },
-    { 0.423,0.774, L"Credits", false, 77, 0, 0, 1 },
-    { 0.691,0.687, L"Tutorial", false, 72, 0, 0, 0 },
-    { 0.183,0.276, L"Combat-based games", true, 15, 1, 0, 0 },
-    { 0.336,0.276, L"Economic-based games", true, 32, 18, 1, 0 },
-    { 0.492,0.276, L"Map Editor", true, 49, 35, 2, 0 },
-    { 0.648,0.278, L"Load a Saved Game", true, 66, 52, 3, 0 },
-    { 0.732, 0.54, L"Options", false, 88, 0, 0, 1 },
+    {  0.12, 0.67, T_MAIN_MENU,      5, false, true, 68,  0, 0, 0 },
+    { 0.423,0.774, T_BUILDINGS,    301, false, true, 77,  0, 0, 1 },
+    { 0.691,0.687, T_BUILDINGS,    286, false, true, 72,  0, 0, 0 },
+    { 0.183,0.276, T_BUILDINGS,    226, true,  true, 15,  1, 0, 0 },
+    { 0.336,0.276, T_BUILDINGS,    227, true,  true, 32, 18, 1, 0 },
+    { 0.492,0.276, T_BUILDINGS,    228, true,  true, 49, 35, 2, 0 },
+    { 0.648,0.278, T_BUILDINGS,    229, true,  true, 66, 52, 3, 0 },
+    { 0.732, 0.54, T_GAME_OPTIONS,  24, false, true, 88,  0, 0, 1 },
     // COMBAT_MENU //
-    { 0.183,0.276, L"Play the Military Campaign", true, 15, 1, 0, 2 },
-    { 0.336,0.276, L"Play a Siege", true, 32, 18, 1, 2 },
-    { 0.492,0.276, L"Play an Invasion", true, 49, 35, 2, 2 },
-    { 0.648,0.276, L"Play a Multiplayer Game", true, 66, 52, 3, 2 },
-    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {   0.1,  0.7, L"", false, 68, 0, 0, 2 }, // back
-    {  0.73,  0.7, L"", false, 70, 0, 0, 2 }, // next
+    { 0.183,0.276, T_BUILDINGS, 258, true,  true,  15,  1, 0, 2 },
+    { 0.336,0.276, T_BUILDINGS, 260, true,  true,  32, 18, 1, 2 },
+    { 0.492,0.276, T_BUILDINGS, 261, true,  true,  49, 35, 2, 2 },
+    { 0.648,0.276, T_BUILDINGS, 259, true,  true,  66, 52, 3, 2 },
+    {   0.1,  0.7, T_BUILDINGS, 270, false, true,  70,  0, 0, 0 },
+    {   0.1,  0.7, T_BUILDINGS,   0, false, false, 68,  0, 0, 2 }, // back
+    {  0.73,  0.7, T_BUILDINGS,   0, false, false, 70,  0, 0, 2 }, // next
     // ECONOMICS_MENU //
-    { 0.262,0.276, L"Play the Economics Campaign", true, 15, 1, 0, 3 },
-    { 0.416,0.276, L"Play an Economics Mission", true, 32, 18, 1, 3 },
-    { 0.571,0.276, L"Free Build", true, 49, 35, 2, 3 },
-    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 0 },
-    {   0.1,  0.7, L"", false, 51, 0, 0, 3 }, // back
-    {  0.73,  0.7, L"", false, 53, 0, 0, 3 }, // next
+    { 0.262,0.276, T_BUILDINGS, 262,  true,  true, 15,  1, 0, 3 },
+    { 0.416,0.276, T_BUILDINGS, 263,  true,  true, 32, 18, 1, 3 },
+    { 0.571,0.276, T_BUILDINGS, 264,  true,  true, 49, 35, 2, 3 },
+    {   0.1,  0.7, T_BUILDINGS, 270, false,  true, 70,  0, 0, 0 },
+    {   0.1,  0.7, T_BUILDINGS,   0, false, false, 51,  0, 0, 3 }, // back
+    {  0.73,  0.7, T_BUILDINGS,   0, false, false, 53,  0, 0, 3 }, // next
     // BUILDER_MENU //
-    { 0.183,0.276, L"New Working Map", true, 15, 1, 0, 4 },
-    { 0.336,0.276, L"New Stand-Alone Mission", true, 32, 18, 1, 4 },
-    { 0.492,0.276, L"New 'Siege That' Mission", true, 49, 35, 2, 4 },
-    { 0.648,0.276, L"New Multiplayer Mission", true, 66, 52, 3, 4 },
-    {   0.1,  0.7, L"Back to Main Menu", false, 70, 0, 0, 4 }
+    { 0.183,0.276, T_BUILDINGS, 266,  true, true, 15,  1, 0, 4 },
+    { 0.336,0.276, T_BUILDINGS, 267,  true, true, 32, 18, 1, 4 },
+    { 0.492,0.276, T_BUILDINGS, 268,  true, true, 49, 35, 2, 4 },
+    { 0.648,0.276, T_BUILDINGS, 269,  true, true, 66, 52, 3, 4 },
+    {   0.1,  0.7, T_BUILDINGS, 270, false, true, 70,  0, 0, 4 }
 };
 
 /* Connects a button to a UIState */
@@ -272,7 +274,7 @@ UIState MainMenu::EnterMenu()
 
                 if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
                 if (ui_elems[i].IsMouseOver()) {
-                    RenderMenuText(inf.text);
+                    if(inf.hasText) RenderMenuText(GetString(inf.sec, inf.textIndex));
                     return tex->Get(inf.index + 1);
                 } else {
                     if(inf.hasGlare && inf.glareOrder == glareCounter) {
@@ -293,7 +295,7 @@ UIState MainMenu::EnterMenu()
             }
         }
 
-        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_SMALL);
+        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
         ResetTarget();
 
         if(edition == STRONGHOLD_HD) {
