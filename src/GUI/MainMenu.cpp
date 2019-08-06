@@ -200,7 +200,10 @@ UIState MainMenu::EnterMenu()
         } break;
         case MILITARY_CAMPAIGN_MISSION: {
             // TODO
-            if(GetMilitaryCampaignIndex() >= 0) return MILITARY_CAMPAIGN_MISSION;
+            if(GetMilitaryCampaignIndex() >= 0) {
+                aud_chantloop.Stop();
+                return MILITARY_CAMPAIGN_MISSION;
+            }
             else currentState = MILITARY_CAMPAIGN_MENU;
         }
         case SIEGE_MENU: {

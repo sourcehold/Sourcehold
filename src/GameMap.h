@@ -46,7 +46,6 @@ namespace Sourcehold {
             void LoadFromDisk(boost::filesystem::path path);
             void Render();
         protected:
-            WorldInformation _worldInfo;
         };
     }
 }

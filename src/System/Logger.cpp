@@ -25,28 +25,17 @@ std::ostream &Logger::log(LogType type, const std::string& subsystem)
             msg = "\033[1;33m[ " + subsystem + " ]\033[0m -> ";
             break;
         case MESSAGE:
+            msg = "\033[1;34m[ " + subsystem + " ]\033[0m -> ";
+            break;
         case SUCCESS:
-            msg = "Info: ";
+            msg = "\033[1;32m[ " + subsystem + " ]\033[0m -> ";
             break;
         default:
             break;
         }
     }
     else {
-        switch(type) {
-        case ERROR:
-            msg = "[ " + subsystem + " ] -> ";
-            break;
-        case WARNING:
-            msg = "[ " + subsystem + " ] -> ";
-            break;
-        case MESSAGE:
-        case SUCCESS:
-            msg = "[ " + subsystem + " ] -> ";
-            break;
-        default:
-            break;
-        }
+        msg = "[ " + subsystem + " ] -> ";
     }
     return std::cout << msg;
 }

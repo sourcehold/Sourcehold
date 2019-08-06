@@ -253,7 +253,7 @@ bool Game::LoadGameData()
             _saveFolder = np;
         }
         else {
-            Logger::warning(GAME) << "Location for save files could not be determined!" << std::endl;
+            Logger::error(GAME) << "Location for save files could not be determined!" << std::endl;
             return false;
         }
     }

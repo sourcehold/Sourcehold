@@ -180,8 +180,10 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
     auto atlas = _gm_interface_icons3->GetTextureAtlas();
     SDL_Rect rect;
 
-    /* Render alpha masks */
+    // background
+    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 128, true);
 
+    /* Render alpha masks */
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
     // corners
@@ -209,7 +211,6 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
     }
 
     /* Render color */
-
     atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
     // corners
@@ -237,8 +238,6 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
     }
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
-
-    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 128, true);
 }
 
 enum class Deco {
@@ -265,7 +264,7 @@ void RenderDeco(Deco type, int x, int y)
 
 void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco = false)
 {
-    RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 24, 80, 24, 152, true);
+    RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 24, 80, 24, 200, true);
     RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 247, 235, 198, 255, false);
 
     auto dim = GetStringPixelDim(text, FONT_LARGE);

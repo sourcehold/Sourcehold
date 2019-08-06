@@ -385,9 +385,6 @@ void World::onEventReceive(Keyboard &keyEvent)
 void World::onEventReceive(Mouse &mouseEvent)
 {
     if(mouseEvent.GetType() == MOUSE_BUTTONDOWN) {
-        int64_t px = (mouseEvent.GetPosX() + CamX()) / 30;
-        int64_t py = (mouseEvent.GetPosY() + CamY()) / 16;
-
         if(mouseEvent.RmbDown()) {
             rmbHolding = true;
             mouseX = mouseEvent.GetPosX();

@@ -115,11 +115,14 @@ int StartGame(GameOptions &opt)
     case MILITARY_CAMPAIGN_MISSION: {
         int index = GetMilitaryCampaignIndex();
         // TODO
-        if(index == 0) {
-            World world;
-            world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
-            state = world.Play();
-        }
+        Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
+        music.Play();
+
+        World world;
+        world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
+        state = world.Play();
+
+        music.Stop();
     } break;
     case EXIT_GAME: goto exit;
     default: break;
@@ -192,7 +195,7 @@ int main(int argc, char **argv)
 
         return StartGame(opt);
     }
-    catch(cxxopts::OptionException ex) {
+    catch(cxxopts::OptionException& ex) {
         std::cerr << ex.what() << std::endl;
         return EXIT_FAILURE;
     }

@@ -3,17 +3,21 @@
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Rendering;
 
-Building::Building(uint32_t mw, uint32_t mh)
+Building::Building(uint32_t mw, uint32_t mh) :
+    px(0),
+    py(0),
+    mapW(mw),
+    mapH(mh)
 {
-    mapW = mw;
-    mapH = mh;
 }
 
-Building::Building(std::weak_ptr<Gm1File> file, uint32_t x, uint32_t y, uint32_t mw, uint32_t mh)
+Building::Building(std::weak_ptr<Gm1File> file, uint32_t x, uint32_t y, uint32_t mw, uint32_t mh) :
+    gm1(file.lock()),
+    px(0),
+    py(0),
+    mapW(mw),
+    mapH(mh)
 {
-    gm1 = file.lock();
-    mapW = mw;
-    mapH = mh;
     PlaceAt(x, y);
 }
 

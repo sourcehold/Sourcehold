@@ -3,14 +3,10 @@
 #include <cinttypes>
 #include <vector>
 
-/**
- * Definitions and look-up tables
- * related to the game's assets
- */
 namespace Sourcehold {
     namespace Assets {
         // ----------------------------------------------------
-
+        
         enum AssetType : uint8_t {
             UNKNOWN,
             BIK, /* Bink video (.bik) file */

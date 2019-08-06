@@ -171,11 +171,8 @@ void Song::Destroy()
 
 bool Song::IsPlaying()
 {
-    bool playing = true;
     ALenum state;
     alGetSourcei(source, AL_SOURCE_STATE, &state);
-    playing = state == AL_PLAYING;
-
-    return playing;
+    return state == AL_PLAYING;
 }
 

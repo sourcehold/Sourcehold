@@ -19,7 +19,7 @@ SDL_Rect Rendering::GetVisibleArea()
     SDL_Rect rect = { };
 
     /* TODO */
-    int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);
+    //int8_t zoomFactor = (ZOOM_NEAR ? zoomStep : 1);
 
     return rect;
 }
