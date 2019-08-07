@@ -202,6 +202,7 @@ UIState MainMenu::EnterMenu()
             // TODO
             if(GetMilitaryCampaignIndex() >= 0) {
                 aud_chantloop.Stop();
+                ResetTarget();
                 return MILITARY_CAMPAIGN_MISSION;
             }
             else currentState = MILITARY_CAMPAIGN_MENU;

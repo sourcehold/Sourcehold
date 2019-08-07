@@ -16,6 +16,8 @@
 #include <System/Logger.h>
 #include <System/FileUtil.h>
 
+#include <GUI/NarrScreen.h>
+
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
@@ -114,6 +116,10 @@ int StartGame(GameOptions &opt)
     switch(state) {
     case MILITARY_CAMPAIGN_MISSION: {
         int index = GetMilitaryCampaignIndex();
+
+        NarrScreen narr(T_START_ACT_ONE);
+        narr.Begin();
+
         // TODO
         Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
         music.Play();

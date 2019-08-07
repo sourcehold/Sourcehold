@@ -129,6 +129,20 @@ namespace Sourcehold {
         // ----------------------------------------------------
         // Text-related
 
+        enum class TextColor: uint8_t {
+            LIGHTBLUE,
+            DARKORANGE,
+            LIGHTORANGE,
+            ORANGE,
+            GREY,
+            CYAN,
+            YELLOW,
+            GREEN,
+            BLUE,
+            WHITE,
+            BLACK
+        };
+
         enum class Message : uint8_t {
             ANIMAL_TRACKS,
             PACKS_OF_WOLVES,
