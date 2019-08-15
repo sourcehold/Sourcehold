@@ -41,7 +41,6 @@ int EnterLoadingScreen()
     /* Get the assets */
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
     if(files.empty()) {
-        Logger::error(GAME) << "Here's a Nickel, kid. Go buy yourself a real Stronghold." << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -93,6 +92,12 @@ int StartGame(GameOptions &opt)
 {
     if(!InitManager(opt) || !LoadGameData()) {
         Logger::error(GAME) << "Error while initializing game!" << std::endl;
+        ErrorMessageBox(
+            "Here's a Nickel, kid. Go buy yourself a real Stronghold",
+            std::string("Please make sure the data directory contains all necessary files.\n") +
+            + "Current path: " + 
+            GetDirectory().string()
+        );
         return EXIT_FAILURE;
     }
     if(!LoadFonts()) {

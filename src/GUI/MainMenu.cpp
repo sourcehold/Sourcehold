@@ -107,7 +107,6 @@ MainMenu::MainMenu()
     success &= aud_exit.Load(GetDirectory() / "fx/speech/General_Quitgame.wav", false);
     if(!success) {
         Logger::error(Subsystem::GUI) << "Unable to initialize main menu: failed to load SFX!" << std::endl;
-        return;
     }
 
     gm1_icons_main =        GetGm1("gm/icons_front_end.gm1");

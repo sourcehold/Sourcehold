@@ -14,6 +14,7 @@ namespace Sourcehold {
         void GrabMouse();
         void ReleaseMouse();
         bool IsDisplayOpen();
+        void ErrorMessageBox(const std::string &title, const std::string& msg);
 
         int GetWidth();
         int GetHeight();

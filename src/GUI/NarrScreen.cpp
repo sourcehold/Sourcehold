@@ -6,9 +6,14 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;
 
-NarrScreen::NarrScreen(TextSection sec) :
+NarrScreen::NarrScreen(TextSection sec, NarrSong s) :
     EventConsumer<Mouse>()
 {
+    std::string path = std::string("fx/music/mandloop") +
+        (s == NarrSong::MANDLOOP1 ? "1.raw" : "2.raw");
+
+    song.Load(GetDirectory() / path, true);
+  
     tgx_bg =       GetTgx("gfx/narrbase.tgx");
 
     /* color */
@@ -67,6 +72,7 @@ bool NarrScreen::Begin()
     int px = (GetWidth() / 2) - (1024 / 2);
     int py = (GetHeight() / 2) - (768 / 2);
 
+    song.Play();
     while(Running()) {
         ClearDisplay();
 
@@ -83,6 +89,7 @@ bool NarrScreen::Begin()
         SyncDisplay();
     }
 
+    song.Stop();
     return Running();
 }
 

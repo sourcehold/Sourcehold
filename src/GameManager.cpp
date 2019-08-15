@@ -279,6 +279,10 @@ bool Game::LoadGameData()
         return false;
     }
 
+    if (!_cfg.soundEnabled) {
+        MuteOpenAL();
+    }
+
     DetectEdition();
     DetectUsername();
 

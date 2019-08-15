@@ -124,6 +124,16 @@ bool Rendering::IsDisplayOpen()
     return true;
 }
 
+void Rendering::ErrorMessageBox(const std::string& title, const std::string& msg)
+{
+    SDL_ShowSimpleMessageBox(
+        SDL_MESSAGEBOX_ERROR,
+        title.c_str(),
+        msg.c_str(),
+        _window
+    );
+}
+
 int Rendering::GetWidth()
 {
     return _width;
