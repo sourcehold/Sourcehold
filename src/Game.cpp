@@ -36,7 +36,7 @@ void Cleanup()
 
 int EnterLoadingScreen()
 {
-    std::shared_ptr<TgxFile> tgx_loading = GetTgx(GetDirectory() / "gfx/frontend_loading.tgx");
+    std::shared_ptr<TgxFile> tgx_loading = GetTgx("gfx/frontend_loading.tgx");
 
     /* Get the assets */
     std::vector<boost::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");

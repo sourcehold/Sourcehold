@@ -18,24 +18,24 @@ Startup::~Startup()
 
 void Startup::PlayMusic()
 {
-    aud_startup.Load(GetDirectory() / "/fx/music/stainedglass1.raw");
+    aud_startup.Load(GetDirectory() / "fx/music/stainedglass1.raw");
     aud_startup.Play();
 }
 
 UIState Startup::Begin()
 {
-    tgx_firefly = GetTgx(GetDirectory() / "gfx/logo1.tgx");
-    tgx_taketwo = GetTgx(GetDirectory() / "gfx/logo2.tgx");
-    tgx_present = GetTgx(GetDirectory() / "gfx/logo3.tgx");
-    tgx_logo = GetTgx(GetDirectory() / "gfx/startup screen.tgx");
-    tgx_firefly_front = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx");
+    tgx_firefly =       GetTgx("gfx/logo1.tgx");
+    tgx_taketwo =       GetTgx("gfx/logo2.tgx");
+    tgx_present =       GetTgx("gfx/logo3.tgx");
+    tgx_logo =          GetTgx("gfx/startup screen.tgx");
+    tgx_firefly_front = GetTgx("gfx/front_firefly_logo.tgx");
 
-    intro = GetBik(GetDirectory() / "binks/intro.bik");
+    intro =             GetBik("binks/intro.bik");
 
     startTime = GetTime();
 
     const std::wstring &startupStr = GetString(T_START_TEXT, 1);
-    auto font = GetGm1(GetDirectory() / "gm/font_stronghold_aa.gm1")->GetTextureAtlas();
+    auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(startupStr, FONT_LARGE);
     dim.first *= 0.7;
     dim.second *= 0.7;

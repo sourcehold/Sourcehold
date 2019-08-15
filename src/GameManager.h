@@ -70,8 +70,8 @@ namespace Sourcehold {
         void ClearFileCache();
 
         /**
-         * Load and cache an asset, 'filename' is the
-         * path relative to the data directory
+         * Load and cache an asset, 'filename' is an
+         * absolute path
          */
         void Cache(boost::filesystem::path filename);
 
@@ -109,7 +109,8 @@ namespace Sourcehold {
         CfgFile &GetCfg();
 
         /**
-         * Asset getter functions
+         * Asset getter functions.
+         * All filenames are relative to the data directory
          */
         std::shared_ptr<TgxFile> GetTgx(boost::filesystem::path filename);
         std::shared_ptr<Gm1File> GetGm1(boost::filesystem::path filename);

@@ -32,10 +32,10 @@ World::World() :
     EventConsumer<Keyboard>(),
     EventConsumer<Mouse>()
 {
-    /* The scribe's facial animation */
-    gm1_scribe = GetGm1(GetDirectory() / "gm/scribe.gm1");
-    gm1_icons = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
-    gm1_floats = GetGm1(GetDirectory() / "gm/floats.gm1");
+    /* The scribes facial animation */
+    gm1_scribe = GetGm1("gm/scribe.gm1");
+    gm1_icons = GetGm1("gm/interface_buttons.gm1");
+    gm1_floats = GetGm1("gm/floats.gm1");
 
     LoadMenuAssets();
 
@@ -316,10 +316,10 @@ void World::LoadMenuAssets()
     Resolution res = GetResolution();
     std::string base(_res_to_edge[res][0]);
 
-    tgx_right = GetTgx(GetDirectory() / std::string("gfx/" + base + "r.tgx"));
-    tgx_bar_bg = GetTgx(GetDirectory() / std::string("gfx/" + base + "l.tgx"));
+    tgx_right = GetTgx(std::string("gfx/" + base + "r.tgx"));
+    tgx_bar_bg = GetTgx(std::string("gfx/" + base + "l.tgx"));
 
-    gm1_face = GetGm1(GetDirectory() / "gm/face800-blank.gm1");
+    gm1_face = GetGm1("gm/face800-blank.gm1");
 }
 
 void World::onEventReceive(Keyboard &keyEvent)

@@ -31,11 +31,11 @@ static LineEdit _name_edit;
 
 bool GUI::InitializeUtils()
 {
-    _gm_interface_icons3 = GetGm1(GetDirectory() / "gm/interface_icons3.gm1");
+    _gm_interface_icons3 = GetGm1("gm/interface_icons3.gm1");
     _ed = GetEdition();
     _res = GetResolution();
     if(_ed == STRONGHOLD_HD) {
-        _tgx_border = GetTgx(GetDirectory() / "gfx/SH1_Back.tgx");
+        _tgx_border = GetTgx("gfx/SH1_Back.tgx");
         /**
          * Render the border 'zoomed in' so that theP
          * menu can be placed in the middle without scaling.

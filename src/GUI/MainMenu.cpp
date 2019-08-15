@@ -110,19 +110,19 @@ MainMenu::MainMenu()
         return;
     }
 
-    gm1_icons_main = GetGm1(GetDirectory() / "gm/icons_front_end.gm1");
-    gm1_icons_additional = GetGm1(GetDirectory() / "gm/interface_buttons.gm1");
-    gm1_icons_combat = GetGm1(GetDirectory() / "gm/icons_front_end_combat.gm1");
-    gm1_icons_economic = GetGm1(GetDirectory() / "gm/icons_front_end_economics.gm1");
-    gm1_icons_builder = GetGm1(GetDirectory() / "gm/icons_front_end_builder.gm1");
+    gm1_icons_main =        GetGm1("gm/icons_front_end.gm1");
+    gm1_icons_additional =  GetGm1("gm/interface_buttons.gm1");
+    gm1_icons_combat =      GetGm1("gm/icons_front_end_combat.gm1");
+    gm1_icons_economic =    GetGm1("gm/icons_front_end_economics.gm1");
+    gm1_icons_builder =     GetGm1("gm/icons_front_end_builder.gm1");
 
-    tgx_bg_main = GetTgx(GetDirectory() / "gfx/frontend_main.tgx");
-    tgx_bg_main2 = GetTgx(GetDirectory() / "gfx/frontend_main2.tgx");
-    tgx_bg_combat = GetTgx(GetDirectory() / "gfx/frontend_combat.tgx");
-    tgx_bg_combat2 = GetTgx(GetDirectory() / "gfx/frontend_combat2.tgx");
-    tgx_bg_economic = GetTgx(GetDirectory() / "gfx/frontend_economics.tgx");
-    tgx_bg_economic2 = GetTgx(GetDirectory() / "gfx/frontend_economics2.tgx");
-    tgx_bg_builder = GetTgx(GetDirectory() / "gfx/frontend_builder.tgx");
+    tgx_bg_main =           GetTgx("gfx/frontend_main.tgx");
+    tgx_bg_main2 =          GetTgx("gfx/frontend_main2.tgx");
+    tgx_bg_combat =         GetTgx("gfx/frontend_combat.tgx");
+    tgx_bg_combat2 =        GetTgx("gfx/frontend_combat2.tgx");
+    tgx_bg_economic =       GetTgx("gfx/frontend_economics.tgx");
+    tgx_bg_economic2 =      GetTgx("gfx/frontend_economics2.tgx");
+    tgx_bg_builder =        GetTgx("gfx/frontend_builder.tgx");
 
     /* Get textures */
     ui_tex.resize(5);

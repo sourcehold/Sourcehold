@@ -17,7 +17,7 @@ using namespace Sourcehold::Game;
 
 GameMap::GameMap()
 {
-    gm1_tile = GetGm1(GetDirectory() / "gm/tile_land8.gm1");
+    gm1_tile = GetGm1("gm/tile_land8.gm1");
 
     tileset = gm1_tile->GetTileset();
     tiles.resize(DIM * DIM);

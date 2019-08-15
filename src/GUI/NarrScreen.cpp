@@ -9,50 +9,50 @@ using namespace Sourcehold::Game;
 NarrScreen::NarrScreen(TextSection sec) :
     EventConsumer<Mouse>()
 {
-    tgx_bg = GetTgx(GetDirectory() / "gfx/narrbase.tgx");
+    tgx_bg =       GetTgx("gfx/narrbase.tgx");
 
     /* color */
-    tgx_anim[0] =  GetTgx(GetDirectory() / "gfx/flame_01.tgx");
-    tgx_anim[1] =  GetTgx(GetDirectory() / "gfx/flame_02.tgx");
-    tgx_anim[2] =  GetTgx(GetDirectory() / "gfx/flame_03.tgx");
-    tgx_anim[3] =  GetTgx(GetDirectory() / "gfx/flame_04.tgx");
-    tgx_anim[4] =  GetTgx(GetDirectory() / "gfx/flame_05.tgx");
-    tgx_anim[5] =  GetTgx(GetDirectory() / "gfx/flame_06.tgx");
-    tgx_anim[6] =  GetTgx(GetDirectory() / "gfx/flame_07.tgx");
-    tgx_anim[7] =  GetTgx(GetDirectory() / "gfx/flame_08.tgx");
-    tgx_anim[8] =  GetTgx(GetDirectory() / "gfx/flame_09.tgx");
-    tgx_anim[9] =  GetTgx(GetDirectory() / "gfx/flame_10.tgx");
-    tgx_anim[10] = GetTgx(GetDirectory() / "gfx/flame_11.tgx");
-    tgx_anim[11] = GetTgx(GetDirectory() / "gfx/flame_12.tgx");
-    tgx_anim[12] = GetTgx(GetDirectory() / "gfx/flame_13.tgx");
+    tgx_anim[0] =  GetTgx("gfx/flame_01.tgx");
+    tgx_anim[1] =  GetTgx("gfx/flame_02.tgx");
+    tgx_anim[2] =  GetTgx("gfx/flame_03.tgx");
+    tgx_anim[3] =  GetTgx("gfx/flame_04.tgx");
+    tgx_anim[4] =  GetTgx("gfx/flame_05.tgx");
+    tgx_anim[5] =  GetTgx("gfx/flame_06.tgx");
+    tgx_anim[6] =  GetTgx("gfx/flame_07.tgx");
+    tgx_anim[7] =  GetTgx("gfx/flame_08.tgx");
+    tgx_anim[8] =  GetTgx("gfx/flame_09.tgx");
+    tgx_anim[9] =  GetTgx("gfx/flame_10.tgx");
+    tgx_anim[10] = GetTgx("gfx/flame_11.tgx");
+    tgx_anim[11] = GetTgx("gfx/flame_12.tgx");
+    tgx_anim[12] = GetTgx("gfx/flame_13.tgx");
     /* alpha masks */
-    tgx_anim[13] = GetTgx(GetDirectory() / "gfx/flame_alpha_01.tgx");
-    tgx_anim[14] = GetTgx(GetDirectory() / "gfx/flame_alpha_02.tgx");
-    tgx_anim[15] = GetTgx(GetDirectory() / "gfx/flame_alpha_03.tgx");
-    tgx_anim[16] = GetTgx(GetDirectory() / "gfx/flame_alpha_04.tgx");
-    tgx_anim[17] = GetTgx(GetDirectory() / "gfx/flame_alpha_05.tgx");
-    tgx_anim[18] = GetTgx(GetDirectory() / "gfx/flame_alpha_06.tgx");
-    tgx_anim[19] = GetTgx(GetDirectory() / "gfx/flame_alpha_07.tgx");
-    tgx_anim[20] = GetTgx(GetDirectory() / "gfx/flame_alpha_08.tgx");
-    tgx_anim[21] = GetTgx(GetDirectory() / "gfx/flame_alpha_09.tgx");
-    tgx_anim[22] = GetTgx(GetDirectory() / "gfx/flame_alpha_10.tgx");
-    tgx_anim[23] = GetTgx(GetDirectory() / "gfx/flame_alpha_11.tgx");
-    tgx_anim[24] = GetTgx(GetDirectory() / "gfx/flame_alpha_12.tgx");
-    tgx_anim[25] = GetTgx(GetDirectory() / "gfx/flame_alpha_13.tgx");
+    tgx_anim[13] = GetTgx("gfx/flame_alpha_01.tgx");
+    tgx_anim[14] = GetTgx("gfx/flame_alpha_02.tgx");
+    tgx_anim[15] = GetTgx("gfx/flame_alpha_03.tgx");
+    tgx_anim[16] = GetTgx("gfx/flame_alpha_04.tgx");
+    tgx_anim[17] = GetTgx("gfx/flame_alpha_05.tgx");
+    tgx_anim[18] = GetTgx("gfx/flame_alpha_06.tgx");
+    tgx_anim[19] = GetTgx("gfx/flame_alpha_07.tgx");
+    tgx_anim[20] = GetTgx("gfx/flame_alpha_08.tgx");
+    tgx_anim[21] = GetTgx("gfx/flame_alpha_09.tgx");
+    tgx_anim[22] = GetTgx("gfx/flame_alpha_10.tgx");
+    tgx_anim[23] = GetTgx("gfx/flame_alpha_11.tgx");
+    tgx_anim[24] = GetTgx("gfx/flame_alpha_12.tgx");
+    tgx_anim[25] = GetTgx("gfx/flame_alpha_13.tgx");
     /* candle */
-    tgx_anim2[0] =  GetTgx(GetDirectory() / "gfx/candle_01.tgx");
-    tgx_anim2[1] =  GetTgx(GetDirectory() / "gfx/candle_02.tgx");
-    tgx_anim2[2] =  GetTgx(GetDirectory() / "gfx/candle_03.tgx");
-    tgx_anim2[3] =  GetTgx(GetDirectory() / "gfx/candle_04.tgx");
-    tgx_anim2[4] =  GetTgx(GetDirectory() / "gfx/candle_05.tgx");
-    tgx_anim2[5] =  GetTgx(GetDirectory() / "gfx/candle_06.tgx");
-    tgx_anim2[6] =  GetTgx(GetDirectory() / "gfx/candle_07.tgx");
-    tgx_anim2[7] =  GetTgx(GetDirectory() / "gfx/candle_08.tgx");
-    tgx_anim2[8] =  GetTgx(GetDirectory() / "gfx/candle_09.tgx");
-    tgx_anim2[9] =  GetTgx(GetDirectory() / "gfx/candle_10.tgx");
-    tgx_anim2[10] = GetTgx(GetDirectory() / "gfx/candle_11.tgx");
-    tgx_anim2[11] = GetTgx(GetDirectory() / "gfx/candle_12.tgx");
-    tgx_anim2[12] = GetTgx(GetDirectory() / "gfx/candle_13.tgx");
+    tgx_anim2[0] =  GetTgx("gfx/candle_01.tgx");
+    tgx_anim2[1] =  GetTgx("gfx/candle_02.tgx");
+    tgx_anim2[2] =  GetTgx("gfx/candle_03.tgx");
+    tgx_anim2[3] =  GetTgx("gfx/candle_04.tgx");
+    tgx_anim2[4] =  GetTgx("gfx/candle_05.tgx");
+    tgx_anim2[5] =  GetTgx("gfx/candle_06.tgx");
+    tgx_anim2[6] =  GetTgx("gfx/candle_07.tgx");
+    tgx_anim2[7] =  GetTgx("gfx/candle_08.tgx");
+    tgx_anim2[8] =  GetTgx("gfx/candle_09.tgx");
+    tgx_anim2[9] =  GetTgx("gfx/candle_10.tgx");
+    tgx_anim2[10] = GetTgx("gfx/candle_11.tgx");
+    tgx_anim2[11] = GetTgx("gfx/candle_12.tgx");
+    tgx_anim2[12] = GetTgx("gfx/candle_13.tgx");
 }
 
 NarrScreen::~NarrScreen()

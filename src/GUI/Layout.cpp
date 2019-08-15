@@ -58,7 +58,7 @@ void Layout::CreateFromHlp(HlpSection *hlp)
         case SectionType::LOADPIC : {
             if(sect.name.empty()) continue;
 
-            auto pic = GetTgx(GetDirectory() / boost::filesystem::path("gfx/") / boost::filesystem::path(sect.name));
+            auto pic = GetTgx(boost::filesystem::path("gfx/") / boost::filesystem::path(sect.name));
             pics.push_back(pic);
         } break;
         case SectionType::SECTION : {

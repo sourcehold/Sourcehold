@@ -17,7 +17,7 @@ LineEdit::~LineEdit()
 
 void LineEdit::Init()
 {
-    atlas = GetGm1(GetDirectory() / "gm/interface_icons3.gm1")->GetTextureAtlas();
+    atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     parts[0] = atlas->Get(114);
     parts[1] = atlas->Get(115);
     parts[2] = atlas->Get(116);

@@ -25,18 +25,18 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
     std::shared_ptr<TgxFile> tgx_credits, tgx_1, tgx_2, tgx_3, tgx_4, tgx_firefly;
 
     if(endgame) {
-        music.Load(GetDirectory() / "fx/music/Glory_06.raw", true);
-        tgx_credits = GetTgx(GetDirectory() / "gfx/end_credit.tgx");
+        music.Load("fx/music/Glory_06.raw", true);
+        tgx_credits = GetTgx("gfx/end_credit.tgx");
     }
     else {
-        music.Load(GetDirectory() / "fx/music/castlejam.raw", true);
-        tgx_1 = GetTgx(GetDirectory() / "gfx/credits_1.tgx");
-        tgx_2 = GetTgx(GetDirectory() / "gfx/credits_2.tgx");
-        tgx_3 = GetTgx(GetDirectory() / "gfx/credits_3.tgx");
-        tgx_4 = GetTgx(GetDirectory() / "gfx/credits_4.tgx");
+        music.Load("fx/music/castlejam.raw", true);
+        tgx_1 = GetTgx("gfx/credits_1.tgx");
+        tgx_2 = GetTgx("gfx/credits_2.tgx");
+        tgx_3 = GetTgx("gfx/credits_3.tgx");
+        tgx_4 = GetTgx("gfx/credits_4.tgx");
     }
 
-    tgx_firefly = GetTgx(GetDirectory() / "gfx/front_firefly_logo.tgx");
+    tgx_firefly = GetTgx("gfx/front_firefly_logo.tgx");
 
     music.Play();
 

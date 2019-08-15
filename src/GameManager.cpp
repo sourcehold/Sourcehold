@@ -301,25 +301,27 @@ void Game::Cache(boost::filesystem::path filename)
         return;
     }
 
+    std::string name = GetFilename(filename);
+
     switch(ExtToType(ext)) {
     case TGX: {
-        _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(filename));
+        _tgxFiles.emplace(name, std::make_unique<TgxFile>(filename));
     }
     break;
     case GM1: {
-        _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(filename));
+        _gm1Files.emplace(name, std::make_unique<Gm1File>(filename));
     }
     break;
     case ANI: {
-        _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(filename));
+        _aniFiles.emplace(name, std::make_unique<AniFile>(filename));
     }
     break;
     case BIK: {
-        _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(filename));
+        _bikFiles.emplace(name, std::make_unique<BinkVideo>(filename));
     }
     break;
     case UNKNOWN: {
-        Logger::warning(GAME) << "Unknown asset type cached: '" << filename << "'" << std::endl;
+        Logger::warning(GAME) << "Unknown asset type cached: '" << name << "'" << std::endl;
     }
     break;
     default:
@@ -421,7 +423,7 @@ std::shared_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
         return _tgxFiles.at(filename.string());
     }
 
-    auto iter = _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(filename));
+    auto iter = _tgxFiles.emplace(filename.string(), std::make_unique<TgxFile>(_dataFolder / filename));
     return iter.first->second;
 }
 
@@ -431,7 +433,7 @@ std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
         return _gm1Files.at(filename.string());
     }
 
-    auto iter = _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(filename));
+    auto iter = _gm1Files.emplace(filename.string(), std::make_unique<Gm1File>(_dataFolder / filename));
     return iter.first->second;
 }
 
@@ -441,7 +443,7 @@ std::shared_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
         return _aniFiles.at(filename.string());
     }
 
-    auto iter = _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(filename));
+    auto iter = _aniFiles.emplace(filename.string(), std::make_unique<AniFile>(_dataFolder / filename));
     return iter.first->second;
 }
 
@@ -451,6 +453,6 @@ std::shared_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
         return _bikFiles.at(filename.string());
     }
 
-    auto iter = _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(filename));
+    auto iter = _bikFiles.emplace(filename.string(), std::make_unique<BinkVideo>(_dataFolder / filename));
     return iter.first->second;
 }
