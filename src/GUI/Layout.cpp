@@ -36,7 +36,7 @@ void Layout::CreateFromHlp(HlpSection *hlp)
             int arg0 = sect.GetIntArg(0);
             std::wstring arg1 = sect.GetStrArg(1);
 
-            PicPosition pos;
+            PicPosition pos = PicPosition::LEFT;
             if(arg1 == L"LEFT") {
                 pos = PicPosition::LEFT;
             }else if(arg1 == L"RIGHT") {
