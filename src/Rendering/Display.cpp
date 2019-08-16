@@ -1,8 +1,8 @@
 #include <chrono>
 #include <thread>
 
-#include <Rendering/Display.h>
-#include <System/Logger.h>
+#include "Rendering/Display.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold;
 using namespace System;

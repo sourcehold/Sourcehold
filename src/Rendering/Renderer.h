@@ -4,8 +4,8 @@
 #include <cinttypes>
 #include <SDL.h>
 
-#include <Rendering/Texture.h>
-#include <Rendering/Shapes.h>
+#include "Rendering/Texture.h"
+#include "Rendering/Shapes.h"
 
 namespace Sourcehold {
     namespace Rendering {

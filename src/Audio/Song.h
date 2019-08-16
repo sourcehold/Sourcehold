@@ -9,7 +9,7 @@
 
 #include <boost/filesystem.hpp>
 
-#include <System/Logger.h>
+#include "System/Logger.h"
 
 namespace Sourcehold {
     namespace Audio {

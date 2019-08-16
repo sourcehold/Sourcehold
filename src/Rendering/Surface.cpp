@@ -1,5 +1,5 @@
-#include <Rendering/Surface.h>
-#include <System/Logger.h>
+#include "Rendering/Surface.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;

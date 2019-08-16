@@ -8,9 +8,9 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 
-#include <Parsers/HlpFile.h>
-#include <System/Logger.h>
-#include <GameManager.h>
+#include "Parsers/HlpFile.h"
+#include "System/Logger.h"
+#include "GameManager.h"
 
 using namespace Sourcehold;
 using namespace Game;

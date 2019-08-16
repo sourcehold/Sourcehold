@@ -3,7 +3,7 @@
 #include <memory>
 #include <SDL.h>
 
-#include <Rendering/Renderer.h>
+#include "Rendering/Renderer.h"
 
 namespace Sourcehold {
     namespace Rendering {

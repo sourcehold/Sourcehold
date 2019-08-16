@@ -2,15 +2,15 @@
 
 #include <memory>
 
-#include <GameMap.h>
+#include "GameMap.h"
 
-#include <GUI/StaticElement.h>
-#include <GUI/UIState.h>
+#include "GUI/StaticElement.h"
+#include "GUI/UIState.h"
 
-#include <Rendering/Texture.h>
+#include "Rendering/Texture.h"
 
-#include <Events/Keyboard.h>
-#include <Events/Mouse.h>
+#include "Events/Keyboard.h"
+#include "Events/Mouse.h"
 
 namespace Sourcehold {
     namespace Parsers {

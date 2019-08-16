@@ -1,10 +1,10 @@
 #include <map>
 #include <boost/assign.hpp>
 
-#include <GUI/MainMenu.h>
-#include <Rendering/Font.h>
-#include <System/Config.h>
-#include <Assets.h>
+#include "GUI/MainMenu.h"
+#include "Rendering/Font.h"
+#include "System/Config.h"
+#include "Assets.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;

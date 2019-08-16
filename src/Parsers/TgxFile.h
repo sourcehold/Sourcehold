@@ -5,15 +5,15 @@
 #include <bitset>
 #include <memory>
 
-#include <Parsers/Parser.h>
+#include "Parsers/Parser.h"
 
-#include <System/Logger.h>
+#include "System/Logger.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Texture.h>
-#include <Rendering/Surface.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Texture.h"
+#include "Rendering/Surface.h"
 
-#include <boost/filesystem.hpp>
+#include "boost/filesystem.hpp"
 
 using namespace Sourcehold::Rendering;
 

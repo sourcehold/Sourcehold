@@ -1,6 +1,6 @@
-#include <Startup.h>
-#include <Rendering/Font.h>
-#include <System/Logger.h>
+#include "Startup.h"
+#include "Rendering/Font.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;

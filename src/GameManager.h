@@ -7,15 +7,15 @@
 #include <functional>
 #include <boost/filesystem.hpp>
 
-#include <Assets.h>
+#include "Assets.h"
 
-#include <Parsers/MlbFile.h>
-#include <Parsers/CfgFile.h>
+#include "Parsers/MlbFile.h"
+#include "Parsers/CfgFile.h"
 
-#include <System/System.h>
+#include "System/System.h"
 
-#include <Rendering/Display.h>
-#include <Rendering/Renderer.h>
+#include "Rendering/Display.h"
+#include "Rendering/Renderer.h"
 
 namespace Sourcehold {
     namespace Events {

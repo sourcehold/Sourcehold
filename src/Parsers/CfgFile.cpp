@@ -1,4 +1,4 @@
-#include <Parsers/CfgFile.h>
+#include "Parsers/CfgFile.h"
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;

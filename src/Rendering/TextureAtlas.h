@@ -7,8 +7,8 @@
 
 #include <SDL.h>
 
-#include <Rendering/Texture.h>
-#include <Rendering/Surface.h>
+#include "Rendering/Texture.h"
+#include "Rendering/Surface.h"
 
 namespace Sourcehold {
     namespace Rendering {

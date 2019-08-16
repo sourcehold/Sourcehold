@@ -1,5 +1,5 @@
-#include <GUI/StaticElement.h>
-#include <Rendering/Renderer.h>
+#include "GUI/StaticElement.h"
+#include "Rendering/Renderer.h"
 
 using namespace Sourcehold::Rendering;
 

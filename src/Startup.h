@@ -6,23 +6,23 @@
 #include <chrono>
 #include <memory>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <GUI/UIState.h>
-#include <GUI/MainMenu.h>
+#include "GUI/UIState.h"
+#include "GUI/MainMenu.h"
 
-#include <Audio/Song.h>
+#include "Audio/Song.h"
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
-#include <Parsers/TgxFile.h>
-#include <Parsers/Gm1File.h>
-#include <Parsers/AniFile.h>
+#include "Parsers/TgxFile.h"
+#include "Parsers/Gm1File.h"
+#include "Parsers/AniFile.h"
 
-#include <Rendering/Texture.h>
-#include <Rendering/TextureAtlas.h>
-#include <Rendering/BinkVideo.h>
+#include "Rendering/Texture.h"
+#include "Rendering/TextureAtlas.h"
+#include "Rendering/BinkVideo.h"
 
 namespace Sourcehold {
     namespace Game

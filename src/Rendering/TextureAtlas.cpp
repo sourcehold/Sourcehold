@@ -1,4 +1,4 @@
-#include <Rendering/TextureAtlas.h>
+#include "Rendering/TextureAtlas.h"
 
 #include <cmath>
 #include <algorithm>

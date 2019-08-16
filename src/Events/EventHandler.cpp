@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <map>
 
-#include <Events/EventHandler.h>
+#include "Events/EventHandler.h"
 
 using namespace Sourcehold;
 

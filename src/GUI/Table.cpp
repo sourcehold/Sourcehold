@@ -1,8 +1,8 @@
-#include <GUI/Table.h>
+#include "GUI/Table.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Font.h>
-#include <Rendering/Display.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Font.h"
+#include "Rendering/Display.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;

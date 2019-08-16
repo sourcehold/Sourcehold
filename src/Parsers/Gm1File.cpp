@@ -2,11 +2,11 @@
 #include <vector>
 #include <climits>
 
-#include <Parsers/Gm1File.h>
-#include <Parsers/TgxFile.h>
+#include "Parsers/Gm1File.h"
+#include "Parsers/TgxFile.h"
 
-#include <System/Logger.h>
-#include <System/Config.h>
+#include "System/Logger.h"
+#include "System/Config.h"
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;

@@ -2,7 +2,7 @@
 
 #include <cinttypes>
 
-#include <GameMap.h>
+#include "GameMap.h"
 
 namespace Sourcehold {
     namespace Game {

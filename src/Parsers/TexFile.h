@@ -5,9 +5,9 @@
 #include <map>
 #include <vector>
 
-#include <Parsers/Parser.h>
+#include "Parsers/Parser.h"
 
-#include <Assets.h>
+#include "Assets.h"
 
 namespace Sourcehold {
     namespace Parsers {

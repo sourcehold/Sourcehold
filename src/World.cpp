@@ -1,14 +1,14 @@
-#include <Building.h>
-#include <Entity.h>
-#include <World.h>
+#include "Building.h"
+#include "Entity.h"
+#include "World.h"
 
-#include <Parsers/TgxFile.h>
-#include <Parsers/Gm1File.h>
+#include "Parsers/TgxFile.h"
+#include "Parsers/Gm1File.h"
 
-#include <Rendering/Font.h>
-#include <Rendering/Camera.h>
+#include "Rendering/Font.h"
+#include "Rendering/Camera.h"
 
-#include <GUI/MenuUtils.h>
+#include "GUI/MenuUtils.h"
 
 using namespace Sourcehold::Game;
 

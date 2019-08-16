@@ -5,9 +5,9 @@
 
 #include <SDL.h>
 
-#include <Rendering/Texture.h>
-#include <Rendering/Surface.h>
-#include <Rendering/Renderer.h>
+#include "Rendering/Texture.h"
+#include "Rendering/Surface.h"
+#include "Rendering/Renderer.h"
 
 namespace Sourcehold {
     namespace Rendering {

@@ -6,7 +6,7 @@
 #include <list>
 #include <memory>
 
-#include <Events/EventHandler.h>
+#include "Events/EventHandler.h"
 
 namespace Sourcehold {
     namespace Events {

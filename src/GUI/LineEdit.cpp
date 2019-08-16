@@ -1,6 +1,6 @@
-#include <GUI/LineEdit.h>
-#include <Rendering/Font.h>
-#include <GameManager.h>
+#include "GUI/LineEdit.h"
+#include "Rendering/Font.h"
+#include "GameManager.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;

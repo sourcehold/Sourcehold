@@ -1,5 +1,5 @@
-#include <Parsers/TexFile.h>
-#include <System/Logger.h>
+#include "Parsers/TexFile.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;

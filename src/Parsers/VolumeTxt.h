@@ -4,10 +4,10 @@
 #include <cinttypes>
 #include <regex>
 
-#include <System/Logger.h>
-#include <Parsers/Parser.h>
+#include "System/Logger.h"
+#include "Parsers/Parser.h"
 
-#include <boost/filesystem.hpp>
+#include "boost/filesystem.hpp"
 
 namespace Sourcehold {
     namespace Parsers {

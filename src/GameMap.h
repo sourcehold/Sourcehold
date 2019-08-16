@@ -7,10 +7,10 @@
 
 #include <boost/filesystem.hpp>
 
-#include <Rendering/Tileset.h>
-#include <Rendering/Renderer.h>
+#include "Rendering/Tileset.h"
+#include "Rendering/Renderer.h"
 
-#include <Assets.h>
+#include "Assets.h"
 
 namespace Sourcehold {
     namespace Parsers {

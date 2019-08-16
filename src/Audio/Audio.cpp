@@ -3,8 +3,8 @@
 #include <al.h>
 #include <alc.h>
 
-#include <Audio/Audio.h>
-#include <System/Logger.h>
+#include "Audio/Audio.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold;
 using namespace System;

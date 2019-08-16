@@ -3,7 +3,7 @@
 #include <cinttypes>
 #include <string>
 
-#include <Rendering/Renderer.h>
+#include "Rendering/Renderer.h"
 
 namespace Sourcehold {
     namespace System {

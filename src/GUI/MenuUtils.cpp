@@ -1,20 +1,20 @@
 #include <GameManager.h>
 
-#include <GUI/MenuUtils.h>
-#include <GUI/StaticElement.h>
-#include <GUI/Table.h>
-#include <GUI/LineEdit.h>
+#include "GUI/MenuUtils.h"
+#include "GUI/StaticElement.h"
+#include "GUI/Table.h"
+#include "GUI/LineEdit.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Texture.h>
-#include <Rendering/Font.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Texture.h"
+#include "Rendering/Font.h"
 
-#include <Parsers/Gm1File.h>
-#include <Parsers/TgxFile.h>
-#include <Parsers/CfgFile.h>
+#include "Parsers/Gm1File.h"
+#include "Parsers/TgxFile.h"
+#include "Parsers/CfgFile.h"
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
 using namespace Sourcehold;
 using namespace Rendering;

@@ -6,13 +6,13 @@
 
 #include <SDL.h>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Texture.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Texture.h"
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
 namespace Sourcehold {
     namespace Rendering {

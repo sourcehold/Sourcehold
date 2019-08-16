@@ -8,19 +8,19 @@
 #include <chrono>
 #include <memory>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <GUI/StaticElement.h>
-#include <GUI/UIState.h>
-#include <GUI/Credits.h>
-#include <GUI/MenuUtils.h>
+#include "GUI/StaticElement.h"
+#include "GUI/UIState.h"
+#include "GUI/Credits.h"
+#include "GUI/MenuUtils.h"
 
-#include <Parsers/TgxFile.h>
-#include <Parsers/Gm1File.h>
+#include "Parsers/TgxFile.h"
+#include "Parsers/Gm1File.h"
 
-#include <Rendering/Texture.h>
+#include "Rendering/Texture.h"
 
-#include <Audio/Effect.h>
+#include "Audio/Effect.h"
 
 namespace Sourcehold {
     namespace GUI {

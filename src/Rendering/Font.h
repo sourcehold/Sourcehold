@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include <Rendering/Shapes.h>
+#include "Rendering/Shapes.h"
 
 namespace Sourcehold {
     namespace Game {

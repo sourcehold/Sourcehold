@@ -4,13 +4,13 @@
 #include <cinttypes>
 #include <memory>
 
-#include <Events/Event.h>
-#include <Events/Keyboard.h>
+#include "Events/Event.h"
+#include "Events/Keyboard.h"
 
-#include <Parsers/Gm1File.h>
+#include "Parsers/Gm1File.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/TextureAtlas.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/TextureAtlas.h"
 
 namespace Sourcehold {
     namespace GUI {

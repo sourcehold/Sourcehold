@@ -1,5 +1,5 @@
-#include <Parsers/TgxFile.h>
-#include <System/Config.h>
+#include "Parsers/TgxFile.h"
+#include "System/Config.h"
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;

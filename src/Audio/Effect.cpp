@@ -1,8 +1,8 @@
 #include <thread>
 #include <chrono>
 
-#include <Audio/Effect.h>
-#include <System/Logger.h>
+#include "Audio/Effect.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::Game;

@@ -1,4 +1,4 @@
-#include <Parsers/AniFile.h>
+#include "Parsers/AniFile.h"
 
 using namespace Sourcehold;
 using namespace Sourcehold::Parsers;

@@ -4,9 +4,9 @@
 
 #include <SDL.h>
 
-#include <Rendering/BinkVideo.h>
-#include <Audio/Audio.h>
-#include <FFmpegUtil.h>
+#include "Rendering/BinkVideo.h"
+#include "Audio/Audio.h"
+#include "FFmpegUtil.h"
 
 using namespace Sourcehold;
 using namespace System;

@@ -3,20 +3,20 @@
 #include <cinttypes>
 #include <memory>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
-#include <Rendering/Texture.h>
-#include <Rendering/Font.h>
+#include "Rendering/Texture.h"
+#include "Rendering/Font.h"
 
-#include <Audio/Song.h>
+#include "Audio/Song.h"
 
-#include <Parsers/TgxFile.h>
-#include <Parsers/HlpFile.h>
+#include "Parsers/TgxFile.h"
+#include "Parsers/HlpFile.h"
 
-#include <GUI/Layout.h>
+#include "GUI/Layout.h"
 
 namespace Sourcehold {
     namespace GUI {

@@ -5,18 +5,18 @@
 
 #include <cxxopts.hpp>
 
-#include <World.h>
-#include <GameManager.h>
-#include <Startup.h>
+#include "World.h"
+#include "GameManager.h"
+#include "Startup.h"
 
-#include <Rendering/Font.h>
-#include <Parsers/MlbFile.h>
+#include "Rendering/Font.h"
+#include "Parsers/MlbFile.h"
 
-#include <System/System.h>
-#include <System/Logger.h>
-#include <System/FileUtil.h>
+#include "System/System.h"
+#include "System/Logger.h"
+#include "System/FileUtil.h"
 
-#include <GUI/NarrScreen.h>
+#include "GUI/NarrScreen.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;

@@ -1,8 +1,8 @@
 #include <utility>
 
-#include <Rendering/Font.h>
-#include <GameManager.h>
-#include <Parsers/Gm1File.h>
+#include "Rendering/Font.h"
+#include "GameManager.h"
+#include "Parsers/Gm1File.h"
 
 using namespace Sourcehold;
 using namespace Rendering;

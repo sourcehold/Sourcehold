@@ -4,7 +4,7 @@
 
 #include <SDL.h>
 
-#include <Events/Event.h>
+#include "Events/Event.h"
 
 namespace Sourcehold {
     namespace Events {

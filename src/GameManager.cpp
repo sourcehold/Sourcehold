@@ -4,24 +4,24 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <Events/EventHandler.h>
+#include "Events/EventHandler.h"
 
-#include <System/System.h>
-#include <System/FileUtil.h>
-#include <System/Logger.h>
+#include "System/System.h"
+#include "System/FileUtil.h"
+#include "System/Logger.h"
 
-#include <Parsers/TgxFile.h>
-#include <Parsers/Gm1File.h>
-#include <Parsers/AniFile.h>
-#include <Parsers/HlpFile.h>
-#include <Parsers/TexFile.h>
+#include "Parsers/TgxFile.h"
+#include "Parsers/Gm1File.h"
+#include "Parsers/AniFile.h"
+#include "Parsers/HlpFile.h"
+#include "Parsers/TexFile.h"
 
-#include <Audio/Audio.h>
+#include "Audio/Audio.h"
 
-#include <Rendering/BinkVideo.h>
-#include <Rendering/Camera.h>
+#include "Rendering/BinkVideo.h"
+#include "Rendering/Camera.h"
 
 using namespace Sourcehold;
 using namespace Game;

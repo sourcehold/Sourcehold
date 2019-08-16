@@ -1,8 +1,8 @@
-#include <Rendering/Texture.h>
-#include <Rendering/Surface.h>
-#include <Rendering/Renderer.h>
+#include "Rendering/Texture.h"
+#include "Rendering/Surface.h"
+#include "Rendering/Renderer.h"
 
-#include <System/Logger.h>
+#include "System/Logger.h"
 
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;

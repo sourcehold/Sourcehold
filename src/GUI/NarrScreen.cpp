@@ -1,7 +1,7 @@
-#include <GUI/NarrScreen.h>
-#include <GUI/MenuUtils.h>
+#include "GUI/NarrScreen.h"
+#include "GUI/MenuUtils.h"
 
-#include <GameManager.h>
+#include "GameManager.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;

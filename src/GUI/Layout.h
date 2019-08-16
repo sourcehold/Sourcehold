@@ -5,11 +5,11 @@
 #include <vector>
 #include <string>
 
-#include <Rendering/Font.h>
-#include <Rendering/Shapes.h>
+#include "Rendering/Font.h"
+#include "Rendering/Shapes.h"
 
-#include <Parsers/HlpFile.h>
-#include <Parsers/TgxFile.h>
+#include "Parsers/HlpFile.h"
+#include "Parsers/TgxFile.h"
 
 namespace Sourcehold {
     namespace GUI {

@@ -8,8 +8,8 @@
 #include <al.h>
 #include <alc.h>
 
-#include <Audio/Audio.h>
-#include <FFmpegUtil.h>
+#include "Audio/Audio.h"
+#include "FFmpegUtil.h"
 
 namespace Sourcehold {
     namespace Audio {

@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Tileset.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Tileset.h"
 
 namespace Sourcehold {
     namespace Parsers {

@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include <Parsers/Gm1File.h>
+#include "Parsers/Gm1File.h"
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
 namespace Sourcehold {
     namespace GUI {

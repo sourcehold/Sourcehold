@@ -5,8 +5,8 @@
 
 #include <boost/filesystem.hpp>
 
-#include <System/Logger.h>
-#include <Parsers/Parser.h>
+#include "System/Logger.h"
+#include "Parsers/Parser.h"
 
 namespace Sourcehold {
     namespace Parsers {

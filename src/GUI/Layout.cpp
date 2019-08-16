@@ -1,11 +1,11 @@
 #include <algorithm>
 
-#include <GameManager.h>
+#include "GameManager.h"
 
-#include <GUI/Layout.h>
+#include "GUI/Layout.h"
 
-#include <Rendering/Renderer.h>
-#include <Rendering/Display.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Display.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;

@@ -1,6 +1,6 @@
-#include <Rendering/Renderer.h>
-#include <Rendering/Display.h>
-#include <System/Logger.h>
+#include "Rendering/Renderer.h"
+#include "Rendering/Display.h"
+#include "System/Logger.h"
 
 using namespace Sourcehold;
 using namespace Rendering;

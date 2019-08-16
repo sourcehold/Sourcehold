@@ -5,13 +5,13 @@
 #include <vector>
 #include <string>
 
-#include <Events/Event.h>
-#include <Events/Mouse.h>
+#include "Events/Event.h"
+#include "Events/Mouse.h"
 
-#include <Audio/Song.h>
+#include "Audio/Song.h"
 
-#include <Parsers/TgxFile.h>
-#include <Assets.h>
+#include "Parsers/TgxFile.h"
+#include "Assets.h"
 
 namespace Sourcehold {
     namespace GUI {
