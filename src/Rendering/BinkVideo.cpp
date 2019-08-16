@@ -105,7 +105,8 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping)
               codecCtx->width,
               codecCtx->height,
               codecCtx->pix_fmt,
-              640, 292,
+              codecCtx->width,
+              codecCtx->height,
               AV_PIX_FMT_RGB32,
               SWS_BILINEAR,
               NULL,
@@ -116,8 +117,8 @@ bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping)
         return false;
     }
 
-    Texture::AllocNewStreaming(640, 292, SDL_PIXELFORMAT_RGB888);
-    framebuf = (uint32_t*)malloc(640 * 292 * sizeof(uint32_t));
+    Texture::AllocNewStreaming(codecCtx->width, codecCtx->height, SDL_PIXELFORMAT_RGB888);
+    framebuf = new uint32_t[codecCtx->width * codecCtx->height];
 
     valid = true;
     running = true;
@@ -134,7 +135,7 @@ void BinkVideo::Close()
         av_frame_free(&frame);
         decoder->close(codecCtx);
         av_free(codecCtx);
-        free(framebuf);
+        delete framebuf;
 
         if(hasAudio) {
             decoder->close(audioCtx);
@@ -177,7 +178,7 @@ void BinkVideo::Update()
 
         /* TODO: don't block the thread by sleeping and use internal
           timer or callback instead */
-        double dur_ms = (double)packet.duration * av_q2d(audioCtx->time_base);
+        double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
         std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
 
         /* Receive one video frame */
@@ -188,16 +189,16 @@ void BinkVideo::Update()
 
         /* Decode video frame into framebuffer texture */
         uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
-        int strides[3] = { 640 * 4, 0, 0 };
+        int strides[3] = { codecCtx->width * 4, 0, 0 };
 
         Texture::LockTexture();
 
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-        std::memcpy(Texture::GetData(), framebuf, 640 * 292 * 4);
+        std::memcpy(Texture::GetData(), framebuf, codecCtx->width * codecCtx->height * sizeof(uint32_t));
 
         Texture::UnlockTexture();
     }
-    else if (packet.stream_index == audioStream && !IsOpenALMuted()) {
+    else if (packet.stream_index == audioStream && !IsOpenALMuted() && hasAudio) {
         av_frame_unref(audioFrame);
 
         /* Receive new packet on start or if the last one was processed */

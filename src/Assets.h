@@ -178,6 +178,13 @@ namespace Sourcehold {
         enum MissionDescription : uint32_t {
         };
 
+        enum class NPC : uint8_t {
+            WOLF,
+            PIG,
+            SNAKE,
+            RAT
+        };
+
         enum TextSection : uint16_t {
             T_COPYRIGHT = 0,
             T_MONTHS,

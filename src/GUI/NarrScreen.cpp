@@ -1,20 +1,41 @@
 #include "GUI/NarrScreen.h"
 #include "GUI/MenuUtils.h"
 
+#include "Parsers/Gm1File.h"
+#include "Rendering/Font.h"
 #include "GameManager.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;
+using namespace Sourcehold::Rendering;
 
-NarrScreen::NarrScreen(TextSection sec, NarrSong s) :
+enum class NarrSong {
+    MANDLOOP1,
+    MANDLOOP2
+};
+
+enum class NarrBackground {
+    GOODGUYS,
+    BADGUYS
+};
+
+enum class NarrPart {
+    NARRATION, // the candle + scrolling text
+    STORYSCREEN, // the fireplace / castle + npc dialogue
+    NPCINTRO // the introduction to an NPC (snake, wolf, etc.)
+};
+
+NarrScreen::NarrScreen(uint8_t mission) :
+    mission(mission),
     EventConsumer<Mouse>()
-{
+{  
+    // TODO
     std::string path = std::string("fx/music/mandloop") +
-        (s == NarrSong::MANDLOOP1 ? "1.raw" : "2.raw");
+        (mission % 2 == 0 ? "1.raw" : "2.raw");
 
     song.Load(GetDirectory() / path, true);
-  
-    tgx_bg =       GetTgx("gfx/narrbase.tgx");
+
+    tgx_bg1 =      GetTgx("gfx/narrbase.tgx");
 
     /* color */
     tgx_anim[0] =  GetTgx("gfx/flame_01.tgx");
@@ -58,6 +79,8 @@ NarrScreen::NarrScreen(TextSection sec, NarrSong s) :
     tgx_anim2[10] = GetTgx("gfx/candle_11.tgx");
     tgx_anim2[11] = GetTgx("gfx/candle_12.tgx");
     tgx_anim2[12] = GetTgx("gfx/candle_13.tgx");
+
+    skipped = false;
 }
 
 NarrScreen::~NarrScreen()
@@ -66,35 +89,116 @@ NarrScreen::~NarrScreen()
 
 bool NarrScreen::Begin()
 {
+    song.Play();
+    switch (mission) {
+    // TODO: add all campaign missions
+    case 1:
+        if (!BeginAct(T_START_ACT_ONE)) break;
+        if (!BeginNarration()) break;
+        break;
+    default: break;
+    }
+    song.Stop();
+
+    return Running();
+}
+
+/* TODO: less copy/paste */
+
+void NarrScreen::onEventReceive(Mouse &mouse)
+{
+    if (mouse.type == MOUSE_BUTTONDOWN) {
+        skipped = true;
+    }
+}
+
+bool NarrScreen::BeginAct(TextSection text)
+{
+    Uint8 alpha = 255;
+    const std::wstring& str = GetString(text, 2);
+    auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
+    auto dim = GetStringPixelDim(str, FONT_LARGE);
+
+    int px = (GetWidth() / 2) - (dim.first / 2);
+    int py = (GetHeight() / 2) - (dim.second / 2);
+
+    double startTime = GetTime();
+    while (Running()) {
+        if (skipped) {
+            skipped = false;
+            break;
+        }
+
+        double now = GetTime();
+        double delta = now - startTime;
+
+        if (delta > 5.0) {
+            break;
+        }
+        if (now < startTime + 1.0) {
+            alpha = Uint8(((now - startTime) * 255.0) / 1.0);
+        }
+        else if (now < startTime + 4.0) {
+            alpha = 255;
+        }
+        else if (now < startTime + 5.0) {
+            alpha = 255 - Uint8(((now - (startTime + 4.0)) * 255.0) / 1.0);
+        }
+
+        ClearDisplay();
+
+        font->SetAlphaMod(alpha);
+        RenderText(str, px, py, FONT_LARGE, false);
+
+        FlushDisplay();
+        SyncDisplay();
+    }
+
+    font->SetAlphaMod(255);
+    return Running();
+}
+
+// TODO: fade-in
+bool NarrScreen::BeginNarration()
+{
     Resolution res = GetResolution();
     StrongholdEdition ed = GetEdition();
 
     int px = (GetWidth() / 2) - (1024 / 2);
     int py = (GetHeight() / 2) - (768 / 2);
 
-    song.Play();
-    while(Running()) {
+    while (Running()) {
+        if (skipped) {
+            skipped = false;
+            return true;
+        }
+
         ClearDisplay();
 
-        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
+        if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
             RenderMenuBorder();
         }
 
         int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));
 
-        Render(*tgx_bg, px, py);
+        Render(*tgx_bg1, px, py);
         RenderFlameAnim(px, py, index);
 
         FlushDisplay();
         SyncDisplay();
     }
 
-    song.Stop();
     return Running();
 }
 
-void NarrScreen::onEventReceive(Mouse &mouse)
+bool NarrScreen::BeginStoryScreen()
 {
+    return Running();
+}
+
+bool NarrScreen::BeginNpcIntro(NPC npc)
+{
+    return Running();
 }
 
 void NarrScreen::RenderFlameAnim(int px, int py, int index)

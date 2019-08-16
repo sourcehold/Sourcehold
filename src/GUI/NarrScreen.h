@@ -11,8 +11,10 @@
 #include "Audio/Song.h"
 
 #include "Parsers/TgxFile.h"
+#include "Rendering/BinkVideo.h"
 #include "Assets.h"
 
+/* Narration screens shown before campaign missions */
 namespace Sourcehold {
     namespace GUI {
         using Parsers::TgxFile;
@@ -21,22 +23,27 @@ namespace Sourcehold {
         using namespace Assets;
         using namespace Audio;
 
-        enum class NarrSong {
-            MANDLOOP1,
-            MANDLOOP2
-        };
-
         class NarrScreen : protected EventConsumer<Mouse> {
             std::vector<std::wstring> lines;
             Song song; 
-            std::shared_ptr<TgxFile> tgx_bg, tgx_anim[26], tgx_anim2[13];
+            BinkVideo bik;
+            bool skipped;
+            uint8_t mission;
+            std::shared_ptr<TgxFile> tgx_bg1, tgx_bg2, tgx_anim[26], tgx_anim2[13];
         public:
-            NarrScreen(TextSection sec, NarrSong s = NarrSong::MANDLOOP1);
+            /* Create sequence based on mission index */
+            NarrScreen(uint8_t mission);
             ~NarrScreen();
 
             bool Begin();
         protected:
             void onEventReceive(Mouse &mouse) override;
+
+            bool BeginAct(TextSection text);
+            bool BeginNarration();
+            bool BeginStoryScreen();
+            bool BeginNpcIntro(NPC npc);
+
             void RenderFlameAnim(int px, int py, int index);
         };
     }

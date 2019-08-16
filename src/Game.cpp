@@ -122,7 +122,7 @@ int StartGame(GameOptions &opt)
     case MILITARY_CAMPAIGN_MISSION: {
         int index = GetMilitaryCampaignIndex();
 
-        NarrScreen narr(T_START_ACT_ONE);
+        NarrScreen narr(index + 1);
         narr.Begin();
 
         // TODO
