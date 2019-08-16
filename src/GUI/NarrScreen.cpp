@@ -1,23 +1,15 @@
 #include "GUI/NarrScreen.h"
 #include "GUI/MenuUtils.h"
 
-#include "Parsers/Gm1File.h"
 #include "Rendering/Font.h"
+#include "Rendering/BinkVideo.h"
+
+#include "Parsers/Gm1File.h"
 #include "GameManager.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Rendering;
-
-enum class NarrSong {
-    MANDLOOP1,
-    MANDLOOP2
-};
-
-enum class NarrBackground {
-    GOODGUYS,
-    BADGUYS
-};
 
 enum class NarrPart {
     NARRATION, // the candle + scrolling text
@@ -95,6 +87,7 @@ bool NarrScreen::Begin()
     case 1:
         if (!BeginAct(T_START_ACT_ONE)) break;
         if (!BeginNarration()) break;
+        if (!BeginStoryScreen(NarrBackground::GOODGUYS)) break;
         break;
     default: break;
     }
@@ -191,8 +184,39 @@ bool NarrScreen::BeginNarration()
     return Running();
 }
 
-bool NarrScreen::BeginStoryScreen()
+bool NarrScreen::BeginStoryScreen(NarrBackground bg)
 {
+    BinkVideo bik;
+    std::shared_ptr<TgxFile> castle;
+    if (bg == NarrBackground::BADGUYS) {
+        castle = GetTgx("gfx/storyscreen_castle.tgx");
+    }
+    else {
+        bik.LoadFromDisk(GetDirectory() / "binks/fireplace_01.bik", true);
+    }
+
+    int px = (GetWidth()  / 2) - (280 / 2);
+    int py = (GetHeight() / 2) - (200 / 2);
+
+    while (Running()) {
+        if (skipped) {
+            skipped = false;
+            return true;
+        }
+
+        ClearDisplay();
+
+        if (bg == NarrBackground::BADGUYS) {
+            Render(*castle, px, py);
+        }
+        else {
+            bik.Update();
+            Render(bik, px, py);
+        }
+
+        FlushDisplay();
+        SyncDisplay();
+    }
     return Running();
 }
 
