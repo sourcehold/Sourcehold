@@ -348,6 +348,7 @@ void World::onEventReceive(Keyboard &keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
+            ResetMenus();
             escMenu = !escMenu;
             break;
         default:

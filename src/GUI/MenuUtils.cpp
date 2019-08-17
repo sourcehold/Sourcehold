@@ -374,75 +374,74 @@ DialogResult GUI::EconomicsMenuDialog()
     return IDLE;
 }
 
+static enum class Settings {
+    GAME_OPTIONS,
+    GAMEPLAY_OPTIONS,
+    VIDEO_OPTIONS,
+    SOUND_OPTIONS,
+    CHANGE_NAME
+} settingsState = Settings::GAME_OPTIONS;
 DialogResult GUI::SettingsDialog()
 {
-    static enum Settings {
-        GAME_OPTIONS,
-        GAMEPLAY_OPTIONS,
-        VIDEO_OPTIONS,
-        SOUND_OPTIONS,
-        CHANGE_NAME
-    } state = GAME_OPTIONS;
-
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
     int x = (w / 2) - (21*24 / 2);
     int y = (h / 2) - (15*24 / 2);
 
-    switch(state) {
-    case GAME_OPTIONS: {
+    switch(settingsState) {
+    case Settings::GAME_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
 
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 25), x + 110, y + 110)) {
-            state = GAMEPLAY_OPTIONS;
+            settingsState = Settings::GAMEPLAY_OPTIONS;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 4), x + 110, y + 145)) {
-            state = VIDEO_OPTIONS;
+            settingsState = Settings::VIDEO_OPTIONS;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 5), x + 110, y + 180)) {
-            state = SOUND_OPTIONS;
+            settingsState = Settings::SOUND_OPTIONS;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 45), x + 110, y + 215)) {
             _name_edit.BeginInput();
-            state = CHANGE_NAME;
+            settingsState = Settings::CHANGE_NAME;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 260)) {
             return BACK;
         }
     } break;
-    case GAMEPLAY_OPTIONS: {
+    case Settings::GAMEPLAY_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 25), true);
 
         if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 235)) {
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
         if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 235)) {
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
     } break;
-    case VIDEO_OPTIONS: {
+    case Settings::VIDEO_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 4), true);
 
         if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 265)) {
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
         if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 265)) {
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
     } break;
-    case SOUND_OPTIONS: {
+    case Settings::SOUND_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 5), true);
 
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 265)) {
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
     } break;
-    case CHANGE_NAME: {
+    case Settings::CHANGE_NAME: {
         y = (768  / 2) - (8*24 / 2);
 
         RenderDialogBorder(x, y, 21, 9);
@@ -454,7 +453,7 @@ DialogResult GUI::SettingsDialog()
             CfgFile &cfg = GetCfg();
             cfg.username = _name_edit.GetLine();
 
-            state = GAME_OPTIONS;
+            settingsState = Settings::GAME_OPTIONS;
         }
 
         _name_edit.Render(x+85, y+110, 34);
@@ -465,77 +464,89 @@ DialogResult GUI::SettingsDialog()
     return IDLE;
 }
 
+static enum class Options {
+    GAME_OPTIONS,
+    SAVE,
+    LOAD,
+    OPTIONS,
+    HELP,
+    RESTART_MISSION,
+    QUIT_MISSION,
+    EXIT_STRONGHOLD
+} escState = Options::GAME_OPTIONS;
 DialogResult GUI::EscMenu()
 {
-    static enum Options {
-        GAME_OPTIONS,
-        SAVE,
-        LOAD,
-        OPTIONS,
-        HELP,
-        RESTART_MISSION,
-        QUIT_MISSION,
-        EXIT_STRONGHOLD
-    } state = GAME_OPTIONS;
-
     int w = GetWidth();
     int h = GetHeight();
 
     int x = (w / 2) - (21*24 / 2);
     int y = (h / 2) - (15*24 / 2);
 
-    if(state == GAME_OPTIONS) {
+    switch(escState) {
+    case Options::GAME_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
         RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
 
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 3), x + 110, y + 90)) {
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 2), x + 110, y + 122)) {
-            state = LOAD;
+            escState = Options::LOAD;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 24), x + 110, y + 152)) {
-            state = OPTIONS;
+            escState = Options::OPTIONS;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 26), x + 110, y + 182)) {
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 34), x + 110, y + 212)) {
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 7), x + 110, y + 242)) {
-            state = QUIT_MISSION;
+            escState = Options::QUIT_MISSION;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 9), x + 110, y + 272)) {
-            state = EXIT_STRONGHOLD;
+            escState = Options::EXIT_STRONGHOLD;
         }
         if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 10), x + 110, y + 302)) {
             return BACK;
         }
-    }else if(state == EXIT_STRONGHOLD) {
+    } break;
+    case Options::EXIT_STRONGHOLD: {
         DialogResult res = QuitDialog();
         if(res == QUIT) {
             return QUIT;
         }else if(res == BACK) {
-            state = GAME_OPTIONS;
+            escState = Options::GAME_OPTIONS;
         }
-    }else if(state == OPTIONS) {
+    } break;
+    case Options::OPTIONS: {
         DialogResult res = SettingsDialog();
-        if(res == BACK) state = GAME_OPTIONS;
-    }else if(state == LOAD) {
+        if(res == BACK) escState = Options::GAME_OPTIONS;
+    } break;
+    case Options::LOAD: {
         std::string file;
         DialogResult res = LoadDialog(file);
-        if(res == BACK) state = GAME_OPTIONS;
+        if(res == BACK) escState = Options::GAME_OPTIONS;
         else if(res == DialogResult::LOAD) {
             // TODO
         }
-    }else if(state == QUIT_MISSION) {
+    } break;
+    case Options::QUIT_MISSION: {
         DialogResult res = QuitMissionDialog();
         if(res == DialogResult::QUIT_MISSION) {
             return DialogResult::QUIT_MISSION;
         }else if(res == BACK) {
-            state = GAME_OPTIONS;
+            escState = Options::GAME_OPTIONS;
         }
+    } break;
+    default: break;
     }
 
     return IDLE;
+}
+
+void GUI::ResetMenus()
+{
+    settingsState = Settings::GAME_OPTIONS;
+    escState = Options::GAME_OPTIONS;
 }
 
 int GUI::GetMilitaryCampaignIndex()

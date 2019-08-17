@@ -47,6 +47,7 @@ namespace Sourcehold {
         DialogResult EconomicsMenuDialog();
         DialogResult SettingsDialog();
         DialogResult EscMenu();
+        void ResetMenus();
 
         int GetMilitaryCampaignIndex();
         int GetEconomicsCampaignIndex();
