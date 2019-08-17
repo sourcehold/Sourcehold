@@ -119,6 +119,7 @@ bool NarrScreen::BeginAct(TextSection text)
     while (Running()) {
         if (skipped) {
             skipped = false;
+            font->SetAlphaMod(255);
             break;
         }
 
@@ -151,7 +152,6 @@ bool NarrScreen::BeginAct(TextSection text)
     return Running();
 }
 
-// TODO: fade-in
 bool NarrScreen::BeginNarration()
 {
     Resolution res = GetResolution();
@@ -160,11 +160,22 @@ bool NarrScreen::BeginNarration()
     int px = (GetWidth() / 2) - (1024 / 2);
     int py = (GetHeight() / 2) - (768 / 2);
 
+    Uint8 alpha = 0;
+    double fadeBase = GetTime();
     while (Running()) {
         if (skipped) {
             skipped = false;
-            return true;
+            tgx_bg1->SetAlphaMod(255);
+            break;
         }
+
+        double now = GetTime();
+        double delta = now - fadeBase;
+
+        if(delta > 2.) alpha = 255;
+        else alpha = Uint8(((now - fadeBase) * 255.0) / 2.0);
+
+        tgx_bg1->SetAlphaMod(alpha);
 
         ClearDisplay();
 
@@ -175,7 +186,7 @@ bool NarrScreen::BeginNarration()
         int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));
 
         Render(*tgx_bg1, px, py);
-        RenderFlameAnim(px, py, index);
+        RenderFlameAnim(px, py, index, alpha);
 
         FlushDisplay();
         SyncDisplay();
@@ -225,13 +236,15 @@ bool NarrScreen::BeginNpcIntro(NPC npc)
     return Running();
 }
 
-void NarrScreen::RenderFlameAnim(int px, int py, int index)
+void NarrScreen::RenderFlameAnim(int px, int py, int index, Uint8 alpha)
 {
     auto tgx_color  = tgx_anim [index];
     auto tgx_candle = tgx_anim2[index];
     auto tgx_alpha  = tgx_anim [index + 13];
 
-    // TODO: blending doesn't work
+    tgx_color->SetAlphaMod(alpha);
+    tgx_candle->SetAlphaMod(alpha);
+    tgx_alpha->SetAlphaMod(alpha);
 
     tgx_alpha->SetBlendMode(SDL_BLENDMODE_ADD);
     Render(*tgx_alpha, px+160, py+235);
@@ -240,4 +253,12 @@ void NarrScreen::RenderFlameAnim(int px, int py, int index)
     Render(*tgx_color, px+160, py+235);
 
     Render(*tgx_candle, px, py+393);
+}
+
+void NarrScreen::NarrationText(TextSection text)
+{
+    /* Split narration text into lines
+       TODO: move into some utils file */
+
+    const std::wstring &str = GetString(text, 3);
 }

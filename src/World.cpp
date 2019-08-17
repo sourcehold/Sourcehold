@@ -166,8 +166,7 @@ void World::RenderQuickMenu()
 
     ui_compass.Render(
     [&]() -> SDL_Rect {
-        if(ui_compass.IsMouseOver())
-        {
+        if(ui_compass.IsMouseOver()) {
             Rotation rota = GetRotation();
         }
         return atlas->Get(37);
