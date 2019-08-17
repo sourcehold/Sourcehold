@@ -20,7 +20,7 @@ enum class NarrPart {
 NarrScreen::NarrScreen(uint8_t mission) :
     mission(mission),
     EventConsumer<Mouse>()
-{  
+{
     // TODO
     std::string path = std::string("fx/music/mandloop") +
         (mission % 2 == 0 ? "1.raw" : "2.raw");

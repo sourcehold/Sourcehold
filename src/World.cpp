@@ -205,7 +205,7 @@ void World::RenderQuickMenu()
 
 void World::RenderMenubar()
 {
-    //Rendering::Render(menubar, menuX, menuY, menuW, menuH);
+    Rendering::Render(menubar, menuX, menuY);
 }
 
 void World::UpdateMenubar()

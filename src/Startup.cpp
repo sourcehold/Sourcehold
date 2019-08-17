@@ -32,8 +32,6 @@ UIState Startup::Begin()
 
     intro =             GetBik("binks/intro.bik");
 
-    startTime = GetTime();
-
     const std::wstring &startupStr = GetString(T_START_TEXT, 1);
     auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(startupStr, FONT_LARGE);
@@ -45,6 +43,7 @@ UIState Startup::Begin()
     Resolution res = GetResolution();
     StrongholdEdition ed = GetEdition();
 
+    startTime = GetTime();
     while(Running()) {
         ClearDisplay();
 
@@ -166,7 +165,10 @@ UIState Startup::Begin()
 
 void Startup::onEventReceive(Mouse &event)
 {
-    if(event.LmbDown()) {
-        if(currentUIState == INTRO_SEQUENCE) currentStartupState++;
+    if(event.LmbDown() && currentUIState == INTRO_SEQUENCE) {
+        currentStartupState++;
+        if(currentStartupState == STARTUP_MULTIPLAYER_INFO) {
+            startTime = GetTime();
+        }
     }
 }

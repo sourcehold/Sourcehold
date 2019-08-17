@@ -277,12 +277,13 @@ bool Gm1File::GetImage(uint32_t index)
                     tile.y + l,
                     r, g, b, 0xFF
                 );
-
+/*
                 textureAtlas->GetSurface().SetPixel(
                     part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
                     part.y + entries[index].tileY + l,
                     r, g, b, a
                 );
+*/
             }
         }
 
