@@ -46,7 +46,7 @@ static StrongholdEdition _edition;
 static bool _running = false;
 static double _time = 0.0;
 
-static void DetectEdition()
+void DetectEdition()
 {
     /**
     * TODO:
@@ -62,7 +62,7 @@ static void DetectEdition()
     }
 }
 
-static void DetectUsername()
+void DetectUsername()
 {
     if(_cfg.username.empty()) {
         return;
@@ -103,7 +103,7 @@ static void DetectUsername()
     return;
 }
 
-static void UpdateGame()
+void UpdateGame()
 {
     if(!IsDisplayOpen() || !FetchEvents()) _running = false;
 

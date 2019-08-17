@@ -130,8 +130,7 @@ UIState World::Play()
             else if(res == QUIT) {
                 return EXIT_GAME;
             }else if(res == QUIT_MISSION) {
-                // TODO
-                return EXIT_GAME;
+                return MAIN_MENU;
             }
         }
 

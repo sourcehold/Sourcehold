@@ -149,11 +149,8 @@ UIState Startup::Begin()
             }
             else {
                 aud_startup.Stop();
-                currentUIState = MAIN_MENU;
+                return MAIN_MENU;
             }
-        } break;
-        case MAIN_MENU: {
-            return mainMenu.EnterMenu();
         } break;
         }
 

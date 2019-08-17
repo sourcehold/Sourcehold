@@ -17,6 +17,7 @@
 #include "System/FileUtil.h"
 
 #include "GUI/NarrScreen.h"
+#include "GUI/MainMenu.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::Audio;
@@ -32,6 +33,40 @@ void Cleanup()
     UnloadFonts();
     ClearFileCache();
     DestroyManager();
+}
+
+int MainLoop(UIState state) {
+    switch(state) {
+    case MAIN_MENU: {
+        MainMenu menu;
+        state = menu.EnterMenu();
+        MainLoop(state);
+    } break;
+    case MILITARY_CAMPAIGN_MISSION: {
+        int index = GetMilitaryCampaignIndex();
+
+        NarrScreen narr(index + 1);
+        narr.Begin();
+
+        // TODO
+        Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
+        music.Play();
+
+        World world;
+        world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
+        state = world.Play();
+
+        music.Stop();
+
+        MainLoop(state);
+    } break;
+    case EXIT_GAME: break;
+    default: break;
+    }
+
+exit:
+    Cleanup();
+    return EXIT_SUCCESS;
 }
 
 int EnterLoadingScreen()
@@ -95,7 +130,7 @@ int StartGame(GameOptions &opt)
         ErrorMessageBox(
             "Here's a Nickel, kid. Go buy yourself a real Stronghold",
             std::string("Please make sure the data directory contains all necessary files.\n") +
-            + "Current path: " + 
+            + "Current path: " +
             GetDirectory().string()
         );
         return EXIT_FAILURE;
@@ -118,30 +153,7 @@ int StartGame(GameOptions &opt)
 
     /* Start the intro sequence and the main menu */
     UIState state = start.Begin();
-    switch(state) {
-    case MILITARY_CAMPAIGN_MISSION: {
-        int index = GetMilitaryCampaignIndex();
-
-        NarrScreen narr(index + 1);
-        narr.Begin();
-
-        // TODO
-        Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
-        music.Play();
-
-        World world;
-        world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
-        state = world.Play();
-
-        music.Stop();
-    } break;
-    case EXIT_GAME: goto exit;
-    default: break;
-    }
-
-exit:
-    Cleanup();
-    return EXIT_SUCCESS;
+    return MainLoop(state);
 }
 
 #undef main

@@ -9,7 +9,7 @@
 #include "GameManager.h"
 
 #include "GUI/UIState.h"
-#include "GUI/MainMenu.h"
+#include "GUI/MenuUtils.h"
 
 #include "Audio/Song.h"
 
@@ -31,12 +31,12 @@ namespace Sourcehold {
         using namespace Parsers;
         using namespace Rendering;
         using namespace GUI;
+        using namespace Audio;
 
         /**
          * Handles non game states - menus and intro sequence
          */
         class Startup : protected EventConsumer<Mouse> {
-            MainMenu mainMenu;
         public:
             Startup();
             Startup(const Startup &) = delete;
