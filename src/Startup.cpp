@@ -39,11 +39,11 @@ UIState Startup::Begin()
     dim.second *= 0.7;
 
     Uint8 alpha = 255;
+    startTime = GetTime();
     double fadeBase = startTime;
     Resolution res = GetResolution();
     StrongholdEdition ed = GetEdition();
 
-    startTime = GetTime();
     while(Running()) {
         ClearDisplay();
 
