@@ -248,7 +248,7 @@ bool Game::LoadGameData()
 
     if(_saveFolder.empty()) {
         /* Attempt to fall back to local dir */
-        boost::filesystem::path np = _dataFolder / "../saves/";
+        boost::filesystem::path np = "../saves/";
         if(DoesFileExist(np)) {
             _saveFolder = np;
         }
