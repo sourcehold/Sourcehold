@@ -20,7 +20,7 @@ namespace Sourcehold {
             uint32_t width, height;
         public:
             Surface();
-            Surface(const Surface&) = delete;
+            Surface(const Surface&);
             ~Surface();
 
             bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);

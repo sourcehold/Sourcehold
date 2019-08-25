@@ -22,8 +22,6 @@ namespace Sourcehold {
             const uint16_t MAX_LENGTH = 100;
             std::wstring line;
             uint16_t cp = 0;
-            SDL_Rect parts[3];
-            std::shared_ptr<TextureAtlas> atlas;
         public:
             LineEdit() = default;
             LineEdit(const std::wstring& line);

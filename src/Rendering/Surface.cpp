@@ -8,6 +8,17 @@ Surface::Surface()
 {
 }
 
+Surface::Surface(const Surface& other) :
+    surface(other.surface),
+    locked(other.locked),
+    valid(other.valid),
+    format(other.format),
+    pixels(other.pixels),
+    width(other.width),
+    height(other.height)
+{
+}
+
 Surface::~Surface()
 {
     Destroy();

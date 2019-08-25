@@ -18,14 +18,10 @@ namespace Sourcehold {
         class Surface;
         class Texture {
             SDL_Texture *texture = nullptr;
-            int width, height, pitch = 0, format;
-            double angle;
-            bool locked = false, target = false, valid = false;
             Uint32* pixels = nullptr;
-            SDL_RendererFlip flip;
             SDL_TextureAccess access;
         public:
-            Texture();
+            Texture() = default;
             Texture(const Texture &tex);
             ~Texture();
 
@@ -58,36 +54,22 @@ namespace Sourcehold {
             void UnlockTexture();
             void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
             void Rotate(double angle);
-            void FlipHorizontal();
-            void FlipVertical();
-            void FlipNone();
             void SetAlphaMod(Uint8 alpha);
             void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
             void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
             void SetBlendMode(SDL_BlendMode mode);
 
+            int GetWidth();
+            int GetHeight();
+            void GetDim(int *w, int *h);
+
             Uint32 *GetData();
 
             inline bool IsValid() {
-                return valid;
-            }
-            inline bool IsLocked() {
-                return locked;
+                return texture;
             }
             inline SDL_Texture *GetTexture() {
                 return texture;
-            }
-            inline int GetWidth() {
-                return width;
-            }
-            inline int GetHeight() {
-                return height;
-            }
-            inline double GetAngle() {
-                return angle;
-            }
-            inline SDL_RendererFlip GetFlip() {
-                return flip;
             }
         protected:
             Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);

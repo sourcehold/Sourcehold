@@ -20,11 +20,10 @@ namespace Sourcehold {
          */
         class TextureAtlas : public Texture {
             uint32_t num;
-            const uint32_t MAX_X_RESOLUTION = 2048;
-            std::vector<SDL_Rect> entries;
             Surface surf;
+            std::vector<SDL_Rect> entries;
         public:
-            TextureAtlas();
+            TextureAtlas() = default;
             TextureAtlas(const TextureAtlas &atlas);
             ~TextureAtlas();
 
@@ -43,6 +42,7 @@ namespace Sourcehold {
                 return surf;
             }
         protected:
+            const uint32_t MAX_X_RESOLUTION = 2048;
             std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
         };
     }

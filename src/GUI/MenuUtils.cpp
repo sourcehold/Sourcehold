@@ -88,7 +88,7 @@ void GUI::RenderMenuText(const std::wstring &text)
 
 void GUI::RenderMenuBorder()
 {
-    Render(*_tgx_border, &_border_rect);
+    if(_ed == STRONGHOLD_HD) Render(*_tgx_border, &_border_rect);
 }
 
 bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)

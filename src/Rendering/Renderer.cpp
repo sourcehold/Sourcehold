@@ -96,10 +96,10 @@ void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip)
         texture.GetTexture(),
         clip,
         &rect,
-        texture.GetAngle(),
+        0.0,
         nullptr,
-        texture.GetFlip()
-    );
+        SDL_FLIP_NONE
+        );
 }
 
 void Rendering::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip)
@@ -118,9 +118,9 @@ void Rendering::Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *c
         texture.GetTexture(),
         clip,
         &rect,
-        texture.GetAngle(),
+        0.0,
         nullptr,
-        texture.GetFlip()
+        SDL_FLIP_NONE
     );
 }
 
@@ -147,9 +147,9 @@ void Rendering::Render(Texture &texture, SDL_Rect *clip)
         texture.GetTexture(),
         clip,
         nullptr,
-        texture.GetAngle(),
+        0.0,
         nullptr,
-        texture.GetFlip()
+        SDL_FLIP_NONE
     );
 }
 

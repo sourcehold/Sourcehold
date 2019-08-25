@@ -40,18 +40,16 @@ struct Gm1File::ImageHeader {
 } ATTRIB_PACKED;
 #pragma pack(pop)
 
-/* Will be overwritten when loading a new file. Not needed at runtime */
-static uint16_t palette[2560];
-
-#pragma pack(push, 1)
 struct Gm1File::Gm1Entry {
     ImageHeader header;
     uint32_t size;
     uint32_t offset;
     uint16_t collection;
     uint16_t offX, offY, tileX, tileY;
-} ATTRIB_PACKED;
-#pragma pack(pop)
+};
+
+/* Will be overwritten when loading a new file. Not needed at runtime */
+static uint16_t palette[2560];
 
 Gm1File::Gm1File() : Parser()
 {
@@ -69,13 +67,10 @@ Gm1File::Gm1File(boost::filesystem::path path) : Parser()
 
 Gm1File::~Gm1File()
 {
-
 }
 
 bool Gm1File::LoadFromDisk(boost::filesystem::path path)
 {
-    this->path = path;
-
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;
         return false;
@@ -88,14 +83,14 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
     }
 
     /* Boundary check */
-    if(header.num > max_num) {
+    if(header.num > MAX_NUM) {
         Logger::error(PARSERS) << "Gm1 file header from '" << path.string() << "' contains too many images!" << std::endl;
         Parser::Close();
         return false;
     }
 
     /* Reserve size in vectors to fit all entries */
-    entries.resize(header.num);
+    std::vector<Gm1Entry> entries(header.num);
 
     /* Read Gm1 palette */
     ReadPalette();
@@ -118,11 +113,11 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
     }
 
     /* Get offset of data start */
-    offData = Parser::Tell();
+    uint32_t offData = Parser::Tell();
 
     /* Read compressed images into buffer */
     uint32_t buflen = Parser::GetLength() - offData;
-    imgdata = new char[buflen];
+    char *imgdata = new char[buflen];
     Parser::GetData(imgdata, buflen);
 
     /* Close file */
@@ -134,7 +129,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
      * tileset will correspond to a single image in
      * the texture atlas (i.e. building + ground).
      */
-    numCollections = 0;
+    uint32_t numCollections = 0;
     for(n = 0; n < header.num; n++) {
         if(entries[n].header.part == 0 && header.type == Gm1Header::TYPE_TILE) {
             numCollections++;
@@ -180,7 +175,7 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
         tileset->Allocate(header.num);
         tileset->Lock();
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n);
+            GetImage(n, entries, imgdata);
         }
         tileset->Unlock();
         tileset->Create();
@@ -200,30 +195,23 @@ bool Gm1File::LoadFromDisk(boost::filesystem::path path)
         textureAtlas->Lock();
         /* One entry -> one texture */
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n);
+            GetImage(n, entries, imgdata);
         }
         textureAtlas->Unlock();
         textureAtlas->Create();
     }
 
     delete [] imgdata;
-
     return true;
-}
-
-void Gm1File::DumpInformation()
-{
-    Logger::message(PARSERS) << "Gm1 file:\nNum: " << header.num << "\nType: " << header.type << "\nLen: " << header.len << std::endl;
 }
 
 void Gm1File::Free()
 {
-    entries.clear();
     textureAtlas->Clear();
     tileset->Clear();
 }
 
-bool Gm1File::GetImage(uint32_t index)
+bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *imgdata)
 {
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
@@ -310,7 +298,7 @@ bool Gm1File::GetImage(uint32_t index)
     }
     break;
     default: {
-        Logger::error(PARSERS) << "Unknown filetype stored in Gm1 '" << path.string() << "': " << header.type << std::endl;
+        Logger::error(PARSERS) << "Unknown filetype stored in Gm1: " << header.type << std::endl;
         return false;
     }
     }

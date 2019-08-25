@@ -13,19 +13,19 @@
 using namespace Sourcehold::Game;
 
 /**
- * Indices into the texture atlas for every user interface tab.
- * Contains indices for:
- * 1. Not selected
- * 2. Mouse over
- * 3. Selected
+ * Contains:
+ * 1. Not selected index
+ * 2. Mouse over index
+ * 3. Selected index
+ * 4. Relative x pos
  */
-static uint16_t _ui_tabs_indices[6][3] = {
-    { 7, 8, 9 },
-    { 10, 11, 12 },
-    { 13, 14, 15 },
-    { 16, 17, 18 },
-    { 19, 20, 21 },
-    { 22, 23, 24 },
+static uint16_t lut_ui_tabs[6][5] = {
+    {  7,  8,  9, 264 },
+    { 10, 11, 12, 300 },
+    { 13, 14, 15, 336 },
+    { 16, 17, 18, 372 },
+    { 19, 20, 21, 408 },
+    { 22, 23, 24, 444 },
 };
 
 World::World() :
@@ -38,9 +38,6 @@ World::World() :
     gm1_floats = GetGm1("gm/floats.gm1");
 
     LoadMenuAssets();
-
-    /* Init the on-screen menu */
-    menubar.AllocNewTarget(240 + 800 + 240, 200);
 
     menuX = (GetWidth() / 2) - (menubar.GetWidth() / 2);
     menuY = GetHeight() - menubar.GetHeight();
@@ -77,24 +74,10 @@ World::World() :
     ui_revert.Scale(rect.w, rect.h);
     ui_revert.SetTexture(atlas.get());
 
-    ui_tabs[0].Translate(264, 165);
-    ui_tabs[0].Scale(30, 35);
-    ui_tabs[0].SetTexture(atlas.get());
-    ui_tabs[1].Translate(300, 165);
-    ui_tabs[1].Scale(30, 35);
-    ui_tabs[1].SetTexture(atlas.get());
-    ui_tabs[2].Translate(336, 165);
-    ui_tabs[2].Scale(30, 35);
-    ui_tabs[2].SetTexture(atlas.get());
-    ui_tabs[3].Translate(372, 165);
-    ui_tabs[3].Scale(30, 35);
-    ui_tabs[3].SetTexture(atlas.get());
-    ui_tabs[4].Translate(408, 165);
-    ui_tabs[4].Scale(30, 35);
-    ui_tabs[4].SetTexture(atlas.get());
-    ui_tabs[5].Translate(444, 165);
-    ui_tabs[5].Scale(30, 35);
-    ui_tabs[5].SetTexture(atlas.get());
+    for (int i = 0; i < 6; i++) {
+        ui_tabs[i].Translate(lut_ui_tabs[i][3], 165);
+        ui_tabs[i].Scale(30, 15);
+    }
 
     ResetTarget();
 
@@ -120,8 +103,8 @@ UIState World::Play()
         }
 
         if(menubarShown) {
-            RenderMenubar();
             UpdateMenubar();
+            RenderMenubar();
         }
 
         if(escMenu) {
@@ -200,10 +183,9 @@ void World::RenderQuickMenu()
     });
 }
 
-
 void World::RenderMenubar()
 {
-    Rendering::Render(menubar, menuX, menuY);
+    ::Render(menubar, menuX, menuY);
 }
 
 void World::UpdateMenubar()
@@ -212,62 +194,64 @@ void World::UpdateMenubar()
 
     int32_t width = menubar.GetWidth(), height = menubar.GetHeight();
 
-    /* TODO: Less hardcoding */
     auto atlas = gm1_face->GetTextureAtlas();
     SDL_Rect rect = atlas->Get(0);
-    Rendering::Render(*atlas, width - 800 - 240, height - rect.h, &rect);
+    Rendering::Render(*atlas, width - 800 - tgx_bar_bg->GetWidth(), height - rect.h, &rect);
 
     atlas = gm1_scribe->GetTextureAtlas();
     rect = atlas->Get(0);
-    Rendering::Render(*atlas, width - 800 - 240 + 705, height - 200, &rect);
-    Rendering::Render(*tgx_right, width - tgx_right->GetWidth(), height - tgx_right->GetHeight());
+    Rendering::Render(*atlas, width - 800 - tgx_bar_bg->GetWidth() + 705, height - 200, &rect);
+    Rendering::Render(*tgx_right, 800 + tgx_right->GetWidth(), height - tgx_right->GetHeight());
     Rendering::Render(*tgx_bar_bg, 0, height - tgx_bar_bg->GetHeight());
 
     atlas = gm1_icons->GetTextureAtlas();
 
     /* Render the menu buttons */
     ui_disk.Render(
-    [&]() -> SDL_Rect {
-        if(ui_disk.IsMouseOver()) return atlas->Get(26);
-        else return atlas->Get(25);
-    });
+        [&]() -> SDL_Rect {
+            if (ui_disk.IsClicked() && !escMenu) {
+                escMenu = true;
+            }
+            if (ui_disk.IsMouseOver() && !escMenu) return atlas->Get(26);
+            else return atlas->Get(25);
+        });
 
     ui_info.Render(
-    [&]() -> SDL_Rect {
-        if(ui_info.IsMouseOver()) return atlas->Get(28);
-        else return atlas->Get(27);
-    });
+        [&]() -> SDL_Rect {
+            if (ui_info.IsMouseOver() && !escMenu) return atlas->Get(28);
+            else return atlas->Get(27);
+        });
 
     ui_delete.Render(
-    [&]() -> SDL_Rect {
-        if(ui_delete.IsMouseOver()) return atlas->Get(30);
-        else return atlas->Get(29);
-    });
+        [&]() -> SDL_Rect {
+            if (ui_delete.IsMouseOver() && !escMenu) return atlas->Get(30);
+            else return atlas->Get(29);
+        });
 
     ui_revert.Render(
-    [&]() -> SDL_Rect {
-        if(ui_revert.IsMouseOver()) return atlas->Get(69);
-        else return atlas->Get(68);
-    });
-
-    for(uint8_t i = 0; i < 6; i++) {
-        ui_tabs[i].Render(
         [&]() -> SDL_Rect {
-            if(ui_tabs[i].IsClicked()) {
-                currentTab = static_cast<MenuPage>(i);
-            }
-            else {
-                if(ui_tabs[i].IsMouseOver())return atlas->Get(_ui_tabs_indices[i][1]);
-                else return atlas->Get(_ui_tabs_indices[i][0]);
-            }
-            /* Highlight the selected tab */
-            if(currentTab == i) return atlas->Get(_ui_tabs_indices[i][2]);
-            return { 0, 0, 0, 0 };
+            if (ui_revert.IsMouseOver() && !escMenu) return atlas->Get(69);
+            else return atlas->Get(68);
         });
+
+    for (uint8_t i = 0; i < 6; i++) {
+        ui_tabs[i].Render(
+            [&]() -> SDL_Rect {
+                if (ui_tabs[i].IsClicked() && !escMenu) {
+                    currentTab = static_cast<MenuPage>(i);
+                }
+                else {
+                    if (ui_tabs[i].IsMouseOver() && !escMenu)return atlas->Get(lut_ui_tabs[i][1]);
+                    else return atlas->Get(lut_ui_tabs[i][0]);
+                }
+                /* Highlight the selected tab */
+                if (currentTab == i) return atlas->Get(lut_ui_tabs[i][2]);
+                return { 0, 0, 0, 0 };
+            });
     }
 
     /* Render the current pages content, TODO: may change when different building selected, etc. */
-    switch(currentTab) {
+    switch (currentTab) {
     case MENU_CASTLE: {
     } break;
     case MENU_INDUSTRY: {
@@ -316,6 +300,8 @@ void World::LoadMenuAssets()
 
     tgx_right = GetTgx(std::string("gfx/" + base + "r.tgx"));
     tgx_bar_bg = GetTgx(std::string("gfx/" + base + "l.tgx"));
+
+    menubar.AllocNewTarget(tgx_bar_bg->GetWidth() + 800 + tgx_right->GetWidth(), 200);
 
     gm1_face = GetGm1("gm/face800-blank.gm1");
 }

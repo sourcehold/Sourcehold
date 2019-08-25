@@ -22,28 +22,8 @@ namespace Sourcehold {
          * and a Tileset depending on the stored type
          */
         class Gm1File : private Parser {
-        public:
-            Gm1File();
-            Gm1File(boost::filesystem::path path);
-            Gm1File(const Gm1File&) = delete;
-            Gm1File& operator=(const Gm1File&)= delete;
-            ~Gm1File();
-
-            bool LoadFromDisk(boost::filesystem::path path);
-            void DumpInformation();
-            void Free();
-
-            inline std::shared_ptr<Tileset> GetTileset() {
-                return tileset;
-            }
-            inline std::shared_ptr<TextureAtlas> GetTextureAtlas() {
-                return textureAtlas;
-            }
-        protected:
-            const uint32_t max_num = 2048;
-            bool GetImage(uint32_t index);
-            void ReadPalette();
-        private:
+            std::shared_ptr<TextureAtlas> textureAtlas;
+            std::shared_ptr<Tileset> tileset;
             struct ImageHeader;
             struct Gm1Entry;
             struct Gm1Header {
@@ -55,15 +35,15 @@ namespace Sourcehold {
                 uint32_t u1;
                 /* Type of stored entries */
                 enum DataType : uint32_t {
-                    TYPE_INTERFACE  = 0x01, /* Tgx images */
-                    TYPE_ANIMATION  = 0x02, /* Animation */
-                    TYPE_TILE       = 0x03, /* Tile object (tgx) */
-                    TYPE_FONT       = 0x04, /* Tgx-compressed font */
-                    TYPE_MISC1      = 0x05, /* Uncompressed image */
-                    TYPE_CONSTSIZE  = 0x06, /* Constant size */
-                    TYPE_MISC2      = 0x07, /* Like 0x05 */
-                    FIRST           = TYPE_INTERFACE,
-                    LAST            = TYPE_MISC2,
+                    TYPE_INTERFACE = 0x01, /* Tgx images */
+                    TYPE_ANIMATION = 0x02, /* Animation */
+                    TYPE_TILE = 0x03, /* Tile object (tgx) */
+                    TYPE_FONT = 0x04, /* Tgx-compressed font */
+                    TYPE_MISC1 = 0x05, /* Uncompressed image */
+                    TYPE_CONSTSIZE = 0x06, /* Constant size */
+                    TYPE_MISC2 = 0x07, /* Like 0x05 */
+                    FIRST = TYPE_INTERFACE,
+                    LAST = TYPE_MISC2,
                 } type;
                 /* Unknown */
                 uint32_t u2[14];
@@ -73,17 +53,26 @@ namespace Sourcehold {
                 uint32_t u3;
             } header;
 
-            std::shared_ptr<TextureAtlas> textureAtlas;
-            std::shared_ptr<Tileset> tileset;
-            boost::filesystem::path path;
-            /* Offset of data section */
-            uint32_t offData;
-            /* If tileset, how many actual entries does it contain? */
-            uint32_t numCollections;
-            /* Raw image data */
-            char *imgdata = nullptr;
-            /* All of the entries */
-            std::vector<Gm1Entry> entries;
+        public:
+            Gm1File();
+            Gm1File(boost::filesystem::path path);
+            Gm1File(const Gm1File&) = delete;
+            Gm1File& operator=(const Gm1File&)= delete;
+            ~Gm1File();
+
+            bool LoadFromDisk(boost::filesystem::path path);
+            void Free();
+
+            inline std::shared_ptr<Tileset> GetTileset() {
+                return tileset;
+            }
+            inline std::shared_ptr<TextureAtlas> GetTextureAtlas() {
+                return textureAtlas;
+            }
+        protected:
+            const uint32_t MAX_NUM = 2048;
+            bool GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *imgdata);
+            void ReadPalette();
         };
     }
 }

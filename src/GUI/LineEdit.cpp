@@ -17,11 +17,6 @@ LineEdit::~LineEdit()
 
 void LineEdit::Init()
 {
-    atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
-    parts[0] = atlas->Get(114);
-    parts[1] = atlas->Get(115);
-    parts[2] = atlas->Get(116);
-
     cp = line.size();
 }
 
@@ -38,6 +33,12 @@ void LineEdit::EndInput()
 void LineEdit::Render(int x, int y, int nx)
 {
     if(nx <= 2) return;
+
+    std::shared_ptr<TextureAtlas> atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
+    SDL_Rect parts[3];
+    parts[0] = atlas->Get(114);
+    parts[1] = atlas->Get(115);
+    parts[2] = atlas->Get(116);
 
     auto dim = GetStringPixelDim(line.substr(0, cp), FONT_SMALL);
 

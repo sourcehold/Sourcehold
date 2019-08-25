@@ -7,23 +7,11 @@
 using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
-Texture::Texture() :
-    width(0),
-    height(0),
-    angle(0.0),
-    flip(SDL_FLIP_NONE)
-{
-}
-
 Texture::Texture(const Texture &tex) :
-    width(0),
-    height(0),
-    angle(0.0),
-    flip(SDL_FLIP_NONE)
+    texture(tex.texture),
+    pixels(tex.pixels),
+    access(tex.access)
 {
-    this->texture = tex.texture;
-    this->width = tex.width;
-    this->height = tex.height;
 }
 
 Texture::~Texture()
@@ -33,9 +21,6 @@ Texture::~Texture()
 
 bool Texture::AllocNewStreaming(int width, int height, int format)
 {
-    this->width = width;
-    this->height = height;
-    this->format = format;
     access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
                   GetRenderer(),
@@ -48,17 +33,13 @@ bool Texture::AllocNewStreaming(int width, int height, int format)
         return false;
     }
 
-    /* Enable transparency */
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-    valid = true;
     return true;
 }
 
 bool Texture::AllocFromSurface(Surface &surface)
 {
-    width = surface.GetWidth();
-    height = surface.GetHeight();
     access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
@@ -67,16 +48,11 @@ bool Texture::AllocFromSurface(Surface &surface)
     }
 
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
-    valid = true;
     return true;
 }
 
 bool Texture::AllocNewTarget(int width, int height, int format)
 {
-    this->width = width;
-    this->height = height;
-    this->format = format;
     access = SDL_TEXTUREACCESS_TARGET;
     texture = SDL_CreateTexture(
                   GetRenderer(),
@@ -90,8 +66,6 @@ bool Texture::AllocNewTarget(int width, int height, int format)
     }
 
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
-    valid = true;
     return true;
 }
 
@@ -102,53 +76,31 @@ void Texture::UpdateTexture()
 
 void Texture::Destroy()
 {
-    if(!valid) return;
+    if (!texture) return;
     SDL_DestroyTexture(texture);
-    valid = false;
+    texture = nullptr;
 }
 
 void Texture::LockTexture()
 {
-    if(locked || access != SDL_TEXTUREACCESS_STREAMING) return;
+    if(!texture || access != SDL_TEXTUREACCESS_STREAMING) return;
+    int pitch;
     if(SDL_LockTexture(texture, nullptr, (void**)&pixels, &pitch)) {
         Logger::error(RENDERING) << "Unable to lock texture: " << SDL_GetError() << std::endl;
-        locked = false;
     }
-    else locked = true;
 }
 
 void Texture::UnlockTexture()
 {
-    if(!locked || access != SDL_TEXTUREACCESS_STREAMING) return;
+    if(access != SDL_TEXTUREACCESS_STREAMING) return;
     SDL_UnlockTexture(texture);
-    locked = false;
 }
 
 void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
-    if(!locked) return;
+    int width = GetWidth();
     uint32_t index = x + y * width;
     pixels[index] = ToPixel(r, g, b, a);
-}
-
-void Texture::Rotate(double angle)
-{
-    this->angle += angle;
-}
-
-void Texture::FlipHorizontal()
-{
-    flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_HORIZONTAL);
-}
-
-void Texture::FlipVertical()
-{
-    flip = (SDL_RendererFlip)((int)flip | SDL_FLIP_VERTICAL);
-}
-
-void Texture::FlipNone()
-{
-    flip = (SDL_RendererFlip)SDL_FLIP_NONE;
 }
 
 void Texture::SetAlphaMod(Uint8 alpha)
@@ -163,11 +115,6 @@ void Texture::SetColorMod(Uint8 r, Uint8 g, Uint8 b)
 
 void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
 {
-    if(!locked || !other.IsLocked()) {
-        Logger::error(RENDERING) << "Lock the texture before copying from or to it!" << std::endl;
-        return;
-    }
-
     uint32_t offX = 0, offY = 0, ow = other.GetWidth(), oh = other.GetHeight();
     if(rect) {
         offX = rect->x;
@@ -175,6 +122,9 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect)
         ow = rect->w;
         oh = rect->h;
     }
+
+    int width, height;
+    GetDim(&width, &height);
 
     if( int(x + ow) > width || int(y + oh) > height ) {
         Logger::error(RENDERING) << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
@@ -199,9 +149,45 @@ void Texture::SetBlendMode(SDL_BlendMode mode)
     SDL_SetTextureBlendMode(texture, mode);
 }
 
+int Texture::GetWidth()
+{
+    int w;
+    SDL_QueryTexture(
+        texture,
+        NULL,
+        NULL,
+        &w,
+        NULL
+    );
+    return w;
+}
+
+int Texture::GetHeight()
+{
+    int h;
+    SDL_QueryTexture(
+        texture,
+        NULL,
+        NULL,
+        NULL,
+        &h
+    );
+    return h;
+}
+
+void Texture::GetDim(int* w, int* h)
+{
+    SDL_QueryTexture(
+        texture,
+        NULL,
+        NULL,
+        w,
+        h
+    );
+}
+
 Uint32 *Texture::GetData()
 {
-    if(!locked) return nullptr;
     return pixels;
 }
 

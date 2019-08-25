@@ -5,11 +5,10 @@
 
 using namespace Sourcehold::Rendering;
 
-TextureAtlas::TextureAtlas()
-{
-}
-
-TextureAtlas::TextureAtlas(const TextureAtlas &atlas)
+TextureAtlas::TextureAtlas(const TextureAtlas &atlas) :
+    num(atlas.num),
+    entries(atlas.entries),
+    surf(atlas.surf)
 {
 }
 

@@ -64,7 +64,6 @@ int MainLoop(UIState state) {
     default: break;
     }
 
-exit:
     Cleanup();
     return EXIT_SUCCESS;
 }
@@ -144,15 +143,14 @@ int StartGame(GameOptions &opt)
         return EXIT_FAILURE;
     }
 
-    /* Init the startup sequence */
     Startup start;
-    start.PlayMusic();
 
     int ret = EnterLoadingScreen();
-    if(ret != EXIT_SUCCESS) return ret;
+    if (ret != EXIT_SUCCESS) return ret;
 
-    /* Start the intro sequence and the main menu */
+    start.PlayMusic();
     UIState state = start.Begin();
+
     return MainLoop(state);
 }
 
