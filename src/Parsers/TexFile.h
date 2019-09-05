@@ -16,7 +16,7 @@ namespace Sourcehold {
         class TexFile : private Parser {
         public:
             TexFile();
-            ~TexFile() =default;
+            ~TexFile() {};
 
             bool LoadFromDisk(boost::filesystem::path path);
 

@@ -17,11 +17,12 @@ After cloning the repository, make sure to run `git submodule init` and `git sub
 Run `cmake` in your build directory. If you're building on Windows or don't have the libraries in your `pkg-config`,
 use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths. 
 
-Sourcehold depends on the following libraries:
+Sourcehold uses the following libraries:
 *   SDL2
 *   OpenAL
 *   FFmpeg (avcodec, avutil, avformat, swscale)
 *   Boost (filesystem)
+*   zlib's blast for PKWARE decompression
 
 ## Running
 Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy

@@ -17,6 +17,21 @@ using namespace Sourcehold::Game;
 
 GameMap::GameMap()
 {
+}
+
+GameMap::GameMap(boost::filesystem::path path)
+{
+    LoadFromDisk(path);
+}
+
+GameMap::~GameMap()
+{
+}
+
+void GameMap::LoadFromDisk(boost::filesystem::path path)
+{
+    MapFile::LoadFromDisk(path);
+
     gm1_tile = GetGm1("gm/tile_land8.gm1");
 
     tileset = gm1_tile->GetTileset();
@@ -26,15 +41,10 @@ GameMap::GameMap()
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 8);
 
-    for(uint32_t i = 0; i < tiles.size(); i++) {
+    for (uint32_t i = 0; i < tiles.size(); i++) {
         int tile = dist(rng);
         tiles[i] = tileset->GetTile(tile);
     }
-}
-
-void GameMap::LoadFromDisk(boost::filesystem::path path)
-{
-    /* TODO */
 }
 
 void GameMap::Render()

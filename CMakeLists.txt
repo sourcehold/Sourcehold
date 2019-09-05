@@ -14,6 +14,7 @@ include_directories(src)
 
 # Thirdparty
 include_directories(thirdparty/cxxopts/include/)
+include_directories(thirdparty/blast/)
 
 # Find pthread
 find_package (Threads)
@@ -64,7 +65,7 @@ else()
 endif()
 
 # Include sources / headers
-file(GLOB_RECURSE SOURCES src/*.cpp)
+file(GLOB_RECURSE SOURCES src/*.cpp thirdparty/blast/blast.c)
 file(GLOB_RECURSE HEADERS src/*.h)
 
 if(MSVC)

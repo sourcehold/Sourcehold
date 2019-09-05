@@ -36,6 +36,7 @@ namespace Sourcehold {
         };
 
         using namespace GUI;
+        using namespace Parsers;
 
         /**
          * Handles everything related to the game world, including

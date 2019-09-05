@@ -1,0 +1,178 @@
+#include <cstring>
+#include <cmath>
+
+#include "Parsers/MapFile.h"
+#include "Parsers/TgxFile.h"
+
+#include "System/Logger.h"
+
+extern "C" {
+#include <blast.h>
+}
+
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::System;
+
+// TODO: verify
+struct MapSectionHeader {
+    uint32_t ID;
+    uint16_t len;
+    uint16_t pad; // part of len?
+    uint32_t unknown;
+};
+
+struct MapFile::MapSec {
+    uint8_t* data;
+    uint32_t num;
+};
+
+MapFile::MapFile()
+{
+}
+
+MapFile::MapFile(boost::filesystem::path path)
+{
+    LoadFromDisk(path);
+}
+
+MapFile::~MapFile()
+{
+}
+
+bool MapFile::LoadFromDisk(boost::filesystem::path path)
+{
+    if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
+        Logger::error(PARSERS) << "Unable to open map file '" << path.string() << "'!" << std::endl;
+        return false;
+    }
+
+    // magic number
+    if (0xFFFFFFFF != Parser::GetDWord()) {
+        Logger::error(PARSERS) << "Magic number of map file '" << path.string() <<"' is wrong!" << std::endl;
+        return false;
+    }
+
+    // unknown int
+    Parser::GetDWord();
+
+    ParsePreview();
+
+    Parser::Close();
+    return true;
+}
+
+MapFile::MapSec MapFile::BlastSection()
+{
+    MapSec sec = { NULL, 0 };
+
+    // TODO: better values
+    const static uint32_t MAX_COMPRESSED_LEN = 1024 * 32;
+    const static uint32_t MAX_BLASTED_LEN = 1024 * 64;
+
+    MapSectionHeader header;
+    Parser::GetData(&header, sizeof(header));
+
+    if (header.len > MAX_COMPRESSED_LEN) {
+        Logger::error(PARSERS) << "Map section exceeds the maximum size of " << MAX_COMPRESSED_LEN << " bytes!" << std::endl;
+        return sec;
+    }
+
+    // "blast" using zlib, TODO: less hacks
+    unsigned left = 0;
+    uint8_t* outbuf = new uint8_t[MAX_BLASTED_LEN];
+
+    struct InData {
+        Parser* parser;
+        uint32_t compLen; // length of compressed chunk
+        uint32_t readPos; // position in buffer
+    } indat;
+
+    struct OutData {
+        uint8_t* buf;
+        uint32_t writePos;
+    } outdat;
+
+    indat.parser = this;
+    indat.compLen = header.len;
+    indat.readPos = 0;
+
+    outdat.buf = outbuf;
+    outdat.writePos = 0;
+
+    int ret = blast(
+        [](void *how, unsigned char **buf) -> unsigned {
+            static unsigned char hold[16384];
+            InData* data = (InData*)how;
+           
+            *buf = hold;
+            uint32_t num = 16384;
+            if (data->readPos + num > data->compLen) {
+                // shrink input to fit compressed data
+                num -= data->compLen - data->readPos;
+            }
+
+            data->parser->GetData(hold, num);
+            data->readPos += num;
+
+            return num;
+        },
+        &indat,
+        [](void *how, unsigned char *buf, unsigned len) -> int {
+            OutData* data = (OutData*)how;
+
+            uint32_t num = len;
+            if (data->writePos + len > MAX_BLASTED_LEN) {
+                // buffer overflow, write as much as possible
+                num -= MAX_BLASTED_LEN - (data->writePos + len);
+            }
+
+            std::memcpy(data->buf, buf, num);
+            data->writePos += num;
+
+            return num != len;
+        },
+        &outdat,
+        &left,
+        NULL
+    );
+
+    switch (ret) {
+    case  2: Logger::error(PARSERS) << "PKWARE blast: Out of input!" << std::endl; break;
+    case  1: Logger::error(PARSERS) << "PKWARE blast: Output error!" << std::endl; break;
+    case -1: Logger::error(PARSERS) << "PKWARE blast: Literal flag not zero or one!" << std::endl; break;
+    case -2: Logger::error(PARSERS) << "PKWARE blast: Dictionary size not in rane 4-6!" << std::endl; break;
+    case -3: Logger::error(PARSERS) << "PKWARE blast: Distance is too far back!" << std::endl; break;
+    default: break;
+    }
+
+    sec.data = outbuf;
+    sec.num = outdat.writePos;
+    return sec;
+}
+
+void MapFile::ParsePreview()
+{
+    // Thanks to https://github.com/gynt //
+    MapSec prev = BlastSection();
+
+    const static uint32_t PALSIZE = 512;
+    uint32_t dim = std::sqrt(prev.num - PALSIZE);
+
+    // copy pixels into temporary surface
+    Surface surf;
+    surf.AllocNew(dim, dim);
+    surf.LockSurface();
+
+    Uint8 r, g, b, a;
+    for (uint32_t x = 0; x < dim; x++) {
+        for (uint32_t y = 0; y < dim; y++) {
+            uint8_t index = prev.data[PALSIZE+x+y*dim];
+            TgxFile::ReadPixel(prev.data[index], r, g, b, a);
+            surf.SetPixel(x, y, r, g, b, a);
+        }
+    }
+
+    surf.UnlockSurface();
+    preview.AllocFromSurface(surf);
+    delete[] prev.data;
+}

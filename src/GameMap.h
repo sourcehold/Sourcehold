@@ -10,6 +10,7 @@
 #include "Rendering/Tileset.h"
 #include "Rendering/Renderer.h"
 
+#include "Parsers/MapFile.h"
 #include "Assets.h"
 
 namespace Sourcehold {
@@ -25,23 +26,19 @@ namespace Sourcehold {
             std::map<Building, bool> unlockedBuildings;
         };
 
-        struct MapTile {
-            uint8_t tileset;
-            uint8_t height;
-        };
-
         using namespace Rendering;
         using namespace Parsers;
 
-        class GameMap {
+        class GameMap : public MapFile {
             int mult = 1;
             std::shared_ptr<Gm1File> gm1_tile;
             std::shared_ptr<Tileset> tileset;
             std::vector<SDL_Rect> tiles;
         public:
             GameMap();
+            GameMap(boost::filesystem::path path);
             GameMap(const GameMap&) = delete;
-            ~GameMap() = default;
+            ~GameMap();
 
             void LoadFromDisk(boost::filesystem::path path);
             void Render();

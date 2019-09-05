@@ -14,11 +14,12 @@ namespace Sourcehold {
         * Parser super class, provide an interface for file IO
         * TODO: DO __NOT__ assume everyone is using little-endian
         */
-        class Parser : protected std::fstream {
+        class Parser {
             uint32_t length = 0;
+            std::fstream stream;
         public:
             Parser();
-            virtual ~Parser() = default;
+            ~Parser() {};
 
             bool Open(const std::string &path, std::ios_base::openmode mode);
             void Close();

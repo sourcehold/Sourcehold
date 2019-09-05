@@ -13,7 +13,7 @@ namespace Sourcehold {
         class CfgFile : private Parser {
         public:
             CfgFile();
-            ~CfgFile() = default;
+            ~CfgFile() {};
 
             void SetDefaultValues();
 
