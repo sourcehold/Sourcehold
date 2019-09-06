@@ -4,18 +4,15 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Surface::Surface()
+Surface::Surface() :
+    surface(nullptr)
 {
 }
 
 Surface::Surface(const Surface& other) :
     surface(other.surface),
     locked(other.locked),
-    valid(other.valid),
-    format(other.format),
-    pixels(other.pixels),
-    width(other.width),
-    height(other.height)
+    pixels(other.pixels)
 {
 }
 
@@ -24,11 +21,10 @@ Surface::~Surface()
     Destroy();
 }
 
-bool Surface::AllocNew(int width, int height, int format)
+bool Surface::AllocNew(int width, int height)
 {
-    this->width = width;
-    this->height = height;
-    this->format = format;
+    if (surface) return false;
+
     surface = SDL_CreateRGBSurface(
                   0,
                   width,
@@ -41,21 +37,17 @@ bool Surface::AllocNew(int width, int height, int format)
               );
     if(!surface) {
         Logger::error(RENDERING) << "Unable to create surface: " << SDL_GetError() << std::endl;
-        valid = false;
         return false;
     }
 
     SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
-
-    valid = true;
     return true;
 }
 
 void Surface::Destroy()
 {
-    if(!valid) return;
-    SDL_FreeSurface(surface);
-    valid = false;
+    if (surface) SDL_FreeSurface(surface);
+    surface = nullptr;
 }
 
 void Surface::LockSurface()

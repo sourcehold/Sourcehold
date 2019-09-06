@@ -69,7 +69,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
         this->entries[e.index] = rect;
     }
 
-    surf.AllocNew(width, height, SDL_PIXELFORMAT_RGBA4444);
+    surf.AllocNew(width, height);
 }
 
 void TextureAtlas::Create()

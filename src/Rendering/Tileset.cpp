@@ -21,7 +21,7 @@ void Tileset::Allocate(uint32_t num)
     this->num = num;
 
     numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-    surf.AllocNew(30 * numRows, 16 * numRows, SDL_PIXELFORMAT_RGBA4444);
+    surf.AllocNew(30 * numRows, 16 * numRows);
 }
 
 void Tileset::Create()

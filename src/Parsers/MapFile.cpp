@@ -102,7 +102,7 @@ MapFile::MapSec MapFile::BlastSection()
     int ret = blast(
         [](void *how, unsigned char **buf) -> unsigned {
             static unsigned char hold[16384];
-            InData* data = (InData*)how;
+            InData* data = static_cast<InData*>(how);
            
             *buf = hold;
             uint32_t num = 16384;
@@ -118,15 +118,15 @@ MapFile::MapSec MapFile::BlastSection()
         },
         &indat,
         [](void *how, unsigned char *buf, unsigned len) -> int {
-            OutData* data = (OutData*)how;
+            OutData* data = static_cast<OutData*>(how);
 
             uint32_t num = len;
             if (data->writePos + len > MAX_BLASTED_LEN) {
                 // buffer overflow, write as much as possible
-                num -= MAX_BLASTED_LEN - (data->writePos + len);
+                num = MAX_BLASTED_LEN - (data->writePos + len);
             }
 
-            std::memcpy(data->buf, buf, num);
+            std::memcpy(data->buf + data->writePos, buf, num);
             data->writePos += num;
 
             return num != len;
@@ -164,10 +164,10 @@ void MapFile::ParsePreview()
     surf.LockSurface();
 
     Uint8 r, g, b, a;
-    for (uint32_t x = 0; x < dim; x++) {
-        for (uint32_t y = 0; y < dim; y++) {
+    for (int y = 0; y < dim; y++) {
+        for (int x = 0; x < dim; x++) {
             uint8_t index = prev.data[PALSIZE+x+y*dim];
-            TgxFile::ReadPixel(prev.data[index], r, g, b, a);
+            TgxFile::ReadPixel(reinterpret_cast<uint16_t*>(prev.data)[index], r, g, b, a);
             surf.SetPixel(x, y, r, g, b, a);
         }
     }

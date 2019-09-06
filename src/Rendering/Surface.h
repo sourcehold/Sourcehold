@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <cstring>
 #include <SDL.h>
 
 #include "Rendering/Renderer.h"
@@ -14,16 +15,13 @@ namespace Sourcehold {
         class Surface {
             SDL_Surface *surface;
             bool locked = false;
-            bool valid = false;
-            int format;
             Uint32 *pixels = nullptr;
-            uint32_t width, height;
         public:
             Surface();
             Surface(const Surface&);
             ~Surface();
 
-            bool AllocNew(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
+            bool AllocNew(int width, int height);
             void Destroy();
             void LockSurface();
             void UnlockSurface();
@@ -33,7 +31,7 @@ namespace Sourcehold {
 
             Uint32 *GetData();
             inline bool IsValid() {
-                return valid;
+                return surface;
             }
             inline bool IsLocked() {
                 return locked;
@@ -42,10 +40,10 @@ namespace Sourcehold {
                 return surface;
             }
             inline int GetWidth() {
-                return width;
+                return surface->w;
             }
             inline int GetHeight() {
-                return height;
+                return surface->h;
             }
         protected:
             Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
