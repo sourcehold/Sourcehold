@@ -1,6 +1,8 @@
 #include <cstring>
 #include <cmath>
 
+#include <boost/crc.hpp>
+
 #include "Parsers/MapFile.h"
 #include "Parsers/TgxFile.h"
 
@@ -13,12 +15,10 @@ extern "C" {
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-// TODO: verify
 struct MapSectionHeader {
-    uint32_t ID;
-    uint16_t len;
-    uint16_t pad; // part of len?
-    uint32_t unknown;
+    uint32_t uncompressedLen;
+    uint32_t compressedLen;
+    uint32_t crc32;
 };
 
 struct MapFile::MapSec {
@@ -65,21 +65,20 @@ MapFile::MapSec MapFile::BlastSection()
 {
     MapSec sec = { NULL, 0 };
 
-    // TODO: better values
+    // TODO: better value
     const static uint32_t MAX_COMPRESSED_LEN = 1024 * 32;
-    const static uint32_t MAX_BLASTED_LEN = 1024 * 64;
 
     MapSectionHeader header;
     Parser::GetData(&header, sizeof(header));
 
-    if (header.len > MAX_COMPRESSED_LEN) {
+    if (header.compressedLen > MAX_COMPRESSED_LEN) {
         Logger::error(PARSERS) << "Map section exceeds the maximum size of " << MAX_COMPRESSED_LEN << " bytes!" << std::endl;
         return sec;
     }
 
     // "blast" using zlib, TODO: less hacks
     unsigned left = 0;
-    uint8_t* outbuf = new uint8_t[MAX_BLASTED_LEN];
+    uint8_t* outbuf = new uint8_t[header.uncompressedLen];
 
     struct InData {
         Parser* parser;
@@ -89,21 +88,23 @@ MapFile::MapSec MapFile::BlastSection()
 
     struct OutData {
         uint8_t* buf;
+        uint32_t uncompLen;
         uint32_t writePos;
     } outdat;
 
     indat.parser = this;
-    indat.compLen = header.len;
+    indat.compLen = header.compressedLen;
     indat.readPos = 0;
 
     outdat.buf = outbuf;
+    outdat.uncompLen = header.uncompressedLen;
     outdat.writePos = 0;
 
     int ret = blast(
         [](void *how, unsigned char **buf) -> unsigned {
             static unsigned char hold[16384];
             InData* data = (InData*)how;
-           
+
             *buf = hold;
             uint32_t num = 16384;
             if (data->readPos + num > data->compLen) {
@@ -121,12 +122,12 @@ MapFile::MapSec MapFile::BlastSection()
             OutData* data = (OutData*)how;
 
             uint32_t num = len;
-            if (data->writePos + len > MAX_BLASTED_LEN) {
+            if (data->writePos + len > data->uncompLen) {
                 // buffer overflow, write as much as possible
-                num -= MAX_BLASTED_LEN - (data->writePos + len);
+                num -= data->uncompLen - (data->writePos + len);
             }
 
-            std::memcpy(data->buf, buf, num);
+            std::memcpy(data->buf+data->writePos, buf, num);
             data->writePos += num;
 
             return num != len;
@@ -143,6 +144,11 @@ MapFile::MapSec MapFile::BlastSection()
     case -2: Logger::error(PARSERS) << "PKWARE blast: Dictionary size not in rane 4-6!" << std::endl; break;
     case -3: Logger::error(PARSERS) << "PKWARE blast: Distance is too far back!" << std::endl; break;
     default: break;
+    }
+
+    uint32_t crc = ComputeCRC32(outbuf, outdat.writePos);
+    if(crc != header.crc32) {
+        Logger::warning(PARSERS) << "CRC32 checksum mismatch in map section!" << std::endl;
     }
 
     sec.data = outbuf;
@@ -176,3 +182,11 @@ void MapFile::ParsePreview()
     preview.AllocFromSurface(surf);
     delete[] prev.data;
 }
+
+uint32_t MapFile::ComputeCRC32(const void *data, size_t size)
+{
+    boost::crc_32_type res;
+    res.process_bytes(data, size);
+    return res.checksum();
+}
+

@@ -53,7 +53,7 @@ int MainLoop(UIState state) {
         music.Play();
 
         World world;
-        world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
+        world.LoadFromDisk(GetDirectory() / "maps/Calanais.map");
         state = world.Play();
 
         music.Stop();

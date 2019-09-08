@@ -21,12 +21,13 @@ namespace Sourcehold {
             ~MapFile();
 
             bool LoadFromDisk(boost::filesystem::path path);
-            
+
             inline Texture& GetPreview() { return preview; }
         protected:
             struct MapSec;
             MapSec BlastSection();
             void ParsePreview();
+            uint32_t ComputeCRC32(const void *data, size_t size);
         };
     }
 }
