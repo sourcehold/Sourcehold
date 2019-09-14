@@ -21,7 +21,7 @@ Sourcehold uses the following libraries:
 *   SDL2
 *   OpenAL
 *   FFmpeg (avcodec, avutil, avformat, swscale)
-*   Boost (filesystem)
+*   Boost (filesystem, program_options)
 *   zlib's blast for PKWARE decompression
 
 ## Running

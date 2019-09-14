@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include <cxxopts.hpp>
+#include <boost/program_options.hpp>
 
 #include "World.h"
 #include "GameManager.h"
@@ -53,7 +53,7 @@ int MainLoop(UIState state) {
         music.Play();
 
         World world;
-        world.LoadFromDisk(GetDirectory() / "maps/mission0.map");
+        world.LoadFromDisk(GetDirectory() / "maps/mission1.map");
         state = world.Play();
 
         music.Stop();
@@ -160,68 +160,45 @@ int StartGame(GameOptions &opt)
 int main(int argc, char **argv)
 {
     /* Parse commandline */
-    cxxopts::Options options("Sourcehold", "Open source engine implementation of Stronghold");
-    options.add_options()
-    ("h,help", "Print this info")
-    ("config-file", "Path to custom config file", cxxopts::value<std::string>()->default_value("config.ini"))
-    ("p,path", "Custom path to data folder", cxxopts::value<std::string>()->default_value("../data/"))
-    ("d,debug", "Print debug info")
-    ("color", "Force color output")
-    ("f,fullscreen", "Run in fullscreen mode")
-    ("r,resolution", "Resolution of the window", cxxopts::value<uint8_t>()->default_value("1"))
-    ("disp", "Index of the monitor to be used", cxxopts::value<uint16_t>()->default_value("0"))
-    ("noborder", "Remove window border")
-    ("nograb", "Don't grab the mouse")
-    ("nosound", "Disable sound entirely")
-    ("nothread", "Disable threading");
+    namespace po = boost::program_options;
 
     try {
         GameOptions opt;
-        auto result = options.parse(argc, argv);
 
-        if(result["help"].as<bool>()) {
-            std::cout << options.help(options.groups()) << std::endl;
+        po::options_description desc("Allowed options");
+        desc.add_options()
+            ("help", po::bool_switch()->default_value(false), "Print this info")
+            ("path", po::value<std::string>(&opt.dataDir)->default_value("../data/"), "Custom path to data folder")
+            ("debug", po::bool_switch(&opt.debug)->default_value(false), "Print debug info")
+            ("color", po::bool_switch()->default_value(false), "Force color output")
+            ("fullscreen", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
+            ("resolution", po::value<int>()->default_value(1), "Resolution of the window")
+            ("disp", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
+            ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
+            ("nograb", po::bool_switch(&opt.nograb)->default_value(false), "Don't grab the mouse")
+            ("nosound", po::bool_switch(&opt.nosound)->default_value(false), "Disable sound entirely")
+            ("nothread", po::bool_switch(&opt.nothread)->default_value(false), "Disable threading")
+            ("nocache", po::bool_switch(&opt.nocache)->default_value(false), "Disable asset caching");
+
+        po::variables_map result;
+        po::store(po::parse_command_line(argc, argv, desc), result);
+        po::notify(result);
+
+        if (result["help"].as<bool>()) {
+            std::cout << desc << std::endl;
             return EXIT_SUCCESS;
         }
 
-        opt.config = result["config-file"].as<std::string>();
-        opt.dataDir = result["path"].as<std::string>();
-
-        if(result["debug"].as<bool>()) {
-            opt.debug = true;
-        }
-
-        if(result.count("color") > 0) opt.color = result["color"].as<bool>();
+        if (result.count("color") > 0) opt.color = result["color"].as<bool>();
         else opt.color = -1;
-
-        if(result["fullscreen"].as<bool>()) {
-            opt.fullscreen = true;
-        }
-
-        opt.resolution = (Resolution)result["resolution"].as<uint8_t>();
-        opt.ndisp = result["disp"].as<uint16_t>();
-
-        if(result["noborder"].as<bool>()) {
-            opt.noborder = true;
-        }
-        if(result["nograb"].as<bool>()) {
-            opt.nograb = true;
-        }
-        if(result["nosound"].as<bool>()) {
-            opt.nosound = true;
-        }
-        if(result["nothread"].as<bool>()) {
-            opt.nothread = true;
-        }
-
+        
+        opt.resolution = (Resolution)result["resolution"].as<int>();
         return StartGame(opt);
     }
-    catch(cxxopts::OptionException& ex) {
-        std::cerr << ex.what() << std::endl;
+    catch (po::error& e) {
+        std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-
-    return EXIT_FAILURE;
 }
 
 #if SOURCEHOLD_MINGW == 1 && 0

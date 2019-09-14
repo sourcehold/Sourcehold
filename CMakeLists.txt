@@ -13,60 +13,37 @@ endif()
 include_directories(src)
 
 # Thirdparty
-include_directories(thirdparty/cxxopts/include/)
 include_directories(thirdparty/blast/)
 
-# Find pthread
+# pthread
 find_package (Threads)
 
-# Find SDL2
+# SDL2
 find_package(SDL2 REQUIRED)
-if(NOT SDL2_FOUND)
-    message(FATAL_ERROR "SDL2 has to be installed!")
-endif()
 include_directories(${SDL2_INCLUDE_DIR})
 
-# Find OpenAL
+# OpenAL
 find_package(OpenAL REQUIRED)
-if(NOT OPENAL_FOUND)
-    message(FATAL_ERROR "OpenAL has to be installed!")
-endif()
 include_directories(${OPENAL_INCLUDE_DIR})
 
-# Find FFMPEG
+# FFmpeg
 find_package(FFmpeg REQUIRED)
-if(FFMPEG_FOUND)
-	include_directories(${FFMPEG_INCLUDE_DIRS})
-if(NOT SWSCALE_FOUND)
-	message(FATAL_ERROR "libswscale has to be installed (provided by FFmpeg)!")
-else()
-	include_directories(${SWSCALE_INCLUDE_DIRS})
-endif()
-else()
-	message(FATAL_ERROR "FFMPEG has to be installed!")
-endif()
+include_directories(${FFMPEG_INCLUDE_DIRS})
+include_directories(${SWSCALE_INCLUDE_DIRS})
 
-# Find swresample
+# swresample
 find_package(Libswresample REQUIRED)
-if()
-	message(FATAL_ERROR "libswresample has to be installed (provided by FFmpeg)!")
-else()
-	include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
-endif()
+include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
 
-# Find boost
+# boost
 set(Boost_USE_STATIC_LIBS ON)
 add_definitions(-DBOOST_ALL_NO_LIB)
-find_package(Boost COMPONENTS filesystem REQUIRED)
-if(Boost_FOUND)
-	include_directories(${Boost_INCLUDE_DIRS})
-else()
-	message(FATAL_ERROR "the following boost components need to be installed: fileystem")
-endif()
+find_package(Boost COMPONENTS filesystem program_options REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Include sources / headers
-file(GLOB_RECURSE SOURCES src/*.cpp thirdparty/blast/blast.c)
-file(GLOB_RECURSE HEADERS src/*.h)
+file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c)
+file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/src/*.h)
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)

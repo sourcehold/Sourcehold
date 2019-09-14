@@ -9,7 +9,7 @@
 
 namespace Sourcehold {
     namespace Rendering {
-        enum Resolution : uint8_t {
+        enum Resolution : int {
             RESOLUTION_800x600 = 0,
             RESOLUTION_1024x768 = 1,
             RESOLUTION_1280x720 = 2,

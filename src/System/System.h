@@ -28,6 +28,7 @@ namespace Sourcehold {
             bool nothread = false;
             bool nosound = false;
             bool nograb = false;
+            bool nocache = false;
             int color = -1;
             Resolution resolution;
             uint16_t ndisp;

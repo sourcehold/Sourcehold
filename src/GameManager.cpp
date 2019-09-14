@@ -3,6 +3,8 @@
 #include <cwchar>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "GameManager.h"
 
@@ -29,22 +31,28 @@ using namespace Audio;
 using namespace System;
 using namespace Rendering;
 
-static int _usernameIndex = -1;
-static GameOptions _opt;
-static MlbFile _mlb;
-static CfgFile _cfg;
-static TexFile _tex;
-static boost::filesystem::path _cfgPath;
-static boost::filesystem::path _dataFolder;
-static boost::filesystem::path _saveFolder;
-static std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
-static std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
-static std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;
-static std::unordered_map<std::string, std::shared_ptr<BinkVideo>> _bikFiles;
-static std::map<int, std::function<void(double)>> _tickFuncs;
-static StrongholdEdition _edition;
-static bool _running = false;
-static double _time = 0.0;
+int _usernameIndex = -1;
+GameOptions _opt;
+MlbFile _mlb;
+CfgFile _cfg;
+TexFile _tex;
+boost::filesystem::path _cfgPath;
+boost::filesystem::path _dataFolder;
+boost::filesystem::path _saveFolder;
+std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
+std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
+std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;
+std::unordered_map<std::string, std::shared_ptr<BinkVideo>> _bikFiles;
+std::map<int, std::function<void(double)>> _tickFuncs;
+StrongholdEdition _edition;
+bool _running = false;
+double _time = 0.0;
+
+bool IsAssetCached(boost::filesystem::path path)
+{
+    // todo
+    return false;
+}
 
 void DetectEdition()
 {
@@ -437,7 +445,35 @@ std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
         return _gm1Files.at(filename.string());
     }
 
-    auto iter = _gm1Files.emplace(filename.string(), std::make_shared<Gm1File>(_dataFolder / filename));
+#if 0
+    /** TODO
+     * Certain (large) gm1 files will be cached. The next time this function is called
+     * and has to load the gm1, the cache will be used instead of parsing the file.
+     * To save disk space, this behaviour can be disabled via '--nocache'.
+     */
+    const static std::vector<std::string> large_files = { // todo
+        "tile_workshops.gm1",
+        "tile_castle.gm1",
+        "body_catapult.gm1",
+        "mapedit_buttons.gm1",
+        "icons_front_end.gm1",
+        "icons_front_end_builder.gm1",
+        "icons_front_end_combat.gm1",
+        "body_trebutchet.gm1",
+        "tile_buildings2.gm1",
+        "interface_icons2.gm1",
+        "tree_oak.gm1",
+        "face800 - blank.gm1",
+        "tile_goods.gm1",
+        "body_farmer.gm1"
+    };
+    bool cache = !_opt.nocache && std::find(large_files.begin(), large_files.end(), filename.string()) == large_files.end();
+    if (cache && IsAssetCached(filename)) {
+
+    }
+#endif
+
+    auto iter = _gm1Files.emplace(filename.string(), std::make_shared<Gm1File>(_dataFolder / filename, false));
     return iter.first->second;
 }
 

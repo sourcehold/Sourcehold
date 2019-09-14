@@ -52,15 +52,14 @@ namespace Sourcehold {
                 /* Unknown */
                 uint32_t u3;
             } header;
-
         public:
             Gm1File();
-            Gm1File(boost::filesystem::path path);
+            Gm1File(boost::filesystem::path path, bool cached = false);
             Gm1File(const Gm1File&) = delete;
             Gm1File& operator=(const Gm1File&)= delete;
             ~Gm1File();
 
-            bool LoadFromDisk(boost::filesystem::path path);
+            bool LoadFromDisk(boost::filesystem::path path, bool cache = false);
             void Free();
 
             inline std::shared_ptr<Tileset> GetTileset() {
