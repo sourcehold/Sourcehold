@@ -1,4 +1,4 @@
-# Sourcehold [![Build Status](https://travis-ci.org/sourcehold/Sourcehold.svg?branch=master)](https://travisci.org/sourcehold/Sourcehold) [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://www.discord.gg/736X9H)
+# Sourcehold [![Build Status](https://travis-ci.org/sourcehold/Sourcehold.svg?branch=master)](https://travisci.org/sourcehold/Sourcehold) [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/dzdBuNy)
 
 Open source engine implementation of Stronghold by Firefly Studios. This project is currently in an early stage of development. Once completed, it should be able to replace all editions of classic Stronghold, including the HD remaster.
 
@@ -12,8 +12,6 @@ its HD remaster.
 The purpose of this project is to make Stronghold playable on platforms it didn't support originally. It is not intended to be a 100% accurate source port, so there will be differences.
 
 ## Building
-After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts).
-
 Run `cmake` in your build directory. If you're building on Windows or don't have the libraries in your `pkg-config`,
 use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths. 
 
