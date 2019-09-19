@@ -3,6 +3,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/algorithm/string.hpp>
 #include <boost/program_options.hpp>
 
 #include "World.h"
@@ -159,33 +162,59 @@ int StartGame(GameOptions &opt)
 /* Common entry point across all platforms */
 int main(int argc, char **argv)
 {
-    /* Parse commandline */
     namespace po = boost::program_options;
+    namespace fs = boost::filesystem;
 
+    fs::path full_path(fs::initial_path<fs::path>());
+    full_path = fs::system_complete(fs::path(argv[0])).parent_path();
+
+    // Parse commandline / config file //
     try {
         GameOptions opt;
 
-        po::options_description desc("Allowed options");
-        desc.add_options()
-            ("help", po::bool_switch()->default_value(false), "Print this info")
-            ("path", po::value<std::string>(&opt.dataDir)->default_value("../data/"), "Custom path to data folder")
+        // Command line only //
+        po::options_description generic("Generic options");
+        generic.add_options()
+            ("help,h", po::bool_switch()->default_value(false), "Print this info")
+            ("version,v", "Print version string");
+
+        // Command line and config file //
+        po::options_description config("Settings");
+        config.add_options()
+            ("path,p", po::value<std::string>(&opt.dataDir)->default_value("../data/"), "Custom path to data folder")
             ("debug", po::bool_switch(&opt.debug)->default_value(false), "Print debug info")
             ("color", po::bool_switch()->default_value(false), "Force color output")
-            ("fullscreen", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
-            ("resolution", po::value<int>()->default_value(1), "Resolution of the window")
-            ("disp", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
+            ("fullscreen.f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
+            ("resolution,r", po::value<int>()->default_value(1), "Resolution of the window")
+            ("disp,d", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
             ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
             ("nograb", po::bool_switch(&opt.nograb)->default_value(false), "Don't grab the mouse")
             ("nosound", po::bool_switch(&opt.nosound)->default_value(false), "Disable sound entirely")
             ("nothread", po::bool_switch(&opt.nothread)->default_value(false), "Disable threading")
             ("nocache", po::bool_switch(&opt.nocache)->default_value(false), "Disable asset caching");
 
+        po::options_description config_file_options;
+        config_file_options.add(config);
+
+        po::options_description cmdline_options;
+        cmdline_options.add(generic).add(config);
+
         po::variables_map result;
-        po::store(po::parse_command_line(argc, argv, desc), result);
+        po::store(po::parse_command_line(argc, argv, cmdline_options), result);
+
+        if (boost::filesystem::exists(full_path / "settings.ini")) {
+            std::ifstream ifs(fs::path(full_path / "settings.ini").string().c_str());
+            po::store(po::parse_config_file(ifs, config_file_options, true), result);
+            ifs.close();
+        }
+        else {
+            Logger::warning(GAME) << "There appears to be no settings.ini in your installation path!" << std::endl;
+        }
+
         po::notify(result);
 
         if (result["help"].as<bool>()) {
-            std::cout << desc << std::endl;
+            std::cout << config << std::endl;
             return EXIT_SUCCESS;
         }
 
@@ -193,6 +222,9 @@ int main(int argc, char **argv)
         else opt.color = -1;
         
         opt.resolution = (Resolution)result["resolution"].as<int>();
+
+        boost::erase_all(opt.dataDir, "\""); // can sometimes appear when there's extra "" in the .ini
+
         return StartGame(opt);
     }
     catch (po::error& e) {
