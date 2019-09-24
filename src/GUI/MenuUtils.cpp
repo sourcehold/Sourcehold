@@ -98,7 +98,11 @@ bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, ui
     // text
     Rendering::RenderText(text, Rect<int>(x+4, y+4, rect.w-4, rect.h-4), Align::CENTER, FONT_LARGE, false);
 
-    return clicked && selected;
+    // TODO
+    if(clicked && selected) {
+        clicked = false;
+        return true;
+    } else return false;
 }
 
 void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
