@@ -2,8 +2,6 @@
 
 #include "GUI/MenuUtils.h"
 #include "GUI/StaticElement.h"
-#include "GUI/Table.h"
-#include "GUI/LineEdit.h"
 
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
@@ -13,73 +11,16 @@
 #include "Parsers/TgxFile.h"
 #include "Parsers/CfgFile.h"
 
-#include "Events/Event.h"
-#include "Events/Mouse.h"
-
 using namespace Sourcehold;
 using namespace Rendering;
 using namespace Game;
 using namespace GUI;
 
-static std::shared_ptr<Gm1File> _gm_interface_icons3;
-static std::shared_ptr<TgxFile> _tgx_border;
-static SDL_Rect _border_rect;
-static StrongholdEdition _ed;
-static Resolution _res;
-static Table _table_load, _table_combat, _table_eco;
-static LineEdit _name_edit;
-
-bool GUI::InitializeUtils()
-{
-    _gm_interface_icons3 = GetGm1("gm/interface_icons3.gm1");
-    _ed = GetEdition();
-    _res = GetResolution();
-    if(_ed == STRONGHOLD_HD) {
-        _tgx_border = GetTgx("gfx/SH1_Back.tgx");
-        /**
-         * Render the border 'zoomed in' so that theP
-         * menu can be placed in the middle without scaling.
-         */
-        _border_rect.x = (1920 - GetWidth()) / 2;
-        _border_rect.y = (1200 - GetHeight()) / 2;
-        _border_rect.w = GetWidth();
-        _border_rect.h = GetHeight();
-    }
-
-    _table_load.Create(2, 16);
-    _table_load.SetRowName(0, GetString(T_GAME_OPTIONS, 27));
-    _table_load.SetRowName(1, GetString(T_GAME_OPTIONS, 28));
-
-    _table_combat.Create(1, 21);
-    _table_combat.Scrollable(false);
-    _table_combat.RenderNames(false);
-
-    /* Add some test maps */
-    for(int i = 0; i < 21; i++) {
-        _table_combat.SetText(0, i, std::to_wstring(i+1) + L" " + GetString(T_MISSION_NAMES, 1+i));
-    }
-
-    _table_eco.Create(1, 5);
-    _table_eco.Scrollable(false);
-    _table_eco.RenderNames(false);
-
-    CfgFile &cfg = GetCfg();
-
-    _name_edit.Init();
-    _name_edit.SetLine(cfg.username);
-
-    return true;
-}
-
-
-/* Main menu functions */
-
-
 void GUI::RenderMenuText(const std::wstring &text)
 {
     if(text.empty()) return;
 
-    std::shared_ptr<TextureAtlas> interface_icons = _gm_interface_icons3->GetTextureAtlas();
+    std::shared_ptr<TextureAtlas> interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
     Render(*interface_icons, 312, 400, &rect);
     RenderText(text.substr(0,1), 317, 406, FONT_SMALL, true);
@@ -88,7 +29,21 @@ void GUI::RenderMenuText(const std::wstring &text)
 
 void GUI::RenderMenuBorder()
 {
-    if(_ed == STRONGHOLD_HD) Render(*_tgx_border, &_border_rect);
+    if(GetEdition() == STRONGHOLD_HD) {
+        std::shared_ptr<TgxFile> tgx_border = GetTgx("gfx/SH1_Back.tgx");;
+        SDL_Rect border_rect;
+
+        /**
+         * Render the border 'zoomed in' so that theP
+         * menu can be placed in the middle without scaling.
+         */
+        border_rect.x = (1920 - GetWidth()) / 2;
+        border_rect.y = (1200 - GetHeight()) / 2;
+        border_rect.w = GetWidth();
+        border_rect.h = GetHeight();
+
+        Render(*tgx_border, &border_rect);
+    }
 }
 
 bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
@@ -99,43 +54,15 @@ bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
 
 
 /* Dialog functions */
-
-
-// TODO: names?
-enum DialogButton : uint8_t {
-    BUTTON_1 = 0,
-    BUTTON_2,
-    BUTTON_3,
-    BUTTON_4,
-    BUTTON_5,
-    BUTTON_6,
-    BUTTON_7,
-    BUTTON_8,
-    BUTTON_9
-};
-
-// !hack!
-static class ButtonEventListener : protected EventConsumer<Mouse> {
-public:
-    bool clicked = false;
-protected:
-    void onEventReceive(Mouse &event) override {
-        if(event.GetType() == MOUSE_BUTTONDOWN) {
-            clicked = true;
-        }else if(event.GetType() == MOUSE_BUTTONUP) {
-            clicked = false;
-        }
-    }
-} listener;
-
-bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y)
+bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y)
 {
     const static int button_indices[] = {
         20, 23, 29, 32, 35, 38, 41, 44, 96,
     };
 
-    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(text, FONT_SMALL);
+
     SDL_Rect rect = atlas->Get(button_indices[style]);;
 
     int mx = GetMouseX();
@@ -147,37 +74,36 @@ bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint
     int rx = ToCoordX(GetTargetX()) + x;
     int ry = ToCoordY(GetTargetY()) + y;
 
-    bool clicked = false;
+    bool selected = false;
     if(mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
         atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
         rect = atlas->Get(button_indices[style] + 1);
-        Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
+        Rendering::Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
 
         atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
         rect = atlas->Get(button_indices[style] + 2);
-        Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
+        Rendering::Render(*atlas.get(), int(x)-5, int(y)-5, &rect);
 
         atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
-
-        clicked = listener.clicked;
+        selected = true;
     }
 
     rect = atlas->Get(button_indices[style]);
 
     // button
-    Render(*atlas.get(), int(x), int(y), &rect);
+    Rendering::Render(*atlas.get(), int(x), int(y), &rect);
 
     // text
-    RenderText(text, Rect<int>(x+4, y+4, rect.w-4, rect.h-4), Align::CENTER, FONT_LARGE, false);
+    Rendering::RenderText(text, Rect<int>(x+4, y+4, rect.w-4, rect.h-4), Align::CENTER, FONT_LARGE, false);
 
-    return clicked;
+    return clicked && selected;
 }
 
-void RenderDialogBorder(int x, int y, int nx, int ny)
+void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
 {
-    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     SDL_Rect rect;
 
     // background
@@ -188,26 +114,26 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
 
     // corners
     rect = atlas->Get(3);
-    Render(*atlas, x, y, &rect);
+    Rendering::Render(*atlas, x, y, &rect);
     rect = atlas->Get(15);
-    Render(*atlas, x, y+ny*24, &rect);
+    Rendering::Render(*atlas, x, y+ny*24, &rect);
     rect = atlas->Get(5);
-    Render(*atlas, x+nx*24, y, &rect);
+    Rendering::Render(*atlas, x+nx*24, y, &rect);
     rect = atlas->Get(17);
-    Render(*atlas, x+nx*24, y+ny*24, &rect);
+    Rendering::Render(*atlas, x+nx*24, y+ny*24, &rect);
 
     // edges
     for(int ix = x+24; ix < x+nx*24; ix+=24) {
         rect = atlas->Get(4);
-        Render(*atlas, ix, y, &rect);
+        Rendering::Render(*atlas, ix, y, &rect);
         rect = atlas->Get(16);
-        Render(*atlas, ix, y+ny*24, &rect);
+        Rendering::Render(*atlas, ix, y+ny*24, &rect);
     }
     for(int iy = y+24; iy < y+ny*24; iy+=24) {
         rect = atlas->Get(9);
-        Render(*atlas, x, iy, &rect);
+        Rendering::Render(*atlas, x, iy, &rect);
         rect = atlas->Get(11);
-        Render(*atlas, x+nx*24, iy, &rect);
+        Rendering::Render(*atlas, x+nx*24, iy, &rect);
     }
 
     /* Render color */
@@ -215,54 +141,49 @@ void RenderDialogBorder(int x, int y, int nx, int ny)
 
     // corners
     rect = atlas->Get(0);
-    Render(*atlas, x, y, &rect);
+    Rendering::Render(*atlas, x, y, &rect);
     rect = atlas->Get(12);
-    Render(*atlas, x, y+ny*24, &rect);
+    Rendering::Render(*atlas, x, y+ny*24, &rect);
     rect = atlas->Get(2);
-    Render(*atlas, x+nx*24, y, &rect);
+    Rendering::Render(*atlas, x+nx*24, y, &rect);
     rect = atlas->Get(14);
-    Render(*atlas, x+nx*24, y+ny*24, &rect);
+    Rendering::Render(*atlas, x+nx*24, y+ny*24, &rect);
 
     // edges
     for(int ix = x+24; ix < x+nx*24; ix+=24) {
         rect = atlas->Get(1);
-        Render(*atlas, ix, y, &rect);
+        Rendering::Render(*atlas, ix, y, &rect);
         rect = atlas->Get(13);
-        Render(*atlas, ix, y+ny*24, &rect);
+        Rendering::Render(*atlas, ix, y+ny*24, &rect);
     }
     for(int iy = y+24; iy < y+ny*24; iy+=24) {
         rect = atlas->Get(6);
-        Render(*atlas, x, iy, &rect);
+        Rendering::Render(*atlas, x, iy, &rect);
         rect = atlas->Get(8);
-        Render(*atlas, x+nx*24, iy, &rect);
+        Rendering::Render(*atlas, x+nx*24, iy, &rect);
     }
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 }
 
-enum class Deco {
-    LARGE,
-    SMALL
-};
-
-void RenderDeco(Deco type, int x, int y)
+void DialogWindow::RenderDeco(Deco type, int x, int y)
 {
-    auto atlas = _gm_interface_icons3->GetTextureAtlas();
+    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
     SDL_Rect rect = atlas->Get(91);
-    Render(*atlas, x, y, &rect);
+    Rendering::Render(*atlas, x, y, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
     rect = atlas->Get(90);
-    Render(*atlas, x, y, &rect);
+    Rendering::Render(*atlas, x, y, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 }
 
-void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco = false)
+void DialogWindow::RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco)
 {
     RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 24, 80, 24, 200, true);
     RenderRect(Rect<int>{ x+8, y+8, 8+w, 8+h }, 247, 235, 198, 255, false);
@@ -276,14 +197,8 @@ void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, b
     }
 }
 
-DialogResult GUI::QuitDialog()
+DialogResult DialogWindow::QuitDialog(int x, int y)
 {
-    int w = ToCoordX(GetTargetWidth());
-    int h = ToCoordY(GetTargetHeight());
-
-    int x = (w / 2) - (18*24 / 2);
-    int y = (h / 2) - (7*24  / 2);
-
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_MAIN_MENU, 5), true);
 
@@ -298,14 +213,187 @@ DialogResult GUI::QuitDialog()
     return IDLE;
 }
 
-DialogResult QuitMissionDialog()
+DialogResult DialogWindow::LoadDialog(int x, int y)
 {
-    int w = ToCoordX(GetTargetWidth());
-    int h = ToCoordY(GetTargetHeight());
+    const std::wstring &load = GetString(T_GAME_OPTIONS, 2);
 
-    int x = (w / 2) - (18*24 / 2);
-    int y = (h / 2) - (7*24  / 2);
+    RenderDialogBorder(x, y, 30, 17);
+    RenderDialogTextBox(x, y, 288, 64, load, true);
 
+    if(RenderButton(BUTTON_3, load, x+52, y+300)) {
+        // TODO
+    }
+    if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x+52, y+340)) {
+        return BACK;
+    }
+
+    table.Render(x + 330, y + 28, 363);
+
+    return IDLE;
+}
+
+DialogResult DialogWindow::CombatMenuDialog(int x, int y)
+{
+    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
+    table.Render(x + 37, y + 90, 363);
+
+    return IDLE;
+}
+
+DialogResult DialogWindow::SiegeMenuDialog(int x, int y)
+{
+    return IDLE;
+}
+
+DialogResult DialogWindow::EconomicsMenuDialog(int x, int y)
+{
+    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
+    table.Render(x + 37, y + 90, 363);
+
+    return IDLE;
+}
+
+DialogResult DialogWindow::SettingsDialog(int x, int y)
+{
+    switch(state) {
+    case State::GAME_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
+
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 25), x + 110, y + 110)) {
+            state = State::GAMEPLAY_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 4), x + 110, y + 145)) {
+            state = State::VIDEO_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 5), x + 110, y + 180)) {
+            state = State::SOUND_OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 45), x + 110, y + 215)) {
+            lineEdit.BeginInput();
+            state = State::CHANGE_NAME;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 260)) {
+            return BACK;
+        }
+    } break;
+    case State::GAMEPLAY_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 25), true);
+
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 235)) {
+            state = State::GAME_OPTIONS;
+        }
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 235)) {
+            state = State::GAME_OPTIONS;
+        }
+    } break;
+    case State::VIDEO_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 4), true);
+
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 265)) {
+            state = State::GAME_OPTIONS;
+        }
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 265)) {
+            state = State::GAME_OPTIONS;
+        }
+    } break;
+    case State::SOUND_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 5), true);
+
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 265)) {
+            state = State::GAME_OPTIONS;
+        }
+    } break;
+    case State::CHANGE_NAME: {
+        y = (768  / 2) - (8*24 / 2);
+
+        RenderDialogBorder(x, y, 21, 9);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 45), true);
+
+        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 260, y + 170)) {
+            lineEdit.EndInput();
+
+            CfgFile &cfg = GetCfg();
+            cfg.username = lineEdit.GetLine();
+
+            state = State::GAME_OPTIONS;
+        }
+
+        lineEdit.Render(x+85, y+110, 34);
+    } break;
+    default: break;
+    }
+
+    return IDLE;
+}
+
+DialogResult DialogWindow::EscMenu(int x, int y)
+{
+    switch(state) {
+    case State::GAME_OPTIONS: {
+        RenderDialogBorder(x, y, 21, 15);
+        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
+
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 3), x + 110, y + 90)) {
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 2), x + 110, y + 122)) {
+            state = State::LOAD;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 24), x + 110, y + 152)) {
+            state = State::OPTIONS;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 26), x + 110, y + 182)) {
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 34), x + 110, y + 212)) {
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 7), x + 110, y + 242)) {
+            state = State::QUIT_MISSION;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 9), x + 110, y + 272)) {
+            state = State::EXIT_STRONGHOLD;
+        }
+        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 10), x + 110, y + 302)) {
+            return BACK;
+        }
+    } break;
+    case State::EXIT_STRONGHOLD: {
+        DialogResult res = QuitDialog(x, y);
+        if(res == QUIT) {
+            return QUIT;
+        }else if(res == BACK) {
+            state = State::GAME_OPTIONS;
+        }
+    } break;
+    case State::OPTIONS: {
+        DialogResult res = SettingsDialog(x, y);
+        if(res == BACK) state = State::GAME_OPTIONS;
+    } break;
+    case State::LOAD: {
+        DialogResult res = LoadDialog(x, y);
+        if(res == BACK) state = State::GAME_OPTIONS;
+        else if(res == LOAD) {
+            // TODO
+        }
+    } break;
+    case State::QUIT_MISSION: {
+        DialogResult res = QuitMissionDialog(x, y);
+        if(res == QUIT_MISSION) {
+            return QUIT_MISSION;
+        }else if(res == BACK) {
+            state = State::GAME_OPTIONS;
+        }
+    } break;
+    default: break;
+    }
+
+    return IDLE;
+}
+
+DialogResult DialogWindow::QuitMissionDialog(int x, int y)
+{
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_GAME_OPTIONS, 7), true);
 
@@ -320,143 +408,107 @@ DialogResult QuitMissionDialog()
     return IDLE;
 }
 
-DialogResult GUI::LoadDialog(std::string &name)
+void DialogWindow::onEventReceive(Mouse &event) {
+    if(event.GetType() == MOUSE_BUTTONDOWN) {
+        clicked = true;
+    }else if(event.GetType() == MOUSE_BUTTONUP) {
+        clicked = false;
+    }
+}
+
+DialogWindow::DialogWindow(DialogType type)
 {
+    Init(type);
+}
+
+void DialogWindow::Init(DialogType type)
+{
+    this->type = type;
+    this->open = true;
+    switch(type) {
+    case DialogType::LOAD: {
+        table.Create(2, 16);
+        table.SetRowName(0, GetString(T_GAME_OPTIONS, 27));
+        table.SetRowName(1, GetString(T_GAME_OPTIONS, 28));
+    } break;
+    case DialogType::COMBAT_MENU: {
+        table.Create(1, 21);
+        table.Scrollable(false);
+        table.RenderNames(false);
+
+        for(int i = 0; i < 21; i++) {
+            table.SetText(0, i, std::to_wstring(i+1) + L" " + GetString(T_MISSION_NAMES, 1+i));
+        }
+    } break;
+    case DialogType::ECO_MENU: {
+        table.Create(1, 5);
+        table.Scrollable(false);
+        table.RenderNames(false);
+    } break;
+    case DialogType::SETTINGS:
+    case DialogType::ESC_MENU: {
+        CfgFile &cfg = GetCfg();
+
+        lineEdit.Init();
+        lineEdit.SetLine(cfg.username);
+    } break;
+    default: break;
+    }
+}
+
+void DialogWindow::Reset()
+{
+    table.Destroy();
+    lineEdit.SetLine(L"");
+    lineEdit.SetPos(0);
+}
+
+DialogResult DialogWindow::Render()
+{
+    if(!open) return IDLE;
+
+    int x, y;
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (30*24 / 2);
-    int y = (h / 2) - (17*24 / 2);
+    switch(type) {
+    case DialogType::QUIT: {
+        x = (w / 2) - (18*24 / 2);
+        y = (h / 2) - (7*24  / 2);
 
-    const std::wstring &load = GetString(T_GAME_OPTIONS, 2);
-
-    RenderDialogBorder(x, y, 30, 17);
-    RenderDialogTextBox(x, y, 288, 64, load, true);
-
-    if(RenderButton(BUTTON_3, load, x+52, y+300)) {
-        // todo
-    }
-    if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x+52, y+340)) {
-        return BACK;
-    }
-
-    _table_load.Render(x + 330, y + 28, 363);
-
-    return IDLE;
-}
-
-DialogResult GUI::CombatMenuDialog()
-{
-    int x = (1024 / 2) - (416 / 2);
-    int y = 90;
-
-    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
-
-    _table_combat.Render(x + 37, y + 90, 363);
-
-    return IDLE;
-}
-
-DialogResult GUI::SiegeMenuDialog()
-{
-    return IDLE;
-}
-
-DialogResult GUI::EconomicsMenuDialog()
-{
-    int x = (1024 / 2) - (416 / 2);
-    int y = 250;
-
-    RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
-
-    _table_eco.Render(x + 37, y + 90, 363);
-
-    return IDLE;
-}
-
-static enum class Settings {
-    GAME_OPTIONS,
-    GAMEPLAY_OPTIONS,
-    VIDEO_OPTIONS,
-    SOUND_OPTIONS,
-    CHANGE_NAME
-} settingsState = Settings::GAME_OPTIONS;
-DialogResult GUI::SettingsDialog()
-{
-    int w = ToCoordX(GetTargetWidth());
-    int h = ToCoordY(GetTargetHeight());
-
-    int x = (w / 2) - (21*24 / 2);
-    int y = (h / 2) - (15*24 / 2);
-
-    switch(settingsState) {
-    case Settings::GAME_OPTIONS: {
-        RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
-
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 25), x + 110, y + 110)) {
-            settingsState = Settings::GAMEPLAY_OPTIONS;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 4), x + 110, y + 145)) {
-            settingsState = Settings::VIDEO_OPTIONS;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 5), x + 110, y + 180)) {
-            settingsState = Settings::SOUND_OPTIONS;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 45), x + 110, y + 215)) {
-            _name_edit.BeginInput();
-            settingsState = Settings::CHANGE_NAME;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 260)) {
-            return BACK;
-        }
+        return QuitDialog(x, y);
     } break;
-    case Settings::GAMEPLAY_OPTIONS: {
-        RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 25), true);
+    case DialogType::LOAD: {
+        x = (w / 2) - (30*24 / 2);
+        y = (h / 2) - (17*24 / 2);
 
-        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 235)) {
-            settingsState = Settings::GAME_OPTIONS;
-        }
-        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 235)) {
-            settingsState = Settings::GAME_OPTIONS;
-        }
+        return LoadDialog(x, y);
     } break;
-    case Settings::VIDEO_OPTIONS: {
-        RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 4), true);
+    case DialogType::COMBAT_MENU: {
+        x = (1024 / 2) - (416 / 2);
+        y = 90;
 
-        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 18), x + 45, y + 265)) {
-            settingsState = Settings::GAME_OPTIONS;
-        }
-        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 265, y + 265)) {
-            settingsState = Settings::GAME_OPTIONS;
-        }
+        return CombatMenuDialog(x, y);
     } break;
-    case Settings::SOUND_OPTIONS: {
-        RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 5), true);
-
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 17), x + 110, y + 265)) {
-            settingsState = Settings::GAME_OPTIONS;
-        }
+    case DialogType::SIEGE_MENU: {
     } break;
-    case Settings::CHANGE_NAME: {
-        y = (768  / 2) - (8*24 / 2);
+    case DialogType::ECO_MENU: {
+        x = (1024 / 2) - (416 / 2);
+        y = 250;
 
-        RenderDialogBorder(x, y, 21, 9);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 45), true);
+        return EconomicsMenuDialog(x, y);
+    } break;
+    case DialogType::SETTINGS: {
+        x = (w / 2) - (21*24 / 2);
+        y = (h / 2) - (15*24 / 2);
 
-        if(RenderButton(BUTTON_3, GetString(T_GAME_OPTIONS, 17), x + 260, y + 170)) {
-            _name_edit.EndInput();
+        return SettingsDialog(x, y);
+    } break;
+    case DialogType::ESC_MENU: {
+        x = (w / 2) - (21*24 / 2);
+        y = (h / 2) - (15*24 / 2);
 
-            CfgFile &cfg = GetCfg();
-            cfg.username = _name_edit.GetLine();
-
-            settingsState = Settings::GAME_OPTIONS;
-        }
-
-        _name_edit.Render(x+85, y+110, 34);
+        return EscMenu(x, y);
     } break;
     default: break;
     }
@@ -464,98 +516,8 @@ DialogResult GUI::SettingsDialog()
     return IDLE;
 }
 
-static enum class Options {
-    GAME_OPTIONS,
-    SAVE,
-    LOAD,
-    OPTIONS,
-    HELP,
-    RESTART_MISSION,
-    QUIT_MISSION,
-    EXIT_STRONGHOLD
-} escState = Options::GAME_OPTIONS;
-DialogResult GUI::EscMenu()
+int DialogWindow::GetSelectedIndex()
 {
-    int w = GetWidth();
-    int h = GetHeight();
-
-    int x = (w / 2) - (21*24 / 2);
-    int y = (h / 2) - (15*24 / 2);
-
-    switch(escState) {
-    case Options::GAME_OPTIONS: {
-        RenderDialogBorder(x, y, 21, 15);
-        RenderDialogTextBox(x, y, 505, 64, GetString(T_GAME_OPTIONS, 1), true);
-
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 3), x + 110, y + 90)) {
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 2), x + 110, y + 122)) {
-            escState = Options::LOAD;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 24), x + 110, y + 152)) {
-            escState = Options::OPTIONS;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 26), x + 110, y + 182)) {
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 34), x + 110, y + 212)) {
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 7), x + 110, y + 242)) {
-            escState = Options::QUIT_MISSION;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 9), x + 110, y + 272)) {
-            escState = Options::EXIT_STRONGHOLD;
-        }
-        if(RenderButton(BUTTON_1, GetString(T_GAME_OPTIONS, 10), x + 110, y + 302)) {
-            return BACK;
-        }
-    } break;
-    case Options::EXIT_STRONGHOLD: {
-        DialogResult res = QuitDialog();
-        if(res == QUIT) {
-            return QUIT;
-        }else if(res == BACK) {
-            escState = Options::GAME_OPTIONS;
-        }
-    } break;
-    case Options::OPTIONS: {
-        DialogResult res = SettingsDialog();
-        if(res == BACK) escState = Options::GAME_OPTIONS;
-    } break;
-    case Options::LOAD: {
-        std::string file;
-        DialogResult res = LoadDialog(file);
-        if(res == BACK) escState = Options::GAME_OPTIONS;
-        else if(res == DialogResult::LOAD) {
-            // TODO
-        }
-    } break;
-    case Options::QUIT_MISSION: {
-        DialogResult res = QuitMissionDialog();
-        if(res == DialogResult::QUIT_MISSION) {
-            return DialogResult::QUIT_MISSION;
-        }else if(res == BACK) {
-            escState = Options::GAME_OPTIONS;
-        }
-    } break;
-    default: break;
-    }
-
-    return IDLE;
-}
-
-void GUI::ResetMenus()
-{
-    settingsState = Settings::GAME_OPTIONS;
-    escState = Options::GAME_OPTIONS;
-}
-
-int GUI::GetMilitaryCampaignIndex()
-{
-    return _table_combat.GetSelected();
-}
-
-int GUI::GetEconomicsCampaignIndex()
-{
-    return _table_eco.GetSelected();
+    return table.GetSelected();
 }
 

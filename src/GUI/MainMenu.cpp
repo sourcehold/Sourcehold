@@ -131,6 +131,13 @@ MainMenu::MainMenu()
     ui_tex[3] = gm1_icons_economic->GetTextureAtlas();
     ui_tex[4] = gm1_icons_builder->GetTextureAtlas();
 
+    dlg[0].Init(DialogType::QUIT);
+    dlg[1].Init(DialogType::LOAD);
+    dlg[2].Init(DialogType::COMBAT_MENU);
+    dlg[3].Init(DialogType::SIEGE_MENU);
+    dlg[4].Init(DialogType::ECO_MENU);
+    dlg[5].Init(DialogType::SETTINGS);
+
     /* Allocate buttons */
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
@@ -151,7 +158,7 @@ MainMenu::~MainMenu()
 
 UIState MainMenu::EnterMenu()
 {
-    currentState = MAIN_MENU;
+    UIState currentState = MAIN_MENU;
 
     aud_chantloop.Play();
     //aud_greetings.Play();
@@ -172,7 +179,7 @@ UIState MainMenu::EnterMenu()
          * buttonEnd and buttonStart define the range of
          * buttons to be rendered for the menu page.
          */
-        selected = BUTTON_END;
+        MenuButton selected = BUTTON_END;
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
         switch(currentState) {
         default:
@@ -188,7 +195,7 @@ UIState MainMenu::EnterMenu()
         case MILITARY_CAMPAIGN_MENU: {
             Render(*tgx_bg_combat2);
 
-            DialogResult res = CombatMenuDialog();
+            DialogResult res = dlg[2].Render();
             if(res == LOAD) {
                 // Double-click on mission -> start mission
                 return MILITARY_CAMPAIGN_MISSION;
@@ -199,7 +206,7 @@ UIState MainMenu::EnterMenu()
         } break;
         case MILITARY_CAMPAIGN_MISSION: {
             // TODO
-            if(GetMilitaryCampaignIndex() >= 0) {
+            if(dlg[2].GetSelectedIndex() >= 0) {
                 aud_chantloop.Stop();
                 ResetTarget();
                 return MILITARY_CAMPAIGN_MISSION;
@@ -209,7 +216,7 @@ UIState MainMenu::EnterMenu()
         case SIEGE_MENU: {
             Render(*tgx_bg_combat2);
 
-            DialogResult res = SiegeMenuDialog();
+            DialogResult res = dlg[3].Render();
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case ECONOMICS_MENU: {
@@ -220,7 +227,7 @@ UIState MainMenu::EnterMenu()
         case ECONOMICS_CAMPAIGN_MENU: {
             Render(*tgx_bg_economic2);
 
-            DialogResult res = EconomicsMenuDialog();
+            DialogResult res = dlg[4].Render();
             if(res == LOAD) {
                 return ECONOMICS_CAMPAIGN_MISSION;
             }
@@ -235,9 +242,8 @@ UIState MainMenu::EnterMenu()
         } break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
-            std::string file;
-            DialogResult res = LoadDialog(file);
-            if(res == LOAD && !file.empty()) {
+            DialogResult res = dlg[1].Render();
+            if(res == LOAD) {
                 // TODO
             } else if(res == BACK) {
                 currentState = MAIN_MENU;
@@ -246,7 +252,7 @@ UIState MainMenu::EnterMenu()
         } break;
         case EXIT_GAME: {
             Render(*tgx_bg_main2);
-            DialogResult res = QuitDialog();
+            DialogResult res = dlg[0].Render();
             if(res == QUIT) {
                 aud_chantloop.Stop();
                 return EXIT_GAME;
@@ -257,7 +263,7 @@ UIState MainMenu::EnterMenu()
         } break;
         case SETTINGS_MENU: {
             Render(*tgx_bg_main2);
-            DialogResult res = SettingsDialog();
+            DialogResult res = dlg[5].Render();
             if(res == BACK) {
                 currentState = MAIN_MENU;
             }

@@ -1,3 +1,4 @@
+
 #include <memory>
 #include <cstdlib>
 #include <string>
@@ -43,10 +44,11 @@ int MainLoop(UIState state) {
     case MAIN_MENU: {
         MainMenu menu;
         state = menu.EnterMenu();
+
         MainLoop(state);
     } break;
     case MILITARY_CAMPAIGN_MISSION: {
-        int index = GetMilitaryCampaignIndex();
+        int index = 0; // todo
 
         NarrScreen narr(index + 1);
         narr.Begin();
@@ -141,10 +143,6 @@ int StartGame(GameOptions &opt)
         Logger::error(GAME) << "Error while loading fonts!" << std::endl;
         return EXIT_FAILURE;
     }
-    if(!InitializeUtils()) {
-        Logger::error(GAME) << "Error while initializing menu utils!" << std::endl;
-        return EXIT_FAILURE;
-    }
 
     Startup start;
 
@@ -183,8 +181,8 @@ int main(int argc, char **argv)
         config.add_options()
             ("path,p", po::value<std::string>(&opt.dataDir)->default_value("../data/"), "Custom path to data folder")
             ("debug", po::bool_switch(&opt.debug)->default_value(false), "Print debug info")
-            ("color", po::bool_switch()->default_value(false), "Force color output")
-            ("fullscreen.f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
+            ("color,c", po::bool_switch()->default_value(false), "Force color output")
+            ("fullscreen,f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
             ("resolution,r", po::value<int>()->default_value(1), "Resolution of the window")
             ("disp,d", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
             ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
@@ -220,7 +218,7 @@ int main(int argc, char **argv)
 
         if (result.count("color") > 0) opt.color = result["color"].as<bool>();
         else opt.color = -1;
-        
+
         opt.resolution = (Resolution)result["resolution"].as<int>();
 
         boost::erase_all(opt.dataDir, "\""); // can sometimes appear when there's extra "" in the .ini

@@ -154,6 +154,7 @@ UIState Startup::Begin()
                 return MAIN_MENU;
             }
         } break;
+        default: break;
         }
 
         FlushDisplay();

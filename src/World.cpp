@@ -108,13 +108,13 @@ UIState World::Play()
         }
 
         if(escMenu) {
-            DialogResult res = EscMenu();
+            /*DialogResult res = EscMenu();
             if(res == BACK) escMenu = false;
             else if(res == QUIT) {
                 return EXIT_GAME;
             }else if(res == QUIT_MISSION) {
                 return MAIN_MENU;
-            }
+                }*/
         }
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
@@ -334,7 +334,6 @@ void World::onEventReceive(Keyboard &keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
-            ResetMenus();
             escMenu = !escMenu;
             break;
         default:

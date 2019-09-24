@@ -70,11 +70,12 @@ namespace Sourcehold {
             StrongholdEdition edition;
             Credits cred;
             Song aud_chantloop;
+            Effect aud_greetings, aud_exit;
             Texture screen;
-            int mx, my;
-            int glareCounter=0;
-            std::shared_ptr<Gm1File> gm1_icons_additional;
+            int mx, my, glareCounter=0;
+            DialogWindow dlg[6];
 
+            std::shared_ptr<Gm1File> gm1_icons_additional;
             std::shared_ptr<Gm1File> gm1_icons_main;
             std::shared_ptr<TgxFile> tgx_bg_main, tgx_bg_main2;
             std::shared_ptr<Gm1File> gm1_icons_combat;
@@ -86,11 +87,6 @@ namespace Sourcehold {
 
             std::vector<StaticElement> ui_elems;
             std::vector<std::shared_ptr<TextureAtlas>> ui_tex;
-
-            MenuButton selected = BUTTON_END;
-            UIState currentState;
-
-            Effect aud_greetings, aud_exit;
         public:
             MainMenu();
             MainMenu(const MainMenu &) = delete;
@@ -99,7 +95,6 @@ namespace Sourcehold {
             UIState EnterMenu();
         protected:
             boost::filesystem::path GetGreetingsSound();
-
             void HideAll();
         };
     }
