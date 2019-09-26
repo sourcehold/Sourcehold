@@ -6,6 +6,7 @@
 
 #include "GUI/StaticElement.h"
 #include "GUI/UIState.h"
+#include "GUI/MenuUtils.h"
 
 #include "Rendering/Texture.h"
 
@@ -64,8 +65,8 @@ namespace Sourcehold {
             /* Quick menu */
             StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
             bool rmbHolding = false;
-            bool escMenu = false;
             Uint32 mouseX, mouseY;
+            DialogWindow escMenu;
         public:
             World();
             World(const World&) = delete;

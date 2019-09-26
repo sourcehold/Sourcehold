@@ -8,9 +8,8 @@
 #include "Rendering/Font.h"
 #include "Rendering/Camera.h"
 
-#include "GUI/MenuUtils.h"
-
 using namespace Sourcehold::Game;
+using namespace Sourcehold::GUI;
 
 /**
  * Contains:
@@ -30,7 +29,8 @@ static uint16_t lut_ui_tabs[6][5] = {
 
 World::World() :
     EventConsumer<Keyboard>(),
-    EventConsumer<Mouse>()
+    EventConsumer<Mouse>(),
+    escMenu(DialogType::ESC_MENU)
 {
     /* The scribes facial animation */
     gm1_scribe = GetGm1("gm/scribe.gm1");
@@ -81,6 +81,8 @@ World::World() :
 
     ResetTarget();
 
+    escMenu.Close();
+
     SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
     SetCamPos(15, 8);
 }
@@ -107,14 +109,12 @@ UIState World::Play()
             RenderMenubar();
         }
 
-        if(escMenu) {
-            /*DialogResult res = EscMenu();
-            if(res == BACK) escMenu = false;
-            else if(res == QUIT) {
-                return EXIT_GAME;
-            }else if(res == QUIT_MISSION) {
-                return MAIN_MENU;
-                }*/
+        DialogResult res = escMenu.Render();
+        if(res == BACK) escMenu.Close();
+        else if(res == QUIT) {
+            return EXIT_GAME;
+        }else if(res == QUIT_MISSION) {
+            return MAIN_MENU;
         }
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
@@ -209,39 +209,39 @@ void World::UpdateMenubar()
     /* Render the menu buttons */
     ui_disk.Render(
         [&]() -> SDL_Rect {
-            if (ui_disk.IsClicked() && !escMenu) {
-                escMenu = true;
+            if (ui_disk.IsClicked()) {
+                escMenu.Open();
             }
-            if (ui_disk.IsMouseOver() && !escMenu) return atlas->Get(26);
+            if (ui_disk.IsMouseOver()) return atlas->Get(26);
             else return atlas->Get(25);
         });
 
     ui_info.Render(
         [&]() -> SDL_Rect {
-            if (ui_info.IsMouseOver() && !escMenu) return atlas->Get(28);
+            if (ui_info.IsMouseOver()) return atlas->Get(28);
             else return atlas->Get(27);
         });
 
     ui_delete.Render(
         [&]() -> SDL_Rect {
-            if (ui_delete.IsMouseOver() && !escMenu) return atlas->Get(30);
+            if (ui_delete.IsMouseOver()) return atlas->Get(30);
             else return atlas->Get(29);
         });
 
     ui_revert.Render(
         [&]() -> SDL_Rect {
-            if (ui_revert.IsMouseOver() && !escMenu) return atlas->Get(69);
+            if (ui_revert.IsMouseOver()) return atlas->Get(69);
             else return atlas->Get(68);
         });
 
     for (uint8_t i = 0; i < 6; i++) {
         ui_tabs[i].Render(
             [&]() -> SDL_Rect {
-                if (ui_tabs[i].IsClicked() && !escMenu) {
+                if (ui_tabs[i].IsClicked()) {
                     currentTab = static_cast<MenuPage>(i);
                 }
                 else {
-                    if (ui_tabs[i].IsMouseOver() && !escMenu)return atlas->Get(lut_ui_tabs[i][1]);
+                    if (ui_tabs[i].IsMouseOver())return atlas->Get(lut_ui_tabs[i][1]);
                     else return atlas->Get(lut_ui_tabs[i][0]);
                 }
                 /* Highlight the selected tab */
@@ -334,7 +334,7 @@ void World::onEventReceive(Keyboard &keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
-            escMenu = !escMenu;
+            escMenu.open = !escMenu.open;
             break;
         default:
             break;

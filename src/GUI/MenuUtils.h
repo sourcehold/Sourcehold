@@ -53,7 +53,7 @@ namespace Sourcehold {
         };
 
         class DialogWindow : protected EventConsumer<Mouse> {
-            bool open,clicked=false;
+            bool clicked=false;
             Table table;
             LineEdit lineEdit;
             DialogType type;
@@ -122,6 +122,8 @@ namespace Sourcehold {
 
             inline void Open() { open = true; }
             inline void Close() { open = false; }
+
+            bool open;
         };
     }
 }
