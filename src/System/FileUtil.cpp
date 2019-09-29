@@ -45,7 +45,7 @@ bool System::DoesFileExist(boost::filesystem::path path)
 
 void System::CreateFolder(boost::filesystem::path path)
 {
-    boost::filesystem::create_directory(path);
+    boost::filesystem::create_directories(path);
 }
 
 boost::filesystem::path System::GetDocumentsPath()

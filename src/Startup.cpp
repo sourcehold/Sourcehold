@@ -49,8 +49,7 @@ UIState Startup::Begin()
     while(Running()) {
         ClearDisplay();
 
-        switch(currentUIState) {
-        case INTRO_SEQUENCE: {
+        if(currentUIState == INTRO_SEQUENCE) {
             /* Logo switching */
             double now = GetTime();
             double delta = now - startTime;
@@ -91,70 +90,70 @@ UIState Startup::Begin()
             }
 #endif
 
-            if(currentStartupState == STARTUP_FIREFLY_LOGO) {
-                tgx_firefly->SetAlphaMod(alpha);
-                if (res == RESOLUTION_800x600) {
-                    Render(*tgx_firefly);
-                }
-                else {
-                    Render(*tgx_firefly, px, py);
-                }
-            }
-            else if(currentStartupState == STARTUP_TAKETWO_LOGO) {
-                tgx_taketwo->SetAlphaMod(alpha);
-                if (res == RESOLUTION_800x600) {
-                    Render(*tgx_taketwo);
-                }
-                else {
-                    Render(*tgx_taketwo, px, py);
-                }
-            }
-            else if(currentStartupState == STARTUP_PRESENT) {
-                tgx_present->SetAlphaMod(alpha);
-                if (res == RESOLUTION_800x600) {
-                    Render(*tgx_present);
-                }
-                else {
-                    Render(*tgx_present, px, py);
-                }
-            }
-            else if(currentStartupState == STARTUP_STRONGHOLD_LOGO) {
-                tgx_logo->SetAlphaMod(alpha);
-                if (res == RESOLUTION_800x600) {
-                    Render(*tgx_logo);
-                }
-                else {
-                    Render(*tgx_logo, px, py);
-                }
-            }
-            else if(currentStartupState == STARTUP_MULTIPLAYER_INFO) {
-                int tx = (GetWidth() / 2) - (dim.first / 2);
-                int ty = (GetHeight() / 2) - (dim.second / 2);
+            switch(currentStartupState) {
+            case STARTUP_FIREFLY_LOGO:
+              tgx_firefly->SetAlphaMod(alpha);
+              if (res == RESOLUTION_800x600) {
+                Render(*tgx_firefly);
+              }
+              else {
+                Render(*tgx_firefly, px, py);
+              }
+              break;
+            case STARTUP_TAKETWO_LOGO:
+              tgx_taketwo->SetAlphaMod(alpha);
+              if (res == RESOLUTION_800x600) {
+                Render(*tgx_taketwo);
+              }
+              else {
+                Render(*tgx_taketwo, px, py);
+              }
+              break;
+            case STARTUP_PRESENT:
+              tgx_present->SetAlphaMod(alpha);
+              if (res == RESOLUTION_800x600) {
+                Render(*tgx_present);
+              }
+              else {
+                Render(*tgx_present, px, py);
+              }
+              break;
+            case STARTUP_STRONGHOLD_LOGO:
+              tgx_logo->SetAlphaMod(alpha);
+              if (res == RESOLUTION_800x600) {
+                Render(*tgx_logo);
+              }
+              else {
+                Render(*tgx_logo, px, py);
+              }
+              break;
+            case STARTUP_MULTIPLAYER_INFO:
+              font->SetAlphaMod(alpha);
+              RenderText(
+                         startupStr,
+                         (GetWidth() / 2) - (dim.first / 2),
+                         (GetHeight() / 2) - (dim.second / 2),
+                         FONT_LARGE, false, 0.7);
+              break;
+            case STARTUP_INTRO:
+              font->SetAlphaMod(255);
 
-                font->SetAlphaMod(alpha);
-                RenderText(startupStr, tx, ty, FONT_LARGE, false, 0.7);
-            }
-            else if(currentStartupState == STARTUP_INTRO) {
-                font->SetAlphaMod(255);
+              aud_startup.SetFadeOut(1.0);
+              aud_startup.UpdateFade();
+              intro->Update();
 
-                aud_startup.SetFadeOut(1.0);
-                aud_startup.UpdateFade();
-                intro->Update();
+              px = (GetWidth() / 2) - (640 / 2);
+              py = (GetHeight() / 2) - (230 / 2);
 
-                px = (GetWidth() / 2) - (640 / 2);
-                py = (GetHeight() / 2) - (230 / 2);
-
-                Render(*intro, px, py);
-                if(!intro->IsRunning()) {
-                    currentUIState = MAIN_MENU;
-                }
+              Render(*intro, px, py);
+              if(!intro->IsRunning()) {
+                currentUIState = MAIN_MENU;
+              }
+              break;
+            default:
+              aud_startup.Stop();
+              return MAIN_MENU;
             }
-            else {
-                aud_startup.Stop();
-                return MAIN_MENU;
-            }
-        } break;
-        default: break;
         }
 
         FlushDisplay();
