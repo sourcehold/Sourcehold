@@ -149,8 +149,11 @@ int StartGame(GameOptions &opt)
     int ret = EnterLoadingScreen();
     if (ret != EXIT_SUCCESS) return ret;
 
-    start.PlayMusic();
-    UIState state = start.Begin();
+    UIState state = MAIN_MENU;
+    if(!opt.skip) {
+        start.PlayMusic();
+        state = start.Begin();
+    }
 
     return MainLoop(state);
 }
@@ -185,6 +188,7 @@ int main(int argc, char **argv)
             ("fullscreen,f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
             ("resolution,r", po::value<int>()->default_value(1), "Resolution of the window")
             ("disp,d", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
+            ("skip,s", po::bool_switch(&opt.skip)->default_value(false), "Skip directly to the main menu")
             ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
             ("nograb", po::bool_switch(&opt.nograb)->default_value(false), "Don't grab the mouse")
             ("nosound", po::bool_switch(&opt.nosound)->default_value(false), "Disable sound entirely")
