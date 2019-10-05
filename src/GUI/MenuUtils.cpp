@@ -201,8 +201,14 @@ void DialogWindow::RenderDialogTextBox(int x, int y, int w, int h, const std::ws
     }
 }
 
-DialogResult DialogWindow::QuitDialog(int x, int y)
+DialogResult DialogWindow::QuitDialog()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (18*24 / 2);
+    int y = (h / 2) - (7*24  / 2);
+
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_MAIN_MENU, 5), true);
 
@@ -217,8 +223,14 @@ DialogResult DialogWindow::QuitDialog(int x, int y)
     return IDLE;
 }
 
-DialogResult DialogWindow::LoadDialog(int x, int y)
+DialogResult DialogWindow::LoadDialog()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (30*24 / 2);
+    int y = (h / 2) - (17*24 / 2);
+
     const std::wstring &load = GetString(T_GAME_OPTIONS, 2);
 
     RenderDialogBorder(x, y, 30, 17);
@@ -236,29 +248,44 @@ DialogResult DialogWindow::LoadDialog(int x, int y)
     return IDLE;
 }
 
-DialogResult DialogWindow::CombatMenuDialog(int x, int y)
+DialogResult DialogWindow::CombatMenuDialog()
 {
+    int x = (1024 / 2) - (416 / 2);
+    int y = 90;
+
     RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
     table.Render(x + 37, y + 90, 363);
 
     return IDLE;
 }
 
-DialogResult DialogWindow::SiegeMenuDialog(int x, int y)
+DialogResult DialogWindow::SiegeMenuDialog()
 {
     return IDLE;
 }
 
-DialogResult DialogWindow::EconomicsMenuDialog(int x, int y)
+DialogResult DialogWindow::EconomicsMenuDialog()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (1024 / 2) - (416 / 2);
+    int y = 250;
+
     RenderDialogTextBox(x, y, 416, 64, GetString(T_MAIN_MENU, 15), true);
     table.Render(x + 37, y + 90, 363);
 
     return IDLE;
 }
 
-DialogResult DialogWindow::SettingsDialog(int x, int y)
+DialogResult DialogWindow::SettingsDialog()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (21*24 / 2);
+    int y = (h / 2) - (15*24 / 2);
+
     switch(state) {
     case State::GAME_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
@@ -334,8 +361,14 @@ DialogResult DialogWindow::SettingsDialog(int x, int y)
     return IDLE;
 }
 
-DialogResult DialogWindow::EscMenu(int x, int y)
+DialogResult DialogWindow::EscMenu()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (21*24 / 2);
+    int y = (h / 2) - (15*24 / 2);
+
     switch(state) {
     case State::GAME_OPTIONS: {
         RenderDialogBorder(x, y, 21, 15);
@@ -364,7 +397,7 @@ DialogResult DialogWindow::EscMenu(int x, int y)
         }
     } break;
     case State::EXIT_STRONGHOLD: {
-        DialogResult res = QuitDialog(x, y);
+        DialogResult res = QuitDialog();
         if(res == QUIT) {
             return QUIT;
         }else if(res == BACK) {
@@ -372,18 +405,18 @@ DialogResult DialogWindow::EscMenu(int x, int y)
         }
     } break;
     case State::OPTIONS: {
-        DialogResult res = SettingsDialog(x, y);
+        DialogResult res = SettingsDialog();
         if(res == BACK) state = State::GAME_OPTIONS;
     } break;
     case State::LOAD: {
-        DialogResult res = LoadDialog(x, y);
+        DialogResult res = LoadDialog();
         if(res == BACK) state = State::GAME_OPTIONS;
         else if(res == LOAD) {
             // TODO
         }
     } break;
     case State::QUIT_MISSION: {
-        DialogResult res = QuitMissionDialog(x, y);
+        DialogResult res = QuitMissionDialog();
         if(res == QUIT_MISSION) {
             return QUIT_MISSION;
         }else if(res == BACK) {
@@ -396,8 +429,14 @@ DialogResult DialogWindow::EscMenu(int x, int y)
     return IDLE;
 }
 
-DialogResult DialogWindow::QuitMissionDialog(int x, int y)
+DialogResult DialogWindow::QuitMissionDialog()
 {
+    int w = ToCoordX(GetTargetWidth());
+    int h = ToCoordY(GetTargetHeight());
+
+    int x = (w / 2) - (18*24 / 2);
+    int y = (h / 2) - (7*24  / 2);
+
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_GAME_OPTIONS, 7), true);
 
@@ -471,48 +510,26 @@ DialogResult DialogWindow::Render()
 {
     if(!open) return IDLE;
 
-    int x, y;
-    int w = ToCoordX(GetTargetWidth());
-    int h = ToCoordY(GetTargetHeight());
-
     switch(type) {
     case DialogType::QUIT: {
-        x = (w / 2) - (18*24 / 2);
-        y = (h / 2) - (7*24  / 2);
-
-        return QuitDialog(x, y);
+        return QuitDialog();
     } break;
     case DialogType::LOAD: {
-        x = (w / 2) - (30*24 / 2);
-        y = (h / 2) - (17*24 / 2);
-
-        return LoadDialog(x, y);
+        return LoadDialog();
     } break;
     case DialogType::COMBAT_MENU: {
-        x = (1024 / 2) - (416 / 2);
-        y = 90;
-
-        return CombatMenuDialog(x, y);
+        return CombatMenuDialog();
     } break;
     case DialogType::SIEGE_MENU: {
     } break;
     case DialogType::ECO_MENU: {
-        x = (1024 / 2) - (416 / 2);
-        y = 250;
-
-        return EconomicsMenuDialog(x, y);
+        return EconomicsMenuDialog();
     } break;
     case DialogType::SETTINGS: {
-        x = (w / 2) - (21*24 / 2);
-        y = (h / 2) - (15*24 / 2);
-
-        return SettingsDialog(x, y);
+        return SettingsDialog();
     } break;
     case DialogType::ESC_MENU: {
-        x = (w / 2) - (21*24 / 2);
-        y = (h / 2) - (15*24 / 2);
-
-        return EscMenu(x, y);
+        return EscMenu();
     } break;
     default: break;
     }

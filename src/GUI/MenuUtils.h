@@ -98,14 +98,14 @@ namespace Sourcehold {
             void RenderDeco(Deco type, int x, int y);
             void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco);
 
-            DialogResult QuitDialog(int x, int y);
-            DialogResult LoadDialog(int x, int y);
-            DialogResult CombatMenuDialog(int x, int y);
-            DialogResult SiegeMenuDialog(int x, int y);
-            DialogResult EconomicsMenuDialog(int x, int y);
-            DialogResult SettingsDialog(int x, int y);
-            DialogResult EscMenu(int x, int y);
-            DialogResult QuitMissionDialog(int x, int y);
+            DialogResult QuitDialog();
+            DialogResult LoadDialog();
+            DialogResult CombatMenuDialog();
+            DialogResult SiegeMenuDialog();
+            DialogResult EconomicsMenuDialog();
+            DialogResult SettingsDialog();
+            DialogResult EscMenu();
+            DialogResult QuitMissionDialog();
         public:
             DialogWindow() = default;
             DialogWindow(DialogType type);
