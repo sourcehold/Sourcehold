@@ -14,6 +14,7 @@
 #include "System/System.h"
 #include "System/FileUtil.h"
 #include "System/Logger.h"
+#include "System/ModCampaign.h"
 
 #include "Parsers/TgxFile.h"
 #include "Parsers/Gm1File.h"
@@ -268,8 +269,9 @@ bool Game::LoadGameData()
     }
     else _saveFolder /= "Stronghold/Saves/";
 
-    /* Does nothing if it already exists */
+    /* Create asset folders. Does nothing if it already exists. */
     CreateFolder(_saveFolder);
+    CreateFolder(_dataFolder / "campaigns/");
 
     /* Create default config */
     _cfgPath = _saveFolder / "../stronghold.cfg";
@@ -278,6 +280,8 @@ bool Game::LoadGameData()
         _cfg.SetDefaultValues();
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }
+
+    LoadModCampaigns(_dataFolder / "campaigns/");
 
     /* Load special files */
     if( !_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb") ||

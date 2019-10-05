@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "System/ModCampaign.h"
+
 #include "GUI/Table.h"
 #include "GUI/LineEdit.h"
 
@@ -9,9 +11,10 @@
 #include "Events/Mouse.h"
 
 namespace Sourcehold {
-    using namespace Events;
-
     namespace GUI {
+        using namespace Events;
+        using namespace System;
+
         /**
          * Renders the given string to fit the main menu
          * rectangle.
@@ -43,13 +46,17 @@ namespace Sourcehold {
         };
 
         enum class DialogType {
+            // Original game //
             QUIT,
             LOAD,
             COMBAT_MENU,
             SIEGE_MENU,
             ECO_MENU,
             SETTINGS,
-            ESC_MENU
+            ESC_MENU,
+            // Sourcehold //
+            CAMPAIGN_SELECT_MILITARY,
+            CAMPAIGN_SELECT_ECO
         };
 
         class DialogWindow : protected EventConsumer<Mouse> {
@@ -106,6 +113,8 @@ namespace Sourcehold {
             DialogResult SettingsDialog();
             DialogResult EscMenu();
             DialogResult QuitMissionDialog();
+
+            void InitModCampaignTable(std::vector<ModCampaign> *campaigns);
         public:
             DialogWindow() = default;
             DialogWindow(DialogType type);

@@ -14,6 +14,7 @@ include_directories(src)
 
 # Thirdparty
 include_directories(thirdparty/blast/)
+include_directories(thirdparty/duktape)
 
 # pthread
 find_package (Threads)
@@ -42,7 +43,7 @@ find_package(Boost COMPONENTS filesystem program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 # Include sources / headers
-file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c)
+file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c thirdparty/duktape/duktape.c)
 file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/src/*.h)
 
 if(MSVC)
@@ -54,7 +55,7 @@ if(MSVC)
 		set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
-	add_definitions(-Wno-reorder -pedantic-errors -Ofast -Wall -Wextra)
+	add_definitions(-Wno-reorder -pedantic-errors -Ofast -Wall -Wextra -fno-fast-math)
 endif()
 
 add_executable(Stronghold ${SOURCES} ${HEADERS})

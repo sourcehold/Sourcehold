@@ -12,6 +12,7 @@ namespace Sourcehold {
         std::string GetFilename(boost::filesystem::path path);
 
         bool IsFileHidden(boost::filesystem::path path);
+        bool IsFolder(boost::filesystem::path path);
         bool DoesFileExist(boost::filesystem::path path);
         void CreateFolder(boost::filesystem::path path);
 
@@ -21,6 +22,6 @@ namespace Sourcehold {
          * Get all the files in a directory and its
          * sub directories
          */
-        std::vector<boost::filesystem::path> GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension = "", bool recursive = true);
+        std::vector<boost::filesystem::path> GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension = "", bool recursive = true, bool includeFolders = false);
     }
 }

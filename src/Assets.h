@@ -6,7 +6,7 @@
 namespace Sourcehold {
     namespace Assets {
         // ----------------------------------------------------
-        
+
         enum AssetType : uint8_t {
             UNKNOWN,
             BIK, /* Bink video (.bik) file */

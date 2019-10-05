@@ -1,4 +1,6 @@
-#include <GameManager.h>
+#include <codecvt>
+
+#include "GameManager.h"
 
 #include "GUI/MenuUtils.h"
 #include "GUI/StaticElement.h"
@@ -451,6 +453,17 @@ DialogResult DialogWindow::QuitMissionDialog()
     return IDLE;
 }
 
+void DialogWindow::InitModCampaignTable(std::vector<ModCampaign> *campaigns)
+{
+    table.Create(1, campaigns->size());
+    for(int i = 0; i < campaigns->size(); i++) {
+        ModCampaign &c = campaigns->at(i);
+
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
+        table.SetText(0, i, conv.from_bytes(c.title));
+    }
+}
+
 void DialogWindow::onEventReceive(Mouse &event) {
     if(event.GetType() == MOUSE_BUTTONDOWN) {
         clicked = true;
@@ -468,6 +481,12 @@ void DialogWindow::Init(DialogType type)
 {
     this->type = type;
     this->open = true;
+
+    std::vector<ModCampaign>
+        *campaigns_military = GetMilitaryCampaigns(),
+        *campaigns_eco = GetEcoCampaigns();
+
+    // Initialize the window based on the type of dialog to be displayed //
     switch(type) {
     case DialogType::LOAD: {
         table.Create(2, 16);
@@ -494,6 +513,12 @@ void DialogWindow::Init(DialogType type)
 
         lineEdit.Init();
         lineEdit.SetLine(cfg.username);
+    } break;
+    case DialogType::CAMPAIGN_SELECT_MILITARY: {
+        InitModCampaignTable(campaigns_military);
+    } break;
+    case DialogType::CAMPAIGN_SELECT_ECO: {
+        InitModCampaignTable(campaigns_eco);
     } break;
     default: break;
     }
