@@ -9,10 +9,8 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-/* All of the menu buttons. TODO: replace double with int */
 struct MenuButtonInfo {
-    double x;
-    double y;
+    int x, y;
     TextSection sec;
     uint16_t textIndex;
     bool hasGlare;
@@ -25,35 +23,35 @@ struct MenuButtonInfo {
 
 const static MenuButtonInfo lut_buttons[] = {
     // MAIN_MENU //
-    {  0.12, 0.67, T_MAIN_MENU,      5, false, true, 68,  0, 0, 0 },
-    { 0.423,0.774, T_BUILDINGS,    301, false, true, 77,  0, 0, 1 },
-    { 0.691,0.687, T_BUILDINGS,    286, false, true, 72,  0, 0, 0 },
-    { 0.182,0.276, T_BUILDINGS,    226, true,  true, 15,  1, 0, 0 },
-    { 0.337,0.276, T_BUILDINGS,    227, true,  true, 32, 18, 1, 0 },
-    { 0.492,0.276, T_BUILDINGS,    228, true,  true, 49, 35, 2, 0 },
-    { 0.647,0.278, T_BUILDINGS,    229, true,  true, 66, 52, 3, 0 },
-    { 0.732, 0.54, T_GAME_OPTIONS,  24, false, true, 88,  0, 0, 1 },
+    { 123, 515, T_MAIN_MENU,      5, false, true, 68,  0, 0, 0 },
+    { 433, 594, T_BUILDINGS,    301, false, true, 77,  0, 0, 1 },
+    { 708, 528, T_BUILDINGS,    286, false, true, 72,  0, 0, 0 },
+    { 186, 212, T_BUILDINGS,    226, true,  true, 15,  1, 0, 0 },
+    { 345, 212, T_BUILDINGS,    227, true,  true, 32, 18, 1, 0 },
+    { 504, 212, T_BUILDINGS,    228, true,  true, 49, 35, 2, 0 },
+    { 663, 212, T_BUILDINGS,    229, true,  true, 66, 52, 3, 0 },
+    { 750, 415, T_GAME_OPTIONS,  24, false, true, 88,  0, 0, 1 },
     // COMBAT_MENU //
-    { 0.183,0.276, T_BUILDINGS, 258, true,  true,  15,  1, 0, 2 },
-    { 0.336,0.276, T_BUILDINGS, 260, true,  true,  32, 18, 1, 2 },
-    { 0.492,0.276, T_BUILDINGS, 261, true,  true,  49, 35, 2, 2 },
-    { 0.648,0.276, T_BUILDINGS, 259, true,  true,  66, 52, 3, 2 },
-    {   0.1,  0.7, T_BUILDINGS, 270, false, true,  70,  0, 0, 0 },
-    {   0.1,  0.7, T_BUILDINGS,   0, false, false, 68,  0, 0, 2 }, // back
-    {  0.73,  0.7, T_BUILDINGS,   0, false, false, 70,  0, 0, 2 }, // next
+    { 187, 212, T_BUILDINGS, 258, true,  true,  15,  1, 0, 2 },
+    { 344, 212, T_BUILDINGS, 260, true,  true,  32, 18, 1, 2 },
+    { 504, 212, T_BUILDINGS, 261, true,  true,  49, 35, 2, 2 },
+    { 664, 212, T_BUILDINGS, 259, true,  true,  66, 52, 3, 2 },
+    { 102, 534, T_BUILDINGS, 270, false, true,  70,  0, 0, 0 },
+    { 102, 534, T_BUILDINGS,   0, false, false, 68,  0, 0, 2 }, // back
+    { 748, 534, T_BUILDINGS,   0, false, false, 70,  0, 0, 2 }, // next
     // ECONOMICS_MENU //
-    { 0.261,0.276, T_BUILDINGS, 262,  true,  true, 15,  1, 0, 3 },
-    { 0.417,0.276, T_BUILDINGS, 263,  true,  true, 32, 18, 1, 3 },
-    { 0.571,0.276, T_BUILDINGS, 264,  true,  true, 49, 35, 2, 3 },
-    {   0.1,  0.7, T_BUILDINGS, 270, false,  true, 70,  0, 0, 0 },
-    {   0.1,  0.7, T_BUILDINGS,   0, false, false, 51,  0, 0, 3 }, // back
-    {  0.73,  0.7, T_BUILDINGS,   0, false, false, 53,  0, 0, 3 }, // next
+    { 267, 212, T_BUILDINGS, 262,  true,  true, 15,  1, 0, 3 },
+    { 427, 212, T_BUILDINGS, 263,  true,  true, 32, 18, 1, 3 },
+    { 585, 212, T_BUILDINGS, 264,  true,  true, 49, 35, 2, 3 },
+    { 102, 534, T_BUILDINGS, 270, false,  true, 70,  0, 0, 0 },
+    { 102, 534, T_BUILDINGS,   0, false, false, 51,  0, 0, 3 }, // back
+    { 748, 534, T_BUILDINGS,   0, false, false, 53,  0, 0, 3 }, // next
     // BUILDER_MENU //
-    { 0.182,0.276, T_BUILDINGS, 266,  true, true, 15,  1, 0, 4 },
-    { 0.336,0.276, T_BUILDINGS, 267,  true, true, 32, 18, 1, 4 },
-    { 0.492,0.276, T_BUILDINGS, 268,  true, true, 49, 35, 2, 4 },
-    { 0.648,0.276, T_BUILDINGS, 269,  true, true, 66, 52, 3, 4 },
-    {   0.1,  0.7, T_BUILDINGS, 270, false, true, 70,  0, 0, 4 }
+    { 186, 212, T_BUILDINGS, 266,  true, true, 15,  1, 0, 4 },
+    { 344, 212, T_BUILDINGS, 267,  true, true, 32, 18, 1, 4 },
+    { 504, 212, T_BUILDINGS, 268,  true, true, 49, 35, 2, 4 },
+    { 663, 212, T_BUILDINGS, 269,  true, true, 66, 52, 3, 4 },
+    { 102, 534, T_BUILDINGS, 270, false, true, 70,  0, 0, 4 }
 };
 
 /* Connects a button to a UIState */
