@@ -23,6 +23,7 @@ namespace Sourcehold {
             std::wstring &GetString(TextSection sec, uint16_t index);
         protected:
             std::map<TextSection, std::vector<std::wstring>> strings;
+            std::wstring dummy_text = L"Text not found";
         };
     }
 }
