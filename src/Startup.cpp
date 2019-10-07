@@ -128,12 +128,15 @@ UIState Startup::Begin()
               }
               break;
             case STARTUP_MULTIPLAYER_INFO:
-              font->SetAlphaMod(alpha);
-              RenderText(
-                         startupStr,
-                         (GetWidth() / 2) - (dim.first / 2),
-                         (GetHeight() / 2) - (dim.second / 2),
-                         FONT_LARGE, false, 0.7);
+              if(ed != STRONGHOLD_CLASSIC)
+              {
+                font->SetAlphaMod(alpha);
+                RenderText(
+                           startupStr,
+                           (GetWidth() / 2) - (dim.first / 2),
+                           (GetHeight() / 2) - (dim.second / 2),
+                           FONT_LARGE, false, 0.7);
+              }
               break;
             case STARTUP_INTRO:
               font->SetAlphaMod(255);
