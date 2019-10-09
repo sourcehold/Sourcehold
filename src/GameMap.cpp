@@ -13,15 +13,17 @@
 
 using namespace Sourcehold::Game;
 
-#define DIM 160
-
-GameMap::GameMap()
+GameMap::GameMap(MapDimension type)
 {
+    static const int dimensions[] = { 160, 200, 300, 400 }; 
+    dim = dimensions[(int)type];
 }
 
 GameMap::GameMap(boost::filesystem::path path)
 {
+    // TODO //
     LoadFromDisk(path);
+    dim = 160;
 }
 
 GameMap::~GameMap()
@@ -35,7 +37,7 @@ void GameMap::LoadFromDisk(boost::filesystem::path path)
     gm1_tile = GetGm1("gm/tile_land8.gm1");
 
     tileset = gm1_tile->GetTileset();
-    tiles.resize(DIM * DIM);
+    tiles.resize(dim * dim);
 
     std::random_device dev;
     std::mt19937 rng(dev());
@@ -54,8 +56,8 @@ void GameMap::Render()
     for(uint32_t i = 0; i < tiles.size(); i++) {
         SDL_Rect clip = tiles[i];
 
-        int iy = i / DIM;
-        int ix = i % DIM;
+        int iy = i / dim;
+        int ix = i % dim;
 
         int y = (8 * iy);
         int x = (30 * ix) + (iy % 2 == 0 ? 15 : 0);

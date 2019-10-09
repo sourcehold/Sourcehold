@@ -27,11 +27,14 @@
 #include "Rendering/BinkVideo.h"
 #include "Rendering/Camera.h"
 
+#include "GUI/MenuUtils.h"
+
 using namespace Sourcehold;
 using namespace Game;
 using namespace Audio;
 using namespace System;
 using namespace Rendering;
+using namespace GUI;
 
 int _usernameIndex = -1;
 GameOptions _opt;
@@ -41,10 +44,10 @@ TexFile _tex;
 boost::filesystem::path _cfgPath;
 boost::filesystem::path _dataFolder;
 boost::filesystem::path _saveFolder;
-std::unordered_map<std::string, std::shared_ptr<TgxFile>> _tgxFiles;
-std::unordered_map<std::string, std::shared_ptr<Gm1File>> _gm1Files;
-std::unordered_map<std::string, std::shared_ptr<AniFile>> _aniFiles;
-std::unordered_map<std::string, std::shared_ptr<BinkVideo>> _bikFiles;
+std::unordered_map<std::string, std::weak_ptr<TgxFile>> _tgxFiles;
+std::unordered_map<std::string, std::weak_ptr<Gm1File>> _gm1Files;
+std::unordered_map<std::string, std::weak_ptr<AniFile>> _aniFiles;
+std::unordered_map<std::string, std::weak_ptr<BinkVideo>> _bikFiles;
 std::map<int, std::function<void(double)>> _tickFuncs;
 StrongholdEdition _edition;
 bool _running = false;
@@ -299,6 +302,7 @@ bool Game::LoadGameData()
     DetectEdition();
     DetectUsername();
 
+    InitMenuUtils();
     return true;
 }
 
@@ -436,20 +440,13 @@ CfgFile &Game::GetCfg()
 
 std::shared_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
 {
-    if(_tgxFiles.count(filename.string())) {
-        return _tgxFiles.at(filename.string());
-    }
-
-    auto iter = _tgxFiles.emplace(filename.string(), std::make_shared<TgxFile>(_dataFolder / filename));
-    return iter.first->second;
+    auto sp = _tgxFiles[filename.string()].lock();
+    if (!sp) _tgxFiles[filename.string()] = sp = std::make_shared<TgxFile>(_dataFolder / filename);
+    return sp;
 }
 
 std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
 {
-    if(_gm1Files.count(filename.string())) {
-        return _gm1Files.at(filename.string());
-    }
-
 #if 0
     /** TODO
      * Certain (large) gm1 files will be cached. The next time this function is called
@@ -478,26 +475,21 @@ std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
     }
 #endif
 
-    auto iter = _gm1Files.emplace(filename.string(), std::make_shared<Gm1File>(_dataFolder / filename, false));
-    return iter.first->second;
+    auto sp = _gm1Files[filename.string()].lock();
+    if (!sp) _gm1Files[filename.string()] = sp = std::make_shared<Gm1File>(_dataFolder / filename);
+    return sp;
 }
 
 std::shared_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
 {
-    if(_aniFiles.count(filename.string())) {
-        return _aniFiles.at(filename.string());
-    }
-
-    auto iter = _aniFiles.emplace(filename.string(), std::make_shared<AniFile>(_dataFolder / filename));
-    return iter.first->second;
+    auto sp = _aniFiles[filename.string()].lock();
+    if (!sp) _aniFiles[filename.string()] = sp = std::make_shared<AniFile>(_dataFolder / filename);
+    return sp;
 }
 
 std::shared_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
 {
-    if(_bikFiles.count(filename.string())) {
-        return _bikFiles.at(filename.string());
-    }
-
-    auto iter = _bikFiles.emplace(filename.string(), std::make_shared<BinkVideo>(_dataFolder / filename));
-    return iter.first->second;
+    auto sp = _bikFiles[filename.string()].lock();
+    if (!sp) _bikFiles[filename.string()] = sp = std::make_shared<BinkVideo>(_dataFolder / filename);
+    return sp;
 }

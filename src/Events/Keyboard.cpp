@@ -31,7 +31,7 @@ void Keyboard::eventCallback(SDL_Event &event)
 
     Event::SetHandled(true);
     type = ConvertTypes(event.type);
-    if(type == KEYBOARD_KEYDOWN || type == KEYBOARD_KEYUP || type == KEYBOARD_TEXTINPUT) {
+    if(type == KEYDOWN || type == KEYUP || type == TEXTINPUT) {
         Event::SetHandled(false);
     }
 }

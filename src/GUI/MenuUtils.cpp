@@ -18,11 +18,19 @@ using namespace Rendering;
 using namespace Game;
 using namespace GUI;
 
+std::shared_ptr<TextureAtlas> interface_icons;
+std::shared_ptr<TgxFile> tgx_border;
+
+void GUI::InitMenuUtils()
+{
+    interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
+    tgx_border = GetTgx("gfx/SH1_Back.tgx");
+}
+
 void GUI::RenderMenuText(const std::wstring &text)
 {
     if(text.empty()) return;
 
-    std::shared_ptr<TextureAtlas> interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     auto rect = interface_icons->Get(18);
     Render(*interface_icons, 312, 400, &rect);
     RenderText(text.substr(0,1), 317, 406, FONT_SMALL, true);
@@ -32,7 +40,6 @@ void GUI::RenderMenuText(const std::wstring &text)
 void GUI::RenderMenuBorder()
 {
     if(GetEdition() == STRONGHOLD_HD) {
-        std::shared_ptr<TgxFile> tgx_border = GetTgx("gfx/SH1_Back.tgx");;
         SDL_Rect border_rect;
 
         /**
@@ -62,9 +69,9 @@ bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, ui
         20, 23, 29, 32, 35, 38, 41, 44, 96,
     };
 
-    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(text, FONT_SMALL);
 
+    auto atlas = interface_icons;
     SDL_Rect rect = atlas->Get(button_indices[style]);;
 
     int mx = GetMouseX();
@@ -109,7 +116,7 @@ bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, ui
 
 void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
 {
-    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
+    auto atlas = interface_icons;
     SDL_Rect rect;
 
     // background
@@ -174,7 +181,7 @@ void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
 
 void DialogWindow::RenderDeco(Deco type, int x, int y)
 {
-    auto atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
+    auto atlas = interface_icons;
 
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
@@ -465,9 +472,9 @@ void DialogWindow::InitModCampaignTable(std::vector<ModCampaign> *campaigns)
 }
 
 void DialogWindow::onEventReceive(Mouse &event) {
-    if(event.GetType() == MOUSE_BUTTONDOWN) {
+    if(event.GetType() == BUTTONDOWN) {
         clicked = true;
-    }else if(event.GetType() == MOUSE_BUTTONUP) {
+    }else if(event.GetType() == BUTTONUP) {
         clicked = false;
     }
 }

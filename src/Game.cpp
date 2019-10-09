@@ -42,8 +42,9 @@ void Cleanup()
 int MainLoop(UIState state) {
     switch(state) {
     case MAIN_MENU: {
-        MainMenu menu;
-        state = menu.EnterMenu();
+        MainMenu *menu = new MainMenu();
+        state = menu->EnterMenu();
+        delete menu;
 
         MainLoop(state);
     } break;
@@ -144,17 +145,18 @@ int StartGame(GameOptions &opt)
         return EXIT_FAILURE;
     }
 
-    Startup start;
+    Startup *start = new Startup();
 
     int ret = EnterLoadingScreen();
     if (ret != EXIT_SUCCESS) return ret;
 
     UIState state = MAIN_MENU;
     if(!opt.skip) {
-        start.PlayMusic();
-        state = start.Begin();
+        start->PlayMusic();
+        state = start->Begin();
     }
-
+    
+    delete start;
     return MainLoop(state);
 }
 

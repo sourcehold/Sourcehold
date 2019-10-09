@@ -96,11 +96,11 @@ static int mouseX=0, mouseY=0;
 void StaticElement::onEventReceive(Mouse &event)
 {
     EventType type = event.GetType();
-    if(type == MOUSE_MOTION) {
+    if(type == MOTION) {
         mouseX = event.GetPosX();
         mouseY = event.GetPosY();
     }
-    else if(type == MOUSE_BUTTONDOWN) {
+    else if(type == BUTTONDOWN) {
         if(mouseOver && shown) clicked = true;
     }
 }

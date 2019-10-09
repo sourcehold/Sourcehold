@@ -107,7 +107,7 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring& text)
 void Table::onEventReceive(Mouse &mouse)
 {
     if(!rows.size() || highlight > numCols) return;
-    if(!rows[0].cols[highlight].empty() && mouse.type == MOUSE_BUTTONDOWN) {
+    if(!rows[0].cols[highlight].empty() && mouse.type == BUTTONDOWN) {
         selected = highlight;
     }
 }

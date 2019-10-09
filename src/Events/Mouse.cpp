@@ -70,10 +70,10 @@ void Mouse::eventCallback(SDL_Event &event)
     Event::SetHandled(true);
     type = ConvertTypes(event.type);
     if(
-        type == MOUSE_MOTION ||
-        type == MOUSE_BUTTONDOWN ||
-        type == MOUSE_BUTTONUP ||
-        type == MOUSE_WHEEL
+        type == MOTION ||
+        type == BUTTONDOWN ||
+        type == BUTTONUP ||
+        type == WHEEL
     ) {
         Event::SetHandled(false);
     }

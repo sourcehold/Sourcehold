@@ -93,7 +93,7 @@ bool NarrScreen::Begin()
 
 void NarrScreen::onEventReceive(Mouse &mouse)
 {
-    if (mouse.type == MOUSE_BUTTONDOWN) {
+    if (mouse.type == BUTTONDOWN) {
         skipped = true;
     }
 }

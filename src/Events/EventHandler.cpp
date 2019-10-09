@@ -24,13 +24,18 @@ bool Events::FetchEvents()
     return true;
 }
 
+static int _cb_counter = 0;
 int Events::AddEventListener(std::function<void(SDL_Event&)> fn)
 {
-    _callbacks[_callbacks.size()] = fn;
-    return _callbacks.size();
+    _cb_counter++;
+    _callbacks[_cb_counter] = fn;
+    return _cb_counter;
 }
 
 void Events::RemoveEventListener(int id)
 {
-    _callbacks.erase(id);
+    if (id) {
+        _cb_counter--;
+        _callbacks.erase(id);
+    }
 }

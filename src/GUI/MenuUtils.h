@@ -15,6 +15,8 @@ namespace Sourcehold {
         using namespace Events;
         using namespace System;
 
+        void InitMenuUtils();
+
         /**
          * Renders the given string to fit the main menu
          * rectangle.

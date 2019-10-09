@@ -59,7 +59,7 @@ void LineEdit::Render(int x, int y, int nx)
 
 void LineEdit::onEventReceive(Keyboard &event)
 {
-    if(event.type == KEYBOARD_KEYDOWN) {
+    if(event.type == KEYDOWN) {
         if(event.Key().sym == SDLK_BACKSPACE) {
             if(line.size() >= 1 && cp) {
                 line.erase(line.begin() + cp - 1);
@@ -74,7 +74,7 @@ void LineEdit::onEventReceive(Keyboard &event)
         }else if(event.Key().sym == SDLK_RIGHT) {
             if(cp < line.size()) cp++;
         }
-    }else if(event.type == KEYBOARD_TEXTINPUT && cp <= line.size()) {
+    }else if(event.type == TEXTINPUT && cp <= line.size()) {
         char c = event.Get().text.text[0];
         line.insert(line.begin() + cp, c);
         cp++;

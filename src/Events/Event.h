@@ -12,13 +12,13 @@ namespace Sourcehold {
     namespace Events {
         enum EventType {
             DUMMY,
-            KEYBOARD_KEYDOWN,
-            KEYBOARD_KEYUP,
-            KEYBOARD_TEXTINPUT,
-            MOUSE_MOTION,
-            MOUSE_BUTTONDOWN,
-            MOUSE_BUTTONUP,
-            MOUSE_WHEEL
+            KEYDOWN,
+            KEYUP,
+            TEXTINPUT,
+            MOTION,
+            BUTTONDOWN,
+            BUTTONUP,
+            WHEEL
         };
 
         /*
@@ -41,19 +41,19 @@ namespace Sourcehold {
             EventType ConvertTypes(Uint32 sdlcode) {
                 switch(sdlcode) {
                 case SDL_KEYDOWN:
-                    return KEYBOARD_KEYDOWN;
+                    return KEYDOWN;
                 case SDL_KEYUP:
-                    return KEYBOARD_KEYUP;
+                    return KEYUP;
                 case SDL_TEXTINPUT:
-                    return KEYBOARD_TEXTINPUT;
+                    return TEXTINPUT;
                 case SDL_MOUSEMOTION:
-                    return MOUSE_MOTION;
+                    return MOTION;
                 case SDL_MOUSEBUTTONDOWN:
-                    return MOUSE_BUTTONDOWN;
+                    return BUTTONDOWN;
                 case SDL_MOUSEBUTTONUP:
-                    return MOUSE_BUTTONUP;
+                    return BUTTONUP;
                 case SDL_MOUSEWHEEL:
-                    return MOUSE_WHEEL;
+                    return WHEEL;
                 default:
                     return DUMMY;
                 }
@@ -80,7 +80,7 @@ namespace Sourcehold {
                 std::function<void(SDL_Event&)> fn(std::bind(&EventConsumer::_callback, this, std::placeholders::_1));
                 id = AddEventListener(fn);
             }
-        protected:
+        private:
             void _callback(SDL_Event &ev) {
                 /* Forward event to implementation */
                 event.eventCallback(ev);
