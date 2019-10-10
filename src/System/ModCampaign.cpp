@@ -16,7 +16,7 @@ class JSONConfig
     duk_context *ctx{nullptr};
 public:
     JSONConfig(const boost::filesystem::path &path) {
-        ctx = duk_create_heap_default();
+        ctx = duk_create_heap(NULL, NULL, NULL, (void*)0xCAFEBABE, my_fatal);
         if(!ctx) {
             throw std::bad_alloc();
         }
@@ -63,6 +63,12 @@ public:
         if(ctx) duk_destroy_heap(ctx);
     }
 protected:
+    static void my_fatal(void* udata, const char* msg) {
+        (void)udata;
+
+        Logger::error(GAME) << "Duktape error: " << msg << std::endl;
+        abort();
+    }
 };
 
 void System::LoadModCampaigns(const boost::filesystem::path& base)
