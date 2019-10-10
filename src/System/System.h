@@ -31,7 +31,7 @@ namespace Sourcehold {
             bool nocache = false;
             bool skip = false;
             int color = -1;
-            Resolution resolution;
+            int width, height;
             uint16_t ndisp;
         };
     }

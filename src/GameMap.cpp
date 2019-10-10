@@ -51,7 +51,9 @@ void GameMap::LoadFromDisk(boost::filesystem::path path)
 
 void GameMap::Render()
 {
-    mult = GetZoomLevel() == ZOOM_NEAR ? 2 : 1;
+    Camera& cam = Camera::instance();
+
+    mult = cam.zoomLevel == ZOOM_NEAR ? 2 : 1;
 
     for(uint32_t i = 0; i < tiles.size(); i++) {
         SDL_Rect clip = tiles[i];
@@ -64,7 +66,7 @@ void GameMap::Render()
 
         Rendering::Render(
             *tileset,
-            int(mult * x - CamX()), int(mult * y - CamY()),
+            int(mult * x - cam.positionX), int(mult * y - cam.positionY),
             30*mult,
             16*mult,
             &clip

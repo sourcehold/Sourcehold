@@ -18,39 +18,38 @@ namespace Sourcehold {
             RIGHT
         };
 
-        /**
-         * Calculate the currently visible area
-         * in world coordinates.
-         */
-        SDL_Rect GetVisibleArea();
-        void SetBounds(SDL_Rect bounds);
+        class Camera {
+        public:
+            static Camera& instance() {
+                static Camera instance;
+                return instance;
+            }
 
-        /**
-         * Move the camera on a given axis, this will take
-         * the momentum into consideration
-         */
-        void MoveLeft();
-        void MoveRight();
-        void MoveUp();
-        void MoveDown();
+            void MoveLeft();
+            void MoveRight();
+            void MoveUp();
+            void MoveDown();
+            void Stop();
 
-        /**
-        * Update the camera position based on momentum and speed
-        */
-        void UpdateCamera();
+            void Update();
 
-        ZoomLevel GetZoomLevel();
-        Rotation GetRotation();
-        void ZoomOut();
-        void ZoomIn();
-        int32_t CamX();
-        int32_t CamY();
-        void SetCamX(int32_t pos);
-        void SetCamY(int32_t pos);
-        void ResetMomentum();
-        void SetCamPos(int32_t x, int32_t y);
-        void TranslateCam(int32_t x, int32_t y);
-        int32_t CamStepX();
-        int32_t CamStepY();
+            void ZoomOut();
+            void ZoomIn();
+
+            void SetPos(int x, int y);
+            void TranslateCam(int x, int y);
+
+            void SetBounds(SDL_Rect bounds);
+        public:
+            Rotation rotation = UP;
+            ZoomLevel zoomLevel = ZOOM_FAR;
+            int positionX = 0, positionY = 0;
+            float accX = 0.0f, accY = 0.0f;
+            float velX = 0.0f, velY = 0.0f;
+            double start = 0.0;
+        protected:
+            const uint8_t zoomStep = 2;
+            SDL_Rect bounds;
+        };
     }
 }

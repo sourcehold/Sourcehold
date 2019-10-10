@@ -24,7 +24,10 @@ std::shared_ptr<TgxFile> tgx_border;
 void GUI::InitMenuUtils()
 {
     interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
-    tgx_border = GetTgx("gfx/SH1_Back.tgx");
+    
+    if (GetEdition() == STRONGHOLD_HD) {
+        tgx_border = GetTgx("gfx/SH1_Back.tgx");
+    }
 }
 
 void GUI::RenderMenuText(const std::wstring &text)

@@ -19,8 +19,8 @@ World::World() :
 {
     LoadMenuAssets();
 
-    SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 - 8});
-    SetCamPos(15, 8);
+    Camera& cam = Camera::instance();
+    cam.SetPos(15, 8);
 }
 
 World::~World()
@@ -48,14 +48,19 @@ UIState World::Play()
 
 void World::UpdateCamera()
 {
-    if(scroll.left) MoveLeft();
-    if(scroll.right) MoveRight();
-    if(scroll.up) MoveUp();
-    if(scroll.down) MoveDown();
+    Camera& cam = Camera::instance();
+    cam.SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 + GetMenubarHeight() }); // TODO
+
+    if(scroll.left) cam.MoveLeft();
+    if(scroll.right)cam.MoveRight();
+    if(scroll.up)   cam.MoveUp();
+    if(scroll.down) cam.MoveDown();
 }
 
 void World::onEventReceive(Keyboard &keyEvent)
 {
+    Camera& cam = Camera::instance();
+
     if(keyEvent.GetType() == KEYDOWN) {
         switch(keyEvent.Key().sym) {
         case SDLK_LEFT:
@@ -75,8 +80,8 @@ void World::onEventReceive(Keyboard &keyEvent)
             scroll.down.setByKeyboard = true;
             break;
         case SDLK_SPACE:
-            if(GetZoomLevel() == ZOOM_NEAR) ZoomOut();
-            else ZoomIn();
+            if(cam.zoomLevel == ZOOM_NEAR) cam.ZoomOut();
+            else cam.ZoomIn();
             break;
         default:
             break;
@@ -104,7 +109,7 @@ void World::onEventReceive(Keyboard &keyEvent)
             break;
         }
 
-        ResetMomentum();
+        cam.Stop();
     }
 }
 
@@ -159,7 +164,7 @@ void World::onEventReceive(Mouse &mouseEvent)
         }
 
         if(shouldReset) {
-            ResetMomentum();
+            Camera::instance().Stop();
         }
     }
 }
