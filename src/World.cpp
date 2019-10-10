@@ -14,11 +14,8 @@ using namespace Sourcehold::GUI;
 World::World() :
     GameMap(WORLD_160), // TODO
     EventConsumer<Keyboard>(),
-    EventConsumer<Mouse>(),
-    IngameGUI()
+    EventConsumer<Mouse>()
 {
-    LoadMenuAssets();
-
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }
@@ -35,7 +32,7 @@ UIState World::Play()
         UpdateCamera();
 
         GameMap::Render();
-        if (!IngameGUI::Render()) break;
+        if (!gui.Render()) break;
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
 
@@ -49,7 +46,7 @@ UIState World::Play()
 void World::UpdateCamera()
 {
     Camera& cam = Camera::instance();
-    cam.SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 + GetMenubarHeight() }); // TODO
+    cam.SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 + gui.GetMenubarHeight() }); // TODO
 
     if(scroll.left) cam.MoveLeft();
     if(scroll.right)cam.MoveRight();

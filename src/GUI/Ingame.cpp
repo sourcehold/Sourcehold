@@ -8,9 +8,7 @@ IngameGUI::IngameGUI() :
     EventConsumer<Mouse>(),
     escMenu(DialogType::ESC_MENU)
 {
-    gm1_scribe = GetGm1("gm/scribe.gm1");
-    gm1_icons = GetGm1("gm/interface_buttons.gm1");
-    gm1_floats = GetGm1("gm/floats.gm1");
+    LoadMenuAssets();
 
     /* Init the buttons */
     auto atlas = gm1_floats->GetTextureAtlas();
@@ -91,6 +89,9 @@ void IngameGUI::LoadMenuAssets()
     }    
 
     gm1_face = GetGm1("gm/face800-blank.gm1");
+    gm1_scribe = GetGm1("gm/scribe.gm1");
+    gm1_icons = GetGm1("gm/interface_buttons.gm1");
+    gm1_floats = GetGm1("gm/floats.gm1");
 }
 
 void IngameGUI::RenderQuickMenu()

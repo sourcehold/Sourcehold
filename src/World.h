@@ -50,10 +50,10 @@ namespace Sourcehold {
         class World : 
             public GameMap,
             private EventConsumer<Keyboard>,
-            private EventConsumer<Mouse>,
-            private IngameGUI
+            private EventConsumer<Mouse>
         {
             ScrollInformation scroll;
+            IngameGUI gui;
         public:
             World();
             World(const World&) = delete;
