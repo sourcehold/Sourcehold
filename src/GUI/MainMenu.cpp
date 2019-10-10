@@ -94,10 +94,8 @@ MainMenu::MainMenu()
     mx = (GetWidth() - 1024) / 2;
     my = (GetHeight() - 768) / 2;
 
-    if (edition == STRONGHOLD_HD) {
-        screen.AllocNewTarget(1024, 768);
-        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
-    }
+    screen.AllocNewTarget(1024, 768);
+    SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
 
     bool success = true;
     success &= aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
@@ -164,10 +162,8 @@ UIState MainMenu::EnterMenu()
     while (Running()) {
         ClearDisplay();
 
-        if(edition == STRONGHOLD_HD) {
-            RenderMenuBorder();
-            SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
-        }
+        RenderMenuBorder();
+        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 }); // TODO: scale for classic edition?
 
         /* Render the current menu on top of the background */
         HideAll();
@@ -305,9 +301,7 @@ UIState MainMenu::EnterMenu()
         RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
         ResetTarget();
 
-        if(edition == STRONGHOLD_HD) {
-            Render(screen, mx, my);
-        }
+        Render(screen, mx, my);
 
         //aud_greetings.Update();
 
