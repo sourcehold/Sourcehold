@@ -50,6 +50,7 @@ std::unordered_map<std::string, std::weak_ptr<AniFile>> _aniFiles;
 std::unordered_map<std::string, std::weak_ptr<BinkVideo>> _bikFiles;
 std::map<int, std::function<void(double)>> _tickFuncs;
 StrongholdEdition _edition;
+Resolution _resolution;
 bool _running = false;
 double _time = 0.0;
 
@@ -69,9 +70,11 @@ void DetectEdition()
 
     if (DoesFileExist(_dataFolder / "gfx/SH1_Back.tgx")) {
         _edition = STRONGHOLD_HD;
+        Logger::message(GAME) << "Detected edition: Stronghold HD" << std::endl;
     }
     else {
         _edition = STRONGHOLD_CLASSIC;
+        Logger::message(GAME) << "Detected edition: Stronghold (2001)" << std::endl;
     }
 }
 
@@ -127,7 +130,7 @@ void UpdateGame()
         e.second(_time);
     }
 
-    UpdateCamera();
+    Camera::instance().Update();
     UpdateRenderer();
 }
 
@@ -170,48 +173,17 @@ AssetType ExtToType(const std::string &ext)
     }
 
     return type;
-
 }
 
-std::pair<int, int> ResolutionToDim(Resolution res)
-{
-    static const int resolutions[][2] = {
-        { 800, 600 },
-        { 1024, 768 },
-        { 1280, 720 },
-        { 1280, 1024 },
-        { 1366, 768 },
-        { 1440, 900 },
-        { 1600, 900 },
-        { 1600, 1200 },
-        { 1680, 1050 },
-        { 1920, 1080 }
-    };
-
-    int rx = resolutions[res][0];
-    int ry = resolutions[res][1];
-
-    return std::pair<int, int>(rx, ry);
-}
-
-bool Game::InitManager(GameOptions &opt)
+bool Game::InitManager(GameOptions &opt, Resolution res)
 {
     _opt = opt;
-
-#if SOURCEHOLD_UNIX == 1
-    Logger::SetColorOutput(true);
-#else
-    Logger::SetColorOutput(false);
-#endif
-
-    if(_opt.color >= 0) Logger::SetColorOutput(_opt.color == 1);
-
-    auto dim = ResolutionToDim(_opt.resolution);
+    _resolution = res;
 
     InitDisplay(
         "Sourcehold version " SOURCEHOLD_VERSION_STRING " - " SOURCEHOLD_BUILD,
-        dim.first,
-        dim.second,
+        opt.width,
+        opt.height,
         _opt.ndisp,
         _opt.fullscreen,
         _opt.noborder,
@@ -226,7 +198,6 @@ bool Game::InitManager(GameOptions &opt)
     }
 
     _running = true;
-
     return true;
 }
 
@@ -425,7 +396,7 @@ StrongholdEdition Game::GetEdition()
 
 Resolution Game::GetResolution()
 {
-    return _opt.resolution;
+    return _resolution;
 }
 
 int Game::GetUsernameIndex()

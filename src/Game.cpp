@@ -23,13 +23,14 @@
 #include "GUI/NarrScreen.h"
 #include "GUI/MainMenu.h"
 
-using namespace Sourcehold::Game;
-using namespace Sourcehold::Audio;
-using namespace Sourcehold::System;
-using namespace Sourcehold::Assets;
-using namespace Sourcehold::Parsers;
-using namespace Sourcehold::Rendering;
-using namespace Sourcehold::GUI;
+using namespace Sourcehold;
+using namespace Game;
+using namespace Audio;
+using namespace System;
+using namespace Assets;
+using namespace Parsers;
+using namespace Rendering;
+using namespace GUI;
 
 void Cleanup()
 {
@@ -51,16 +52,17 @@ int MainLoop(UIState state) {
     case MILITARY_CAMPAIGN_MISSION: {
         int index = 0; // todo
 
-        NarrScreen narr(index + 1);
-        narr.Begin();
+        NarrScreen *narr = new NarrScreen(index + 1);
+        narr->Begin();
+        delete narr;
 
         // TODO
         Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
         music.Play();
 
-        World world;
-        world.LoadFromDisk(GetDirectory() / "maps/mission1.map");
-        state = world.Play();
+        World *world = new World();
+        world->LoadFromDisk(GetDirectory() / "maps/mission1.map");
+        state = world->Play();
 
         music.Stop();
 
@@ -128,10 +130,53 @@ int EnterLoadingScreen()
     return Running() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-int StartGame(GameOptions &opt)
+static const int resolutions[][2] = {
+    { 800, 600 },
+    { 1024, 768 },
+    { 1280, 720 },
+    { 1280, 1024 },
+    { 1366, 768 },
+    { 1440, 900 },
+    { 1600, 900 },
+    { 1600, 1200 },
+    { 1680, 1050 },
+    { 1920, 1080 }
+};
+
+int StartGame(GameOptions& opt)
 {
-    if(!InitManager(opt) || !LoadGameData()) {
-        Logger::error(GAME) << "Error while initializing game!" << std::endl;
+    // Init logger //
+#if SOURCEHOLD_UNIX == 1
+    Logger::SetColorOutput(true);
+#else
+    Logger::SetColorOutput(false);
+#endif
+
+    if (opt.color >= 0) Logger::SetColorOutput(opt.color == 1);
+
+    // Convert resolution //
+    Resolution res;
+    bool found = false;
+    for (int i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
+        int w = resolutions[i][0];
+        int h = resolutions[i][1];
+
+        if (w == opt.width && h == opt.height) {
+            res = static_cast<Resolution>(i);
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        opt.width = 800; opt.height = 600;
+        res = RESOLUTION_800x600;
+    }
+
+    // Init game //
+    Logger::message(GAME) << "Starting version " SOURCEHOLD_VERSION_STRING " (" SOURCEHOLD_BUILD ")" << std::endl;
+
+    if(!InitManager(opt, res) || !LoadGameData()) {
         ErrorMessageBox(
             "Here's a Nickel, kid. Go buy yourself a real Stronghold",
             std::string("Please make sure the data directory contains all necessary files.\n") +
@@ -144,6 +189,8 @@ int StartGame(GameOptions &opt)
         Logger::error(GAME) << "Error while loading fonts!" << std::endl;
         return EXIT_FAILURE;
     }
+
+    Logger::message(GAME) << "Done" << std::endl;
 
     Startup *start = new Startup();
 
@@ -188,7 +235,8 @@ int main(int argc, char **argv)
             ("debug", po::bool_switch(&opt.debug)->default_value(false), "Print debug info")
             ("color,c", po::bool_switch()->default_value(false), "Force color output")
             ("fullscreen,f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
-            ("resolution,r", po::value<int>()->default_value(1), "Resolution of the window")
+            ("resolution,r", po::value<std::string>()->default_value("1280x720"), "Resolution of the window")
+            ("resolutions", po::bool_switch()->default_value(false), "List available resolutions and exit")
             ("disp,d", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
             ("skip,s", po::bool_switch(&opt.skip)->default_value(false), "Skip directly to the main menu")
             ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
@@ -222,12 +270,28 @@ int main(int argc, char **argv)
             return EXIT_SUCCESS;
         }
 
+        if (result["resolutions"].as<bool>()) {
+            for (int i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
+                std::cout << resolutions[i][0] << "x" << resolutions[i][1] << std::endl;
+            }
+            return EXIT_SUCCESS;
+        }
+
         if (result.count("color") > 0) opt.color = result["color"].as<bool>();
         else opt.color = -1;
 
-        opt.resolution = (Resolution)result["resolution"].as<int>();
-
         boost::erase_all(opt.dataDir, "\""); // can sometimes appear when there's extra "" in the .ini
+
+        std::vector<std::string> res;
+        boost::split(res, result["resolution"].as<std::string>(), [](char c){return c=='x';});
+
+        if (res.size() != 2) {
+            // fallback
+            opt.width = 800; opt.height = 600;
+        }
+        else {
+            opt.width = std::stoi(res[0]); opt.height = std::stoi(res[1]);
+        }
 
         return StartGame(opt);
     }

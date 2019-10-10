@@ -40,7 +40,7 @@ namespace Sourcehold {
         using namespace Assets;
         using namespace Rendering;
 
-        bool InitManager(GameOptions &opt);
+        bool InitManager(GameOptions &opt, Resolution res);
         void DestroyManager();
 
         /**
