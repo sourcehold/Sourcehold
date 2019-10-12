@@ -121,7 +121,6 @@ void UpdateGame()
 {
     if(!IsDisplayOpen() || !FetchEvents()) _running = false;
 
-    Camera::instance().Update();
     UpdateRenderer();
 }
 

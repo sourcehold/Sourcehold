@@ -41,7 +41,7 @@ namespace Sourcehold {
             ~GameMap();
 
             void LoadFromDisk(boost::filesystem::path path);
-            void Render();
+            void Render();            
         protected:
         };
     }

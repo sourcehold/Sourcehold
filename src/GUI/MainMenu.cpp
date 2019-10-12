@@ -317,7 +317,8 @@ UIState MainMenu::EnterMenu()
         }
 
         FlushDisplay();
-        SyncDisplay();
+
+        SDL_Delay(1);
     }
 
     aud_chantloop.Stop();

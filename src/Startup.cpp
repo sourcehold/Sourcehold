@@ -160,7 +160,7 @@ UIState Startup::Begin()
         }
 
         FlushDisplay();
-        SyncDisplay();
+        SDL_Delay(1);
     }
     return EXIT_GAME;
 }

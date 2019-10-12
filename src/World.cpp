@@ -2,10 +2,8 @@
 #include "World.h"
 
 #include "Parsers/TgxFile.h"
-#include "Parsers/Gm1File.h"
 
 #include "Rendering/Font.h"
-#include "Rendering/Camera.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
@@ -34,13 +32,19 @@ UIState World::Play()
 
         while(frame > 0.0) {
             double delta = std::min(frame, 1.0 / 60.0);
+            UpdateCamera(frame);
+            for (Unit* unit : units) unit->Update(frame);
             frame -= delta;
-            UpdateCamera();
         }
 
         ClearDisplay();
 
         GameMap::Render();
+
+        for (Unit *unit : units) {
+            unit->Render();
+        }
+
         if (!gui.Render()) break;
 
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
@@ -48,18 +52,24 @@ UIState World::Play()
         FlushDisplay();
     }
 
+    for (Unit *unit : units) {
+        delete unit;
+    }
+
     return EXIT_GAME;
 }
 
-void World::UpdateCamera()
+void World::UpdateCamera(double dt)
 {
     Camera& cam = Camera::instance();
-    cam.SetBounds({ 15, 8, 160 * 30 - 15, 90 * 16 + gui.GetMenubarHeight() }); // TODO
+    cam.SetBounds({ 15, 8, 160 * 30 - 15, 87 * 16 }); // TODO
 
     if(scroll.left) cam.MoveLeft();
     if(scroll.right)cam.MoveRight();
     if(scroll.up)   cam.MoveUp();
     if(scroll.down) cam.MoveDown();
+
+    cam.Update(dt);
 }
 
 void World::onEventReceive(Keyboard &keyEvent)
@@ -120,6 +130,8 @@ void World::onEventReceive(Keyboard &keyEvent)
 
 void World::onEventReceive(Mouse &mouseEvent)
 {
+    Camera& cam = Camera::instance();
+
     if(mouseEvent.GetType() == MOTION) {
         const int scrollThreshold = 2;
 
@@ -169,11 +181,13 @@ void World::onEventReceive(Mouse &mouseEvent)
         }
 
         if(shouldReset) {
-            Camera::instance().Stop();
+            cam.Stop();
         }
     }
     else if (mouseEvent.GetType() == BUTTONDOWN) {
-        int x = mouseEvent.GetPosX() / 30;
-        int y = mouseEvent.GetPosY() / 15;
+        int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
+        int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
+
+        Spawn<Oak>(x, y);
     }
 }

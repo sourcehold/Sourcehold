@@ -10,7 +10,6 @@ namespace Sourcehold {
         bool InitDisplay(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false);
         void DestroyDisplay();
         void ToggleFullscreen();
-        void SyncDisplay();
         void GrabMouse();
         void ReleaseMouse();
         bool IsDisplayOpen();

@@ -8,7 +8,10 @@
 #include "GUI/UIState.h"
 #include "GUI/Ingame.h"
 
+#include "Parsers/Gm1File.h"
+
 #include "Rendering/Texture.h"
+#include "Rendering/Camera.h"
 
 #include "Events/Event.h"
 #include "Events/Keyboard.h"
@@ -41,6 +44,45 @@ namespace Sourcehold {
         using namespace Parsers;
         using namespace Events;
 
+        // Just testing. Nothing to see here, move along! //
+        class Unit {
+        public:
+            Unit(int x, int y, const char *f) : x(x), y(y) {
+                file = GetGm1(std::string("gm/") + f + std::string(".gm1"));
+            }
+
+            virtual void Update(double dt) = 0;
+
+            void Render() {
+                Camera& cam = Camera::instance();
+
+                int px = x * 30 - cam.positionX;
+                int py = y * 15 - cam.positionY;
+
+                SDL_Rect r = file->GetTextureAtlas()->Get(index);
+                Rendering::Render(*file->GetTextureAtlas(), px, py, &r);
+            }
+        protected:
+            int x, y, index=0;
+            std::shared_ptr<Gm1File> file;
+        };
+
+        class Lord : Unit {
+        public:
+            Lord(int x, int y) : Unit(x, y, "body_lord")
+            {}
+        };
+
+        class Oak : Unit {
+        public:
+            Oak(int x, int y) : Unit(x, y, "tree_oak")
+            {}
+
+            void Update(double dt) {
+                index = (24 - abs(int(GetTime() * 15.0f) % (2 * 24) - 24));
+            }
+        };
+
         /**
          * Handles everything related to the game world, including
          * loading, rendering and moving the camera
@@ -54,6 +96,7 @@ namespace Sourcehold {
         {
             ScrollInformation scroll;
             IngameGUI gui;
+            std::vector<Unit*> units;
         public:
             World();
             World(const World&) = delete;
@@ -61,7 +104,12 @@ namespace Sourcehold {
 
             UIState Play();
         protected:
-            void UpdateCamera();
+            void UpdateCamera(double dt);
+
+            template<class T>
+            void Spawn(int x, int y) {
+                units.push_back((Unit*)new T( x, y ));
+            }
         private:
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;

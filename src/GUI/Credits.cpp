@@ -120,7 +120,6 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
         // TODO: Rest of credits, colored titles
 
         FlushDisplay();
-        SyncDisplay();
     }
 
     MouseOn();

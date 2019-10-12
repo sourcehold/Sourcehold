@@ -1,16 +1,12 @@
-#include <chrono>
-#include <thread>
-
 #include "Rendering/Display.h"
 #include "System/Logger.h"
 
 using namespace Sourcehold;
 using namespace System;
 
-static SDL_Window *_window;
-static bool _fullscreen, _nograb;
-static int _width, _height;
-static std::chrono::high_resolution_clock::time_point tp;
+SDL_Window *_window;
+bool _fullscreen, _nograb;
+int _width, _height;
 
 static int ResizeEventWatcher(void *data, SDL_Event *event)
 {
@@ -92,17 +88,6 @@ void Rendering::ToggleFullscreen()
         Logger::error(RENDERING)  << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
     }
     _fullscreen = !_fullscreen;
-}
-
-void Rendering::SyncDisplay()
-{
-    std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-
-    Uint64 delta = std::chrono::duration_cast<std::chrono::nanoseconds>(now - tp).count();
-
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(10)
-    );
 }
 
 void Rendering::GrabMouse()

@@ -138,7 +138,6 @@ bool NarrScreen::BeginAct(TextSection text)
         RenderText(str, px, py, FONT_LARGE, false);
 
         FlushDisplay();
-        SyncDisplay();
     }
 
     font->SetAlphaMod(255);
@@ -183,7 +182,6 @@ bool NarrScreen::BeginNarration()
         RenderFlameAnim(px, py, index, alpha);
 
         FlushDisplay();
-        SyncDisplay();
     }
 
     return Running();
@@ -220,7 +218,6 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg)
         }
 
         FlushDisplay();
-        SyncDisplay();
     }
     return Running();
 }
