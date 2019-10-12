@@ -11,22 +11,22 @@ using namespace Game;
 
 void Camera::MoveLeft()
 {
-    accX -= 1.0f;
+    accX = std::max(accX - 1.0, -10.0);
 }
 
 void Camera::MoveRight()
 {
-    accX += 1.0f;
+    accX = std::min(accX + 1.0, 10.0);
 }
 
 void Camera::MoveUp()
 {
-    accY -= 1.0f;
+    accY = std::max(accY - 1.0, -10.0);
 }
 
 void Camera::MoveDown()
 {
-    accY += 1.0f;
+    accY = std::min(accY + 1.0, 10.0);
 }
 
 void Camera::Stop()
@@ -34,10 +34,11 @@ void Camera::Stop()
     accX = accY = 0.0f;
 }
 
-void Camera::Update()
+void Camera::Update(double dt)
 {
-    // TODO
-    
+    positionX += 100.0 * dt * accX;
+    positionY += 100.0 * dt * accY;
+
     positionX = std::max(bounds.x, positionX);
     positionY = std::max(bounds.y, positionY);
 

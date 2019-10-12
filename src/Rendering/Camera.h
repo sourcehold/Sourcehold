@@ -31,7 +31,7 @@ namespace Sourcehold {
             void MoveDown();
             void Stop();
 
-            void Update();
+            void Update(double dt);
 
             void ZoomOut();
             void ZoomIn();
@@ -45,7 +45,6 @@ namespace Sourcehold {
             ZoomLevel zoomLevel = ZOOM_FAR;
             int positionX = 0, positionY = 0;
             float accX = 0.0f, accY = 0.0f;
-            float velX = 0.0f, velY = 0.0f;
             double start = 0.0;
         protected:
             const uint8_t zoomStep = 2;
