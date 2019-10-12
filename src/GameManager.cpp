@@ -1,7 +1,7 @@
-
 #include <SDL.h>
 #include <cstring>
 #include <cwchar>
+#include <chrono>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
@@ -48,11 +48,9 @@ std::unordered_map<std::string, std::weak_ptr<TgxFile>> _tgxFiles;
 std::unordered_map<std::string, std::weak_ptr<Gm1File>> _gm1Files;
 std::unordered_map<std::string, std::weak_ptr<AniFile>> _aniFiles;
 std::unordered_map<std::string, std::weak_ptr<BinkVideo>> _bikFiles;
-std::map<int, std::function<void(double)>> _tickFuncs;
 StrongholdEdition _edition;
 Resolution _resolution;
 bool _running = false;
-double _time = 0.0;
 
 bool IsAssetCached(boost::filesystem::path path)
 {
@@ -122,13 +120,6 @@ void DetectUsername()
 void UpdateGame()
 {
     if(!IsDisplayOpen() || !FetchEvents()) _running = false;
-
-    /* TODO: accuracy */
-    _time = SDL_GetTicks() / 1000.0;
-
-    for(const auto & e : _tickFuncs) {
-        e.second(_time);
-    }
 
     Camera::instance().Update();
     UpdateRenderer();
@@ -367,21 +358,9 @@ std::wstring Game::GetString(TextSection sec, uint16_t index)
     return str;
 }
 
-int Game::RegisterFrameTick(std::function<void(double)> tick_fn)
-{
-    int ID = _tickFuncs.size();
-    _tickFuncs.insert(std::make_pair(ID, tick_fn));
-    return ID;
-}
-
-void Game::DeregisterFrameTick(int ID)
-{
-    _tickFuncs.erase(ID);
-}
-
 double Game::GetTime()
 {
-    return _time;
+    return SDL_GetTicks() / 1000.0f;
 }
 
 boost::filesystem::path Game::GetDirectory()

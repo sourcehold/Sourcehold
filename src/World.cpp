@@ -1,5 +1,4 @@
 #include "Building.h"
-#include "Entity.h"
 #include "World.h"
 
 #include "Parsers/TgxFile.h"
@@ -26,10 +25,20 @@ World::~World()
 
 UIState World::Play()
 {
+    double previous = GetTime();
     while(Running()) {
-        ClearDisplay();
+        // Timing is good enough for now (TODO obviously) //
+        double now = GetTime();
+        double frame = now - previous;
+        previous = now;
 
-        UpdateCamera();
+        while(frame > 0.0) {
+            double delta = std::min(frame, 1.0 / 60.0);
+            frame -= delta;
+            UpdateCamera();
+        }
+
+        ClearDisplay();
 
         GameMap::Render();
         if (!gui.Render()) break;
@@ -37,7 +46,6 @@ UIState World::Play()
         RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1, FONT_SMALL);
 
         FlushDisplay();
-        SyncDisplay();
     }
 
     return EXIT_GAME;
@@ -163,5 +171,9 @@ void World::onEventReceive(Mouse &mouseEvent)
         if(shouldReset) {
             Camera::instance().Stop();
         }
+    }
+    else if (mouseEvent.GetType() == BUTTONDOWN) {
+        int x = mouseEvent.GetPosX() / 30;
+        int y = mouseEvent.GetPosY() / 15;
     }
 }

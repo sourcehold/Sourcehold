@@ -3,6 +3,7 @@
 #include <memory>
 #include <utility>
 #include <map>
+#include <algorithm>
 #include <unordered_map>
 #include <functional>
 #include <boost/filesystem.hpp>
@@ -91,15 +92,6 @@ namespace Sourcehold {
          */
         std::wstring GetDescription(MissionDescription index);
         std::wstring GetString(TextSection sec, uint16_t index);
-
-        /**
-         * Register a function which will tick every frame
-         * Passes the time in seconds
-         * Returns function ID
-         * TODO: replace ID with smart ptr to avoid crashes
-         */
-        int RegisterFrameTick(std::function<void(double)> tick_fn);
-        void DeregisterFrameTick(int ID);
 
         double GetTime();
         boost::filesystem::path GetDirectory();

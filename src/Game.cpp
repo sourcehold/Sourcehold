@@ -124,7 +124,8 @@ int EnterLoadingScreen()
         RenderRect(Rect<int>{ px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25 }, 0, 0, 0, 255, true);
 
         FlushDisplay();
-        SyncDisplay();
+
+        SDL_Delay(1);
     }
 
     return Running() ? EXIT_SUCCESS : EXIT_FAILURE;
