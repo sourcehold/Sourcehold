@@ -59,6 +59,7 @@ set_target_properties(Stronghold PROPERTIES
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
+target_compile_features(Stronghold PRIVATE cxx_std_17)
 
 target_link_libraries(
 	Stronghold
