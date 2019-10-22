@@ -13,7 +13,7 @@ TgxFile::TgxFile()
 {
 }
 
-TgxFile::TgxFile(std::filesystem::path path)
+TgxFile::TgxFile(ghc::filesystem::path path)
 {
     this->LoadFromDisk(path);
 }
@@ -23,7 +23,7 @@ TgxFile::~TgxFile()
     Unload();
 }
 
-bool TgxFile::LoadFromDisk(std::filesystem::path path)
+bool TgxFile::LoadFromDisk(ghc::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open Tgx file '" << path << "'!" << std::endl;

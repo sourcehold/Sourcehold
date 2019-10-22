@@ -17,7 +17,7 @@ extern "C" {
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 namespace Sourcehold {
     namespace Rendering {
@@ -48,10 +48,10 @@ namespace Sourcehold {
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
             BinkVideo();
-            BinkVideo(std::filesystem::path path, bool looping = false);
+            BinkVideo(ghc::filesystem::path path, bool looping = false);
             ~BinkVideo();
 
-            bool LoadFromDisk(std::filesystem::path path, bool looping = false);
+            bool LoadFromDisk(ghc::filesystem::path path, bool looping = false);
             void Close();
             void Update();
 

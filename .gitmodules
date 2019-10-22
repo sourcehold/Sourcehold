@@ -1,3 +1,6 @@
 [submodule "thirdparty/cxxopts"]
 	path = thirdparty/cxxopts
 	url = https://github.com/jarro2783/cxxopts
+[submodule "thirdparty/filesystem"]
+	path = thirdparty/filesystem
+	url = https://github.com/gulrak/filesystem

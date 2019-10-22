@@ -13,7 +13,7 @@ VolumeTxt::~VolumeTxt()
 
 }
 
-bool VolumeTxt::LoadFromDisk(std::filesystem::path path)
+bool VolumeTxt::LoadFromDisk(ghc::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open volume file '" << path.string() << "'!" << std::endl;

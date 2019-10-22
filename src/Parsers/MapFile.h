@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cinttypes>
-#include <filesystem>
+#include "System/filesystem.h"
 
 #include "Parsers/Parser.h"
 
@@ -16,11 +16,11 @@ namespace Sourcehold {
             Texture preview;
         public:
             MapFile();
-            MapFile(std::filesystem::path path);
+            MapFile(ghc::filesystem::path path);
             MapFile(const MapFile&) = delete;
             ~MapFile();
 
-            bool LoadFromDisk(std::filesystem::path path);
+            bool LoadFromDisk(ghc::filesystem::path path);
 
             inline Texture& GetPreview() { return preview; }
         protected:

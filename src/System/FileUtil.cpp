@@ -11,49 +11,49 @@
 #include <shlobj.h>
 #endif
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 using namespace Sourcehold;
 using namespace System;
 
-std::string System::GetFileExtension(std::filesystem::path path)
+std::string System::GetFileExtension(ghc::filesystem::path path)
 {
     return path.extension().string();
 }
 
-std::string System::GetFileStem(std::filesystem::path path)
+std::string System::GetFileStem(ghc::filesystem::path path)
 {
     return path.stem().string();
 }
 
-std::string System::GetFilename(std::filesystem::path path)
+std::string System::GetFilename(ghc::filesystem::path path)
 {
     return path.filename().string();
 }
 
-bool System::IsFileHidden(std::filesystem::path path)
+bool System::IsFileHidden(ghc::filesystem::path path)
 {
     std::string name = path.filename().string();
     if(name[0] == '.') return true;
     return false;
 }
 
-bool System::IsFolder(std::filesystem::path path)
+bool System::IsFolder(ghc::filesystem::path path)
 {
-    return std::filesystem::is_directory(path);
+    return ghc::filesystem::is_directory(path);
 }
 
-bool System::DoesFileExist(std::filesystem::path path)
+bool System::DoesFileExist(ghc::filesystem::path path)
 {
-    return std::filesystem::exists(path);
+    return ghc::filesystem::exists(path);
 }
 
-void System::CreateFolder(std::filesystem::path path)
+void System::CreateFolder(ghc::filesystem::path path)
 {
-    std::filesystem::create_directories(path);
+    ghc::filesystem::create_directories(path);
 }
 
-std::filesystem::path System::GetDocumentsPath()
+ghc::filesystem::path System::GetDocumentsPath()
 {
     char path[512];
 
@@ -102,29 +102,29 @@ std::filesystem::path System::GetDocumentsPath()
     SHGetPathFromIDList(pidl, path);
 #endif
 
-    return std::filesystem::path(path);
+    return ghc::filesystem::path(path);
 }
 
-std::vector<std::filesystem::path> System::GetDirectoryRecursive(std::filesystem::path path, const std::string &extension, bool recursive, bool includeFolders)
+std::vector<ghc::filesystem::path> System::GetDirectoryRecursive(ghc::filesystem::path path, const std::string &extension, bool recursive, bool includeFolders)
 {
-    std::vector<std::filesystem::path> files;
-    if(std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
+    std::vector<ghc::filesystem::path> files;
+    if(ghc::filesystem::exists(path) && ghc::filesystem::is_directory(path)) {
         if(recursive) {
-            std::filesystem::recursive_directory_iterator it(path);
-            std::filesystem::recursive_directory_iterator endit;
+            ghc::filesystem::recursive_directory_iterator it(path);
+            ghc::filesystem::recursive_directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(std::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
+                    if(ghc::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
                 }
                 ++it;
             }
         }
         else {
-            std::filesystem::directory_iterator it(path);
-            std::filesystem::directory_iterator endit;
+            ghc::filesystem::directory_iterator it(path);
+            ghc::filesystem::directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(std::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
+                    if(ghc::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
                 }
                 ++it;
             }

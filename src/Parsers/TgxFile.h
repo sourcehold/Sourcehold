@@ -13,7 +13,7 @@
 #include "Rendering/Texture.h"
 #include "Rendering/Surface.h"
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 using namespace Sourcehold::Rendering;
 
@@ -28,10 +28,10 @@ namespace Sourcehold {
         class TgxFile : private Parser, public Texture {
         public:
             TgxFile();
-            TgxFile(std::filesystem::path path);
+            TgxFile(ghc::filesystem::path path);
             ~TgxFile();
 
-            bool LoadFromDisk(std::filesystem::path path);
+            bool LoadFromDisk(ghc::filesystem::path path);
             void Unload();
 
             static void ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint16_t offY, uint16_t *pal=NULL, uint8_t color=0);

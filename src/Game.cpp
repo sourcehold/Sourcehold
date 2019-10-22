@@ -78,7 +78,7 @@ int EnterLoadingScreen()
     std::shared_ptr<TgxFile> tgx_loading = GetTgx("gfx/frontend_loading.tgx");
 
     /* Get the assets */
-    std::vector<std::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
+    std::vector<ghc::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
     if(files.empty()) {
         return EXIT_FAILURE;
     }
@@ -105,7 +105,7 @@ int EnterLoadingScreen()
 #endif
 
         /* Load a file */
-        std::filesystem::path path = files.at(index);
+        ghc::filesystem::path path = files.at(index);
         Cache(path);
         index++;
 
@@ -211,7 +211,7 @@ int StartGame(GameOptions& opt)
 int main(int argc, char **argv)
 {
     namespace po = cxxopts;
-    namespace fs = std::filesystem;
+    namespace fs = ghc::filesystem;
 
     // Parse commandline //
     try {
@@ -262,8 +262,6 @@ int main(int argc, char **argv)
         if (std::regex_search(str.begin(), str.end(), match, regex)) {
             opt.width  = std::stoi(match[1]);
             opt.height = std::stoi(match[2]);
-
-            std::cout << opt.width << "x" << opt.height << std::endl;
         }
         else {
             // fallback

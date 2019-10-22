@@ -28,7 +28,7 @@ MapFile::MapFile()
 {
 }
 
-MapFile::MapFile(std::filesystem::path path)
+MapFile::MapFile(ghc::filesystem::path path)
 {
     LoadFromDisk(path);
 }
@@ -37,7 +37,7 @@ MapFile::~MapFile()
 {
 }
 
-bool MapFile::LoadFromDisk(std::filesystem::path path)
+bool MapFile::LoadFromDisk(ghc::filesystem::path path)
 {
     if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS) << "Unable to open map file '" << path.string() << "'!" << std::endl;

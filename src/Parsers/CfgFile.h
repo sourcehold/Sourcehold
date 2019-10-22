@@ -3,7 +3,7 @@
 #include <string>
 #include <cinttypes>
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 #include "System/Logger.h"
 #include "Parsers/Parser.h"
@@ -17,8 +17,8 @@ namespace Sourcehold {
 
             void SetDefaultValues();
 
-            bool LoadFromDisk(std::filesystem::path path);
-            bool WriteToDisk(std::filesystem::path path);
+            bool LoadFromDisk(ghc::filesystem::path path);
+            bool WriteToDisk(ghc::filesystem::path path);
 
             std::wstring username;
             uint8_t speed;

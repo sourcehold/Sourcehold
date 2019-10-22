@@ -28,7 +28,7 @@ namespace Sourcehold {
             Logger();
             ~Logger();
 
-            enum LogType {
+            enum class LogType {
                 ERROR,
                 WARNING,
                 MESSAGE,

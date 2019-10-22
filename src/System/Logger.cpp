@@ -18,16 +18,16 @@ std::ostream &Logger::log(LogType type, const std::string& subsystem)
     std::string msg = "";
     if(coloredOutput) {
         switch(type) {
-        case ERROR:
+        case LogType::ERROR:
             msg = "\033[1;31m[ " + subsystem + " ]\033[0m -> ";
             break;
-        case WARNING:
+        case LogType::WARNING:
             msg = "\033[1;33m[ " + subsystem + " ]\033[0m -> ";
             break;
-        case MESSAGE:
+        case LogType::MESSAGE:
             msg = "\033[1;34m[ " + subsystem + " ]\033[0m -> ";
             break;
-        case SUCCESS:
+        case LogType::SUCCESS:
             msg = "\033[1;32m[ " + subsystem + " ]\033[0m -> ";
             break;
         default:
@@ -42,22 +42,22 @@ std::ostream &Logger::log(LogType type, const std::string& subsystem)
 
 std::ostream &Logger::error(Subsystem subsystem)
 {
-    return log(ERROR, SubsystemName(subsystem));
+    return log(LogType::ERROR, SubsystemName(subsystem));
 }
 
 std::ostream &Logger::warning(Subsystem subsystem)
 {
-    return log(WARNING, SubsystemName(subsystem));
+    return log(LogType::WARNING, SubsystemName(subsystem));
 }
 
 std::ostream &Logger::message(Subsystem subsystem)
 {
-    return log(MESSAGE, SubsystemName(subsystem));
+    return log(LogType::MESSAGE, SubsystemName(subsystem));
 }
 
 std::ostream &Logger::success(Subsystem subsystem)
 {
-    return log(SUCCESS, SubsystemName(subsystem));
+    return log(LogType::SUCCESS, SubsystemName(subsystem));
 }
 
 void Logger::SetColorOutput(bool a)

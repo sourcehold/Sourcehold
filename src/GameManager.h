@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <unordered_map>
 #include <functional>
-#include <filesystem>
+#include "System/filesystem.h"
 
 #include "Assets.h"
 
@@ -54,8 +54,8 @@ namespace Sourcehold {
         /**
          * Override the game system paths
          */
-        void SetDataDirectory(std::filesystem::path dir);
-        void SetSaveDirectory(std::filesystem::path dir);
+        void SetDataDirectory(ghc::filesystem::path dir);
+        void SetSaveDirectory(ghc::filesystem::path dir);
 
         /**
          * Load all of the files which will remain in memory
@@ -74,14 +74,14 @@ namespace Sourcehold {
          * Load and cache an asset, 'filename' is an
          * absolute path
          */
-        void Cache(std::filesystem::path filename);
+        void Cache(ghc::filesystem::path filename);
 
         /**
          * Delete a given entry from the file cache.
          * This will ensure that an asset will be freed once
          * every shared_ptr is destructed.
          */
-        void DeleteCacheEntry(std::filesystem::path filename);
+        void DeleteCacheEntry(ghc::filesystem::path filename);
 
         void SaveConfig();
 
@@ -94,7 +94,7 @@ namespace Sourcehold {
         std::wstring GetString(TextSection sec, uint16_t index);
 
         double GetTime();
-        std::filesystem::path GetDirectory();
+        ghc::filesystem::path GetDirectory();
         StrongholdEdition GetEdition();
         Resolution GetResolution();
         int GetUsernameIndex();
@@ -104,9 +104,9 @@ namespace Sourcehold {
          * Asset getter functions.
          * All filenames are relative to the data directory
          */
-        std::shared_ptr<TgxFile> GetTgx(std::filesystem::path filename);
-        std::shared_ptr<Gm1File> GetGm1(std::filesystem::path filename);
-        std::shared_ptr<AniFile> GetAni(std::filesystem::path filename);
-        std::shared_ptr<BinkVideo> GetBik(std::filesystem::path filename);
+        std::shared_ptr<TgxFile> GetTgx(ghc::filesystem::path filename);
+        std::shared_ptr<Gm1File> GetGm1(ghc::filesystem::path filename);
+        std::shared_ptr<AniFile> GetAni(ghc::filesystem::path filename);
+        std::shared_ptr<BinkVideo> GetBik(ghc::filesystem::path filename);
     }
 }

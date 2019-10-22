@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include "System/filesystem.h"
 #include <cinttypes>
 #include <map>
 #include <vector>
@@ -18,7 +18,7 @@ namespace Sourcehold {
             TexFile();
             ~TexFile() {};
 
-            bool LoadFromDisk(std::filesystem::path path);
+            bool LoadFromDisk(ghc::filesystem::path path);
 
             std::wstring &GetString(TextSection sec, uint16_t index);
         protected:

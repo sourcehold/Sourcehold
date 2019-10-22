@@ -12,6 +12,9 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
+#undef min // ...
+#undef max
+
 #pragma pack(push, 1)
 struct Gm1File::ImageHeader {
     /* Image dimensions */
@@ -57,7 +60,7 @@ Gm1File::Gm1File() : Parser()
     tileset = std::make_shared<Tileset>();
 }
 
-Gm1File::Gm1File(std::filesystem::path path, bool cache) : Parser()
+Gm1File::Gm1File(ghc::filesystem::path path, bool cache) : Parser()
 {
     textureAtlas = std::make_shared<TextureAtlas>();
     tileset = std::make_shared<Tileset>();
@@ -69,7 +72,7 @@ Gm1File::~Gm1File()
 {
 }
 
-bool Gm1File::LoadFromDisk(std::filesystem::path path, bool cached)
+bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;

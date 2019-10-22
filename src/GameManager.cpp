@@ -37,9 +37,9 @@ GameOptions _opt;
 MlbFile _mlb;
 CfgFile _cfg;
 TexFile _tex;
-std::filesystem::path _cfgPath;
-std::filesystem::path _dataFolder;
-std::filesystem::path _saveFolder;
+ghc::filesystem::path _cfgPath;
+ghc::filesystem::path _dataFolder;
+ghc::filesystem::path _saveFolder;
 std::unordered_map<std::string, std::weak_ptr<TgxFile>> _tgxFiles;
 std::unordered_map<std::string, std::weak_ptr<Gm1File>> _gm1Files;
 std::unordered_map<std::string, std::weak_ptr<AniFile>> _aniFiles;
@@ -48,7 +48,7 @@ StrongholdEdition _edition;
 Resolution _resolution;
 bool _running = false;
 
-bool IsAssetCached(std::filesystem::path path)
+bool IsAssetCached(ghc::filesystem::path path)
 {
     // todo
     return false;
@@ -200,12 +200,12 @@ bool Game::Running()
     return _running;
 }
 
-void Game::SetDataDirectory(std::filesystem::path dir)
+void Game::SetDataDirectory(ghc::filesystem::path dir)
 {
     _dataFolder = dir;
 }
 
-void Game::SetSaveDirectory(std::filesystem::path dir)
+void Game::SetSaveDirectory(ghc::filesystem::path dir)
 {
     _saveFolder = dir;
 }
@@ -218,7 +218,7 @@ bool Game::LoadGameData()
 
     if(_saveFolder.empty()) {
         /* Attempt to fall back to local dir */
-        std::filesystem::path np = "../saves/";
+        ghc::filesystem::path np = "../saves/";
         if(DoesFileExist(np)) {
             _saveFolder = np;
         }
@@ -271,7 +271,7 @@ void Game::ClearFileCache()
     _bikFiles.clear();
 }
 
-void Game::Cache(std::filesystem::path filename)
+void Game::Cache(ghc::filesystem::path filename)
 {
     std::string ext = GetFileExtension(filename);
     if(filename.empty() || ext.empty()) {
@@ -307,7 +307,7 @@ void Game::Cache(std::filesystem::path filename)
     }
 }
 
-void Game::DeleteCacheEntry(std::filesystem::path filename)
+void Game::DeleteCacheEntry(ghc::filesystem::path filename)
 {
     AssetType t = ExtToType(GetFileExtension(filename));
     switch(t) {
@@ -358,7 +358,7 @@ double Game::GetTime()
     return SDL_GetTicks() / 1000.0f;
 }
 
-std::filesystem::path Game::GetDirectory()
+ghc::filesystem::path Game::GetDirectory()
 {
     return _dataFolder;
 }
@@ -383,14 +383,14 @@ CfgFile &Game::GetCfg()
     return _cfg;
 }
 
-std::shared_ptr<TgxFile> Game::GetTgx(std::filesystem::path filename)
+std::shared_ptr<TgxFile> Game::GetTgx(ghc::filesystem::path filename)
 {
     auto sp = _tgxFiles[filename.string()].lock();
     if (!sp) _tgxFiles[filename.string()] = sp = std::make_shared<TgxFile>(_dataFolder / filename);
     return sp;
 }
 
-std::shared_ptr<Gm1File> Game::GetGm1(std::filesystem::path filename)
+std::shared_ptr<Gm1File> Game::GetGm1(ghc::filesystem::path filename)
 {
 #if 0
     /** TODO
@@ -425,14 +425,14 @@ std::shared_ptr<Gm1File> Game::GetGm1(std::filesystem::path filename)
     return sp;
 }
 
-std::shared_ptr<AniFile> Game::GetAni(std::filesystem::path filename)
+std::shared_ptr<AniFile> Game::GetAni(ghc::filesystem::path filename)
 {
     auto sp = _aniFiles[filename.string()].lock();
     if (!sp) _aniFiles[filename.string()] = sp = std::make_shared<AniFile>(_dataFolder / filename);
     return sp;
 }
 
-std::shared_ptr<BinkVideo> Game::GetBik(std::filesystem::path filename)
+std::shared_ptr<BinkVideo> Game::GetBik(ghc::filesystem::path filename)
 {
     auto sp = _bikFiles[filename.string()].lock();
     if (!sp) _bikFiles[filename.string()] = sp = std::make_shared<BinkVideo>(_dataFolder / filename);

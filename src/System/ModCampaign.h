@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 #include <string>
 #include <vector>
@@ -16,7 +16,7 @@ namespace Sourcehold {
             std::string comment;
         };
 
-        void LoadModCampaigns(const std::filesystem::path& base);
+        void LoadModCampaigns(const ghc::filesystem::path& base);
 
         std::vector<ModCampaign> *GetMilitaryCampaigns();
         std::vector<ModCampaign> *GetEcoCampaigns();

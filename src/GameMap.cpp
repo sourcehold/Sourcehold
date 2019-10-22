@@ -19,7 +19,7 @@ GameMap::GameMap(MapDimension type)
     dim = dimensions[(int)type];
 }
 
-GameMap::GameMap(std::filesystem::path path)
+GameMap::GameMap(ghc::filesystem::path path)
 {
     // TODO //
     LoadFromDisk(path);
@@ -30,7 +30,7 @@ GameMap::~GameMap()
 {
 }
 
-void GameMap::LoadFromDisk(std::filesystem::path path)
+void GameMap::LoadFromDisk(ghc::filesystem::path path)
 {
     MapFile::LoadFromDisk(path);
 

@@ -325,9 +325,9 @@ UIState MainMenu::EnterMenu()
     return EXIT_GAME;
 }
 
-std::filesystem::path MainMenu::GetGreetingsSound()
+ghc::filesystem::path MainMenu::GetGreetingsSound()
 {
-    std::filesystem::path snd = GetDirectory() / "fx/speech/";
+    ghc::filesystem::path snd = GetDirectory() / "fx/speech/";
 
     int index = GetUsernameIndex();
     if(index == -1) {

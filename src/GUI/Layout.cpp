@@ -11,6 +11,9 @@ using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::Game;
 
+#undef min // ...
+#undef max
+
 Layout::Layout()
 {
 }
@@ -59,7 +62,7 @@ void Layout::CreateFromHlp(HlpSection *hlp)
         case SectionType::LOADPIC : {
             if(sect.name.empty()) continue;
 
-            auto pic = GetTgx(std::filesystem::path("gfx/") / std::filesystem::path(sect.name));
+            auto pic = GetTgx(ghc::filesystem::path("gfx/") / ghc::filesystem::path(sect.name));
             pics.push_back(pic);
         } break;
         case SectionType::SECTION : {

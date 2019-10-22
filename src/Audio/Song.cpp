@@ -17,7 +17,7 @@ Song::Song(const Song &source)
     this->fading = source.fading;
 }
 
-Song::Song(std::filesystem::path path, bool repeat) :
+Song::Song(ghc::filesystem::path path, bool repeat) :
     repeat(repeat),
     valid(false)
 {
@@ -37,7 +37,7 @@ Song::~Song()
     Destroy();
 }
 
-bool Song::Load(std::filesystem::path path, bool repeat)
+bool Song::Load(ghc::filesystem::path path, bool repeat)
 {
     /* Parameters */
     this->repeat = repeat;

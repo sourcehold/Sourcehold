@@ -16,6 +16,7 @@ include_directories(src)
 include_directories(thirdparty/blast/)
 include_directories(thirdparty/duktape/)
 include_directories(thirdparty/cxxopts/include/)
+include_directories(thirdparty/filesystem/include/)
 
 # pthread
 find_package (Threads)
@@ -55,11 +56,10 @@ endif()
 
 add_executable(Stronghold ${SOURCES} ${HEADERS})
 set_target_properties(Stronghold PROPERTIES
- 	CXX_STANDARD 17
+ 	CXX_STANDARD 11
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
-target_compile_features(Stronghold PRIVATE cxx_std_17)
 
 target_link_libraries(
 	Stronghold

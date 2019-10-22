@@ -21,7 +21,7 @@ BinkVideo::BinkVideo() : Texture()
     }
 }
 
-BinkVideo::BinkVideo(std::filesystem::path path, bool looping) : Texture()
+BinkVideo::BinkVideo(ghc::filesystem::path path, bool looping) : Texture()
 {
     ic = avformat_alloc_context();
     if(!ic) {
@@ -36,7 +36,7 @@ BinkVideo::~BinkVideo()
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(std::filesystem::path path, bool looping)
+bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool looping)
 {
     this->looping = looping;
 

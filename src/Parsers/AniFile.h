@@ -9,7 +9,7 @@
 #include "Rendering/Renderer.h"
 #include "Parsers/Parser.h"
 
-#include <filesystem>
+#include "System/filesystem.h"
 
 namespace Sourcehold {
     namespace Parsers {
@@ -20,10 +20,10 @@ namespace Sourcehold {
         public:
             AniFile();
             AniFile(const AniFile&);
-            AniFile(std::filesystem::path path);
+            AniFile(ghc::filesystem::path path);
             ~AniFile();
 
-            bool LoadFromDisk(std::filesystem::path path);
+            bool LoadFromDisk(ghc::filesystem::path path);
         protected:
             bool ParseChunks();
             struct RiffHeader;
