@@ -8,8 +8,6 @@ dist: xenial
 compiler: gcc
 
 script:
-  - export CC=gcc-7
-  - export CXX=g++-7
   - mkdir build/
   - cd build/
   - cmake ..

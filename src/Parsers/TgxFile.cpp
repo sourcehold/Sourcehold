@@ -70,11 +70,11 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
         /* Read token byte */
         uint8_t b = *(uint8_t*)buf;
         buf++;
-        uint8_t len = (b & 0b11111) + 1;
+        uint8_t len = (b & 0x1F) + 1;
         uint8_t flag = b >> 5;
 
         switch(flag) {
-        case 0b000: {
+        case 0x00: {
             // pixel
             for(uint8_t i = 0; i < len; ++i,++x) {
                 uint16_t pixelColor;
@@ -93,13 +93,13 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
             }
         }
         break;
-        case 0b100: {
+        case 0x04: {
             // line break
             y++;
             x = 0;
         }
         break;
-        case 0b010: {
+        case 0x02: {
             // repeated pixel
             uint16_t pixelColor;
             if(pal) {
@@ -119,7 +119,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
             }
         }
         break;
-        case 0b001: {
+        case 0x01: {
             // transparent pixels
             for(uint8_t i = 0; i < len; i++, x++) {
                 tex.SetPixel(x+offX, y+offY, 0, 0, 0, 0);
