@@ -13,5 +13,5 @@ sudo apt install -y -qq libavformat-dev
 sudo apt install -y -qq libswscale-dev
 sudo apt install -y -qq ffmpeg
 sudo apt install -y -qq libopenal-dev
-sudo apt install -y -qq g++-6
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-6 90
+sudo apt install -y -qq g++-7
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90

@@ -5,14 +5,15 @@ language: cpp
 sudo: required
 dist: xenial
 
+compiler: gcc
+
 script:
+  - export CC=gcc-7
+  - export CXX=g++-7
   - mkdir build/
   - cd build/
   - cmake ..
   - make -j8
-
-compiler:
-  - gcc
 
 install:
   source ./travis/install.sh
