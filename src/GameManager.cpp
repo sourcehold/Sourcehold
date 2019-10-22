@@ -3,10 +3,6 @@
 #include <cwchar>
 #include <chrono>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/lexical_cast.hpp>
-
 #include "GameManager.h"
 
 #include "Events/EventHandler.h"
@@ -41,9 +37,9 @@ GameOptions _opt;
 MlbFile _mlb;
 CfgFile _cfg;
 TexFile _tex;
-boost::filesystem::path _cfgPath;
-boost::filesystem::path _dataFolder;
-boost::filesystem::path _saveFolder;
+std::filesystem::path _cfgPath;
+std::filesystem::path _dataFolder;
+std::filesystem::path _saveFolder;
 std::unordered_map<std::string, std::weak_ptr<TgxFile>> _tgxFiles;
 std::unordered_map<std::string, std::weak_ptr<Gm1File>> _gm1Files;
 std::unordered_map<std::string, std::weak_ptr<AniFile>> _aniFiles;
@@ -52,7 +48,7 @@ StrongholdEdition _edition;
 Resolution _resolution;
 bool _running = false;
 
-bool IsAssetCached(boost::filesystem::path path)
+bool IsAssetCached(std::filesystem::path path)
 {
     // todo
     return false;
@@ -83,7 +79,7 @@ void DetectUsername()
     }
 
     std::vector<std::wstring> words;
-    boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "), boost::token_compress_on);
+    //boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "), boost::token_compress_on);
     if(words.empty()) return;
 
     int gender = 0;
@@ -102,10 +98,10 @@ void DetectUsername()
         }
     }
     /* Look-up the name and store the index */
+/*
     for(size_t i = 0; i < lut_names.size(); i++) {
         const wchar_t *name = lut_names[i];
         if(!wcscmp(name, boost::to_upper_copy<std::wstring>(username).c_str())) {
-            /* Prevent names like 'Lord Cindy' or 'Lady Aaron', no offense */
             if((gender == 1 && i < NAME_INDEX_MALE) || (gender == 2 && i >= NAME_INDEX_MALE)) {
                 return;
             }
@@ -113,7 +109,7 @@ void DetectUsername()
             return;
         }
     }
-
+*/
     return;
 }
 
@@ -204,12 +200,12 @@ bool Game::Running()
     return _running;
 }
 
-void Game::SetDataDirectory(boost::filesystem::path dir)
+void Game::SetDataDirectory(std::filesystem::path dir)
 {
     _dataFolder = dir;
 }
 
-void Game::SetSaveDirectory(boost::filesystem::path dir)
+void Game::SetSaveDirectory(std::filesystem::path dir)
 {
     _saveFolder = dir;
 }
@@ -222,7 +218,7 @@ bool Game::LoadGameData()
 
     if(_saveFolder.empty()) {
         /* Attempt to fall back to local dir */
-        boost::filesystem::path np = "../saves/";
+        std::filesystem::path np = "../saves/";
         if(DoesFileExist(np)) {
             _saveFolder = np;
         }
@@ -275,7 +271,7 @@ void Game::ClearFileCache()
     _bikFiles.clear();
 }
 
-void Game::Cache(boost::filesystem::path filename)
+void Game::Cache(std::filesystem::path filename)
 {
     std::string ext = GetFileExtension(filename);
     if(filename.empty() || ext.empty()) {
@@ -311,7 +307,7 @@ void Game::Cache(boost::filesystem::path filename)
     }
 }
 
-void Game::DeleteCacheEntry(boost::filesystem::path filename)
+void Game::DeleteCacheEntry(std::filesystem::path filename)
 {
     AssetType t = ExtToType(GetFileExtension(filename));
     switch(t) {
@@ -362,7 +358,7 @@ double Game::GetTime()
     return SDL_GetTicks() / 1000.0f;
 }
 
-boost::filesystem::path Game::GetDirectory()
+std::filesystem::path Game::GetDirectory()
 {
     return _dataFolder;
 }
@@ -387,14 +383,14 @@ CfgFile &Game::GetCfg()
     return _cfg;
 }
 
-std::shared_ptr<TgxFile> Game::GetTgx(boost::filesystem::path filename)
+std::shared_ptr<TgxFile> Game::GetTgx(std::filesystem::path filename)
 {
     auto sp = _tgxFiles[filename.string()].lock();
     if (!sp) _tgxFiles[filename.string()] = sp = std::make_shared<TgxFile>(_dataFolder / filename);
     return sp;
 }
 
-std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
+std::shared_ptr<Gm1File> Game::GetGm1(std::filesystem::path filename)
 {
 #if 0
     /** TODO
@@ -429,14 +425,14 @@ std::shared_ptr<Gm1File> Game::GetGm1(boost::filesystem::path filename)
     return sp;
 }
 
-std::shared_ptr<AniFile> Game::GetAni(boost::filesystem::path filename)
+std::shared_ptr<AniFile> Game::GetAni(std::filesystem::path filename)
 {
     auto sp = _aniFiles[filename.string()].lock();
     if (!sp) _aniFiles[filename.string()] = sp = std::make_shared<AniFile>(_dataFolder / filename);
     return sp;
 }
 
-std::shared_ptr<BinkVideo> Game::GetBik(boost::filesystem::path filename)
+std::shared_ptr<BinkVideo> Game::GetBik(std::filesystem::path filename)
 {
     auto sp = _bikFiles[filename.string()].lock();
     if (!sp) _bikFiles[filename.string()] = sp = std::make_shared<BinkVideo>(_dataFolder / filename);

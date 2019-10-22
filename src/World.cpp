@@ -1,8 +1,9 @@
+#include <random>
+
 #include "Building.h"
 #include "World.h"
 
 #include "Parsers/TgxFile.h"
-
 #include "Rendering/Font.h"
 
 using namespace Sourcehold::Game;
@@ -23,6 +24,16 @@ World::~World()
 
 UIState World::Play()
 {
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 160);
+
+    for (int i = 0; i < 1000; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        Spawn<Oak>(x, y);
+    }
+
     double previous = GetTime();
     while(Running()) {
         // Timing is good enough for now (TODO obviously) //
@@ -188,6 +199,6 @@ void World::onEventReceive(Mouse &mouseEvent)
         int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
         int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
 
-        Spawn<Oak>(x, y);
+        Spawn<Lord>(x, y);
     }
 }

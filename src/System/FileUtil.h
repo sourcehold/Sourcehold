@@ -3,25 +3,25 @@
 #include <string>
 #include <vector>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace Sourcehold {
     namespace System {
-        std::string GetFileExtension(boost::filesystem::path path);
-        std::string GetFileStem(boost::filesystem::path path);
-        std::string GetFilename(boost::filesystem::path path);
+        std::string GetFileExtension(std::filesystem::path path);
+        std::string GetFileStem(std::filesystem::path path);
+        std::string GetFilename(std::filesystem::path path);
 
-        bool IsFileHidden(boost::filesystem::path path);
-        bool IsFolder(boost::filesystem::path path);
-        bool DoesFileExist(boost::filesystem::path path);
-        void CreateFolder(boost::filesystem::path path);
+        bool IsFileHidden(std::filesystem::path path);
+        bool IsFolder(std::filesystem::path path);
+        bool DoesFileExist(std::filesystem::path path);
+        void CreateFolder(std::filesystem::path path);
 
-        boost::filesystem::path GetDocumentsPath();
+        std::filesystem::path GetDocumentsPath();
 
         /**
          * Get all the files in a directory and its
          * sub directories
          */
-        std::vector<boost::filesystem::path> GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension = "", bool recursive = true, bool includeFolders = false);
+        std::vector<std::filesystem::path> GetDirectoryRecursive(std::filesystem::path path, const std::string &extension = "", bool recursive = true, bool includeFolders = false);
     }
 }

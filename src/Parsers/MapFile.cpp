@@ -1,8 +1,6 @@
 #include <cstring>
 #include <cmath>
 
-#include <boost/crc.hpp>
-
 #include "Parsers/MapFile.h"
 #include "Parsers/TgxFile.h"
 
@@ -30,7 +28,7 @@ MapFile::MapFile()
 {
 }
 
-MapFile::MapFile(boost::filesystem::path path)
+MapFile::MapFile(std::filesystem::path path)
 {
     LoadFromDisk(path);
 }
@@ -39,7 +37,7 @@ MapFile::~MapFile()
 {
 }
 
-bool MapFile::LoadFromDisk(boost::filesystem::path path)
+bool MapFile::LoadFromDisk(std::filesystem::path path)
 {
     if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS) << "Unable to open map file '" << path.string() << "'!" << std::endl;
@@ -185,8 +183,9 @@ void MapFile::ParsePreview()
 
 uint32_t MapFile::ComputeCRC32(const void *data, size_t size)
 {
-    boost::crc_32_type res;
-    res.process_bytes(data, size);
-    return res.checksum();
+    //boost::crc_32_type res;
+    //res.process_bytes(data, size);
+    //return res.checksum();
+    return 0;
 }
 

@@ -7,7 +7,7 @@
 #include "System/Logger.h"
 #include "Parsers/Parser.h"
 
-#include "boost/filesystem.hpp"
+#include <filesystem>
 
 namespace Sourcehold {
     namespace Parsers {
@@ -20,7 +20,7 @@ namespace Sourcehold {
             VolumeTxt();
             ~VolumeTxt();
 
-            bool LoadFromDisk(boost::filesystem::path path);
+            bool LoadFromDisk(std::filesystem::path path);
             void Clear();
 
             uint8_t GetVolumeOf(std::string key);

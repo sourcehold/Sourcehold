@@ -9,7 +9,7 @@ TexFile::TexFile() :
 {
 }
 
-bool TexFile::LoadFromDisk(boost::filesystem::path path)
+bool TexFile::LoadFromDisk(std::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
         Logger::error(PARSERS) << "Unable to read tex file from " << path << std::endl;

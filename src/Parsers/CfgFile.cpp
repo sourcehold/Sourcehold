@@ -22,7 +22,7 @@ void CfgFile::SetDefaultValues()
     mousePointer = 1;
 }
 
-bool CfgFile::LoadFromDisk(boost::filesystem::path path)
+bool CfgFile::LoadFromDisk(std::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
         Logger::error(PARSERS) << "Unable to read cfg " << path << std::endl;
@@ -56,7 +56,7 @@ bool CfgFile::LoadFromDisk(boost::filesystem::path path)
     return true;
 }
 
-bool CfgFile::WriteToDisk(boost::filesystem::path path)
+bool CfgFile::WriteToDisk(std::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ofstream::out)) {
         Logger::error(PARSERS) << "Unable to write cfg " << path << std::endl;

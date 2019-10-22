@@ -14,7 +14,8 @@ include_directories(src)
 
 # Thirdparty
 include_directories(thirdparty/blast/)
-include_directories(thirdparty/duktape)
+include_directories(thirdparty/duktape/)
+include_directories(thirdparty/cxxopts/include/)
 
 # pthread
 find_package (Threads)
@@ -36,12 +37,6 @@ include_directories(${SWSCALE_INCLUDE_DIRS})
 find_package(Libswresample REQUIRED)
 include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
 
-# boost
-set(Boost_USE_STATIC_LIBS ON)
-add_definitions(-DBOOST_ALL_NO_LIB)
-find_package(Boost COMPONENTS filesystem program_options REQUIRED)
-include_directories(${Boost_INCLUDE_DIRS})
-
 # Include sources / headers
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c thirdparty/duktape/duktape.c)
 file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/src/*.h)
@@ -60,7 +55,7 @@ endif()
 
 add_executable(Stronghold ${SOURCES} ${HEADERS})
 set_target_properties(Stronghold PROPERTIES
- 	CXX_STANDARD 14
+ 	CXX_STANDARD 17
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
@@ -68,7 +63,6 @@ set_target_properties(Stronghold PROPERTIES
 target_link_libraries(
 	Stronghold
 	${SDL2_LIBRARY}
-	${Boost_LIBRARIES}
 	${OPENAL_LIBRARY}
 	${FFMPEG_LIBRARIES}
 	${SWSCALE_LIBRARIES}

@@ -25,7 +25,7 @@ AniFile::AniFile(const AniFile &other)
 {
 }
 
-AniFile::AniFile(boost::filesystem::path path) : Parser()
+AniFile::AniFile(std::filesystem::path path) : Parser()
 {
     this->LoadFromDisk(path);
 }
@@ -35,7 +35,7 @@ AniFile::~AniFile()
 
 }
 
-bool AniFile::LoadFromDisk(boost::filesystem::path path)
+bool AniFile::LoadFromDisk(std::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
         Logger::error(PARSERS)  << "Unable to load ani file '" << path.string() << "' from data folder!" << std::endl;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include <cinttypes>
 #include <algorithm>
@@ -94,7 +94,7 @@ namespace Sourcehold {
 
             UIState EnterMenu();
         protected:
-            boost::filesystem::path GetGreetingsSound();
+            std::filesystem::path GetGreetingsSound();
             void HideAll();
         };
     }

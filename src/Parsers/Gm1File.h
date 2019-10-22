@@ -10,7 +10,7 @@
 
 #include "Parsers/Parser.h"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace Sourcehold {
     namespace Parsers {
@@ -54,12 +54,12 @@ namespace Sourcehold {
             } header;
         public:
             Gm1File();
-            Gm1File(boost::filesystem::path path, bool cached = false);
+            Gm1File(std::filesystem::path path, bool cached = false);
             Gm1File(const Gm1File&) = delete;
             Gm1File& operator=(const Gm1File&)= delete;
             ~Gm1File();
 
-            bool LoadFromDisk(boost::filesystem::path path, bool cache = false);
+            bool LoadFromDisk(std::filesystem::path path, bool cache = false);
             void Free();
 
             inline std::shared_ptr<Tileset> GetTileset() {

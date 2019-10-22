@@ -1,4 +1,5 @@
 #include "GUI/Ingame.h"
+#include "System/Config.h"
 
 using namespace Sourcehold;
 using namespace GUI;

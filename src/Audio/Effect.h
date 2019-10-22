@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <cinttypes>
 #include <string>
 #include <cstdio>
@@ -35,7 +35,7 @@ namespace Sourcehold {
             Effect();
             ~Effect();
 
-            bool Load(boost::filesystem::path path, bool looping = false);
+            bool Load(std::filesystem::path path, bool looping = false);
             void Destroy();
             void Play();
             void Stop();

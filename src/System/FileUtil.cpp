@@ -11,49 +11,49 @@
 #include <shlobj.h>
 #endif
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 using namespace Sourcehold;
 using namespace System;
 
-std::string System::GetFileExtension(boost::filesystem::path path)
+std::string System::GetFileExtension(std::filesystem::path path)
 {
     return path.extension().string();
 }
 
-std::string System::GetFileStem(boost::filesystem::path path)
+std::string System::GetFileStem(std::filesystem::path path)
 {
     return path.stem().string();
 }
 
-std::string System::GetFilename(boost::filesystem::path path)
+std::string System::GetFilename(std::filesystem::path path)
 {
     return path.filename().string();
 }
 
-bool System::IsFileHidden(boost::filesystem::path path)
+bool System::IsFileHidden(std::filesystem::path path)
 {
     std::string name = path.filename().string();
     if(name[0] == '.') return true;
     return false;
 }
 
-bool System::IsFolder(boost::filesystem::path path)
+bool System::IsFolder(std::filesystem::path path)
 {
-    return boost::filesystem::is_directory(path);
+    return std::filesystem::is_directory(path);
 }
 
-bool System::DoesFileExist(boost::filesystem::path path)
+bool System::DoesFileExist(std::filesystem::path path)
 {
-    return boost::filesystem::exists(path);
+    return std::filesystem::exists(path);
 }
 
-void System::CreateFolder(boost::filesystem::path path)
+void System::CreateFolder(std::filesystem::path path)
 {
-    boost::filesystem::create_directories(path);
+    std::filesystem::create_directories(path);
 }
 
-boost::filesystem::path System::GetDocumentsPath()
+std::filesystem::path System::GetDocumentsPath()
 {
     char path[512];
 
@@ -102,29 +102,29 @@ boost::filesystem::path System::GetDocumentsPath()
     SHGetPathFromIDList(pidl, path);
 #endif
 
-    return boost::filesystem::path(path);
+    return std::filesystem::path(path);
 }
 
-std::vector<boost::filesystem::path> System::GetDirectoryRecursive(boost::filesystem::path path, const std::string &extension, bool recursive, bool includeFolders)
+std::vector<std::filesystem::path> System::GetDirectoryRecursive(std::filesystem::path path, const std::string &extension, bool recursive, bool includeFolders)
 {
-    std::vector<boost::filesystem::path> files;
-    if(boost::filesystem::exists(path) && boost::filesystem::is_directory(path)) {
+    std::vector<std::filesystem::path> files;
+    if(std::filesystem::exists(path) && std::filesystem::is_directory(path)) {
         if(recursive) {
-            boost::filesystem::recursive_directory_iterator it(path);
-            boost::filesystem::recursive_directory_iterator endit;
+            std::filesystem::recursive_directory_iterator it(path);
+            std::filesystem::recursive_directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(boost::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
+                    if(std::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
                 }
                 ++it;
             }
         }
         else {
-            boost::filesystem::directory_iterator it(path);
-            boost::filesystem::directory_iterator endit;
+            std::filesystem::directory_iterator it(path);
+            std::filesystem::directory_iterator endit;
             while (it != endit) {
                 if((extension=="")?true:it->path().extension() == extension) {
-                    if(boost::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
+                    if(std::filesystem::is_regular_file(*it) || includeFolders) files.push_back(it->path());
                 }
                 ++it;
             }

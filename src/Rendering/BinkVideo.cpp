@@ -21,7 +21,7 @@ BinkVideo::BinkVideo() : Texture()
     }
 }
 
-BinkVideo::BinkVideo(boost::filesystem::path path, bool looping) : Texture()
+BinkVideo::BinkVideo(std::filesystem::path path, bool looping) : Texture()
 {
     ic = avformat_alloc_context();
     if(!ic) {
@@ -36,7 +36,7 @@ BinkVideo::~BinkVideo()
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(boost::filesystem::path path, bool looping)
+bool BinkVideo::LoadFromDisk(std::filesystem::path path, bool looping)
 {
     this->looping = looping;
 
@@ -205,9 +205,6 @@ void BinkVideo::Update()
         if (packetFinished) {
             ret = avcodec_send_packet(audioCtx, &packet);
         }
-
-        double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
-        std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
 
         while (ret >= 0) {
             /* Receive one audio frame */

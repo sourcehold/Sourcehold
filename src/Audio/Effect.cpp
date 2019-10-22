@@ -21,7 +21,7 @@ Effect::~Effect()
     Destroy();
 }
 
-bool Effect::Load(boost::filesystem::path path, bool looping)
+bool Effect::Load(std::filesystem::path path, bool looping)
 {
     this->looping = looping;
 

@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "Rendering/Tileset.h"
 #include "Rendering/Renderer.h"
@@ -36,11 +36,11 @@ namespace Sourcehold {
             std::vector<SDL_Rect> tiles;
         public:
             GameMap(MapDimension type);
-            GameMap(boost::filesystem::path path);
+            GameMap(std::filesystem::path path);
             GameMap(const GameMap&) = delete;
             ~GameMap();
 
-            void LoadFromDisk(boost::filesystem::path path);
+            void LoadFromDisk(std::filesystem::path path);
             void Render();            
         protected:
         };

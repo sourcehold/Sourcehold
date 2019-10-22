@@ -4,9 +4,7 @@
 #include <codecvt>
 #include <cinttypes>
 
-#include <boost/filesystem.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
+#include <filesystem>
 
 #include "Parsers/HlpFile.h"
 #include "System/Logger.h"
@@ -41,6 +39,7 @@ std::wstring HlpSection::GetStrArg(size_t index)
 
 bool Parsers::LoadStrongholdHlp()
 {
+    /*
     auto path = GetDirectory() / "help/stronghold_help.hlp";
     std::wifstream ws(
         path.string(),
@@ -80,12 +79,6 @@ bool Parsers::LoadStrongholdHlp()
                 ident = ident.substr(1);
             }
 
-            /**
-             * This is the bodged part:
-             * We don't bother parsing arguments intelligently, but
-             * expect certain arguments for the type of command, for
-             * example 'FONT' is always followed by an int.
-             */
             if(ident == L"PIC") {
                 // TODO: case <PIC=5, LEFT> doesn't match pos!!!!!!
                 boost::algorithm::split(cts, contents, boost::algorithm::is_any_of(",= "));
@@ -170,7 +163,7 @@ bool Parsers::LoadStrongholdHlp()
                 Logger::warning(PARSERS) << "Unknown comand in help file at pos " << it - fb.begin() << std::endl;
             }
         }
-    }
+    }*/
 
     return true;
 }

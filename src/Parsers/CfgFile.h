@@ -3,7 +3,7 @@
 #include <string>
 #include <cinttypes>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "System/Logger.h"
 #include "Parsers/Parser.h"
@@ -17,8 +17,8 @@ namespace Sourcehold {
 
             void SetDefaultValues();
 
-            bool LoadFromDisk(boost::filesystem::path path);
-            bool WriteToDisk(boost::filesystem::path path);
+            bool LoadFromDisk(std::filesystem::path path);
+            bool WriteToDisk(std::filesystem::path path);
 
             std::wstring username;
             uint8_t speed;

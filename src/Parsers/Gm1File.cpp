@@ -57,7 +57,7 @@ Gm1File::Gm1File() : Parser()
     tileset = std::make_shared<Tileset>();
 }
 
-Gm1File::Gm1File(boost::filesystem::path path, bool cache) : Parser()
+Gm1File::Gm1File(std::filesystem::path path, bool cache) : Parser()
 {
     textureAtlas = std::make_shared<TextureAtlas>();
     tileset = std::make_shared<Tileset>();
@@ -69,7 +69,7 @@ Gm1File::~Gm1File()
 {
 }
 
-bool Gm1File::LoadFromDisk(boost::filesystem::path path, bool cached)
+bool Gm1File::LoadFromDisk(std::filesystem::path path, bool cached)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;

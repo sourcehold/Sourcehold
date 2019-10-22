@@ -15,7 +15,7 @@ class JSONConfig
 {
     duk_context *ctx{nullptr};
 public:
-    JSONConfig(const boost::filesystem::path &path) {
+    JSONConfig(const std::filesystem::path &path) {
         ctx = duk_create_heap(NULL, NULL, NULL, (void*)0xCAFEBABE, my_fatal);
         if(!ctx) {
             throw std::bad_alloc();
@@ -71,7 +71,7 @@ protected:
     }
 };
 
-void System::LoadModCampaigns(const boost::filesystem::path& base)
+void System::LoadModCampaigns(const std::filesystem::path& base)
 {
     /* Folder structure:
      *
@@ -82,7 +82,7 @@ void System::LoadModCampaigns(const boost::filesystem::path& base)
      */
     auto folders = GetDirectoryRecursive(base, "", false, true);
     for(const auto &folder : folders) {
-        boost::filesystem::path
+        std::filesystem::path
             maps(folder / "maps/"),
             manifest(folder / "manifest.json"),
             campaign(folder / "campaign.js");

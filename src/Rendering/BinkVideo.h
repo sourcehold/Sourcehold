@@ -17,7 +17,7 @@ extern "C" {
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace Sourcehold {
     namespace Rendering {
@@ -48,10 +48,10 @@ namespace Sourcehold {
             bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
         public:
             BinkVideo();
-            BinkVideo(boost::filesystem::path path, bool looping = false);
+            BinkVideo(std::filesystem::path path, bool looping = false);
             ~BinkVideo();
 
-            bool LoadFromDisk(boost::filesystem::path path, bool looping = false);
+            bool LoadFromDisk(std::filesystem::path path, bool looping = false);
             void Close();
             void Update();
 

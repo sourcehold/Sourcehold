@@ -1,13 +1,10 @@
-
 #include <memory>
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <regex>
 
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/program_options.hpp>
+#include <cxxopts.hpp>
 
 #include "World.h"
 #include "GameManager.h"
@@ -81,7 +78,7 @@ int EnterLoadingScreen()
     std::shared_ptr<TgxFile> tgx_loading = GetTgx("gfx/frontend_loading.tgx");
 
     /* Get the assets */
-    std::vector<boost::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
+    std::vector<std::filesystem::path> files = GetDirectoryRecursive(GetDirectory(), ".ani");
     if(files.empty()) {
         return EXIT_FAILURE;
     }
@@ -108,7 +105,7 @@ int EnterLoadingScreen()
 #endif
 
         /* Load a file */
-        boost::filesystem::path path = files.at(index);
+        std::filesystem::path path = files.at(index);
         Cache(path);
         index++;
 
@@ -155,8 +152,8 @@ int StartGame(GameOptions& opt)
 
     if (opt.color >= 0) Logger::SetColorOutput(opt.color == 1);
 
-    // Convert resolution //
     Resolution res;
+    // Convert resolution //
     bool found = false;
     for (int i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
         int w = resolutions[i][0];
@@ -213,61 +210,35 @@ int StartGame(GameOptions& opt)
 /* Common entry point across all platforms */
 int main(int argc, char **argv)
 {
-    namespace po = boost::program_options;
-    namespace fs = boost::filesystem;
+    namespace po = cxxopts;
+    namespace fs = std::filesystem;
 
-    fs::path full_path(fs::initial_path<fs::path>());
-    full_path = fs::system_complete(fs::path(argv[0])).parent_path();
-
-    // Parse commandline / config file //
+    // Parse commandline //
     try {
         GameOptions opt;
 
-        // Command line only //
-        po::options_description generic("Generic options");
-        generic.add_options()
-            ("help,h", po::bool_switch()->default_value(false), "Print this info")
-            ("version,v", "Print version string");
+        po::Options config("Sourcehold", "Open-source Stronghold");
 
-        // Command line and config file //
-        po::options_description config("Settings");
         config.add_options()
-            ("path,p", po::value<std::string>(&opt.dataDir)->default_value("../data/"), "Custom path to data folder")
-            ("debug", po::bool_switch(&opt.debug)->default_value(false), "Print debug info")
-            ("color,c", po::bool_switch()->default_value(false), "Force color output")
-            ("fullscreen,f", po::bool_switch(&opt.fullscreen)->default_value(false), "Run in fullscreen mode")
-            ("resolution,r", po::value<std::string>()->default_value("1280x720"), "Resolution of the window")
-            ("resolutions", po::bool_switch()->default_value(false), "List available resolutions and exit")
-            ("disp,d", po::value<uint16_t>(&opt.ndisp)->default_value(0), "Index of the monitor to be used")
-            ("skip,s", po::bool_switch(&opt.skip)->default_value(false), "Skip directly to the main menu")
-            ("noborder", po::bool_switch(&opt.noborder)->default_value(false), "Remove window border")
-            ("nograb", po::bool_switch(&opt.nograb)->default_value(false), "Don't grab the mouse")
-            ("nosound", po::bool_switch(&opt.nosound)->default_value(false), "Disable sound entirely")
-            ("nothread", po::bool_switch(&opt.nothread)->default_value(false), "Disable threading")
-            ("nocache", po::bool_switch(&opt.nocache)->default_value(false), "Disable asset caching");
+            ("h,help", "Print this info")
+            ("v,version", "Print version string")
+            ("resolutions", "List available resolutions and exit")
+            ("p,path", "Custom path to data folder", po::value<std::string>()->default_value("../data/"))
+            ("debug", "Print debug info", po::value<bool>(opt.debug))
+            ("c,color", "Force color output")
+            ("f,fullscreen", "Run in fullscreen mode", po::value<bool>(opt.fullscreen))
+            ("r,resolution", "Resolution of the window", po::value<std::string>()->default_value("1280x720"))
+            ("d,disp", "Index of the monitor to be used", po::value<uint16_t>()->default_value("0"))
+            ("s,skip", "Skip directly to the main menu", po::value<bool>(opt.skip))
+            ("noborder", "Remove window border", po::value<bool>(opt.noborder))
+            ("nograb", "Don't grab the mouse", po::value<bool>(opt.nograb))
+            ("nosound", "Disable sound entirely", po::value<bool>(opt.nosound))
+            ("nothread", "Disable threading", po::value<bool>(opt.nothread))
+            ("nocache", "Disable asset caching", po::value<bool>(opt.nocache));
 
-        po::options_description config_file_options;
-        config_file_options.add(config);
-
-        po::options_description cmdline_options;
-        cmdline_options.add(generic).add(config);
-
-        po::variables_map result;
-        po::store(po::parse_command_line(argc, argv, cmdline_options), result);
-
-        if (boost::filesystem::exists(full_path / "settings.ini")) {
-            std::ifstream ifs(fs::path(full_path / "settings.ini").string().c_str());
-            po::store(po::parse_config_file(ifs, config_file_options, true), result);
-            ifs.close();
-        }
-        else {
-            Logger::warning(GAME) << "There appears to be no settings.ini in your installation path!" << std::endl;
-        }
-
-        po::notify(result);
-
+        auto result = config.parse(argc, argv);
         if (result["help"].as<bool>()) {
-            std::cout << config << std::endl;
+            std::cout << config.help() << std::endl;
             return EXIT_SUCCESS;
         }
 
@@ -281,22 +252,27 @@ int main(int argc, char **argv)
         if (result.count("color") > 0) opt.color = result["color"].as<bool>();
         else opt.color = -1;
 
-        boost::erase_all(opt.dataDir, "\""); // can sometimes appear when there's extra "" in the .ini
+        opt.ndisp = result["disp"].as<uint16_t>();
+        opt.dataDir = result["path"].as<std::string>();
 
-        std::vector<std::string> res;
-        boost::split(res, result["resolution"].as<std::string>(), [](char c){return c=='x';});
+        std::regex regex("(\\d+)x(\\d+)");
+        std::smatch match;
 
-        if (res.size() != 2) {
-            // fallback
-            opt.width = 800; opt.height = 600;
+        const std::string str = result["resolution"].as<std::string>();
+        if (std::regex_search(str.begin(), str.end(), match, regex)) {
+            opt.width  = std::stoi(match[1]);
+            opt.height = std::stoi(match[2]);
+
+            std::cout << opt.width << "x" << opt.height << std::endl;
         }
         else {
-            opt.width = std::stoi(res[0]); opt.height = std::stoi(res[1]);
+            // fallback
+            opt.width = 800; opt.height = 600;
         }
 
         return StartGame(opt);
     }
-    catch (po::error& e) {
+    catch (po::OptionException & e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }

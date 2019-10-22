@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cinttypes>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "Parsers/Parser.h"
 
@@ -16,11 +16,11 @@ namespace Sourcehold {
             Texture preview;
         public:
             MapFile();
-            MapFile(boost::filesystem::path path);
+            MapFile(std::filesystem::path path);
             MapFile(const MapFile&) = delete;
             ~MapFile();
 
-            bool LoadFromDisk(boost::filesystem::path path);
+            bool LoadFromDisk(std::filesystem::path path);
 
             inline Texture& GetPreview() { return preview; }
         protected:

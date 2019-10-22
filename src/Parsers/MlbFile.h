@@ -7,7 +7,7 @@
 #include "System/Logger.h"
 #include "Parsers/Parser.h"
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace Sourcehold {
     namespace Parsers {
@@ -23,7 +23,7 @@ namespace Sourcehold {
             MlbFile();
             ~MlbFile();
 
-            bool LoadFromDisk(boost::filesystem::path path);
+            bool LoadFromDisk(std::filesystem::path path);
             void Clear();
 
             inline std::wstring& GetString(Assets::MissionDescription index) {

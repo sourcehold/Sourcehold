@@ -7,7 +7,7 @@
 #include <al.h>
 #include <alc.h>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 #include "System/Logger.h"
 
@@ -25,11 +25,11 @@ namespace Sourcehold {
             bool fadeIn;
         public:
             Song(const Song &source);
-            Song(boost::filesystem::path path, bool repeat = false);
+            Song(std::filesystem::path path, bool repeat = false);
             Song(uint8_t *ptr = NULL, size_t size = 0, bool repeat = false);
             ~Song();
 
-            bool Load(boost::filesystem::path path, bool repeat = false);
+            bool Load(std::filesystem::path path, bool repeat = false);
             bool Play();
             void Pause();
             void Resume();

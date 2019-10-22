@@ -13,7 +13,7 @@ MlbFile::~MlbFile()
     Clear();
 }
 
-bool MlbFile::LoadFromDisk(boost::filesystem::path path)
+bool MlbFile::LoadFromDisk(std::filesystem::path path)
 {
     if(!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
         Logger::error(PARSERS)  << "Unable to load Mlb file " << path << " from data folder!" << std::endl;

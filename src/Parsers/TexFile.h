@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 #include <cinttypes>
 #include <map>
 #include <vector>
@@ -18,7 +18,7 @@ namespace Sourcehold {
             TexFile();
             ~TexFile() {};
 
-            bool LoadFromDisk(boost::filesystem::path path);
+            bool LoadFromDisk(std::filesystem::path path);
 
             std::wstring &GetString(TextSection sec, uint16_t index);
         protected:

@@ -51,7 +51,7 @@ namespace Sourcehold {
                 file = GetGm1(std::string("gm/") + f + std::string(".gm1"));
             }
 
-            virtual void Update(double dt) = 0;
+            virtual void Update(double dt) {};
 
             void Render() {
                 Camera& cam = Camera::instance();
@@ -62,8 +62,10 @@ namespace Sourcehold {
                 SDL_Rect r = file->GetTextureAtlas()->Get(index);
                 Rendering::Render(*file->GetTextureAtlas(), px, py, &r);
             }
+
+            int x, y;
         protected:
-            int x, y, index=0;
+            int index=0;
             std::shared_ptr<Gm1File> file;
         };
 
