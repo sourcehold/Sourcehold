@@ -32,6 +32,11 @@ bool Parser::Ok()
     return !(stream.rdstate() & std::fstream::failbit);
 }
 
+void Parser::Skip(uint32_t n)
+{
+    stream.seekg(n, std::ios_base::cur);
+}
+
 void Parser::SeekG(uint32_t pos)
 {
     stream.seekg(pos, std::ios_base::beg);

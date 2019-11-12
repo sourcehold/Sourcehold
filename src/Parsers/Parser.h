@@ -24,6 +24,7 @@ namespace Sourcehold {
             bool Open(const std::string &path, std::ios_base::openmode mode);
             void Close();
             bool Ok();
+            void Skip(uint32_t n);
             void SeekG(uint32_t pos);
             void SeekP(uint32_t pos);
             uint32_t Tell();

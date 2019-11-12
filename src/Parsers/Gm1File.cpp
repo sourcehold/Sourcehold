@@ -12,10 +12,6 @@ using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-#undef min // ...
-#undef max
-
-#pragma pack(push, 1)
 struct Gm1File::ImageHeader {
     /* Image dimensions */
     uint16_t width;
@@ -40,8 +36,7 @@ struct Gm1File::ImageHeader {
     uint8_t partWidth;
     /* Color */
     uint8_t color;
-} ATTRIB_PACKED;
-#pragma pack(pop)
+};
 
 struct Gm1File::Gm1Entry {
     ImageHeader header;
@@ -49,6 +44,25 @@ struct Gm1File::Gm1Entry {
     uint32_t offset;
     uint16_t collection;
     uint16_t offX, offY, tileX, tileY;
+};
+
+struct Gm1File::Gm1Header {
+    /* Number of entries */
+    uint32_t num;
+    /* Type of stored entries */
+    enum DataType : uint32_t {
+        TYPE_INTERFACE = 0x01, /* Tgx images */
+        TYPE_ANIMATION = 0x02, /* Animation */
+        TYPE_TILE = 0x03, /* Tile object (tgx) */
+        TYPE_FONT = 0x04, /* Tgx-compressed font */
+        TYPE_MISC1 = 0x05, /* Uncompressed image */
+        TYPE_CONSTSIZE = 0x06, /* Constant size */
+        TYPE_MISC2 = 0x07, /* Like 0x05 */
+        FIRST = TYPE_INTERFACE,
+        LAST = TYPE_MISC2,
+    } type;
+    /* Data size */
+    uint32_t len;
 };
 
 /* Will be overwritten when loading a new file. Not needed at runtime */
@@ -79,11 +93,14 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
         return false;
     }
 
-    if(!Parser::GetData(&header, sizeof(Gm1Header))) {
-        Logger::error(PARSERS) << "Unable to load Gm1 file header from '" << path.string() << "'!" << std::endl;
-        Parser::Close();
-        return false;
-    }
+    Gm1Header header;
+    Parser::Skip(3*sizeof(uint32_t));
+    header.num = Parser::GetDWord();
+    Parser::Skip(1*sizeof(uint32_t));
+    header.type = (Gm1Header::DataType)Parser::GetDWord();
+    Parser::Skip(14*sizeof(uint32_t));
+    header.len = Parser::GetDWord();
+    Parser::Skip(1*sizeof(uint32_t));
 
     /* Boundary check */
     if(header.num > MAX_NUM) {
@@ -112,7 +129,18 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
 
     for(n = 0; n < header.num; n++) {
         /* Read image header */
-        Parser::GetData(&(entries.begin() + n)->header, sizeof(ImageHeader));
+        ImageHeader *header = &(entries.begin() + n)->header;
+        header->width = GetWord();
+        header->height = GetWord();
+        header->offsetX = GetWord();
+        header->offsetY = GetWord();
+        header->part =  GetByte();
+        header->parts = GetByte();
+        header->tileOffsetY = GetWord();
+        header->direction = (ImageHeader::Direction)GetByte();
+        header->horizOffset = GetByte();
+        header->partWidth = GetByte();
+        header->color = GetByte();
     }
 
     /* Get offset of data start */
@@ -178,7 +206,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
         tileset->Allocate(header.num);
         tileset->Lock();
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n, entries, imgdata);
+            GetImage(n, entries, imgdata, &header);
         }
         tileset->Unlock();
         tileset->Create();
@@ -198,7 +226,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
         textureAtlas->Lock();
         /* One entry -> one texture */
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n, entries, imgdata);
+            GetImage(n, entries, imgdata, &header);
         }
         textureAtlas->Unlock();
         textureAtlas->Create();
@@ -214,24 +242,24 @@ void Gm1File::Free()
     tileset->Clear();
 }
 
-bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *imgdata)
+bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *imgdata, Gm1Header *header)
 {
     /* Seek to position */
     char *position = imgdata + entries[index].offset;
 
-    switch(header.type) {
+    switch(header->type) {
     case Gm1Header::TYPE_INTERFACE:
     case Gm1Header::TYPE_FONT:
     case Gm1Header::TYPE_CONSTSIZE: {
         SDL_Rect part = textureAtlas->Get(index);
         TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, nullptr, 0);
     }
-    break;
+        break;
     case Gm1Header::TYPE_ANIMATION: {
         SDL_Rect part = textureAtlas->Get(index);
         TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, palette, entries[index].header.color % 10);
     }
-    break;
+        break;
     case Gm1Header::TYPE_TILE: {
         /* Read tile */
         SDL_Rect tile = tileset->GetTile(index);
@@ -267,20 +295,20 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
                     tile.x + (15 - lines[l] / 2 + i),
                     tile.y + l,
                     r, g, b, 0xFF
-                );
+                    );
 /*
-                textureAtlas->GetSurface().SetPixel(
-                    part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
-                    part.y + entries[index].tileY + l,
-                    r, g, b, a
-                );
+  textureAtlas->GetSurface().SetPixel(
+  part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
+  part.y + entries[index].tileY + l,
+  r, g, b, a
+  );
 */
             }
         }
 
         position += entries[index].size-512;
     }
-    break;
+        break;
     case Gm1Header::TYPE_MISC1:
     case Gm1Header::TYPE_MISC2: {
         SDL_Rect part = textureAtlas->Get(index);
@@ -299,9 +327,9 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
             }
         }
     }
-    break;
+        break;
     default: {
-        Logger::error(PARSERS) << "Unknown filetype stored in Gm1: " << header.type << std::endl;
+        Logger::error(PARSERS) << "Unknown filetype stored in Gm1: " << header->type << std::endl;
         return false;
     }
     }
