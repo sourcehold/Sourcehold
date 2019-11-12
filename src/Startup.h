@@ -47,7 +47,7 @@ namespace Sourcehold {
         protected:
             void onEventReceive(Mouse &event) override;
 
-            double startTime = 0.0, fadeBase = 0.0;
+            double startTime = 0.0;
             Song aud_startup;
 
             /* Resources */

@@ -91,7 +91,7 @@ namespace Sourcehold {
          */
         class Building;
         class Entity;
-        class World : 
+        class World :
             public GameMap,
             private EventConsumer<Keyboard>,
             private EventConsumer<Mouse>

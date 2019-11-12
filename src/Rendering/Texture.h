@@ -19,7 +19,6 @@ namespace Sourcehold {
         class Texture {
             SDL_Texture *texture = nullptr;
             Uint32* pixels = nullptr;
-            SDL_TextureAccess access;
         public:
             Texture() = default;
             Texture(const Texture &tex);

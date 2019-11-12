@@ -9,8 +9,7 @@ using namespace Sourcehold::Rendering;
 
 Texture::Texture(const Texture &tex) :
     texture(tex.texture),
-    pixels(tex.pixels),
-    access(tex.access)
+    pixels(tex.pixels)
 {
 }
 
@@ -21,7 +20,6 @@ Texture::~Texture()
 
 bool Texture::AllocNewStreaming(int width, int height, int format)
 {
-    access = SDL_TEXTUREACCESS_STREAMING;
     texture = SDL_CreateTexture(
                   GetRenderer(),
                   format,
@@ -40,7 +38,6 @@ bool Texture::AllocNewStreaming(int width, int height, int format)
 
 bool Texture::AllocFromSurface(Surface &surface)
 {
-    access = SDL_TEXTUREACCESS_STATIC;
     texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
     if(!texture) {
         Logger::error(RENDERING) << "Unable to create texture from surface: " << SDL_GetError() << std::endl;
@@ -53,7 +50,6 @@ bool Texture::AllocFromSurface(Surface &surface)
 
 bool Texture::AllocNewTarget(int width, int height, int format)
 {
-    access = SDL_TEXTUREACCESS_TARGET;
     texture = SDL_CreateTexture(
                   GetRenderer(),
                   format,
@@ -83,6 +79,9 @@ void Texture::Destroy()
 
 void Texture::LockTexture()
 {
+    int access;
+    SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
+
     if(!texture || access != SDL_TEXTUREACCESS_STREAMING) return;
     int pitch;
     if(SDL_LockTexture(texture, nullptr, (void**)&pixels, &pitch)) {
@@ -92,6 +91,9 @@ void Texture::LockTexture()
 
 void Texture::UnlockTexture()
 {
+    int access;
+    SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
+
     if(access != SDL_TEXTUREACCESS_STREAMING) return;
     SDL_UnlockTexture(texture);
 }

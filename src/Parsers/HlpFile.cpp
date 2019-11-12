@@ -176,8 +176,9 @@ void Parsers::UnloadStrongholdHlp()
 HlpSection *Parsers::GetHlpSection(std::wstring name)
 {
     // TODO: speed up
-    for(std::vector<HlpSection>::iterator it = _sections.begin(); it != _sections.end(); ++it) {
-        if(it->name == name) return &(*it);
-    }
+    //for(std::vector<HlpSection>::iterator it = _sections.begin(); it != _sections.end(); ++it) {
+    //    if(it->name == name) return &(*it);
+    //}
+	return nullptr;
 }
 
