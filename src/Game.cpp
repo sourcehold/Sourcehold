@@ -10,7 +10,6 @@
 #include "GameManager.h"
 #include "Startup.h"
 
-#include "Rendering/Font.h"
 #include "Parsers/MlbFile.h"
 
 #include "System/System.h"
@@ -183,11 +182,7 @@ int StartGame(GameOptions& opt)
         );
         return EXIT_FAILURE;
     }
-    if(!LoadFonts()) {
-        Logger::error(GAME) << "Error while loading fonts!" << std::endl;
-        return EXIT_FAILURE;
-    }
-
+	
     Logger::message(GAME) << "Done" << std::endl;
 
     Startup *start = new Startup();

@@ -271,7 +271,7 @@ void IngameGUI::onEventReceive(Keyboard& keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
-            escMenu.open = !escMenu.open;
+            escMenu.Toggle();
             break;
         default: break;
         }

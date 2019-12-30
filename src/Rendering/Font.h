@@ -24,7 +24,7 @@ namespace Sourcehold {
             RIGHT
         };
 
-        bool LoadFonts();
+        void LoadFonts();
         void UnloadFonts();
         void RenderText(const std::wstring& text, int32_t x, int32_t y, Font type = FONT_SMALL, bool illumination = false, double scaleFactor = 1.0);
         /* Render text inside the rect */

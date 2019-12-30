@@ -22,6 +22,7 @@
 
 #include "Rendering/BinkVideo.h"
 #include "Rendering/Camera.h"
+#include "Rendering/Font.h"
 
 #include "GUI/MenuUtils.h"
 
@@ -98,7 +99,7 @@ void DetectUsername()
         }
     }
     /* Look-up the name and store the index */
-/*
+    /*
     for(size_t i = 0; i < lut_names.size(); i++) {
         const wchar_t *name = lut_names[i];
         if(!wcscmp(name, boost::to_upper_copy<std::wstring>(username).c_str())) {
@@ -109,7 +110,8 @@ void DetectUsername()
             return;
         }
     }
-*/
+    */
+
     return;
 }
 
@@ -260,6 +262,8 @@ bool Game::LoadGameData()
     DetectUsername();
 
     InitMenuUtils();
+    LoadFonts();
+
     return true;
 }
 

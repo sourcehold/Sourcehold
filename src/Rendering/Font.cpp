@@ -15,13 +15,11 @@ static std::pair<uint8_t, uint8_t> _table_width_height[3] = {
     { 19, 32 }, /* Large */
 };
 
-bool Rendering::LoadFonts()
-{
+void Rendering::LoadFonts()
+{	
     _fonts[0] = GetGm1("gm/font_slanted.gm1");
     _fonts[1] = GetGm1("gm/font_stronghold.gm1");
     _fonts[2] = GetGm1("gm/font_stronghold_aa.gm1");
-
-    return true;
 }
 
 void Rendering::UnloadFonts()

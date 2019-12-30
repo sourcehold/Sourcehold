@@ -13,10 +13,10 @@ endif()
 include_directories(src)
 
 # Thirdparty
-include_directories(thirdparty/blast/)
-include_directories(thirdparty/duktape/)
-include_directories(thirdparty/cxxopts/include/)
-include_directories(thirdparty/filesystem/include/)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/blast/)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/duktape/)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/include/)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/filesystem/include/)
 
 # pthread
 find_package (Threads)
@@ -39,8 +39,23 @@ find_package(Libswresample REQUIRED)
 include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
 
 # Include sources / headers
-file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c thirdparty/duktape/duktape.c)
-file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/src/*.h)
+file(
+    GLOB_RECURSE _source_list 
+    LIST_DIRECTORIES false
+    "${CMAKE_SOURCE_DIR}/src/*.cpp*"
+    "${CMAKE_SOURCE_DIR}/src/*.h*"
+    "${CMAKE_SOURCE_DIR}/thirdparty/blast/*.c"
+    "${CMAKE_SOURCE_DIR}/thirdparty/blast/*.h"
+    "${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/*.c"
+    "${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/*.h"
+)
+
+foreach(_source IN ITEMS ${_source_list})
+    get_filename_component(_source_path "${_source}" PATH)
+    file(RELATIVE_PATH _source_path_rel "${CMAKE_SOURCE_DIR}/src/" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()
 
 if(MSVC)
 	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -51,10 +66,10 @@ if(MSVC)
 		set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
-	add_definitions(-Wno-reorder -pedantic-errors -Ofast -Wall -Wextra -fno-fast-math)
+	add_definitions(-Wno-reorder -pedantic-errors -Ofast -fno-fast-math)
 endif()
 
-add_executable(Stronghold ${SOURCES} ${HEADERS})
+add_executable(Stronghold ${_source_list})
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 11
 	CXX_STANDARD_REQUIRED YES

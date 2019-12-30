@@ -22,6 +22,11 @@ bool Rendering::InitRenderer()
 
     SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
 
+	const char *hint = "SDL_HINT_RENDER_SCALE_QUALITY";
+	if(SDL_SetHintWithPriority(hint, "1", SDL_HINT_OVERRIDE) == SDL_FALSE) {
+		Logger::warning(RENDERING) << "Unable to set " << hint << " hint!" << std::endl;
+	}
+
     return true;
 }
 

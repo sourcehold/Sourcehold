@@ -46,7 +46,7 @@ void GUI::RenderMenuBorder()
         SDL_Rect border_rect;
 
         /**
-         * Render the border 'zoomed in' so that theP
+         * Render the border 'zoomed in' so that the
          * menu can be placed in the middle without scaling.
          */
         border_rect.x = (1920 - GetWidth()) / 2;
@@ -64,7 +64,6 @@ bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
     return false;
 }
 
-
 /* Dialog functions */
 bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y)
 {
@@ -75,7 +74,7 @@ bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, ui
     auto dim = GetStringPixelDim(text, FONT_SMALL);
 
     auto atlas = interface_icons;
-    SDL_Rect rect = atlas->Get(button_indices[style]);;
+    SDL_Rect rect = atlas->Get(button_indices[style]);
 
     int mx = GetMouseX();
     int my = GetMouseY();
@@ -105,7 +104,9 @@ bool DialogWindow::RenderButton(DialogButton style, const std::wstring& text, ui
     rect = atlas->Get(button_indices[style]);
 
     // button
+	atlas->SetAlphaMod(140);
     Rendering::Render(*atlas.get(), int(x), int(y), &rect);
+	atlas->SetAlphaMod(255);
 
     // text
     Rendering::RenderText(text, Rect<int>(x+4, y+4, rect.w-4, rect.h-4), Align::CENTER, FONT_LARGE, false);
@@ -123,7 +124,7 @@ void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
     SDL_Rect rect;
 
     // background
-    RenderRect(Rect<int>{ x+8, y+8, 8+nx*24, 8+ny*24 }, 0, 0, 0, 128, true);
+    RenderRect(Rect<int>{ x+8, y+8, 8+nx*MENU_TILE_DIM, 8+ny*MENU_TILE_DIM }, 0, 0, 0, 128, true);
 
     /* Render alpha masks */
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
@@ -132,24 +133,24 @@ void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
     rect = atlas->Get(3);
     Rendering::Render(*atlas, x, y, &rect);
     rect = atlas->Get(15);
-    Rendering::Render(*atlas, x, y+ny*24, &rect);
+    Rendering::Render(*atlas, x, y+ny*MENU_TILE_DIM, &rect);
     rect = atlas->Get(5);
-    Rendering::Render(*atlas, x+nx*24, y, &rect);
+    Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, y, &rect);
     rect = atlas->Get(17);
-    Rendering::Render(*atlas, x+nx*24, y+ny*24, &rect);
+    Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, y+ny*MENU_TILE_DIM, &rect);
 
     // edges
-    for(int ix = x+24; ix < x+nx*24; ix+=24) {
+    for(int ix = x+MENU_TILE_DIM; ix < x+nx*MENU_TILE_DIM; ix+=MENU_TILE_DIM) {
         rect = atlas->Get(4);
         Rendering::Render(*atlas, ix, y, &rect);
         rect = atlas->Get(16);
-        Rendering::Render(*atlas, ix, y+ny*24, &rect);
+        Rendering::Render(*atlas, ix, y+ny*MENU_TILE_DIM, &rect);
     }
-    for(int iy = y+24; iy < y+ny*24; iy+=24) {
+    for(int iy = y+MENU_TILE_DIM; iy < y+ny*MENU_TILE_DIM; iy+=MENU_TILE_DIM) {
         rect = atlas->Get(9);
         Rendering::Render(*atlas, x, iy, &rect);
         rect = atlas->Get(11);
-        Rendering::Render(*atlas, x+nx*24, iy, &rect);
+        Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, iy, &rect);
     }
 
     /* Render color */
@@ -159,24 +160,24 @@ void DialogWindow::RenderDialogBorder(int x, int y, int nx, int ny)
     rect = atlas->Get(0);
     Rendering::Render(*atlas, x, y, &rect);
     rect = atlas->Get(12);
-    Rendering::Render(*atlas, x, y+ny*24, &rect);
+    Rendering::Render(*atlas, x, y+ny*MENU_TILE_DIM, &rect);
     rect = atlas->Get(2);
-    Rendering::Render(*atlas, x+nx*24, y, &rect);
+    Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, y, &rect);
     rect = atlas->Get(14);
-    Rendering::Render(*atlas, x+nx*24, y+ny*24, &rect);
+    Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, y+ny*MENU_TILE_DIM, &rect);
 
     // edges
-    for(int ix = x+24; ix < x+nx*24; ix+=24) {
+    for(int ix = x+MENU_TILE_DIM; ix < x+nx*MENU_TILE_DIM; ix+=MENU_TILE_DIM) {
         rect = atlas->Get(1);
         Rendering::Render(*atlas, ix, y, &rect);
         rect = atlas->Get(13);
-        Rendering::Render(*atlas, ix, y+ny*24, &rect);
+        Rendering::Render(*atlas, ix, y+ny*MENU_TILE_DIM, &rect);
     }
-    for(int iy = y+24; iy < y+ny*24; iy+=24) {
+    for(int iy = y+MENU_TILE_DIM; iy < y+ny*MENU_TILE_DIM; iy+=MENU_TILE_DIM) {
         rect = atlas->Get(6);
         Rendering::Render(*atlas, x, iy, &rect);
         rect = atlas->Get(8);
-        Rendering::Render(*atlas, x+nx*24, iy, &rect);
+        Rendering::Render(*atlas, x+nx*MENU_TILE_DIM, iy, &rect);
     }
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
@@ -218,8 +219,8 @@ DialogResult DialogWindow::QuitDialog()
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (18*24 / 2);
-    int y = (h / 2) - (7*24  / 2);
+    int x = (w / 2) - (18*MENU_TILE_DIM / 2);
+    int y = (h / 2) - (7 *MENU_TILE_DIM  / 2);
 
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_MAIN_MENU, 5), true);
@@ -240,8 +241,8 @@ DialogResult DialogWindow::LoadDialog()
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (30*24 / 2);
-    int y = (h / 2) - (17*24 / 2);
+    int x = (w / 2) - (30*MENU_TILE_DIM / 2);
+    int y = (h / 2) - (17*MENU_TILE_DIM / 2);
 
     const std::wstring &load = GetString(T_GAME_OPTIONS, 2);
 
@@ -295,8 +296,8 @@ DialogResult DialogWindow::SettingsDialog()
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (21*24 / 2);
-    int y = (h / 2) - (15*24 / 2);
+    int x = (w / 2) - (21*MENU_TILE_DIM / 2);
+    int y = (h / 2) - (15*MENU_TILE_DIM / 2);
 
     switch(state) {
     case State::GAME_OPTIONS: {
@@ -378,8 +379,8 @@ DialogResult DialogWindow::EscMenu()
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (21*24 / 2);
-    int y = (h / 2) - (15*24 / 2);
+    int x = (w / 2) - (21*MENU_TILE_DIM / 2);
+    int y = (h / 2) - (15*MENU_TILE_DIM / 2) - 50;
 
     switch(state) {
     case State::GAME_OPTIONS: {
@@ -446,8 +447,8 @@ DialogResult DialogWindow::QuitMissionDialog()
     int w = ToCoordX(GetTargetWidth());
     int h = ToCoordY(GetTargetHeight());
 
-    int x = (w / 2) - (18*24 / 2);
-    int y = (h / 2) - (7*24  / 2);
+    int x = (w / 2) - (18 * MENU_TILE_DIM / 2);
+    int y = (h / 2) - (7  * MENU_TILE_DIM  / 2);
 
     RenderDialogBorder(x, y, 18, 6);
     RenderDialogTextBox(x, y, 433, 64, GetString(T_GAME_OPTIONS, 7), true);
@@ -490,7 +491,6 @@ DialogWindow::DialogWindow(DialogType type)
 void DialogWindow::Init(DialogType type)
 {
     this->type = type;
-    this->open = true;
 
     std::vector<ModCampaign>
         *campaigns_military = GetMilitaryCampaigns(),

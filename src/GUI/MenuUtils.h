@@ -62,10 +62,12 @@ namespace Sourcehold {
         };
 
         class DialogWindow : protected EventConsumer<Mouse> {
-            bool clicked=false;
+            bool clicked=false,open=true;
             Table table;
             LineEdit lineEdit;
             DialogType type;
+
+			const int MENU_TILE_DIM = 24; // Size of one 'tile' menus are made of
 
             enum class State {
                 GAME_OPTIONS,
@@ -133,8 +135,7 @@ namespace Sourcehold {
 
             inline void Open() { open = true; }
             inline void Close() { open = false; }
-
-            bool open;
+			inline void Toggle() { open = !open; }
         };
     }
 }
