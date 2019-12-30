@@ -202,3 +202,40 @@ void World::onEventReceive(Mouse &mouseEvent)
         Spawn<Lord>(x, y);
     }
 }
+
+void World::onEventReceive(Touch& touchEvent)
+{
+    Camera& cam = Camera::instance();
+
+    if (touchEvent.GetType() == FINGERMOTION) {
+        float dx = touchEvent.GetDx();
+        float dy = touchEvent.GetDy();
+
+        // To screen coord
+        int sdx = (int)(dx * (float)GetWidth() * 0.5f + 0.5f),
+            sdy = (int)(dy * (float)GetHeight() * 0.5f + 0.5f);
+
+        const float CAMERA_ACC_MINMAX = 10.0f;
+
+        // Move horizontally
+        cam.accX += sdx;
+        cam.accX = std::max<float>(-CAMERA_ACC_MINMAX, cam.accX);
+        cam.accX = std::min<float>(CAMERA_ACC_MINMAX, cam.accX);
+
+        // Move vertically
+        cam.accY += sdy;
+        cam.accY = std::max<float>(-CAMERA_ACC_MINMAX, cam.accY);
+        cam.accY = std::min<float>(CAMERA_ACC_MINMAX, cam.accY);
+    }
+    else if (touchEvent.GetType() == FINGERDOWN) {
+        float x = touchEvent.GetY();
+        float y = touchEvent.GetX();
+
+        // To screen coord
+        int sx = (int)(x * (float)GetWidth() * 0.5f + 0.5f),
+            sy = (int)(y * (float)GetHeight() * 0.5f + 0.5f);
+
+        int wpX = (cam.positionX + sx) / 30;
+        int wpY = (cam.positionY + sy) / 15;
+    }
+}

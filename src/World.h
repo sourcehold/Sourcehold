@@ -16,6 +16,7 @@
 #include "Events/Event.h"
 #include "Events/Keyboard.h"
 #include "Events/Mouse.h"
+#include "Events/Touch.h"
 
 namespace Sourcehold {
     namespace Parsers {
@@ -94,7 +95,8 @@ namespace Sourcehold {
         class World :
             public GameMap,
             private EventConsumer<Keyboard>,
-            private EventConsumer<Mouse>
+            private EventConsumer<Mouse>,
+            private EventConsumer<Touch>
         {
             ScrollInformation scroll;
             IngameGUI gui;
@@ -115,6 +117,7 @@ namespace Sourcehold {
         private:
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;
+            void onEventReceive(Touch& touchEvent) override;
         };
     }
 }

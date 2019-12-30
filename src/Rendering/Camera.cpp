@@ -3,6 +3,8 @@
 #include "Rendering/Camera.h"
 #include "Rendering/Display.h"
 
+#include "System/Config.h"
+
 #include "GameManager.h"
 
 using namespace Sourcehold;
@@ -36,8 +38,17 @@ void Camera::Stop()
 
 void Camera::Update(double dt)
 {
+#if defined(SOURCEHOLD_ANDROID) && defined(INVERT_CAM_ON_ANDROID)
+    positionX -= 60.0 * dt * accX;
+    positionY -= 50.0 * dt * accY;
+
+    // TODO
+    accX *= 0.96f;
+    accY *= 0.96f;
+#else
     positionX += 100.0 * dt * accX;
     positionY += 100.0 * dt * accY;
+#endif
 
     positionX = std::max(bounds.x, positionX);
     positionY = std::max(bounds.y, positionY);

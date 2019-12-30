@@ -85,7 +85,7 @@ int EnterLoadingScreen()
     /* Preload some assets */
     uint32_t index = 0;
 
-    /* Calculater the position */
+    /* Calculate the position */
     int px = (GetWidth() / 2) - (1024 / 2);
     int py = (GetHeight() / 2) - (768 / 2);
 
