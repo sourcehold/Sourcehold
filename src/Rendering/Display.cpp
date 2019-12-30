@@ -1,5 +1,6 @@
 #include "Rendering/Display.h"
 #include "System/Logger.h"
+#include "System/Config.h"
 
 using namespace Sourcehold;
 using namespace System;
@@ -40,7 +41,7 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
         param |= SDL_WINDOW_BORDERLESS;
     }
 
-    /* Select display */
+    // Select display //
     int displays = SDL_GetNumVideoDisplays();
     if(index >= displays) index = 0;
 
@@ -49,6 +50,17 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
         displayBounds[i] = { 0, 0, 0, 0 };
         SDL_GetDisplayBounds(i, &displayBounds[i]);
     }
+
+#ifdef SOURCEHOLD_ANDROID
+    // On Android, only use the native resolution //
+    if (width < 0 || height < 0) {
+        SDL_DisplayMode mode;
+        SDL_GetCurrentDisplayMode(index, &mode);
+        // Flip width and height to force landscape orientation //        
+        width = mode.h;
+        height = mode.w;
+    }
+#endif
 
     _window = SDL_CreateWindow(
                   title.c_str(),

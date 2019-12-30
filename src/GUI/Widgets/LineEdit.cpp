@@ -1,4 +1,4 @@
-#include "GUI/LineEdit.h"
+#include "GUI/Widgets/LineEdit.h"
 #include "Rendering/Font.h"
 #include "GameManager.h"
 

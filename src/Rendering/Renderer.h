@@ -23,6 +23,7 @@ namespace Sourcehold {
             RESOLUTION_1600x1200,
             RESOLUTION_1680x1050,
             RESOLUTION_1920x1080,
+            RESOLUTION_DYNAMIC
         };
 
         bool InitRenderer();

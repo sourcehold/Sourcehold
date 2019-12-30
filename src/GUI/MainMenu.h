@@ -10,7 +10,8 @@
 
 #include "GameManager.h"
 
-#include "GUI/StaticElement.h"
+#include "GUI/Widgets/StaticElement.h"
+#include "GUI/Widgets/Button.h"
 #include "GUI/UIState.h"
 #include "GUI/Credits.h"
 #include "GUI/MenuUtils.h"
@@ -73,7 +74,6 @@ namespace Sourcehold {
             Effect aud_greetings, aud_exit;
             Texture screen;
             int mx, my, glareCounter=0;
-            DialogWindow dlg[6];
 
             std::shared_ptr<Gm1File> gm1_icons_additional;
             std::shared_ptr<Gm1File> gm1_icons_main;

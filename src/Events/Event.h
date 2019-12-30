@@ -18,7 +18,10 @@ namespace Sourcehold {
             MOTION,
             BUTTONDOWN,
             BUTTONUP,
-            WHEEL
+            WHEEL,
+            FINGERMOTION,
+            FINGERDOWN,
+            FINGERUP
         };
 
         /*
@@ -27,7 +30,7 @@ namespace Sourcehold {
         class Event {
         public:
             Event() = default;
-            Event(const Event &event) = delete;
+            Event(const Event& event) = delete;
             ~Event() = default;
 
             inline void SetHandled(bool h) {
@@ -37,9 +40,13 @@ namespace Sourcehold {
                 return handled;
             }
 
-            virtual void eventCallback(SDL_Event &event) = 0;
+            inline EventType GetType() {
+                return type;
+            }
+
+            virtual void eventCallback(SDL_Event& event) = 0;
             EventType ConvertTypes(Uint32 sdlcode) {
-                switch(sdlcode) {
+                switch (sdlcode) {
                 case SDL_KEYDOWN:
                     return KEYDOWN;
                 case SDL_KEYUP:
@@ -54,6 +61,12 @@ namespace Sourcehold {
                     return BUTTONUP;
                 case SDL_MOUSEWHEEL:
                     return WHEEL;
+                case SDL_FINGERMOTION:
+                    return FINGERMOTION;
+                case SDL_FINGERDOWN:
+                    return FINGERDOWN;
+                case SDL_FINGERUP:
+                    return FINGERUP;
                 default:
                     return DUMMY;
                 }
@@ -75,19 +88,19 @@ namespace Sourcehold {
             ~EventConsumer() {
                 RemoveEventListener(id);
             };
-            EventConsumer(const EventConsumer &) = delete;
+            EventConsumer(const EventConsumer&) = delete;
             EventConsumer() : event() {
                 std::function<void(SDL_Event&)> fn(std::bind(&EventConsumer::_callback, this, std::placeholders::_1));
                 id = AddEventListener(fn);
             }
         private:
-            void _callback(SDL_Event &ev) {
+            void _callback(SDL_Event& ev) {
                 /* Forward event to implementation */
                 event.eventCallback(ev);
                 /* If not handled already, hand to consumer */
-                if(!event.IsHandled()) onEventReceive(event);
+                if (!event.IsHandled()) onEventReceive(event);
             }
-            virtual void onEventReceive(T &event) = 0;
+            virtual void onEventReceive(T& event) = 0;
         };
     }
 }

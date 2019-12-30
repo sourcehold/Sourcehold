@@ -11,9 +11,9 @@
 
 namespace Sourcehold {
     namespace GUI {
-        struct Row {
+        struct Column {
             std::wstring name;
-            std::vector<std::wstring> cols;
+            std::vector<std::wstring> rows;
         };
 
         using namespace Events;
@@ -30,7 +30,7 @@ namespace Sourcehold {
 
             void SetNumRows(uint32_t n);
             void SetNumCols(uint32_t n);
-            void SetRowName(uint32_t n, const std::wstring& name);
+            void SetColName(uint32_t n, const std::wstring& name);
             void SetText(uint32_t row, uint32_t col, const std::wstring& text);
 
             inline int GetSelected() { return selected; }
@@ -41,10 +41,10 @@ namespace Sourcehold {
         protected:
             void onEventReceive(Mouse &mouse) override;
 
-            std::vector<Row> rows;
+            std::vector<Column> cols;
             bool scrollbar = true;
             bool renderNames = true;
-            uint32_t numCols = 0;
+            uint32_t numRows = 0;
             int highlight = -1, selected = -1;
         };
     }

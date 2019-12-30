@@ -6,8 +6,7 @@ using namespace GUI;
 
 IngameGUI::IngameGUI() :
     EventConsumer<Keyboard>(),
-    EventConsumer<Mouse>(),
-    escMenu(DialogType::ESC_MENU)
+    EventConsumer<Mouse>()
 {
     LoadMenuAssets();
 
@@ -36,8 +35,6 @@ IngameGUI::IngameGUI() :
     ui_revert.SetTexture(atlas.get());
 
     ResetTarget();
-
-    escMenu.Close();
 }
 
 IngameGUI::~IngameGUI() {
@@ -50,13 +47,6 @@ bool IngameGUI::Render() {
 
     if (menubarShown) {
         RenderMenubar();
-    }
-
-    DialogResult res = escMenu.Render();
-    if (res == BACK) escMenu.Close();
-    else if (res == QUIT || res == QUIT_MISSION) {
-        // TODO: quit mission properly
-        return false;
     }
 
     return true;
@@ -204,7 +194,6 @@ void IngameGUI::RenderMenubar()
     atlas = gm1_icons->GetTextureAtlas();
     ui_disk.Render([&]() -> SDL_Rect {
         if (ui_disk.IsClicked()) {
-            escMenu.Open();
         }
         if (ui_disk.IsMouseOver()) return atlas->Get(26);
         else return atlas->Get(25);
@@ -271,7 +260,6 @@ void IngameGUI::onEventReceive(Keyboard& keyEvent)
             menubarShown = !menubarShown;
             break;
         case SDLK_ESCAPE:
-            escMenu.Toggle();
             break;
         default: break;
         }

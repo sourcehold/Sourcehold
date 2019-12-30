@@ -1,3 +1,5 @@
+#ifdef SCRIPT_SUPPORT
+
 #include "System/ModCampaign.h"
 #include "System/FileUtil.h"
 #include "System/Logger.h"
@@ -142,3 +144,5 @@ bool System::HasEcoModCampaigns()
 {
     return eco.size() > 0;
 }
+
+#endif

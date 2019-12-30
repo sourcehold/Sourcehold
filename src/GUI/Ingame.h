@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GUI/StaticElement.h"
+#include "GUI/Widgets/StaticElement.h"
 #include "GUI/MenuUtils.h"
 
 #include "Events/Event.h"
@@ -37,7 +37,6 @@ namespace Sourcehold {
             StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
             std::shared_ptr<TgxFile> tgx_right, tgx_left;
             std::shared_ptr<Gm1File> gm1_scribe, gm1_face, gm1_icons, gm1_floats;
-            DialogWindow escMenu;
         public:
             IngameGUI();
             ~IngameGUI();

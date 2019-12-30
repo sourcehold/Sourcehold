@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef SCRIPT_SUPPORT
+
 #include "System/filesystem.h"
 
 #include <string>
@@ -25,3 +27,5 @@ namespace Sourcehold {
         bool HasEcoModCampaigns();
     }
 }
+
+#endif

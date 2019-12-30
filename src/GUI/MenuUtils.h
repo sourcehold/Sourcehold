@@ -4,8 +4,8 @@
 
 #include "System/ModCampaign.h"
 
-#include "GUI/Table.h"
-#include "GUI/LineEdit.h"
+#include "GUI/Widgets/Table.h"
+#include "GUI/Widgets/LineEdit.h"
 
 #include "Events/Event.h"
 #include "Events/Mouse.h"
@@ -13,9 +13,9 @@
 namespace Sourcehold {
     namespace GUI {
         using namespace Events;
-        using namespace System;
 
         void InitMenuUtils();
+        std::shared_ptr<TextureAtlas> GetInterfaceIcons();
 
         /**
          * Renders the given string to fit the main menu
@@ -61,81 +61,27 @@ namespace Sourcehold {
             CAMPAIGN_SELECT_ECO
         };
 
-        class DialogWindow : protected EventConsumer<Mouse> {
-            bool clicked=false,open=true;
-            Table table;
-            LineEdit lineEdit;
-            DialogType type;
-
-			const int MENU_TILE_DIM = 24; // Size of one 'tile' menus are made of
-
-            enum class State {
-                GAME_OPTIONS,
-                GAMEPLAY_OPTIONS,
-                VIDEO_OPTIONS,
-                SOUND_OPTIONS,
-                CHANGE_NAME,
-                SAVE,
-                LOAD,
-                OPTIONS,
-                HELP,
-                RESTART_MISSION,
-                QUIT_MISSION,
-                EXIT_STRONGHOLD
-            } state = State::GAME_OPTIONS;
-        protected:
-            void onEventReceive(Mouse &event) override;
-
-            // TODO: names?
-            enum DialogButton : uint8_t {
-                BUTTON_1 = 0,
-                BUTTON_2,
-                BUTTON_3,
-                BUTTON_4,
-                BUTTON_5,
-                BUTTON_6,
-                BUTTON_7,
-                BUTTON_8,
-                BUTTON_9
-            };
-
-            enum class Deco {
-                LARGE,
-                SMALL
-            };
-
-            bool RenderButton(DialogButton style, const std::wstring& text, uint32_t x, uint32_t y);
-            void RenderDialogBorder(int x, int y, int nx, int ny);
-            void RenderDeco(Deco type, int x, int y);
-            void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring &text, bool deco);
-
-            DialogResult QuitDialog();
-            DialogResult LoadDialog();
-            DialogResult CombatMenuDialog();
-            DialogResult SiegeMenuDialog();
-            DialogResult EconomicsMenuDialog();
-            DialogResult SettingsDialog();
-            DialogResult EscMenu();
-            DialogResult QuitMissionDialog();
-
-            void InitModCampaignTable(std::vector<ModCampaign> *campaigns);
-        public:
-            DialogWindow() = default;
-            DialogWindow(DialogType type);
-            ~DialogWindow() = default;
-
-            void Init(DialogType type);
-            void Reset();
-
-            // Render the dialog window in its current state //
-            DialogResult Render();
-
-            // Get index of the selected table entry //
-            int GetSelectedIndex();
-
-            inline void Open() { open = true; }
-            inline void Close() { open = false; }
-			inline void Toggle() { open = !open; }
+        // TODO: names?
+        enum DialogButton : uint8_t {
+            BUTTON_1 = 0,
+            BUTTON_2,
+            BUTTON_3,
+            BUTTON_4,
+            BUTTON_5,
+            BUTTON_6,
+            BUTTON_7,
+            BUTTON_8,
+            BUTTON_9
         };
-    }
+
+        enum class Deco {
+            LARGE,
+            SMALL
+        };
+
+        /* Rendering functions for common dialog window elements */
+        void RenderDialogBorder(int x, int y, int nx, int ny);
+        void RenderDeco(Deco type, int x, int y);
+        void RenderDialogTextBox(int x, int y, int w, int h, const std::wstring& text, bool deco);
+     }
 }

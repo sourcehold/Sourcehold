@@ -25,11 +25,11 @@ namespace Sourcehold {
          * Use this for UI elements.
          */
         class StaticElement : public EventConsumer<Mouse> {
-            Texture *tex = nullptr;
+            Texture* tex = nullptr;
             bool shown = true;
             bool clicked = false;
             bool mouseOver = false;
-            double nx, ny, nw, nh, tx, ty, tw, th;
+            Rect<double> np, tp;
         public:
             StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
             StaticElement(const StaticElement &elem);

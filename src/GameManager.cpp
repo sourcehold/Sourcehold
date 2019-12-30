@@ -26,6 +26,10 @@
 
 #include "GUI/MenuUtils.h"
 
+#ifdef SOURCEHOLD_ANDROID
+#include <jni.h>
+#endif
+
 using namespace Sourcehold;
 using namespace Game;
 using namespace Audio;
@@ -165,6 +169,28 @@ AssetType ExtToType(const std::string &ext)
 
 bool Game::InitManager(GameOptions &opt, Resolution res)
 {
+#ifdef SOURCEHOLD_ANDROID
+
+    // Get JNI env from SDL
+    JNIEnv* env = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    jobject activity = (jobject)SDL_AndroidGetActivity();
+    jclass clazz(env->GetObjectClass(activity));
+
+    // Request permissions to read/write
+    jmethodID method_id = env->GetMethodID(clazz, "permissionCheck", "()V");
+    env->CallVoidMethod(activity, method_id);
+
+    // Get SD card mounting point
+    method_id = env->GetMethodID(clazz, "getSDCard", "()Ljava/lang/String;");
+    jstring path = reinterpret_cast<jstring>(env->CallObjectMethod(activity, method_id));
+    opt.dataDir = ghc::filesystem::path(env->GetStringUTFChars(path, nullptr)) / "Stronghold/";
+
+    // Cleanup
+    env->DeleteLocalRef(activity);
+    env->DeleteLocalRef(clazz);
+
+#endif
+
     _opt = opt;
     _resolution = res;
 
@@ -243,7 +269,9 @@ bool Game::LoadGameData()
         _cfg.WriteToDisk(_saveFolder / "../stronghold.cfg");
     }
 
+#ifdef SCRIPT_SUPPORT
     LoadModCampaigns(_dataFolder / "campaigns/");
+#endif
 
     /* Load special files */
     if( !_mlb.LoadFromDisk(_dataFolder / "stronghold.mlb") ||

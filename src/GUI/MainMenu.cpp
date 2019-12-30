@@ -127,13 +127,6 @@ MainMenu::MainMenu()
     ui_tex[3] = gm1_icons_economic->GetTextureAtlas();
     ui_tex[4] = gm1_icons_builder->GetTextureAtlas();
 
-    dlg[0].Init(DialogType::QUIT);
-    dlg[1].Init(DialogType::LOAD);
-    dlg[2].Init(DialogType::COMBAT_MENU);
-    dlg[3].Init(DialogType::SIEGE_MENU);
-    dlg[4].Init(DialogType::ECO_MENU);
-    dlg[5].Init(DialogType::SETTINGS);
-
     /* Allocate buttons */
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
@@ -175,7 +168,8 @@ UIState MainMenu::EnterMenu()
          */
         MenuButton selected = BUTTON_END;
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
-        switch(currentState) {
+
+        switch (currentState) {
         default:
         case MAIN_MENU: {
             Render(*tgx_bg_main);
@@ -183,84 +177,45 @@ UIState MainMenu::EnterMenu()
         } break;
         case COMBAT_MENU: {
             Render(*tgx_bg_combat);
-            buttonEnd = COMBAT_BACK_TO_MAIN+1;
+            buttonEnd = COMBAT_BACK_TO_MAIN + 1;
             buttonStart = COMBAT_CAMPAIGN;
         } break;
         case MILITARY_CAMPAIGN_MENU: {
             Render(*tgx_bg_combat2);
-
-            DialogResult res = dlg[2].Render();
-            if(res == LOAD) {
-                // Double-click on mission -> start mission
-                return MILITARY_CAMPAIGN_MISSION;
-            }
-
-            buttonEnd = COMBAT_CAMPAIGN_NEXT+1;
+            buttonEnd = COMBAT_CAMPAIGN_NEXT + 1;
             buttonStart = COMBAT_CAMPAIGN_BACK;
         } break;
         case MILITARY_CAMPAIGN_MISSION: {
-            // TODO
-            if(dlg[2].GetSelectedIndex() >= 0) {
-                aud_chantloop.Stop();
-                ResetTarget();
-                return MILITARY_CAMPAIGN_MISSION;
-            }
-            else currentState = MILITARY_CAMPAIGN_MENU;
         }
         case SIEGE_MENU: {
             Render(*tgx_bg_combat2);
-
-            DialogResult res = dlg[3].Render();
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case ECONOMICS_MENU: {
             Render(*tgx_bg_economic);
-            buttonEnd = ECO_BACK_TO_MAIN+1;
+            buttonEnd = ECO_BACK_TO_MAIN + 1;
             buttonStart = ECO_CAMPAIGN;
         } break;
         case ECONOMICS_CAMPAIGN_MENU: {
             Render(*tgx_bg_economic2);
-
-            DialogResult res = dlg[4].Render();
-            if(res == LOAD) {
-                return ECONOMICS_CAMPAIGN_MISSION;
-            }
-
-            buttonEnd = ECO_CAMPAIGN_NEXT+1;
+            buttonEnd = ECO_CAMPAIGN_NEXT + 1;
             buttonStart = ECO_CAMPAIGN_BACK;
         } break;
         case BUILDER_MENU: {
             Render(*tgx_bg_builder);
-            buttonEnd = BUILDER_BACK_TO_MAIN+1;
+            buttonEnd = BUILDER_BACK_TO_MAIN + 1;
             buttonStart = BUILDER_WORKING_MAP;
         } break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
-            DialogResult res = dlg[1].Render();
-            if(res == LOAD) {
-                // TODO
-            } else if(res == BACK) {
-                currentState = MAIN_MENU;
-            }
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case EXIT_GAME: {
             Render(*tgx_bg_main2);
-            DialogResult res = dlg[0].Render();
-            if(res == QUIT) {
-                aud_chantloop.Stop();
-                return EXIT_GAME;
-            } else if(res == BACK) {
-                currentState = MAIN_MENU;
-            }
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case SETTINGS_MENU: {
             Render(*tgx_bg_main2);
-            DialogResult res = dlg[5].Render();
-            if(res == BACK) {
-                currentState = MAIN_MENU;
-            }
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         }
@@ -301,7 +256,16 @@ UIState MainMenu::EnterMenu()
         RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
         ResetTarget();
 
-        Render(screen, mx, my);
+        if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
+#if SCALE_MAIN_MENU == 1
+            || GetEdition() == STRONGHOLD_CLASSIC // scale for classic edition too (optional)
+#endif
+            ) {
+            Render(screen);
+        }
+        else {
+            Render(screen, mx, my);
+        }
 
         //aud_greetings.Update();
 

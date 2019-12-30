@@ -98,7 +98,7 @@ int EnterLoadingScreen()
         ClearDisplay();
 
 #if RENDER_LOADING_BORDER == 1
-        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
+        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600 && res != RESOLUTION_DYNAMIC) {
             RenderMenuBorder();
         }
 #endif
@@ -137,13 +137,14 @@ static const int resolutions[][2] = {
     { 1600, 900 },
     { 1600, 1200 },
     { 1680, 1050 },
-    { 1920, 1080 }
+    { 1920, 1080 },
+    { -1, -1 }
 };
 
 int StartGame(GameOptions& opt)
 {
     // Init logger //
-#if SOURCEHOLD_UNIX == 1
+#if SOURCEHOLD_UNIX == 1 && !defined(SOURCEHOLD_ANDROID)
     Logger::SetColorOutput(true);
 #else
     Logger::SetColorOutput(false);
@@ -166,8 +167,12 @@ int StartGame(GameOptions& opt)
     }
 
     if (!found) {
-        opt.width = 800; opt.height = 600;
-        res = RESOLUTION_800x600;
+        /**
+         * If the selected resolution is not supported by the original game,
+         * some graphical elements will have to be scaled or positioned differently.
+         */
+         res = RESOLUTION_DYNAMIC;
+         Logger::warning(GAME) << "You selected an unsupported resolution. This may lead to ugly scaling!" << std::endl;
     }
 
     // Init game //
@@ -175,14 +180,14 @@ int StartGame(GameOptions& opt)
 
     if(!InitManager(opt, res) || !LoadGameData()) {
         ErrorMessageBox(
-            "Here's a Nickel, kid. Go buy yourself a real Stronghold",
+            "Something went wrong...",
             std::string("Please make sure the data directory contains all necessary files.\n") +
             + "Current path: " +
             GetDirectory().string()
         );
         return EXIT_FAILURE;
     }
-	
+
     Logger::message(GAME) << "Done" << std::endl;
 
     Startup *start = new Startup();
@@ -196,6 +201,8 @@ int StartGame(GameOptions& opt)
         state = start->Begin();
     }
     
+    std::cout << GetWidth() << "x" << GetHeight() << std::endl;
+
     delete start;
     return MainLoop(state);
 }
@@ -253,15 +260,20 @@ int main(int argc, char **argv)
         std::regex regex("(\\d+)x(\\d+)");
         std::smatch match;
 
+#ifdef SOURCEHOLD_ANDROID
+        // Width and height arguments will be ignored on Android //
+        opt.width = opt.height = -1;
+#else
         const std::string str = result["resolution"].as<std::string>();
         if (std::regex_search(str.begin(), str.end(), match, regex)) {
             opt.width  = std::stoi(match[1]);
             opt.height = std::stoi(match[2]);
         }
         else {
-            // fallback
+            // Fallback to 800x600 if the resolution is ill-formed
             opt.width = 800; opt.height = 600;
         }
+#endif
 
         return StartGame(opt);
     }
