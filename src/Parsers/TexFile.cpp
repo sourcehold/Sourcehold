@@ -43,6 +43,5 @@ std::wstring &TexFile::GetString(TextSection sec, uint16_t index)
     if(index < strings.at(sec).size())
         return strings.at(sec)[index];
 
-    Logger::warning(PARSERS) << "Trying to get string " << index << " from section " << sec << ", that only contain " << (strings.at(sec).size()-1) << " of these." << std::endl;
     return dummy_text;
 }

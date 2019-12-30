@@ -21,7 +21,7 @@ static int ResizeEventWatcher(void *data, SDL_Event *event)
     return 0;
 }
 
-bool Rendering::InitDisplay(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb)
+bool Rendering::InitDisplay(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb, bool resize)
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Logger::error(RENDERING) << SDL_GetError() << std::endl;
@@ -39,6 +39,10 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
 
     if(noborder) {
         param |= SDL_WINDOW_BORDERLESS;
+    }
+
+    if (resize) {
+        param |= SDL_WINDOW_RESIZABLE;
     }
 
     // Select display //

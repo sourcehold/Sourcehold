@@ -1,25 +1,38 @@
 #pragma once
 
+#include <string>
+
+#include "Events/Event.h"
 #include "Events/Mouse.h"
-#include "GUI/MenuUtils.h"
+
+#include "GUI/Widgets/Widget.h"
 
 namespace Sourcehold {
     namespace GUI {
-        class Button : protected EventConsumer<Mouse>
+        // TODO: names?
+        enum DialogButton : uint8_t {
+            BUTTON_1 = 0,
+            BUTTON_2,
+            BUTTON_3,
+            BUTTON_4,
+            BUTTON_5,
+            BUTTON_6,
+            BUTTON_7,
+            BUTTON_8,
+            BUTTON_9
+        };
+
+        using namespace Events;
+        class Button : protected EventConsumer<Mouse>, public Widget
         {
             DialogButton style;
-            uint32_t x, y;
             std::wstring text;
             bool clicked = false;
         public:
-            Button(DialogButton style, uint32_t x, uint32_t y, const std::wstring &text);
+            Button(DialogButton style, const std::wstring &text);
             ~Button();
 
-            /**
-             * Renders the button and updates the state.
-             * Returns true if the button was pressed
-             */
-            bool Update();
+            void Update(Rect<int> constraints) override;
         protected:
             void onEventReceive(Mouse& event) override;
         };

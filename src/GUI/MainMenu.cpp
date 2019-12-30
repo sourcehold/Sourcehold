@@ -155,8 +155,11 @@ UIState MainMenu::EnterMenu()
     while (Running()) {
         ClearDisplay();
 
+        mx = ( GetWidth() - 1024) / 2;
+        my = (GetHeight() -  768) / 2;
+
         RenderMenuBorder();
-        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 }); // TODO: scale for classic edition?
+        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
 
         /* Render the current menu on top of the background */
         HideAll();
@@ -165,6 +168,7 @@ UIState MainMenu::EnterMenu()
          * Handle the current UIState.
          * buttonEnd and buttonStart define the range of
          * buttons to be rendered for the menu page.
+         * TODO: better solution
          */
         MenuButton selected = BUTTON_END;
         int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
@@ -212,6 +216,9 @@ UIState MainMenu::EnterMenu()
         } break;
         case EXIT_GAME: {
             Render(*tgx_bg_main2);
+
+            QuitDialog()->Update(Dialog::CENTRE, 0, 0);
+
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case SETTINGS_MENU: {
@@ -245,6 +252,9 @@ UIState MainMenu::EnterMenu()
             });
         }
 
+        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
+        ResetTarget();
+
         if(selected != BUTTON_END) {
             try {
                 currentState = actions.at(selected);
@@ -252,9 +262,6 @@ UIState MainMenu::EnterMenu()
                 currentState = MAIN_MENU;
             }
         }
-
-        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
-        ResetTarget();
 
         if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
 #if SCALE_MAIN_MENU == 1

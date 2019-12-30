@@ -9,6 +9,8 @@
 #include "Events/Event.h"
 #include "Events/Mouse.h"
 
+#include "GUI/Widgets/Widget.h"
+
 namespace Sourcehold {
     namespace GUI {
         struct Column {

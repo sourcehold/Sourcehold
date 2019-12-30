@@ -1,14 +1,18 @@
 #include "GUI/Widgets/Button.h"
+#include "GUI/MenuUtils.h"
 
 #include "Rendering/Font.h"
 #include "Rendering/Display.h"
 
+#include "GameManager.h"
+
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
+using namespace Sourcehold::Game;
 
-Button::Button(DialogButton style, uint32_t x, uint32_t y, const std::wstring& text) :
+Button::Button(DialogButton style, const std::wstring& text) :
+    Widget(),
     style{style},
-    x{x}, y{y},
     text{text}
 {
 }
@@ -17,14 +21,14 @@ Button::~Button()
 {
 }
 
-bool Button::Update()
+void Button::Update(Rect<int> constraints)
 {
     const static int button_indices[] = {
         20, 23, 29, 32, 35, 38, 41, 44, 96,
     };
 
     auto dim = GetStringPixelDim(text, FONT_SMALL);
-    auto interface_icons = GetInterfaceIcons();
+    auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
     auto atlas = interface_icons;
     SDL_Rect rect = atlas->Get(button_indices[style]);
@@ -32,14 +36,17 @@ bool Button::Update()
     int mx = GetMouseX();
     int my = GetMouseY();
 
+    int x = constraints.x + ((constraints.w - rect.w) / 2);
+    int y = constraints.y + ((constraints.h - rect.h) / 2);
+
     // highlight
-    int rw = GetTargetWidth() * rect.w;
-    int rh = GetTargetHeight() * rect.h;
+    int rw = rect.w;
+    int rh = rect.h;
     int rx = ToCoordX(GetTargetX()) + x;
     int ry = ToCoordY(GetTargetY()) + y;
 
     bool selected = false;
-    if (mx > rx&& mx < rx + rw && my > ry&& my < ry + rh) {
+    if (mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
         atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
         rect = atlas->Get(button_indices[style] + 1);
@@ -67,9 +74,7 @@ bool Button::Update()
     // TODO
     if (clicked && selected) {
         clicked = false;
-        return true;
     }
-    else return false;
 }
 
 void Button::onEventReceive(Mouse& event)

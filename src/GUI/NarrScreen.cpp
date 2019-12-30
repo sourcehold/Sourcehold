@@ -171,7 +171,7 @@ bool NarrScreen::BeginNarration()
 
         ClearDisplay();
 
-        if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
+        if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600 && res != RESOLUTION_DYNAMIC) {
             RenderMenuBorder();
             RenderRect(Rect<int>{ px, py, 1024, 768 }, 0, 0, 0, 255, true);
         }

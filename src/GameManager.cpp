@@ -201,7 +201,8 @@ bool Game::InitManager(GameOptions &opt, Resolution res)
         _opt.ndisp,
         _opt.fullscreen,
         _opt.noborder,
-        _opt.nograb
+        _opt.nograb,
+        res == RESOLUTION_DYNAMIC
     );
 
     InitRenderer();

@@ -98,7 +98,7 @@ int EnterLoadingScreen()
         ClearDisplay();
 
 #if RENDER_LOADING_BORDER == 1
-        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600 && res != RESOLUTION_DYNAMIC) {
+        if(ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
             RenderMenuBorder();
         }
 #endif
@@ -200,8 +200,6 @@ int StartGame(GameOptions& opt)
         start->PlayMusic();
         state = start->Begin();
     }
-    
-    std::cout << GetWidth() << "x" << GetHeight() << std::endl;
 
     delete start;
     return MainLoop(state);

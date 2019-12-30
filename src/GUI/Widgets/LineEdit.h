@@ -12,6 +12,8 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/TextureAtlas.h"
 
+#include "GUI/Widgets/Widget.h"
+
 namespace Sourcehold {
     namespace GUI {
         using namespace Events;
