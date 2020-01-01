@@ -40,11 +40,13 @@ namespace Sourcehold {
         using namespace Parsers;
         class Dialog : public Container
         {
-            int nx, ny; // number of 24x24 pixel 'tiles'
             const int MENU_TILE_DIM = 24;
+            int nx, ny, tw; // number of 24x24 pixel 'tiles', textbox width in tiles
+            bool textbox;
+            std::wstring text;
             std::shared_ptr<Gm1File> icons;
         public:
-            Dialog(WidgetLayout l, int nx, int ny);
+            Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text = L"", bool textbox = false, int textboxW = 0);
             ~Dialog();
 
             enum Position {

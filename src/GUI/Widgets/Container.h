@@ -26,7 +26,13 @@ namespace Sourcehold {
             void Update(Rect<int> constraints) override;
 
             /** Add a widget to the container. */
-            void Add(std::shared_ptr<Widget> widget);
+            template<typename T, typename... Args>
+            std::shared_ptr<T> Add(Args... args) {
+                static_assert(std::is_base_of<Widget, T>::value, "Template parameter must be a widget!");
+                auto widget = std::make_shared<T>(args...);
+                widgets.push_back(widget);
+                return widget;
+            }
         };
     }
 }

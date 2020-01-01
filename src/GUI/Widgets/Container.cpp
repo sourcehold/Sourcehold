@@ -35,7 +35,3 @@ void Container::Update(Rect<int> constraints)
     }
 }
 
-void Container::Add(std::shared_ptr<Widget> widget)
-{
-    widgets.push_back(widget);
-}
