@@ -22,8 +22,8 @@ void Dialog::Update(Dialog::Position pos, int offX, int offY)
     int w = nx * MENU_TILE_DIM;
     int h = ny * MENU_TILE_DIM;
 
-    int x = (pos == Dialog::CENTRE) ? ((ToCoordX( GetTargetWidth()) - w) / 2) + offX : offX;
-    int y = (pos == Dialog::CENTRE) ? ((ToCoordY(GetTargetHeight()) - h) / 2) + offY : offY;
+    int x = (pos == Dialog::CENTRE) ? ((GetWidth()  - w) / 2) + offX : offX;
+    int y = (pos == Dialog::CENTRE) ? ((GetHeight() - h) / 2) + offY : offY;
 
     icons = GetGm1("gm/interface_icons3.gm1");
 

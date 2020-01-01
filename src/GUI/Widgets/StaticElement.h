@@ -22,46 +22,35 @@ namespace Sourcehold {
         /**
          * Static visual element wrapper, handles positioning, scaling and
          * mouse events
-         * Use this for UI elements.
          */
         class StaticElement : public EventConsumer<Mouse> {
             Texture* tex = nullptr;
-            bool shown = true;
-            bool clicked = false;
-            bool mouseOver = false;
-            Rect<double> np, tp;
+            Rect<int> tp;
+            size_t id;
+            SDL_Rect inactive, active; // parts of the texture to be rendered
         public:
-            StaticElement(double x = 0.0, double y = 0.0, Texture *t = nullptr);
-            StaticElement(const StaticElement &elem);
-            virtual ~StaticElement();
+            StaticElement() = default;
+            StaticElement(Rect<int> tp, Texture *t, SDL_Rect& inactive, SDL_Rect& active, size_t id);
+            StaticElement(const StaticElement&);
+            ~StaticElement() {}
 
-            void Hide();
-            void Show();
-            void SetTexture(Texture *t);
-            void Translate(int x, int y);
-            void Translate(double x, double y);
-            void Scale(int w, int h);
-            void Scale(double w, double h);
+            void Render();
 
+            inline void Transform(Rect<int> p) { tp = p; }
+            inline void SetTexture(Texture* t) { tex = t; }
+            inline void SetActiveRect(SDL_Rect& r) { active = r; }
+            inline void SetInactiveRect(SDL_Rect& r) { inactive = r; }
+            inline void SetID(size_t i) { id = i; }
+        public:
             /**
-             * Render the element returned by render_fn given the known
-             * parameters. This is useful if the renderable may change,
-             * E.g. a button is highlighted on mouseover
+             * Can be used to handle dynamic changes.
+             * void onEvent(size_t buttonID, Mouse & event);
              */
-            void Render(std::function<SDL_Rect()> render_fn);
-
-            bool IsClicked();
-
-            inline bool IsHidden() {
-                return !shown;
-            }
-
-            inline bool IsMouseOver() {
-                return mouseOver;
-            }
+            std::function<void(size_t,Mouse&)> onEvent;
+            bool visible;
         protected:
             void onEventReceive(Mouse &event) override;
-            void DetectMouseOver();
+            bool DetectMouseOver(int mx, int my);
         };
     }
 }

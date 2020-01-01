@@ -25,11 +25,11 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
     std::shared_ptr<TgxFile> tgx_credits, tgx_1, tgx_2, tgx_3, tgx_4, tgx_firefly;
 
     if(endgame) {
-        music.Load("fx/music/Glory_06.raw", true);
+        music.Load(GetDirectory() / "fx/music/Glory_06.raw", true);
         tgx_credits = GetTgx("gfx/end_credit.tgx");
     }
     else {
-        music.Load("fx/music/castlejam.raw", true);
+        music.Load(GetDirectory() / "fx/music/castlejam.raw", true);
         tgx_1 = GetTgx("gfx/credits_1.tgx");
         tgx_2 = GetTgx("gfx/credits_2.tgx");
         tgx_3 = GetTgx("gfx/credits_3.tgx");

@@ -89,13 +89,8 @@ const static std::map<MenuButton, UIState> actions{
 
 MainMenu::MainMenu()
 {
-    edition = GetEdition();
-
-    mx = (GetWidth() - 1024) / 2;
-    my = (GetHeight() - 768) / 2;
-
-    screen.AllocNewTarget(1024, 768);
-    SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
+    int mx = (GetWidth() - 1024) / 2;
+    int my = (GetHeight() - 768) / 2;
 
     bool success = true;
     success &= aud_chantloop.Load(GetDirectory() / "fx/music/chantloop1.raw", true);
@@ -105,19 +100,20 @@ MainMenu::MainMenu()
         Logger::error(Subsystem::GUI) << "Unable to initialize main menu: failed to load SFX!" << std::endl;
     }
 
-    gm1_icons_main =        GetGm1("gm/icons_front_end.gm1");
-    gm1_icons_additional =  GetGm1("gm/interface_buttons.gm1");
-    gm1_icons_combat =      GetGm1("gm/icons_front_end_combat.gm1");
-    gm1_icons_economic =    GetGm1("gm/icons_front_end_economics.gm1");
-    gm1_icons_builder =     GetGm1("gm/icons_front_end_builder.gm1");
+    auto gm1_icons_main =        GetGm1("gm/icons_front_end.gm1");
+    auto gm1_icons_additional =  GetGm1("gm/interface_buttons.gm1");
+    auto gm1_icons_combat =      GetGm1("gm/icons_front_end_combat.gm1");
+    auto gm1_icons_economic =    GetGm1("gm/icons_front_end_economics.gm1");
+    auto gm1_icons_builder =     GetGm1("gm/icons_front_end_builder.gm1");
 
-    tgx_bg_main =           GetTgx("gfx/frontend_main.tgx");
-    tgx_bg_main2 =          GetTgx("gfx/frontend_main2.tgx");
-    tgx_bg_combat =         GetTgx("gfx/frontend_combat.tgx");
-    tgx_bg_combat2 =        GetTgx("gfx/frontend_combat2.tgx");
-    tgx_bg_economic =       GetTgx("gfx/frontend_economics.tgx");
-    tgx_bg_economic2 =      GetTgx("gfx/frontend_economics2.tgx");
-    tgx_bg_builder =        GetTgx("gfx/frontend_builder.tgx");
+    bg_main[0] =    GetTgx("gfx/frontend_main.tgx");
+    bg_main[1] =    GetTgx("gfx/frontend_main2.tgx");
+    bg_combat[0] =  GetTgx("gfx/frontend_combat.tgx");
+    bg_combat[1] =  GetTgx("gfx/frontend_combat2.tgx");
+    bg_eco[0] =     GetTgx("gfx/frontend_economics.tgx");
+    bg_eco[1] =     GetTgx("gfx/frontend_economics2.tgx");
+    bg_builder[0] = GetTgx("gfx/frontend_builder.tgx");
+    bg_builder[1] = GetTgx("gfx/frontend_builder2.tgx");
 
     /* Get textures */
     ui_tex.resize(5);
@@ -131,14 +127,31 @@ MainMenu::MainMenu()
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
         const MenuButtonInfo *inf = &lut_buttons[i];
-        auto atlas = ui_tex[inf->atlasIndex];
-        auto rect = atlas->Get(inf->index);
+        auto atlas      = ui_tex[inf->atlasIndex];
+        auto inactive   = atlas->Get(inf->index+0);
+        auto active     = atlas->Get(inf->index+1);
 
-        ui_elems[i].Translate(inf->x, inf->y);
-        ui_elems[i].Scale(rect.w, rect.w);
+        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, active.w, active.h));
         ui_elems[i].SetTexture(atlas.get());
+        ui_elems[i].SetActiveRect(active);
+        ui_elems[i].SetInactiveRect(inactive);
+        ui_elems[i].SetID(i);
+
+        ui_elems[i].onEvent = [&](size_t id, Mouse& m) {
+            if (id >= BUTTON_END || id < 0) return;
+            if (m.type == BUTTONDOWN && m.LmbDown()) {
+                MenuButton selected = static_cast<MenuButton>(id);
+                if (selected != BUTTON_END) {
+                    try {
+                        currentState = actions.at(selected);
+                    }
+                    catch (std::out_of_range & ex) {
+                        currentState = MAIN_MENU;
+                    }
+                }
+            }
+        };
     }
-    ResetTarget();
 }
 
 MainMenu::~MainMenu()
@@ -147,7 +160,7 @@ MainMenu::~MainMenu()
 
 UIState MainMenu::EnterMenu()
 {
-    UIState currentState = MAIN_MENU;
+    currentState = MAIN_MENU;
 
     aud_chantloop.Play();
     //aud_greetings.Play();
@@ -158,118 +171,58 @@ UIState MainMenu::EnterMenu()
     while (Running()) {
         ClearDisplay();
 
-        mx = ( GetWidth() - 1024) / 2;
-        my = (GetHeight() -  768) / 2;
+        int mx = ( GetWidth() - 1024) / 2;
+        int my = (GetHeight() -  768) / 2;
 
         RenderMenuBorder();
-        SetTarget(&screen, Rect<int>{ mx, my, 1024, 768 });
 
-        /* Render the current menu on top of the background */
-        HideAll();
-
-        /**
-         * Handle the current UIState.
-         * buttonEnd and buttonStart define the range of
-         * buttons to be rendered for the menu page.
-         * TODO: better solution
-         */
-        MenuButton selected = BUTTON_END;
-        int buttonEnd = BUTTON_END, buttonStart = MAIN_EXIT;
-
+        /* Handle the current menu state */
+        HideButtons();
         switch (currentState) {
         default:
         case MAIN_MENU: {
-            Render(*tgx_bg_main);
-            buttonEnd = COMBAT_CAMPAIGN;
+            Render(*bg_main[0], mx, my);
+            RenderButtons(MAIN_EXIT, MAIN_SETTINGS);
         } break;
         case COMBAT_MENU: {
-            Render(*tgx_bg_combat);
-            buttonEnd = COMBAT_BACK_TO_MAIN + 1;
-            buttonStart = COMBAT_CAMPAIGN;
+            Render(*bg_combat[0], mx, my);
+            RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);
         } break;
         case MILITARY_CAMPAIGN_MENU: {
-            Render(*tgx_bg_combat2);
-            buttonEnd = COMBAT_CAMPAIGN_NEXT + 1;
-            buttonStart = COMBAT_CAMPAIGN_BACK;
+            Render(*bg_combat[1], mx, my);
+            RenderButtons(COMBAT_CAMPAIGN_NEXT, COMBAT_CAMPAIGN_BACK);
         } break;
-        case MILITARY_CAMPAIGN_MISSION: {
-        }
         case SIEGE_MENU: {
-            Render(*tgx_bg_combat2);
-            buttonStart = buttonEnd = MAIN_EXIT;
+            Render(*bg_combat[1], mx, my);
         } break;
         case ECONOMICS_MENU: {
-            Render(*tgx_bg_economic);
-            buttonEnd = ECO_BACK_TO_MAIN + 1;
-            buttonStart = ECO_CAMPAIGN;
+            Render(*bg_eco[0], mx, my);
+            RenderButtons(ECO_CAMPAIGN, ECO_BACK_TO_MAIN);
         } break;
         case ECONOMICS_CAMPAIGN_MENU: {
-            Render(*tgx_bg_economic2);
-            buttonEnd = ECO_CAMPAIGN_NEXT + 1;
-            buttonStart = ECO_CAMPAIGN_BACK;
+            Render(*bg_eco[1], mx, my);
+            RenderButtons(ECO_CAMPAIGN_BACK, ECO_CAMPAIGN_NEXT);
         } break;
         case BUILDER_MENU: {
-            Render(*tgx_bg_builder);
-            buttonEnd = BUILDER_BACK_TO_MAIN + 1;
-            buttonStart = BUILDER_WORKING_MAP;
+            Render(*bg_builder[0], mx, my);
+            RenderButtons(BUILDER_WORKING_MAP, BUILDER_BACK_TO_MAIN);
         } break;
         case LOAD_SAVED_MENU: {
-            Render(*tgx_bg_main2);
-
+            Render(*bg_main[1], mx, my);
             loadDlg->Update(Dialog::CENTRE, 0, 0);
-
-            buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case EXIT_GAME: {
-            Render(*tgx_bg_main2);
-
+            Render(*bg_main[1], mx, my);
             quitDlg->Update(Dialog::CENTRE, 0, 0);
-
-            buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case SETTINGS_MENU: {
-            Render(*tgx_bg_main2);
-            buttonStart = buttonEnd = MAIN_EXIT;
+            Render(*bg_main[1], mx, my);
         } break;
-        }
-
-        int glareTicks = (int)(GetTime() * 10.0);
-        glareCounter = (glareTicks / 14) % 4;
-
-        for(int i = buttonStart; i < buttonEnd; i++) {
-            ui_elems[i].Show();
-            ui_elems[i].Render(
-            [&]() -> SDL_Rect {
-                MenuButtonInfo inf = lut_buttons[i];
-                auto tex = ui_tex[inf.atlasIndex];
-
-                if(ui_elems[i].IsClicked()) selected = (MenuButton)i;
-                if (ui_elems[i].IsMouseOver()) {
-                    if(inf.hasText) RenderMenuText(GetString(inf.sec, inf.textIndex));
-                    return tex->Get(inf.index + 1);
-                } else {
-                    if(inf.hasGlare && inf.glareOrder == glareCounter) {
-                        return tex->Get(inf.glareIndex + (glareTicks % 14));
-                    }
-                    else {
-                        return tex->Get(inf.index);
-                    }
-                }
-            });
         }
 
         RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
-        ResetTarget();
 
-        if(selected != BUTTON_END) {
-            try {
-                currentState = actions.at(selected);
-            } catch(std::out_of_range & ex) {
-                currentState = MAIN_MENU;
-            }
-        }
-
-        if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
+        /*if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
 #if SCALE_MAIN_MENU == 1
             || GetEdition() == STRONGHOLD_CLASSIC // scale for classic edition too (optional)
 #endif
@@ -278,7 +231,7 @@ UIState MainMenu::EnterMenu()
         }
         else {
             Render(screen, mx, my);
-        }
+        }*/
 
         //aud_greetings.Update();
 
@@ -294,7 +247,6 @@ UIState MainMenu::EnterMenu()
         }
 
         FlushDisplay();
-
         SDL_Delay(1);
     }
 
@@ -317,11 +269,41 @@ ghc::filesystem::path MainMenu::GetGreetingsSound()
     return snd;
 }
 
-void MainMenu::HideAll()
+void MainMenu::RenderButtons(MenuButton start, MenuButton end)
 {
-    for(auto & e : ui_elems) {
-        e.Hide();
+    if (start >= end) return;
+
+    int glareTicks = (int)(GetTime() * 10.0);
+    int glareCounter = (glareTicks / 14) % 4;
+
+    for (int i = start; i <= end; i++) {
+        const MenuButtonInfo* inf = &lut_buttons[i];
+        auto tex = ui_tex[inf->atlasIndex];
+
+        // Animate the inactive graphic //
+        SDL_Rect inactive = tex->Get(inf->index);
+        if (inf->hasGlare && inf->glareOrder == glareCounter) {            
+            ui_elems[i].SetInactiveRect(tex->Get(inf->glareIndex + (glareTicks % 14)));
+        }
+        else {
+            ui_elems[i].SetInactiveRect(inactive);
+        }
+
+        // Update position //
+        int mx = (GetWidth() - 1024) / 2;
+        int my = (GetHeight() - 768) / 2;
+
+        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, inactive.w, inactive.h));
+
+        ui_elems[i].visible = true;
+        ui_elems[i].Render();
     }
 }
 
-
+void MainMenu::HideButtons()
+{
+    // hack
+    for (int i = 0; i < BUTTON_END; i++) {
+        ui_elems[i].visible = false;
+    }
+}

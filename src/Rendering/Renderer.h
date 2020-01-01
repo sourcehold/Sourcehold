@@ -35,21 +35,14 @@ namespace Sourcehold {
         /**
          * Redirect all rendering operations to the target
          */
-        void SetTarget(Texture *target, Rect<double> rect);
         void SetTarget(Texture *target, Rect<int> rect);
         void ResetTarget();
 
         /**
-         * Render a texture (screen coordinates)
+         * Render a texture
          */
         void Render(Texture &texture, int x, int y, SDL_Rect *clip = nullptr);
         void Render(Texture &texture, int x, int y, int w, int h, SDL_Rect *clip = nullptr);
-
-        /**
-         * Render a texture (normalized coordinates)
-         */
-        void Render(Texture &texture, double x, double y, SDL_Rect *clip = nullptr);
-        void Render(Texture &texture, double x, double y, double w, double h, SDL_Rect *clip = nullptr);
 
         /**
          * Render a texture to the whole screen
@@ -58,10 +51,7 @@ namespace Sourcehold {
         void Fill(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255);
 
         void RenderRect(Rect<int> rect, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
-        void RenderRect(Rect<double> rect, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255, bool solid = false);
-
         void RenderLine(Line<int> line, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
-        void RenderLine(Line<double> line, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
 
         /**
          * Get custom blend mode for keying out
@@ -69,23 +59,7 @@ namespace Sourcehold {
          */
         SDL_BlendMode GetAlphaKeyBlendMode();
 
-        /**
-         * Normalize based on the dimensions of
-         * the current render target
-         */
-        double NormalizeX(int32_t c);
-        double NormalizeY(int32_t c);
-        int32_t ToCoordX(double c);
-        int32_t ToCoordY(double c);
-        double NormalizeTargetX(int32_t c);
-        double NormalizeTargetY(int32_t c);
-        int32_t ToTargetCoordX(double c);
-        int32_t ToTargetCoordY(double c);
-
-        double GetTargetWidth();
-        double GetTargetHeight();
-        double GetTargetX();
-        double GetTargetY();
+        Rect<int> GetTarget();
         SDL_Renderer *GetRenderer();
     }
 }

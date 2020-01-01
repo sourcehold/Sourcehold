@@ -11,30 +11,28 @@ IngameGUI::IngameGUI() :
     LoadMenuAssets();
 
     /* Init the buttons */
-    auto atlas = gm1_floats->GetTextureAtlas();
-    ui_compass.SetTexture(atlas.get());
-    ui_hide.SetTexture(atlas.get());
-    ui_magnify.SetTexture(atlas.get());
-    ui_lower.SetTexture(atlas.get());
-
-    atlas = gm1_icons->GetTextureAtlas();
-    SDL_Rect rect = atlas->Get(25);
-    ui_disk.Scale(rect.w, rect.h);
-    ui_disk.SetTexture(atlas.get());
-
-    rect = atlas->Get(27);
-    ui_info.Scale(rect.w, rect.h);
-    ui_info.SetTexture(atlas.get());
-
-    rect = atlas->Get(29);
-    ui_delete.Scale(rect.w, rect.h);
-    ui_delete.SetTexture(atlas.get());
-
-    rect = atlas->Get(68);
-    ui_revert.Scale(rect.w, rect.h);
-    ui_revert.SetTexture(atlas.get());
-
-    ResetTarget();
+    //auto atlas = gm1_floats->GetTextureAtlas();
+    //ui_compass.SetTexture(atlas.get());
+    //ui_hide.SetTexture(atlas.get());
+    //ui_magnify.SetTexture(atlas.get());
+    //ui_lower.SetTexture(atlas.get());
+    //
+    //atlas = gm1_icons->GetTextureAtlas();
+    //SDL_Rect rect = atlas->Get(25);
+    //ui_disk.Scale(rect.w, rect.h);
+    //ui_disk.SetTexture(atlas.get());
+    //
+    //rect = atlas->Get(27);
+    //ui_info.Scale(rect.w, rect.h);
+    //ui_info.SetTexture(atlas.get());
+    //
+    //rect = atlas->Get(29);
+    //ui_delete.Scale(rect.w, rect.h);
+    //ui_delete.SetTexture(atlas.get());
+    //
+    //rect = atlas->Get(68);
+    //ui_revert.Scale(rect.w, rect.h);
+    //ui_revert.SetTexture(atlas.get());
 }
 
 IngameGUI::~IngameGUI() {
@@ -90,7 +88,7 @@ void IngameGUI::RenderQuickMenu()
     auto atlas = gm1_floats->GetTextureAtlas();
 
     int mouseX = GetMouseX(), mouseY = GetMouseY();
-
+    /*
     SDL_Rect rect = atlas->Get(37);
     ui_compass.Translate(int(mouseX - (rect.w / 2)), int(mouseY - rect.h - 25));
     ui_compass.Scale(rect.w, rect.h);
@@ -137,6 +135,7 @@ void IngameGUI::RenderQuickMenu()
         }
         else return atlas->Get(35);
     });
+    */
 }
 
 /**
@@ -185,7 +184,7 @@ void IngameGUI::RenderMenubar()
     }
 
     // Calculate button positions //
-    ui_disk.Translate  (menuOffsetX+800-287, menuOffsetY+16);
+    /*ui_disk.Translate  (menuOffsetX+800-287, menuOffsetY+16);
     ui_info.Translate  (menuOffsetX+800-287, menuOffsetY+54);
     ui_delete.Translate(menuOffsetX+800-287, menuOffsetY+86);
     ui_revert.Translate(menuOffsetX+800-287, menuOffsetY+112);
@@ -249,7 +248,7 @@ void IngameGUI::RenderMenubar()
     } break;
     default:
         break;
-    }
+    }*/
 }
 
 void IngameGUI::onEventReceive(Keyboard& keyEvent)

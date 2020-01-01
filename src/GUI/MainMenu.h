@@ -72,21 +72,9 @@ namespace Sourcehold {
             Credits cred;
             Song aud_chantloop;
             Effect aud_greetings, aud_exit;
-            Texture screen;
-            int mx, my, glareCounter=0;
-
-            std::shared_ptr<Gm1File> gm1_icons_additional;
-            std::shared_ptr<Gm1File> gm1_icons_main;
-            std::shared_ptr<TgxFile> tgx_bg_main, tgx_bg_main2;
-            std::shared_ptr<Gm1File> gm1_icons_combat;
-            std::shared_ptr<TgxFile> tgx_bg_combat, tgx_bg_combat2;
-            std::shared_ptr<Gm1File> gm1_icons_economic;
-            std::shared_ptr<TgxFile> tgx_bg_economic, tgx_bg_economic2;
-            std::shared_ptr<Gm1File> gm1_icons_builder;
-            std::shared_ptr<TgxFile> tgx_bg_builder;
-
-            std::vector<StaticElement> ui_elems;
-            std::vector<std::shared_ptr<TextureAtlas>> ui_tex;
+            UIState currentState;
+            std::vector<StaticElement> ui_elems; // buttons
+            std::vector<std::shared_ptr<TextureAtlas>> ui_tex; // texture atlases
         public:
             MainMenu();
             MainMenu(const MainMenu &) = delete;
@@ -95,7 +83,10 @@ namespace Sourcehold {
             UIState EnterMenu();
         protected:
             ghc::filesystem::path GetGreetingsSound();
-            void HideAll();
+            void RenderButtons(MenuButton start, MenuButton end);
+            void HideButtons();
+        private:
+            std::shared_ptr<TgxFile> bg_main[2], bg_combat[2], bg_eco[2], bg_builder[2];
         };
     }
 }

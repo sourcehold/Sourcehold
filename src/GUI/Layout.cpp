@@ -92,7 +92,6 @@ void Layout::Destroy()
 
 void Layout::Render(double x, double y)
 {
-    Render(ToCoordX(x), ToCoordY(y));
 }
 
 void Layout::Render(int x, int y)
@@ -122,11 +121,6 @@ void Layout::SetFont(Font index)
 void Layout::AddText(const std::wstring &str)
 {
     auto dim = GetStringPixelDim(str, currentFont);
-    double fw = NormalizeTargetX(dim.first);
-
-    if(fw > bounds.w) {
-        // TODO: insert a line break at nearest word
-    }
 
     LayoutElement elem;
     elem.type = LayoutElement::LINE;

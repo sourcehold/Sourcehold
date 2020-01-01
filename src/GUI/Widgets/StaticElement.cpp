@@ -3,118 +3,51 @@
 
 using namespace Sourcehold::Rendering;
 
-StaticElement::StaticElement(double x, double y, Texture* t) :
-    EventConsumer<Mouse>()
+StaticElement::StaticElement(Rect<int> tp, Texture* t, SDL_Rect& inactive, SDL_Rect& active, size_t id) :
+    EventConsumer<Mouse>(),
+    tp{tp},
+    tex{t},
+    inactive{inactive},
+    active{active},
+    id{id},
+    visible{true}
+{}
+
+StaticElement::StaticElement(const StaticElement& e) :
+    EventConsumer<Mouse>(),
+    tp{e.tp},
+    tex{e.tex},
+    inactive{e.inactive},
+    active{e.active},
+    id{e.id},
+    visible{e.visible}
+{}
+
+void StaticElement::Render()
 {
-    np.x = x;
-    np.y = y;
-    tex = t;
+    if (!visible || !tex) return;
+
+    int mouseX = GetMouseX();
+    int mouseY = GetMouseY();
+
+    Rendering::Render(*tex, tp.x, tp.y, tp.w, tp.h, DetectMouseOver(mouseX, mouseY) ? &active : &inactive);
 }
 
-StaticElement::StaticElement(const StaticElement& elem) :
-    EventConsumer<Mouse>()
-{
-    this->tex = elem.tex;
-    this->shown = elem.shown;
-    this->np = elem.np;
-    this->tp = elem.tp;
-}
-
-StaticElement::~StaticElement()
-{
-}
-
-void StaticElement::Hide()
-{
-    shown = false;
-}
-
-void StaticElement::Show()
-{
-    shown = true;
-}
-
-void StaticElement::SetTexture(Texture* t)
-{
-    tex = t;
-}
-
-void StaticElement::Translate(int x, int y)
-{
-    np.x = NormalizeX(x);
-    np.y = NormalizeY(y);
-    tp.x = NormalizeTargetX(x);
-    tp.y = NormalizeTargetY(y);
-}
-
-void StaticElement::Translate(double x, double y)
-{
-    tp.x = x;
-    tp.y = y;
-    np.x = GetTargetWidth() * x;
-    np.y = GetTargetHeight() * y;
-}
-
-void StaticElement::Scale(int w, int h)
-{
-    np.w = NormalizeX(w);
-    np.h = NormalizeY(h);
-    tp.w = NormalizeTargetX(w);
-    tp.h = NormalizeTargetY(h);
-}
-
-void StaticElement::Scale(double w, double h)
-{
-    tp.w = w;
-    tp.h = h;
-    np.w = GetTargetWidth() * w;
-    np.h = GetTargetHeight() * h;
-}
-
-void StaticElement::Render(std::function<SDL_Rect()> render_fn)
-{
-    if (!shown || !tex) return;
-
-    DetectMouseOver();
-
-    SDL_Rect elem = render_fn();
-    Rendering::Render(*tex, np.x, np.y, /*np.w, np.h,*/ &elem);
-}
-
-bool StaticElement::IsClicked()
-{
-    if (clicked && shown) {
-        clicked = false;
-        return true;
-    }
-    return false;
-}
-
-static int mouseX = 0, mouseY = 0;
 void StaticElement::onEventReceive(Mouse& event)
 {
-    EventType type = event.GetType();
-    if (type == MOTION) {
-        mouseX = event.GetPosX();
-        mouseY = event.GetPosY();
-    }
-    else if (type == BUTTONDOWN) {
-        if (mouseOver && shown) clicked = true;
+    if (visible && DetectMouseOver(event.GetPosX(), event.GetPosY()) && onEvent) {
+        onEvent(id, event);
     }
 }
 
-void StaticElement::DetectMouseOver()
+bool StaticElement::DetectMouseOver(int mx, int my)
 {
-    mouseOver = false;
+    auto target = GetTarget();
 
-    if (shown) {
-        int rw = ToCoordX(tp.w) * GetTargetWidth();
-        int rh = ToCoordY(tp.h) * GetTargetHeight();
-        int rx = ToCoordX(GetTargetX()) + tp.x * (double)ToCoordX(GetTargetWidth());
-        int ry = ToCoordY(GetTargetY()) + tp.y * (double)ToCoordY(GetTargetHeight());
+    int rx = target.x + tp.x;
+    int ry = target.y + tp.y;
+    int rw = tp.w; // TODO
+    int rh = tp.h; // TODO
 
-        if (mouseX > rx&& mouseY > ry&& mouseX < rx + rw && mouseY < ry + rh) {
-            mouseOver = true;
-        }
-    }
+    return (mx > rx && my > ry && mx < rx + rw && my < ry + rh);
 }

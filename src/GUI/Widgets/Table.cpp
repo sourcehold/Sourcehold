@@ -37,8 +37,9 @@ void Table::Update(Rect<int> constraints)
     int x = constraints.x;
     int y = constraints.y;
 
-    int rx = ToCoordX(GetTargetX()) + x;
-    int ry = ToCoordY(GetTargetY()) + y + (renderNames ? 20 : 0);
+    auto target = GetTarget();
+    int rx = target.x + x;
+    int ry = target.y + y + (renderNames ? 20 : 0);
 
     if(mx > rx && mx < rx + width && my > ry && my < ry+20*numRows) {
         highlight = (my - ry) / 20;

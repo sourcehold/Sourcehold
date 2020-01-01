@@ -41,10 +41,11 @@ void Button::Update(Rect<int> constraints)
     int y = constraints.y + ((constraints.h - rect.h) / 2);
 
     // highlight
+    auto target = GetTarget();
     int rw = rect.w;
     int rh = rect.h;
-    int rx = ToCoordX(GetTargetX()) + x;
-    int ry = ToCoordY(GetTargetY()) + y;
+    int rx = target.x + x;
+    int ry = target.y + y;
 
     selected = false;
     if (mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
