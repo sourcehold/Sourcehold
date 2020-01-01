@@ -5,7 +5,6 @@
 #include <cinttypes>
 #include <algorithm>
 #include <cstdlib>
-#include <chrono>
 #include <memory>
 
 #include "GameManager.h"

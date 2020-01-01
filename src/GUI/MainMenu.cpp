@@ -293,9 +293,9 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
         int mx = (GetWidth() - 1024) / 2;
         int my = (GetHeight() - 768) / 2;
 
-        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, inactive.w, inactive.h));
-
         ui_elems[i].visible = true;
+
+        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, inactive.w, inactive.h));
         ui_elems[i].Render();
     }
 }

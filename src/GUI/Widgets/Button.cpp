@@ -78,5 +78,6 @@ void Button::onEventReceive(Mouse& event)
 {
     if (event.type == BUTTONDOWN && handler && selected) {
         handler(event);
+        selected = false;
     }
 }
