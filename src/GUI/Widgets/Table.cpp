@@ -15,8 +15,8 @@ Table::Table(uint32_t rows, uint32_t columns) :
 
 void Table::Create(uint32_t rows, uint32_t columns)
 {
-    SetNumRows(rows);
     SetNumCols(columns);
+    SetNumRows(rows);
 }
 
 void Table::Destroy()
@@ -33,9 +33,11 @@ void Table::Update(Rect<int> constraints)
     int mx = GetMouseX();
     int my = GetMouseY();
 
-    int width = constraints.w;
-    int x = constraints.x;
-    int y = constraints.y;
+    int width   = constraints.w;
+    int height  = 20 * numRows;
+
+    int x = constraints.x + ((constraints.w -  width) / 2);
+    int y = constraints.y + ((constraints.h - height) / 2);
 
     auto target = GetTarget();
     int rx = target.x + x;
@@ -52,7 +54,7 @@ void Table::Update(Rect<int> constraints)
         y += 20;
     }
 
-    for(int i = 0; i < col.rows.size(); i++) {
+    for(size_t i = 0; i < col.rows.size(); i++) {
         std::wstring &row = col.rows[i];
 
         if(i == highlight || i == selected) {
@@ -60,6 +62,7 @@ void Table::Update(Rect<int> constraints)
             RenderRect(Rect<int>(x, y+20*i, width, 20), 239, 239, 189, 255, false);
         }else {
             Uint8 r, g, b;
+            // Slightly lighter color for even rows //
             if(i % 2 == 0) {
                 r = 104;
                 g = 120;
@@ -72,9 +75,11 @@ void Table::Update(Rect<int> constraints)
             RenderRect(Rect<int>(x, y+20*i, width, 20), r, g, b, 152, true);
         }
 
+        // Render row contents //
         RenderText(row, Rect<int>(x + 10, 2+y+20*i, width, 20), Align::LEFT, FONT_LARGE, false);
     }
 
+    // Render border around table //
     RenderRect(Rect<int>(x, y, width, 20*numRows), 239, 239, 189, 255, false);
 }
 
@@ -93,8 +98,7 @@ void Table::SetNumCols(uint32_t n)
 
 void Table::SetColName(uint32_t n, const std::wstring& name)
 {
-    if(n > cols.size()) return;
-
+    if(n >= cols.size()) return;
     cols[n].name = name;
 }
 
@@ -110,8 +114,8 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring& text)
 
 void Table::onEventReceive(Mouse &mouse)
 {
-    if(!cols.size() || highlight > numRows) return;
-    if(!cols[0].rows[highlight].empty() && mouse.type == BUTTONDOWN) {
+    if(cols.empty() || highlight > numRows || cols[0].rows.empty()) return;
+    if(mouse.type == BUTTONDOWN) {
         selected = highlight;
     }
 }

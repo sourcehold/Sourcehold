@@ -100,9 +100,25 @@ std::shared_ptr<Dialog> GUI::LoadDialog()
         WidgetLayout::HORIZONTAL, 30, 17, GetString(T_GAME_OPTIONS, 2), true, Deco::LARGE, 12
     );
     // TODO
-    //auto table = res->Add<Table>(16, 2);
-    //table->SetColName(0, GetString(T_GAME_OPTIONS, 27));
-    //table->SetColName(1, GetString(T_GAME_OPTIONS, 28));
+    auto table = res->Add<Table>(16, 2);
+    table->SetColName(0, GetString(T_GAME_OPTIONS, 27));
+    table->SetColName(1, GetString(T_GAME_OPTIONS, 28));
+
+    return res;
+}
+
+std::shared_ptr<Dialog> GUI::CombatMenuDialog()
+{
+    auto res = std::make_shared<Dialog>(
+        WidgetLayout::VERTICAL, 17, 22, GetString(T_MAIN_MENU, 15), true, Deco::LARGE, 17, false
+    );
+
+    auto table = res->Add<Table>(21, 1);
+    for (int i = 0; i < 21; i++) {
+        table->SetText(i, 0, std::to_wstring(i + 1) + L" " + GetString(T_MISSION_NAMES, 1 + i));
+    }
+
+    table->RenderNames(false);
 
     return res;
 }

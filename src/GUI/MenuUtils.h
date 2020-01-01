@@ -41,5 +41,6 @@ namespace Sourcehold {
         /* Construct common dialog windows */
         std::shared_ptr<Dialog> QuitDialog();
         std::shared_ptr<Dialog> LoadDialog();
+        std::shared_ptr<Dialog> CombatMenuDialog();
     }
 }

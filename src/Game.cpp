@@ -37,25 +37,6 @@ int MainLoop(UIState state) {
 
         MainLoop(state);
     } break;
-    case MILITARY_CAMPAIGN_MISSION: {
-        int index = 0; // todo
-
-        NarrScreen *narr = new NarrScreen(index + 1);
-        narr->Begin();
-        delete narr;
-
-        // TODO
-        Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
-        music.Play();
-
-        World *world = new World();
-        world->LoadFromDisk(GetDirectory() / "maps/mission1.map");
-        state = world->Play();
-
-        music.Stop();
-
-        MainLoop(state);
-    } break;
     case EXIT_GAME: break;
     default: break;
     }

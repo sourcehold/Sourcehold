@@ -1,9 +1,12 @@
 #include <map>
 
 #include "GUI/MainMenu.h"
+#include "GUI/NarrScreen.h"
+
 #include "Rendering/Font.h"
 #include "System/Config.h"
 #include "Assets.h"
+#include "World.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -126,12 +129,12 @@ MainMenu::MainMenu()
     /* Allocate buttons */
     ui_elems.resize(BUTTON_END);
     for(size_t i = 0; i < BUTTON_END; i++) {
-        const MenuButtonInfo *inf = &lut_buttons[i];
-        auto atlas      = ui_tex[inf->atlasIndex];
-        auto inactive   = atlas->Get(inf->index+0);
-        auto active     = atlas->Get(inf->index+1);
+        const MenuButtonInfo &inf = lut_buttons[i];
+        auto atlas      = ui_tex[inf.atlasIndex];
+        auto inactive   = atlas->Get(inf.index+0);
+        auto active     = atlas->Get(inf.index+1);
 
-        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, active.w, active.h));
+        ui_elems[i].Transform(Rect<int>(mx + inf.x, my + inf.y, active.w, active.h));
         ui_elems[i].SetTexture(atlas.get());
         ui_elems[i].SetActiveRect(active);
         ui_elems[i].SetInactiveRect(inactive);
@@ -165,7 +168,7 @@ UIState MainMenu::EnterMenu()
     aud_chantloop.Play();
     //aud_greetings.Play();
 
-    auto quitDlg = QuitDialog(), loadDlg = LoadDialog();
+    auto quitDlg = QuitDialog(), loadDlg = LoadDialog(), combatMenuDlg = CombatMenuDialog();
     quitDlg->onExit = [&]() { currentState = MAIN_MENU; };
 
     while (Running()) {
@@ -186,11 +189,32 @@ UIState MainMenu::EnterMenu()
         } break;
         case COMBAT_MENU: {
             Render(*bg_combat[0], mx, my);
-            RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);
+            RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);            
         } break;
         case MILITARY_CAMPAIGN_MENU: {
             Render(*bg_combat[1], mx, my);
-            RenderButtons(COMBAT_CAMPAIGN_NEXT, COMBAT_CAMPAIGN_BACK);
+            RenderButtons(COMBAT_CAMPAIGN_BACK, COMBAT_CAMPAIGN_NEXT);
+
+            combatMenuDlg->Update(Dialog::CENTRE, 0, -60);
+        } break;
+        case MILITARY_CAMPAIGN_MISSION: {
+            // Start the selected campaign mission (TODO) //
+            aud_chantloop.Stop();
+
+            int index = 0;
+            NarrScreen* narr = new NarrScreen(index + 1);
+            narr->Begin();
+            delete narr;
+
+            Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
+            music.Play();
+
+            World* world = new World();
+            world->LoadFromDisk(GetDirectory() / "maps/mission1.map");
+            currentState = world->Play();
+
+            music.Stop();
+            aud_chantloop.Resume();
         } break;
         case SIEGE_MENU: {
             Render(*bg_combat[1], mx, my);
@@ -220,7 +244,7 @@ UIState MainMenu::EnterMenu()
         } break;
         }
 
-        RenderText(L"V." SOURCEHOLD_VERSION_STRING, 6, 4, FONT_LARGE, false, 0.5);
+        RenderText(L"V." SOURCEHOLD_VERSION_STRING, mx+6, my+4, FONT_LARGE, false, 0.5);
 
         /*if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
 #if SCALE_MAIN_MENU == 1
@@ -277,13 +301,13 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
     int glareCounter = (glareTicks / 14) % 4;
 
     for (int i = start; i <= end; i++) {
-        const MenuButtonInfo* inf = &lut_buttons[i];
-        auto tex = ui_tex[inf->atlasIndex];
+        const MenuButtonInfo& inf = lut_buttons[i];
+        auto tex = ui_tex[inf.atlasIndex];
 
         // Animate the inactive graphic //
-        SDL_Rect inactive = tex->Get(inf->index);
-        if (inf->hasGlare && inf->glareOrder == glareCounter) {            
-            ui_elems[i].SetInactiveRect(tex->Get(inf->glareIndex + (glareTicks % 14)));
+        SDL_Rect inactive = tex->Get(inf.index);
+        if (inf.hasGlare && inf.glareOrder == glareCounter) {            
+            ui_elems[i].SetInactiveRect(tex->Get(inf.glareIndex + (glareTicks % 14)));
         }
         else {
             ui_elems[i].SetInactiveRect(inactive);
@@ -295,7 +319,7 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
 
         ui_elems[i].visible = true;
 
-        ui_elems[i].Transform(Rect<int>(mx + inf->x, my + inf->y, inactive.w, inactive.h));
+        ui_elems[i].Transform(Rect<int>(mx + inf.x, my + inf.y, inactive.w, inactive.h));
         ui_elems[i].Render();
     }
 }

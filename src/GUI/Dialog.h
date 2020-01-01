@@ -19,14 +19,14 @@ namespace Sourcehold {
         class Dialog : public Container
         {
             const int MENU_TILE_DIM = 24;
-            const int MARGIN_X = 12, MARGIN_Y = 6;
+            const int MARGIN_X = 12, MARGIN_Y = 4;
             int nx, ny, tw; // number of 24x24 pixel 'tiles', textbox width in tiles
-            bool textbox;
+            bool textbox, border;
             Deco deco;
             std::wstring text;
             std::shared_ptr<Gm1File> icons;
         public:
-            Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text = L"", bool textbox = false, Deco deco = Deco::LARGE, int textboxW = 0);
+            Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text = L"", bool textbox = false, Deco deco = Deco::LARGE, int textboxW = 0, bool border = true);
             ~Dialog();
 
             enum Position {

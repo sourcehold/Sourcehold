@@ -38,8 +38,8 @@ namespace Sourcehold {
 
             inline void Transform(Rect<int> p) { tp = p; }
             inline void SetTexture(Texture* t) { tex = t; }
-            inline void SetActiveRect(SDL_Rect& r) { active = r; }
-            inline void SetInactiveRect(SDL_Rect& r) { inactive = r; }
+            inline void SetActiveRect(SDL_Rect r) { active = r; }
+            inline void SetInactiveRect(SDL_Rect r) { inactive = r; }
             inline void SetID(size_t i) { id = i; }
         public:
             /**

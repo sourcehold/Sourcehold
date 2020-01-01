@@ -8,12 +8,13 @@ using namespace Game;
 using namespace Rendering;
 
 Dialog::~Dialog() {}
-Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text, bool textbox, Deco deco, int textboxW) :
+Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text, bool textbox, Deco deco, int textboxW, bool border) :
     Container(l),
     nx(nx), ny(ny),
     tw{textboxW},
     text{text},
     textbox{textbox},
+    border{border},
     deco{deco}
 {}
 
@@ -27,7 +28,7 @@ void Dialog::Update(Dialog::Position pos, int offX, int offY)
 
     icons = GetGm1("gm/interface_icons3.gm1");
 
-    RenderBorder(x, y, nx, ny);
+    if(border)  RenderBorder(x, y, nx, ny);
     if(textbox) RenderTextBox(x, y, tw*24, 64, text, deco);
 
     // Render the member widgets in the available area of the dialog //
