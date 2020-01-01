@@ -152,6 +152,9 @@ UIState MainMenu::EnterMenu()
     aud_chantloop.Play();
     //aud_greetings.Play();
 
+    auto quitDlg = QuitDialog(), loadDlg = LoadDialog();
+    quitDlg->onExit = [&]() { currentState = MAIN_MENU; };
+
     while (Running()) {
         ClearDisplay();
 
@@ -212,12 +215,15 @@ UIState MainMenu::EnterMenu()
         } break;
         case LOAD_SAVED_MENU: {
             Render(*tgx_bg_main2);
+
+            loadDlg->Update(Dialog::CENTRE, 0, 0);
+
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;
         case EXIT_GAME: {
             Render(*tgx_bg_main2);
 
-            QuitDialog()->Update(Dialog::CENTRE, 0, 0);
+            quitDlg->Update(Dialog::CENTRE, 0, 0);
 
             buttonStart = buttonEnd = MAIN_EXIT;
         } break;

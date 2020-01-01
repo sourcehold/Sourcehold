@@ -13,7 +13,8 @@ using namespace Sourcehold::Game;
 Button::Button(DialogButton style, const std::wstring& text) :
     Widget(),
     style{style},
-    text{text}
+    text{text},
+    selected{false}
 {
 }
 
@@ -45,7 +46,7 @@ void Button::Update(Rect<int> constraints)
     int rx = ToCoordX(GetTargetX()) + x;
     int ry = ToCoordY(GetTargetY()) + y;
 
-    bool selected = false;
+    selected = false;
     if (mx > rx && mx < rx + rw && my > ry && my < ry + rh) {
         atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
@@ -70,14 +71,11 @@ void Button::Update(Rect<int> constraints)
 
     // text
     Rendering::RenderText(text, Rect<int>(x + 4, y + 4, rect.w - 4, rect.h - 4), Align::CENTER, FONT_LARGE, false);
-
-    // TODO
-    if (clicked && selected) {
-        clicked = false;
-    }
 }
 
 void Button::onEventReceive(Mouse& event)
 {
-    clicked = event.LmbDown() && !event.RmbDown();
+    if (event.type == BUTTONDOWN && handler && selected) {
+        handler(event);
+    }
 }

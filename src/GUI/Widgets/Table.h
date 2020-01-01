@@ -20,15 +20,20 @@ namespace Sourcehold {
 
         using namespace Events;
 
-        class Table : protected EventConsumer<Mouse> {
+        class Table : protected EventConsumer<Mouse>, public Widget {
+            std::vector<Column> cols;
+            bool scrollbar = true;
+            bool renderNames = true;
+            uint32_t numRows = 0;
+            int highlight = -1, selected = -1;
         public:
-            Table() = default;
             Table(uint32_t rows, uint32_t columns);
-            ~Table() = default;
+            ~Table() {};
 
             void Create(uint32_t rows, uint32_t columns);
             void Destroy();
-            void Render(int x, int y, int w);
+            
+            void Update(Rect<int> constraints) override;
 
             void SetNumRows(uint32_t n);
             void SetNumCols(uint32_t n);
@@ -42,12 +47,6 @@ namespace Sourcehold {
             inline void RenderNames(bool b) { renderNames = b; }
         protected:
             void onEventReceive(Mouse &mouse) override;
-
-            std::vector<Column> cols;
-            bool scrollbar = true;
-            bool renderNames = true;
-            uint32_t numRows = 0;
-            int highlight = -1, selected = -1;
         };
     }
 }

@@ -8,15 +8,16 @@ using namespace Game;
 using namespace Rendering;
 
 Dialog::~Dialog() {}
-Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text, bool textbox, int textboxW) :
+Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text, bool textbox, Deco deco, int textboxW) :
     Container(l),
     nx(nx), ny(ny),
     tw{textboxW},
     text{text},
-    textbox{textbox}
+    textbox{textbox},
+    deco{deco}
 {}
 
-DialogResult Dialog::Update(Dialog::Position pos, int offX, int offY)
+void Dialog::Update(Dialog::Position pos, int offX, int offY)
 {
     int w = nx * MENU_TILE_DIM;
     int h = ny * MENU_TILE_DIM;
@@ -27,14 +28,12 @@ DialogResult Dialog::Update(Dialog::Position pos, int offX, int offY)
     icons = GetGm1("gm/interface_icons3.gm1");
 
     RenderBorder(x, y, nx, ny);
-    if(textbox) RenderTextBox(x, y, tw*24, 64, text, true);
+    if(textbox) RenderTextBox(x, y, tw*24, 64, text, deco);
 
     // Render the member widgets in the available area of the dialog //
     w += MENU_TILE_DIM; // TODO
     h += MENU_TILE_DIM;
-    Container::Update(Rect<int>(x, y+textbox?64:0, w, h-textbox?64:0));
-
-    return DialogResult::IDLE;
+    Container::Update(Rect<int>(x+MARGIN_X, y+MARGIN_Y+(textbox?64:0), w-MARGIN_X*2, h-MARGIN_Y*2-(textbox?64:0)));
 }
 
 void Dialog::RenderBorder(int x, int y, int nx, int ny)
@@ -104,6 +103,8 @@ void Dialog::RenderBorder(int x, int y, int nx, int ny)
 
 void Dialog::RenderDeco(Deco type, int x, int y)
 {
+    if (type == Deco::NONE) return;
+
     auto atlas = icons->GetTextureAtlas();
 
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
@@ -119,7 +120,7 @@ void Dialog::RenderDeco(Deco type, int x, int y)
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 }
 
-void Dialog::RenderTextBox(int x, int y, int w, int h, const std::wstring& text, bool deco)
+void Dialog::RenderTextBox(int x, int y, int w, int h, const std::wstring& text, Deco deco)
 {
     RenderRect(Rect<int>{ x + 8, y + 8, w + 8, h + 8 },  24,  80,  24, 200, true);
     RenderRect(Rect<int>{ x + 8, y + 8, w + 8, h + 8 }, 247, 235, 198, 255, false);
@@ -127,8 +128,6 @@ void Dialog::RenderTextBox(int x, int y, int w, int h, const std::wstring& text,
     auto dim = GetStringPixelDim(text, FONT_LARGE);
     RenderText(text, x + 20 + (w / 2) - (dim.first / 2), y + 25, FONT_LARGE);
 
-    if (deco) {
-        RenderDeco(Deco::LARGE, x + 11, y + (h / 2) - 11);
-        RenderDeco(Deco::LARGE, x + (w - 16), y + (h / 2) - 11);
-    }
+    RenderDeco(deco, x + 11, y + (h / 2) - 11);
+    RenderDeco(deco, x + (w - 16), y + (h / 2) - 11);
 }

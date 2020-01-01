@@ -8,7 +8,7 @@ using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
 Table::Table(uint32_t rows, uint32_t columns) :
-    EventConsumer<Mouse>()
+    EventConsumer<Mouse>(), Widget()
 {
     Create(rows, columns);
 }
@@ -24,7 +24,7 @@ void Table::Destroy()
     cols.clear();
 }
 
-void Table::Render(int x, int y, int w)
+void Table::Update(Rect<int> constraints)
 {
     if(cols.empty()) return;
 
@@ -33,16 +33,20 @@ void Table::Render(int x, int y, int w)
     int mx = GetMouseX();
     int my = GetMouseY();
 
+    int width = constraints.w;
+    int x = constraints.x;
+    int y = constraints.y;
+
     int rx = ToCoordX(GetTargetX()) + x;
     int ry = ToCoordY(GetTargetY()) + y + (renderNames ? 20 : 0);
 
-    if(mx > rx && mx < rx + w && my > ry && my < ry+20*numRows) {
+    if(mx > rx && mx < rx + width && my > ry && my < ry+20*numRows) {
         highlight = (my - ry) / 20;
     }else highlight = -1;
 
     if(renderNames) {
-        RenderRect(Rect<int>(x, y, w, 20), 104, 120, 88, 152, true);
-        RenderRect(Rect<int>(x, y, w, 20), 239, 239, 189, 255, false);
+        RenderRect(Rect<int>(x, y, width, 20), 104, 120, 88, 152, true);
+        RenderRect(Rect<int>(x, y, width, 20), 239, 239, 189, 255, false);
         RenderText(col.name, x + 10, y + 2, FONT_SMALL);
         y += 20;
     }
@@ -51,8 +55,8 @@ void Table::Render(int x, int y, int w)
         std::wstring &row = col.rows[i];
 
         if(i == highlight || i == selected) {
-            RenderRect(Rect<int>(x, y+20*i, w, 20), 144, 160, 136, 152, true);
-            RenderRect(Rect<int>(x, y+20*i, w, 20), 239, 239, 189, 255, false);
+            RenderRect(Rect<int>(x, y+20*i, width, 20), 144, 160, 136, 152, true);
+            RenderRect(Rect<int>(x, y+20*i, width, 20), 239, 239, 189, 255, false);
         }else {
             Uint8 r, g, b;
             if(i % 2 == 0) {
@@ -64,13 +68,13 @@ void Table::Render(int x, int y, int w)
                 g = 80;
                 b = 24;
             }
-            RenderRect(Rect<int>(x, y+20*i, w, 20), r, g, b, 152, true);
+            RenderRect(Rect<int>(x, y+20*i, width, 20), r, g, b, 152, true);
         }
 
-        RenderText(row, Rect<int>(x + 10, 2+y+20*i, w, 20), Align::LEFT, FONT_LARGE, false);
+        RenderText(row, Rect<int>(x + 10, 2+y+20*i, width, 20), Align::LEFT, FONT_LARGE, false);
     }
 
-    RenderRect(Rect<int>(x, y, w, 20*numRows), 239, 239, 189, 255, false);
+    RenderRect(Rect<int>(x, y, width, 20*numRows), 239, 239, 189, 255, false);
 }
 
 void Table::SetNumRows(uint32_t n)

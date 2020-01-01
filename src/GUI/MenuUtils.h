@@ -38,7 +38,8 @@ namespace Sourcehold {
          */
         bool CheckButtonCollision(uint32_t rx, uint32_t ry);
 
-        /* Common dialog windows */
+        /* Construct common dialog windows */
         std::shared_ptr<Dialog> QuitDialog();
-     }
+        std::shared_ptr<Dialog> LoadDialog();
+    }
 }

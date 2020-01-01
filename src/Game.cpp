@@ -28,14 +28,6 @@ using namespace Parsers;
 using namespace Rendering;
 using namespace GUI;
 
-void Cleanup()
-{
-    SaveConfig();
-    UnloadFonts();
-    ClearFileCache();
-    DestroyManager();
-}
-
 int MainLoop(UIState state) {
     switch(state) {
     case MAIN_MENU: {
@@ -68,7 +60,7 @@ int MainLoop(UIState state) {
     default: break;
     }
 
-    Cleanup();
+    ExitGame();
     return EXIT_SUCCESS;
 }
 

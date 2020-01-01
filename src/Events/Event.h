@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <memory>
+#include <functional>
 
 #include "Events/EventHandler.h"
 

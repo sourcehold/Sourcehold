@@ -374,6 +374,12 @@ void Game::SaveConfig()
     _cfg.WriteToDisk(_cfgPath);
 }
 
+void Game::ExitGame()
+{
+    DestroyManager();
+    _running = false;
+}
+
 std::wstring Game::GetDescription(MissionDescription index)
 {
     std::wstring& str = _mlb.GetString(index);

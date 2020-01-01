@@ -5,11 +5,12 @@
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;
 
-LineEdit::LineEdit(const std::wstring& line) :
-    EventConsumer<Keyboard>()
-{
-    this->line = line;
-}
+LineEdit::LineEdit(int nx, const std::wstring& line) :
+    EventConsumer<Keyboard>(),
+    line{line},
+    nx{nx},
+    cp{0}
+{}
 
 LineEdit::~LineEdit()
 {
@@ -30,10 +31,8 @@ void LineEdit::EndInput()
     SDL_StopTextInput();
 }
 
-void LineEdit::Render(int x, int y, int nx)
+void LineEdit::Update(Rect<int> constraints)
 {
-    if(nx <= 2) return;
-
     std::shared_ptr<TextureAtlas> atlas = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
     SDL_Rect parts[3];
     parts[0] = atlas->Get(114);
@@ -42,18 +41,24 @@ void LineEdit::Render(int x, int y, int nx)
 
     auto dim = GetStringPixelDim(line.substr(0, cp), FONT_SMALL);
 
+    int x = constraints.x + ((constraints.w - LINE_SEGMENT_W*nx) / 2);
+    int y = constraints.y + ((constraints.h - parts[0].h) / 2);
+
     atlas->SetAlphaMod(127);
 
     ::Render(*atlas, x, y, &parts[0]);
-    ::Render(*atlas, x+10*nx, y, &parts[2]);
+    ::Render(*atlas, x+ LINE_SEGMENT_W * nx, y, &parts[2]);
 
-    for(int px = 10; px < nx*10; px += 10) {
+    for(int px = LINE_SEGMENT_W; px < nx * LINE_SEGMENT_W; px += LINE_SEGMENT_W) {
         ::Render(*atlas, x+px, y, &parts[1]);
     }
 
     atlas->SetAlphaMod(255);
 
+    // Text contents
     RenderText(line, x + 4, y + 6, FONT_SMALL);
+
+    // Cursor
     RenderRect(Rect<int>(x+dim.first, y, 2, 34), 24, 80, 24, 255, true);
 }
 

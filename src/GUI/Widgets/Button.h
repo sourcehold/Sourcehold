@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <functional>
 
 #include "Events/Event.h"
 #include "Events/Mouse.h"
@@ -23,16 +24,19 @@ namespace Sourcehold {
         };
 
         using namespace Events;
-        class Button : protected EventConsumer<Mouse>, public Widget
+        class Button : public EventConsumer<Mouse>, public Widget
         {
             DialogButton style;
             std::wstring text;
-            bool clicked = false;
+            bool selected;
+            std::function<void(Mouse & ev)> handler;
         public:
             Button(DialogButton style, const std::wstring &text);
             ~Button();
-
+            
             void Update(Rect<int> constraints) override;
+
+            inline void SetOnClick(std::function<void(Mouse & ev)> fn) { handler = fn; }
         protected:
             void onEventReceive(Mouse& event) override;
         };

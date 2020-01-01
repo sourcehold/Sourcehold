@@ -20,19 +20,18 @@ namespace Sourcehold {
         using namespace Parsers;
         using namespace Rendering;
 
-        class LineEdit : protected EventConsumer<Keyboard> {
-            const uint16_t MAX_LENGTH = 100;
+        class LineEdit : protected EventConsumer<Keyboard>, public Widget {
+            const uint16_t MAX_LENGTH = 100, LINE_SEGMENT_W = 10;
             std::wstring line;
-            uint16_t cp = 0;
+            int nx,cp; // number of line segments, character position
         public:
-            LineEdit() = default;
-            LineEdit(const std::wstring& line);
+            LineEdit(int nx, const std::wstring& line = L"");
             ~LineEdit();
 
             void Init();
             void BeginInput();
             void EndInput();
-            void Render(int x, int y, int nx);
+            void Update(Rect<int> constraints) override;
 
             inline void SetLine(const std::wstring &line) { this->line = line; cp = line.size(); }
             inline void SetPos(uint16_t cp) { this->cp = cp; }

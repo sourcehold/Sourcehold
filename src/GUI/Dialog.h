@@ -9,44 +9,24 @@
 
 namespace Sourcehold {
     namespace GUI {
-        enum class DialogResult {
-            IDLE,
-            LOAD,
-            SAVE,
-            BACK,
-            QUIT,
-            QUIT_MISSION
-        };
-
-        enum class DialogType {
-            // Original game //
-            QUIT,
-            LOAD,
-            COMBAT_MENU,
-            SIEGE_MENU,
-            ECO_MENU,
-            SETTINGS,
-            ESC_MENU,
-            // Sourcehold //
-            CAMPAIGN_SELECT_MILITARY,
-            CAMPAIGN_SELECT_ECO
-        };
-
         enum class Deco {
             LARGE,
-            SMALL
+            SMALL,
+            NONE
         };
 
         using namespace Parsers;
         class Dialog : public Container
         {
             const int MENU_TILE_DIM = 24;
+            const int MARGIN_X = 12, MARGIN_Y = 6;
             int nx, ny, tw; // number of 24x24 pixel 'tiles', textbox width in tiles
             bool textbox;
+            Deco deco;
             std::wstring text;
             std::shared_ptr<Gm1File> icons;
         public:
-            Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text = L"", bool textbox = false, int textboxW = 0);
+            Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text = L"", bool textbox = false, Deco deco = Deco::LARGE, int textboxW = 0);
             ~Dialog();
 
             enum Position {
@@ -58,11 +38,13 @@ namespace Sourcehold {
              * Render the dialog window at the specified position
              * and offset.
              */
-            DialogResult Update(Dialog::Position pos, int offX=0, int offY=0);
+            void Update(Dialog::Position pos, int offX=0, int offY=0);
+        public:
+            std::function<void()> onExit;
         protected:
             void RenderBorder(int x, int y, int nx, int ny);
             void RenderDeco(Deco type, int x, int y);
-            void RenderTextBox(int x, int y, int w, int h, const std::wstring& text, bool deco);
+            void RenderTextBox(int x, int y, int w, int h, const std::wstring& text, Deco deco);
         };
     }
 }

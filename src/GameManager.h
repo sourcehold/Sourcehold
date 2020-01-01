@@ -82,8 +82,9 @@ namespace Sourcehold {
          * every shared_ptr is destructed.
          */
         void DeleteCacheEntry(ghc::filesystem::path filename);
-
+        
         void SaveConfig();
+        void ExitGame();
 
         /**
          * Localization functions. These will get

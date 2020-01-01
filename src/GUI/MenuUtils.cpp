@@ -5,6 +5,7 @@
 #include "GUI/MenuUtils.h"
 #include "GUI/Widgets/StaticElement.h"
 #include "GUI/Widgets/Button.h"
+#include "GUI/Widgets/LineEdit.h"
 
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
@@ -68,10 +69,40 @@ bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
 
 std::shared_ptr<Dialog> GUI::QuitDialog()
 {
-    std::shared_ptr<Dialog> res = std::make_shared<Dialog>(
-        WidgetLayout::HORIZONTAL, 18, 6
+    auto res = std::make_shared<Dialog>(
+        WidgetLayout::HORIZONTAL, 18, 6, GetString(T_MAIN_MENU, 5), true, Deco::LARGE, 18
     );
-    res->Add(std::make_shared<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 22))); // Yes
-    res->Add(std::make_shared<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 23))); // No
+    // Yes //
+    res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 22))->SetOnClick(
+        [](Mouse &m) {
+            if (m.LmbDown()) {
+                SaveConfig();
+                ExitGame();
+            }
+        }
+    );
+
+    // No //
+    res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 23))->SetOnClick(
+        [res](Mouse& m) {
+            if (m.LmbDown() && res->onExit) {
+                res->onExit();
+            }
+        }
+    );
+
+    return res;
+}
+
+std::shared_ptr<Dialog> GUI::LoadDialog()
+{
+    auto res = std::make_shared<Dialog>(
+        WidgetLayout::HORIZONTAL, 30, 17, GetString(T_GAME_OPTIONS, 2), true, Deco::LARGE, 12
+    );
+    // TODO
+    //auto table = res->Add<Table>(16, 2);
+    //table->SetColName(0, GetString(T_GAME_OPTIONS, 27));
+    //table->SetColName(1, GetString(T_GAME_OPTIONS, 28));
+
     return res;
 }
