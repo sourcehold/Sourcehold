@@ -13,10 +13,16 @@ endif()
 include_directories(src)
 
 # Thirdparty
+include_directories(thirdparty/)
+include_directories(thirdparty/cxxopts)
 include_directories(thirdparty/blast/)
 include_directories(thirdparty/duktape/)
 include_directories(thirdparty/cxxopts/include/)
 include_directories(thirdparty/filesystem/include/)
+
+if (MSVC)
+  set( SDL2_ROOT_DIR thirdparty/SDL2-2.0.10)
+endif()
 
 # pthread
 find_package (Threads)
@@ -29,14 +35,22 @@ include_directories(${SDL2_INCLUDE_DIR})
 find_package(OpenAL REQUIRED)
 include_directories(${OPENAL_INCLUDE_DIR})
 
-# FFmpeg
-find_package(FFmpeg REQUIRED)
-include_directories(${FFMPEG_INCLUDE_DIRS})
-include_directories(${SWSCALE_INCLUDE_DIRS})
 
-# swresample
-find_package(Libswresample REQUIRED)
-include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
+if (MSVC)
+	include_directories(thirdparty/ffmpeg/include/)
+	set (SWSCALE_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/ffmpeg/lib/swscale.lib)
+else()
+	# FFmpeg
+	find_package(FFmpeg REQUIRED)
+	include_directories(${FFMPEG_INCLUDE_DIRS})
+	include_directories(${SWSCALE_INCLUDE_DIRS})
+
+	# swresample
+	find_package(Libswresample REQUIRED)
+	include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
+endif()
+
+
 
 # Include sources / headers
 file(GLOB_RECURSE SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp thirdparty/blast/blast.c thirdparty/duktape/duktape.c)
