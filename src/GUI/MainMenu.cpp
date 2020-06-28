@@ -211,7 +211,14 @@ UIState MainMenu::EnterMenu()
             Render(*tgx_bg_combat2);
 
             DialogResult res = dlg[3].Render();
-            buttonStart = buttonEnd = MAIN_EXIT;
+            /*if (dlg[3].GetSelectedIndex() >= 0) {
+                aud_chantloop.Stop();
+                ResetTarget();
+            }
+            else currentState = SIEGE_MENU;*/
+
+            buttonEnd = COMBAT_CAMPAIGN_NEXT + 1;
+            buttonStart = COMBAT_CAMPAIGN_BACK;
         } break;
         case ECONOMICS_MENU: {
             Render(*tgx_bg_economic);

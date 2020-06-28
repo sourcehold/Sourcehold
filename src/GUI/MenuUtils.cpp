@@ -273,6 +273,15 @@ DialogResult DialogWindow::CombatMenuDialog()
 
 DialogResult DialogWindow::SiegeMenuDialog()
 {
+    //int xHeader = (1024 / 2) - (416 / 2);
+    //int yHeader = 90;
+
+    int xTable = 1024 / 2;
+    int yTable = 768 / 2;
+
+    //RenderDialogTextBox(xHeader, yHeader, 416, 64, GetString(T_SIEGE_MAPS, 0), true);
+    table.Render(xTable + 100, yTable - 50, 283);
+
     return IDLE;
 }
 
@@ -512,6 +521,15 @@ void DialogWindow::Init(DialogType type)
             table.SetText(0, i, std::to_wstring(i+1) + L" " + GetString(T_MISSION_NAMES, 1+i));
         }
     } break;
+    case DialogType::SIEGE_MENU: {
+        table.Create(1, 12);
+        table.Scrollable(true);
+        table.RenderNames(false);
+
+        for (int i = 0; i < 74; i++) {
+            table.SetText(0, i, std::to_wstring(i + 1) + L" " + GetString(T_STANDALONE_MISSIONS, 1 + i));
+        }
+    } break;
     case DialogType::ECO_MENU: {
         table.Create(1, 5);
         table.Scrollable(false);
@@ -556,6 +574,7 @@ DialogResult DialogWindow::Render()
         return CombatMenuDialog();
     } break;
     case DialogType::SIEGE_MENU: {
+        return SiegeMenuDialog();
     } break;
     case DialogType::ECO_MENU: {
         return EconomicsMenuDialog();
