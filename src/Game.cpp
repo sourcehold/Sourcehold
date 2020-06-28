@@ -87,8 +87,9 @@ int EnterLoadingScreen()
     uint32_t index = 0;
 
     /* Calculater the position */
-    int px = (GetWidth() / 2) - (1024 / 2);
-    int py = (GetHeight() / 2) - (768 / 2);
+    Size loadingBgSz = { 1024, 768 };
+    int px = (Rendering::GetWidth() / 2) - (loadingBgSz.w / 2);
+    int py = (GetHeight() / 2) - (loadingBgSz.h / 2);
 
     ResetTarget();
 
@@ -116,9 +117,11 @@ int EnterLoadingScreen()
         Render(*tgx_loading, px, py);
 
         /* Render the loading bar */
-        RenderRect(Rect<int>{ px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35 }, 0, 0, 0, 128, true);
-        RenderRect(Rect<int>{ px+(1024/2)-(450/2), py+int(768.0/1.3), 450, 35 }, 0, 0, 0, 255, false);
-        RenderRect(Rect<int>{ px+5+(1024/2)-(450/2), py+5+int(768.0/1.3), int(440.0*progress), 25 }, 0, 0, 0, 255, true);
+        Size barSz = { 450, 35 };
+        int padding = 10;
+        RenderRect(Rect<int>{ px+(loadingBgSz.w/2)-(barSz.w/2), py+int(loadingBgSz.h/1.3), barSz.w, barSz.h }, 0, 0, 0, 128, true);
+        RenderRect(Rect<int>{ px+(loadingBgSz.w/2)-(barSz.w/2), py+int(loadingBgSz.h/1.3), barSz.w, barSz.h }, 0, 0, 0, 255, false);
+        RenderRect(Rect<int>{ px+5+(loadingBgSz.w/2)-(barSz.w/2), py+5+int(loadingBgSz.h/1.3), int((barSz.w-padding)*progress), barSz.h-padding }, 0, 0, 0, 255, true);
 
         FlushDisplay();
 
@@ -138,7 +141,8 @@ static const int resolutions[][2] = {
     { 1600, 900 },
     { 1600, 1200 },
     { 1680, 1050 },
-    { 1920, 1080 }
+    { 1920, 1080 },
+    { 2560, 1600 }
 };
 
 int StartGame(GameOptions& opt)
