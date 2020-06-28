@@ -38,7 +38,15 @@ include_directories(${OPENAL_INCLUDE_DIR})
 
 if (MSVC)
 	include_directories(thirdparty/ffmpeg/include/)
-	set (SWSCALE_LIBRARIES ${CMAKE_SOURCE_DIR}/thirdparty/ffmpeg/lib/swscale.lib)
+	set (FFMPEG_LIBS_DIR ${CMAKE_SOURCE_DIR}/thirdparty/ffmpeg/lib)
+	set (FFMPEG_LIBS_DLL_DIR thirdparty/ffmpeg/bin)
+	set (SWSCALE_LIBRARIES ${FFMPEG_LIBS_DIR}/swscale.lib
+												 ${FFMPEG_LIBS_DIR}/avcodec.lib
+												 ${FFMPEG_LIBS_DIR}/avdevice.lib
+												 ${FFMPEG_LIBS_DIR}/avfilter.lib
+												 ${FFMPEG_LIBS_DIR}/avformat.lib
+												 ${FFMPEG_LIBS_DIR}/avutil.lib
+												 ${FFMPEG_LIBS_DIR}/swresample.lib)
 else()
 	# FFmpeg
 	find_package(FFmpeg REQUIRED)
@@ -74,6 +82,27 @@ set_target_properties(Stronghold PROPERTIES
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
+
+if (MSVC)
+	add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${SDL2_ROOT_DIR}/lib/x64/SDL2.dll" "${CMAKE_BINARY_DIR}/SDL2.dll")
+	add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${FFMPEG_LIBS_DLL_DIR}/swscale-5.dll" "${CMAKE_BINARY_DIR}/swscale-5.dll")
+  add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${FFMPEG_LIBS_DLL_DIR}/avcodec-58.dll" "${CMAKE_BINARY_DIR}/avcodec-58.dll")
+  add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${FFMPEG_LIBS_DLL_DIR}/avformat-58.dll" "${CMAKE_BINARY_DIR}/avformat-58.dll")
+  add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${FFMPEG_LIBS_DLL_DIR}/avutil-56.dll" "${CMAKE_BINARY_DIR}/avutil-56.dll")
+  add_custom_command(TARGET Stronghold POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${PROJECT_SOURCE_DIR}/${FFMPEG_LIBS_DLL_DIR}/swresample-3.dll" "${CMAKE_BINARY_DIR}/swresample-3.dll")
+endif()
 
 target_link_libraries(
 	Stronghold
