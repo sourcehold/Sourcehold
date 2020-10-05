@@ -137,7 +137,7 @@ void Effect::Update()
 
             alNumFreeBuffers = NUM_AUDIO_BUFFERS;
 
-            std::copy(alFreeBuffers, alFreeBuffers + NUM_AUDIO_BUFFERS, alBuffers);
+            std::copy(alBuffers, alBuffers + NUM_AUDIO_BUFFERS, alFreeBuffers);
 
             alSampleRate = 22050;
             size = alNumChannels * audioFrame->nb_samples * av_get_bytes_per_sample((AVSampleFormat)audioFrame->format);
