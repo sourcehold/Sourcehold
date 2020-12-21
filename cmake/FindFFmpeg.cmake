@@ -147,5 +147,13 @@ foreach (_component ${FFmpeg_FIND_COMPONENTS})
   list(APPEND _FFmpeg_REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS)
 endforeach ()
 
+# Add imported targets for each component
+foreach (_component ${FFmpeg_FIND_COMPONENTS})
+  add_library(FFMPEG::${_component} UNKNOWN IMPORTED)
+  set_target_properties(FFMPEG::${_component} PROPERTIES
+    IMPORTED_LOCATION ${${_component}_LIBRARIES}
+    INTERFACE_INCLUDE_DIRECTORIES ${${_component}_INCLUDE_DIRS})
+endforeach()
+
 # Give a nice error message if some of the required vars are missing.
 find_package_handle_standard_args(FFmpeg DEFAULT_MSG ${_FFmpeg_REQUIRED_VARS})
