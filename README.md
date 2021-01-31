@@ -12,16 +12,23 @@ its HD remaster.
 The purpose of this project is to make Stronghold playable on platforms it didn't support originally. It is not intended to be a 100% accurate source port, so there will be differences.
 
 ## Building
-After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts).
-
-Run `cmake` in your build directory. If you're building on Windows or don't have the libraries in your `pkg-config`,
-use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths. 
+After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [cxxopts](https://github.com/jarro2783/cxxopts). 
 
 Sourcehold uses the following libraries:
 *   SDL2
 *   OpenAL
 *   FFmpeg (avcodec, avutil, avformat, swscale)
 *   zlib's blast for PKWARE decompression
+
+Run `cmake` in your build directory.
+
+###Windows
+
+If you're building on Windows or don't have the libraries in your `pkg-config`,
+use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths.
+
+###Mac OS
+Simply run `build.sh` from `macos` directory in repository root. This script will install Homebrew in order to install all necessary dependencies.
 
 ## Running
 Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy
@@ -43,6 +50,7 @@ data
 ├── jester.ani
 └── sword.ani
 ```
+Also you should create  `saves` directory near your  `data`  folder.
 
 ## Configuration
 This is either done by reading an existing Stronghold config file, found in your documents folder
