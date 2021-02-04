@@ -98,9 +98,8 @@ void Layout::Render(int x, int y)
 {
     int winH = GetHeight();
 
-    for(int i = 0; i < elems.size(); i++) {
-        LayoutElement &elem = elems[i];
-
+    for (auto &elem : elems)
+    {
         if(y + elem.y > winH) return;
 
         if(elem.type == LayoutElement::LINE) {

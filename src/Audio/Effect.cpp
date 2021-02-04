@@ -1,5 +1,6 @@
 #include <thread>
 #include <chrono>
+#include <algorithm>
 
 #include "Audio/Effect.h"
 #include "System/Logger.h"
@@ -135,9 +136,8 @@ void Effect::Update()
             alNumChannels = 1;
 
             alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-            for (uint32_t i = 0; i < NUM_AUDIO_BUFFERS; i++) {
-                alFreeBuffers[i] = alBuffers[i];
-            }
+
+            std::copy(alBuffers, alBuffers + NUM_AUDIO_BUFFERS, alFreeBuffers);
 
             alSampleRate = 22050;
             size = alNumChannels * audioFrame->nb_samples * av_get_bytes_per_sample((AVSampleFormat)audioFrame->format);
