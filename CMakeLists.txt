@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Project
 project(Stronghold)
@@ -13,30 +14,45 @@ endif()
 include_directories(src)
 
 # Thirdparty
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/blast/)
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/duktape/)
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/include/)
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/filesystem/include/)
+
+# blast
+add_library(blast thirdparty/blast/blast.c)
+set_target_properties(blast PROPERTIES
+  INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/thirdparty/blast)
+
+# cxxopts
+set(CXXOPTS_BUILD_TESTS OFF)
+set(CXXOPTS_BUILD_EXAMPLES OFF)
+
+add_subdirectory(thirdparty/cxxopts)
+
+# ghc filesystem
+add_subdirectory(thirdparty/filesystem)
 
 # pthread
-find_package (Threads)
+find_package(Threads REQUIRED)
 
 # SDL2
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIR})
 
 # OpenAL
 find_package(OpenAL REQUIRED)
-include_directories(${OPENAL_INCLUDE_DIR})
+add_library(OpenAL::OpenAL UNKNOWN IMPORTED)
+set_target_properties(OpenAL::OpenAL PROPERTIES
+  IMPORTED_LOCATION ${OPENAL_LIBRARY}
+  INTERFACE_INCLUDE_DIRECTORIES ${OPENAL_INCLUDE_DIR})
 
 # FFmpeg
-find_package(FFmpeg REQUIRED)
-include_directories(${FFMPEG_INCLUDE_DIRS})
-include_directories(${SWSCALE_INCLUDE_DIRS})
+find_package(FFmpeg REQUIRED COMPONENTS
+  AVCODEC AVFORMAT AVUTIL SWSCALE)
+
 
 # swresample
 find_package(Libswresample REQUIRED)
-include_directories( ${LIBSWRESAMPLE_INCLUDE_DIRS})
+add_library(SWRESAMPLE::SWRESAMPLE UNKNOWN IMPORTED)
+set_target_properties(SWRESAMPLE::SWRESAMPLE PROPERTIES
+  IMPORTED_LOCATION ${LIBSWRESAMPLE_LIBRARIES}
+  INTERFACE_INCLUDE_DIRECTORIES ${LIBSWRESAMPLE_INCLUDE_DIRS})
 
 # Include sources / headers
 file(
@@ -44,10 +60,6 @@ file(
     LIST_DIRECTORIES false
     "${CMAKE_SOURCE_DIR}/src/*.cpp*"
     "${CMAKE_SOURCE_DIR}/src/*.h*"
-    "${CMAKE_SOURCE_DIR}/thirdparty/blast/*.c"
-    "${CMAKE_SOURCE_DIR}/thirdparty/blast/*.h"
-    "${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/*.c"
-    "${CMAKE_SOURCE_DIR}/thirdparty/cxxopts/*.h"
 )
 
 foreach(_source IN ITEMS ${_source_list})
@@ -57,8 +69,11 @@ foreach(_source IN ITEMS ${_source_list})
     source_group("${_group_path}" FILES "${_source}")
 endforeach()
 
+add_executable(Stronghold ${_source_list})
+
+
 if(MSVC)
-	add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
 		set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
@@ -66,22 +81,29 @@ if(MSVC)
 		set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
-	add_definitions(-Wno-reorder -pedantic-errors -Ofast -fno-fast-math)
+  target_compile_options(Stronghold PRIVATE
+    -Wno-reorder
+    -pedantic-errors
+    -Ofast
+    -fno-fast-math)
 endif()
 
-add_executable(Stronghold ${_source_list})
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 11
 	CXX_STANDARD_REQUIRED YES
 	CXX_EXTENSIONS NO
 )
 
-target_link_libraries(
-	Stronghold
-	${SDL2_LIBRARY}
-	${OPENAL_LIBRARY}
-	${FFMPEG_LIBRARIES}
-	${SWSCALE_LIBRARIES}
-	${LIBSWRESAMPLE_LIBRARIES}
-	${CMAKE_THREAD_LIBS_INIT}
+target_link_libraries(Stronghold
+  PRIVATE Threads::Threads
+  PRIVATE SDL2::SDL2
+  PRIVATE OpenAL::OpenAL
+  PRIVATE FFMPEG::AVCODEC
+  PRIVATE FFMPEG::AVFORMAT
+  PRIVATE FFMPEG::AVUTIL
+  PRIVATE FFMPEG::SWSCALE
+  PRIVATE SWRESAMPLE::SWRESAMPLE
+  PRIVATE blast
+  PRIVATE cxxopts
+  PRIVATE ghc_filesystem
 )
