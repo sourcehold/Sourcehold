@@ -16,7 +16,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
+      with:
+        submodules: 'true'
+      
     - name: Install dependencies
       # Install all the required dependencies to build Sourcehold
       run: sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev 
