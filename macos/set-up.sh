@@ -1,6 +1,7 @@
 #!/bin/sh
 
-SAVES_DIR="saves"
+PROJECT_ROOT=".."
+SAVES_DIR="$PROJECT_ROOT/saves"
 
 echo "Setting up environment..."
 if [ -d "$SAVES_DIR" ]; then
