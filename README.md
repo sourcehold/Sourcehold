@@ -30,6 +30,8 @@ use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the comman
 ###Mac OS
 Simply run `set-up-n-build.sh` from `macos` directory in repository root. This script will install Homebrew and all necessary dependencies, build project and create all necessary directories to run Stronghold.
 
+Also you may build and run Stronghold using Xcode. Project file is located inside `macos` directory in repository root.
+
 ## Running
 Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy
 the files to a directory called `data` in the main folder of Sourcehold. The directory should look like this:
