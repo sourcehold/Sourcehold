@@ -5,3 +5,15 @@ saves/*
 stronghold.cfg
 .idea
 .vscode
+
+# Mac OS file that stores custom attributes of its containing folder
+.DS_Store
+
+# Xcode related stuff
+xcuserdata
+xcshareddata
+*.pbxuser
+*.xcuserstate
+*.xcbkptlist
+*.xcworkspacedata
+*.xccheckout
