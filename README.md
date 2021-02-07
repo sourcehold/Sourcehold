@@ -28,7 +28,7 @@ If you're building on Windows or don't have the libraries in your `pkg-config`,
 use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths.
 
 ###Mac OS
-Simply run `build.sh` from `macos` directory in repository root. This script will install Homebrew in order to install all necessary dependencies.
+Simply run `set-up-n-build.sh` from `macos` directory in repository root. This script will install Homebrew and all necessary dependencies, build project and create all necessary directories to run Stronghold.
 
 ## Running
 Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy
@@ -50,7 +50,7 @@ data
 ├── jester.ani
 └── sword.ani
 ```
-Also you should create  `saves` directory near your  `data`  folder.
+Also you should create `saves` directory near your `data` folder.
 
 ## Configuration
 This is either done by reading an existing Stronghold config file, found in your documents folder
