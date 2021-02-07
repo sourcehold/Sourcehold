@@ -148,7 +148,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
 
     /* Read compressed images into buffer */
     uint32_t buflen = Parser::GetLength() - offData;
-    auto imgdata = std::vetor<char>(buflen);
+    auto imgdata = std::vector<char>(buflen);
     Parser::GetData(imgdata.data(), buflen);
 
     /* Close file */
