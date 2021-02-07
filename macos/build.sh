@@ -1,8 +1,8 @@
 #!/bin/sh
 
-SRC_ROOT=".."
-CMAKE_WORKING_DIR="$SRC_ROOT/"
-BUILD_DIR="$SRC_ROOT/build"
+PROJECT_ROOT=".."
+CMAKE_WORKING_DIR="$PROJECT_ROOT"
+BUILD_DIR="$PROJECT_ROOT/build"
 
 echo "Updating subrepositories..."
 git submodule init
