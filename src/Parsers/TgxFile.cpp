@@ -1,6 +1,8 @@
 #include "Parsers/TgxFile.h"
 #include "System/Config.h"
 
+#include <vector>
+
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
@@ -41,19 +43,18 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path)
     /* Calculate size */
     size_t size = Parser::GetLength() - Parser::Tell();
 
-    char *buf = new char[size];
-    Parser::GetData(buf, size);
+    auto buf = std::vector<char>(size);
+    Parser::GetData(buf.data(), size);
     Parser::Close();
 
     /* Read image data */
     surf.LockSurface();
-    ReadTgx(surf, buf, size, 0, 0, nullptr);
+    ReadTgx(surf, buf.data(), size, 0, 0, nullptr);
     surf.UnlockSurface();
 
     /* Convert to texture */
     Texture::AllocFromSurface(surf);
 
-    delete [] buf;
     return true;
 }
 
