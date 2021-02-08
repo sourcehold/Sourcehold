@@ -28,7 +28,9 @@ If you're building on Windows or don't have the libraries in your `pkg-config`,
 use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths.
 
 ###Mac OS
-Simply run `set-up-n-build.sh` from `macos` directory in repository root. This script will install Homebrew and all necessary dependencies, build project and create all necessary directories to run Stronghold.
+Simply run `set-up-n-build.sh` from `macos` directory in repository root. This script will install Homebrew and all necessary dependencies, build project and create all necessary directories to run Sourcehold.
+
+Also you may build and run Sourcehold using Xcode. Project file is located inside `macos` directory in repository root.
 
 ## Running
 Make sure you point Sourcehold to where your game data is located, which you can do using `--path=/your/path` or copy
