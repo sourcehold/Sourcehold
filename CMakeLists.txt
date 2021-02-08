@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 
+#if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND APPLE)
+    set(MAC_OS TRUE)
+#endif()
+
 # Project
 project(Stronghold)
 set(Stronghold_VERSION, 0.1.2)
@@ -69,6 +73,10 @@ else()
 	add_definitions(-Wno-reorder -pedantic-errors -Ofast -fno-fast-math)
 endif()
 
+if(MAC_OS)
+    list(APPEND _source_list "${CMAKE_SOURCE_DIR}/macos/src/PathUtils.m")
+endif()
+
 add_executable(Stronghold ${_source_list})
 set_target_properties(Stronghold PROPERTIES
  	CXX_STANDARD 11
@@ -85,3 +93,9 @@ target_link_libraries(
 	${LIBSWRESAMPLE_LIBRARIES}
 	${CMAKE_THREAD_LIBS_INIT}
 )
+
+if(MAC_OS)
+    target_link_libraries(Stronghold 
+        "-framework Foundation"
+    )
+endif()

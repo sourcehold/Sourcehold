@@ -13,6 +13,11 @@
 
 #include "System/filesystem.h"
 
+#if SOURCEHOLD_MAC_OS
+#include "../macos/src/PathUtils.h"
+#endif
+
+
 using namespace Sourcehold;
 using namespace System;
 
@@ -55,13 +60,16 @@ void System::CreateFolder(ghc::filesystem::path path)
 
 ghc::filesystem::path System::GetDocumentsPath()
 {
-    char path[512];
+    static const unsigned int maxPathLength = 512;
+    char path[maxPathLength];
 
     /**
     * TODO: better way to do this
     * Why the f*** isn't this part of boost?
     */
-#ifdef SOURCEHOLD_UNIX
+#if SOURCEHOLD_MAC_OS
+    GetUserDocumentsDirectoryPath(path, maxPathLength);
+#elif SOURCEHOLD_UNIX
     /* Requires ~/.config/user-dirs.dirs from the FreeDesktop xdg standard */
     const char *home = getenv("HOME");
     strcpy(path, home);
@@ -95,7 +103,6 @@ ghc::filesystem::path System::GetDocumentsPath()
     else {
         *path = '\0';
     }
-
 #elif SOURCEHOLD_WINDOWS || SOURCEHOLD_MINGW
     LPITEMIDLIST pidl;
     SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
