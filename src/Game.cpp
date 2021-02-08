@@ -163,8 +163,7 @@ int StartGame(GameOptions& opt)
 
     Logger::message(GAME) << "Done" << std::endl;
 
-    // TODO: Shouldn’t this be on stack?
-    auto start = std::unique_ptr<Startup>(new Startup());
+    Startup *start = new Startup();
 
     int ret = EnterLoadingScreen();
     if (ret != EXIT_SUCCESS) return ret;
@@ -175,6 +174,7 @@ int StartGame(GameOptions& opt)
         state = start->Begin();
     }
 
+    delete start;
     return MainLoop(state);
 }
 
