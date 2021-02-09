@@ -76,5 +76,5 @@ void Tileset::Unlock()
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index)
 {
-    return std::pair<uint32_t, uint32_t>(30 * (index % numRows), 16 * (index / numRows));
+    return { 30 * (index % numRows), 16 * (index / numRows) };
 }

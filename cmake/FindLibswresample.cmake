@@ -36,6 +36,7 @@ pkg_check_modules(PC_LIBSWRESAMPLE QUIET Libswresample)
 
 find_path(LIBSWRESAMPLE_INCLUDE_DIR
         NAMES libswresample/swresample.h
+        PATH_SUFFIXES ffmpeg
         HINTS ${PC_LIBSWRESAMPLE_INCLUDEDIR} ${PC_LIBSWRESAMPLE_INCLUDE_DIRS})
 
 find_library(LIBSWRESAMPLE_LIBRARY

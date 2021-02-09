@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Building.h"
 
 using namespace Sourcehold::Game;
@@ -56,11 +57,10 @@ void Building::Render()
 
 bool Building::CanWalkOn(uint32_t x, uint32_t y)
 {
-    uint32_t index = CoordToLocalIndex(x, y);
-    for(uint32_t tile : walkableTiles) {
-        if(tile == index) return true;
-    }
-    return false;
+    uint32_t const index = CoordToLocalIndex(x, y);
+
+    return std::find(begin(walkableTiles), end(walkableTiles), index)
+        != end(walkableTiles);
 }
 
 uint32_t Building::CoordToGlobalIndex(uint32_t x, uint32_t y)

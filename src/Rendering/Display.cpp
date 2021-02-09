@@ -1,3 +1,4 @@
+#include <vector>
 #include "Rendering/Display.h"
 #include "System/Logger.h"
 #include "System/Config.h"
@@ -49,7 +50,7 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
     int displays = SDL_GetNumVideoDisplays();
     if(index >= displays) index = 0;
 
-    SDL_Rect *displayBounds = new SDL_Rect[displays];
+    auto displayBounds = std::vector<SDL_Rect>(displays);
     for(int i = 0; i < displays; i++) {
         displayBounds[i] = { 0, 0, 0, 0 };
         SDL_GetDisplayBounds(i, &displayBounds[i]);
@@ -60,7 +61,7 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
     if (width < 0 || height < 0) {
         SDL_DisplayMode mode;
         SDL_GetCurrentDisplayMode(index, &mode);
-        // Flip width and height to force landscape orientation //        
+        // Flip width and height to force landscape orientation //
         width = mode.h;
         height = mode.w;
     }
@@ -77,8 +78,6 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
     if(!_window) {
         Logger::error(RENDERING) << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
     }
-
-    delete [] displayBounds;
 
     if(!nograb) {
         SDL_SetWindowGrab(_window, SDL_TRUE);
