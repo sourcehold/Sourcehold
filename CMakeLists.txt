@@ -4,6 +4,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND APPLE)
+  message("Building for Mac OS...")
   set(MAC_OS TRUE)
 #endif()
 
@@ -73,7 +74,7 @@ set_target_properties(SWRESAMPLE::SWRESAMPLE PROPERTIES
 
 # MacOSUtils
 if(MAC_OS)
-  add_library(MacOSUtils macOS/src/PathUtils.m)
+  add_library(MacOSUtils macos/src/PathUtils.m)
   set_target_properties(MacOSUtils PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/macos/src)
   target_link_libraries(MacOSUtils
