@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND APPLE)
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin" AND APPLE)
   message("Building for Mac OS...")
   set(MAC_OS TRUE)
 endif()
