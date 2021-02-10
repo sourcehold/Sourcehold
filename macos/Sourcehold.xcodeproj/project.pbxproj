@@ -56,7 +56,9 @@
 		6D6C457D25D03F94009A45DF /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C454D25D03F93009A45DF /* World.cpp */; };
 		6D6C457E25D03F94009A45DF /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C454E25D03F93009A45DF /* Game.cpp */; };
 		6D6C459225D05B9B009A45DF /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C459125D05B9B009A45DF /* OpenAL.framework */; };
-		6D6C45AA25D07B28009A45DF /* blast.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C45A925D07B28009A45DF /* blast.c */; };
+		6D6C45B025D09F57009A45DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C45AF25D09F57009A45DF /* Foundation.framework */; };
+		6D6C496325D1C2B3009A45DF /* blast.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C496225D1C2B3009A45DF /* blast.c */; };
+		6D6C496A25D1C3A6009A45DF /* PathUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C496925D1C3A6009A45DF /* PathUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -178,7 +180,10 @@
 		6D6C454D25D03F93009A45DF /* World.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = World.cpp; sourceTree = "<group>"; };
 		6D6C454E25D03F93009A45DF /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
 		6D6C459125D05B9B009A45DF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
-		6D6C45A925D07B28009A45DF /* blast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blast.c; path = ../../../thirdparty/blast/blast.c; sourceTree = "<group>"; };
+		6D6C45AF25D09F57009A45DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6D6C496225D1C2B3009A45DF /* blast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blast.c; path = ../../thirdparty/blast/blast.c; sourceTree = "<group>"; };
+		6D6C496825D1C3A6009A45DF /* PathUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PathUtils.h; sourceTree = "<group>"; };
+		6D6C496925D1C3A6009A45DF /* PathUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PathUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +191,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D6C45B025D09F57009A45DF /* Foundation.framework in Frameworks */,
 				6D6C459225D05B9B009A45DF /* OpenAL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,8 +202,8 @@
 		6D6C44CA25D03EE7009A45DF = {
 			isa = PBXGroup;
 			children = (
-				6D6C44DF25D03F93009A45DF /* src */,
-				6D6C45A025D063DF009A45DF /* thirdparty */,
+				6D6C496525D1C2F5009A45DF /* Common */,
+				6D6C496625D1C319009A45DF /* MacOS */,
 				6D6C44D425D03EE9009A45DF /* Products */,
 				6D6C459025D05B9B009A45DF /* Frameworks */,
 			);
@@ -382,25 +388,52 @@
 		6D6C459025D05B9B009A45DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D6C45AF25D09F57009A45DF /* Foundation.framework */,
 				6D6C459125D05B9B009A45DF /* OpenAL.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		6D6C45A025D063DF009A45DF /* thirdparty */ = {
+		6D6C496025D1C297009A45DF /* thidparty */ = {
 			isa = PBXGroup;
 			children = (
-				6D6C45A425D06404009A45DF /* blast */,
+				6D6C496125D1C2A2009A45DF /* blast */,
 			);
-			path = thirdparty;
+			name = thidparty;
 			sourceTree = "<group>";
 		};
-		6D6C45A425D06404009A45DF /* blast */ = {
+		6D6C496125D1C2A2009A45DF /* blast */ = {
 			isa = PBXGroup;
 			children = (
-				6D6C45A925D07B28009A45DF /* blast.c */,
+				6D6C496225D1C2B3009A45DF /* blast.c */,
 			);
 			path = blast;
+			sourceTree = "<group>";
+		};
+		6D6C496525D1C2F5009A45DF /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				6D6C44DF25D03F93009A45DF /* src */,
+				6D6C496025D1C297009A45DF /* thidparty */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		6D6C496625D1C319009A45DF /* MacOS */ = {
+			isa = PBXGroup;
+			children = (
+				6D6C496725D1C344009A45DF /* src */,
+			);
+			name = MacOS;
+			sourceTree = "<group>";
+		};
+		6D6C496725D1C344009A45DF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				6D6C496825D1C3A6009A45DF /* PathUtils.h */,
+				6D6C496925D1C3A6009A45DF /* PathUtils.m */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -484,6 +517,7 @@
 				6D6C455325D03F94009A45DF /* Gm1File.cpp in Sources */,
 				6D6C455725D03F94009A45DF /* AniFile.cpp in Sources */,
 				6D6C457E25D03F94009A45DF /* Game.cpp in Sources */,
+				6D6C496A25D1C3A6009A45DF /* PathUtils.m in Sources */,
 				6D6C457125D03F94009A45DF /* Camera.cpp in Sources */,
 				6D6C457725D03F94009A45DF /* Renderer.cpp in Sources */,
 				6D6C456025D03F94009A45DF /* Audio.cpp in Sources */,
@@ -526,7 +560,7 @@
 				6D6C457425D03F94009A45DF /* Display.cpp in Sources */,
 				6D6C455825D03F94009A45DF /* Parser.cpp in Sources */,
 				6D6C455425D03F94009A45DF /* MlbFile.cpp in Sources */,
-				6D6C45AA25D07B28009A45DF /* blast.c in Sources */,
+				6D6C496325D1C2B3009A45DF /* blast.c in Sources */,
 				6D6C456125D03F94009A45DF /* Effect.cpp in Sources */,
 				6D6C457525D03F94009A45DF /* Surface.cpp in Sources */,
 			);

@@ -52,7 +52,6 @@ data
 ├── jester.ani
 └── sword.ani
 ```
-Also you should create `saves` directory near your `data` folder.
 
 ## Configuration
 This is either done by reading an existing Stronghold config file, found in your documents folder
