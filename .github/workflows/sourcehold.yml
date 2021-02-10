@@ -12,16 +12,29 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            install_dependencies: "sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev"
+            artifact_name: "sourcehold-linux-amd64"
+          - os: macos-latest
+            install_dependencies: "./macos/install-dependencies.sh"
+            artifact_name: "sourcehold-mac-os"
+    
     steps:
     - uses: actions/checkout@v2
       with:
         submodules: 'true'
       
     - name: Install dependencies
+      env:
+        INSTALL_DEPENDENCIES: ${{ matrix.install_dependencies }}
       # Install all the required dependencies to build Sourcehold
-      run: sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev 
+      run: $INSTALL_DEPENDENCIES
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -41,10 +54,10 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}/build
       shell: bash
-      # Execute the build.  You can specify a specific target with "--target <NAME>"
+      # Execute the build. You can specify a specific target with "--target <NAME>"
       run: cmake --build . --config $BUILD_TYPE
 
     - uses: actions/upload-artifact@v2
       with:
-        name: sourcehold-linux-amd64
+        name: ${{ matrix.artifact_name }}
         path: ${{github.workspace}}/build/Stronghold
