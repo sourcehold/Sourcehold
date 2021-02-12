@@ -2,6 +2,7 @@ build/*
 cmake-build-debug/*
 data/*
 saves/*
+.cache/
 stronghold.cfg
 .idea
 .vscode
