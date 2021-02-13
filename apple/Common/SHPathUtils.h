@@ -1,5 +1,5 @@
 //
-//  PathUtils.h
+//  SHPathUtils.h
 //  Sourcehold
 //
 //  Created by apodrugin on 08.02.2021.
@@ -9,7 +9,7 @@
 extern "C" {
 #endif
 
-bool GetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize);
+bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize);
 
 #ifdef __cplusplus
 }

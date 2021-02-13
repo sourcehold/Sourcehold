@@ -74,7 +74,7 @@ set_target_properties(SWRESAMPLE::SWRESAMPLE PROPERTIES
 
 # MacOSUtils
 if(MAC_OS)
-  add_library(MacOSUtils macos/src/PathUtils.m)
+  add_library(MacOSUtils apple/Common/SHPathUtils.m)
   set_target_properties(MacOSUtils PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/macos/src)
   target_link_libraries(MacOSUtils

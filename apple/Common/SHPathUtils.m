@@ -1,15 +1,15 @@
 //
-//  PathUtils.m
+//  SHPathUtils.m
 //  Sourcehold
 //
 //  Created by apodrugin on 08.02.2021.
 //
 
 #import <Foundation/Foundation.h>
-#import "PathUtils.h"
+#import "SHPathUtils.h"
 
 
-bool GetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize) {
+bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize) {
     if (NULL == buffer) {
         return false;
     }

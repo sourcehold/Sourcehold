@@ -33,8 +33,22 @@
 
 #elif TARGET_OS_MAC
 
+#if TARGET_OS_IOS
+
+#define SOURCEHOLD_BUILD "iOS"
+#define SOURCEHOLD_iOS 1
+
+#elif TARGET_OS_OSX
+
 #define SOURCEHOLD_BUILD "Mac OS"
 #define SOURCEHOLD_MAC_OS 1
+
+#else
+
+#error "Unsupported platform"
+
+#endif // TARGET_OS_OSX
+
 #define SOURCEHOLD_UNIX 1
 #define ATTRIB_PACKED __attribute__((packed))
 

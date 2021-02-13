@@ -2,6 +2,7 @@ build/*
 cmake-build-debug/*
 data/*
 saves/*
+thirdparty/ffmpeg-ios/*
 stronghold.cfg
 .idea
 .vscode
