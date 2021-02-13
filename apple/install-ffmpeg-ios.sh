@@ -1,4 +1,5 @@
 #!/bin/sh
+# This script is based on https://github.com/kewlbear/FFmpeg-iOS-build-script
 
 COMPILE=0
 LIPO=0
