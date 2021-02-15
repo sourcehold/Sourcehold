@@ -2,6 +2,7 @@ build/*
 cmake-build-debug/*
 data/*
 saves/*
+.cache/
 stronghold.cfg
 .idea
 .vscode
@@ -17,3 +18,6 @@ xcshareddata
 *.xcbkptlist
 *.xcworkspacedata
 *.xccheckout
+
+# Vim
+compile_commands.json
