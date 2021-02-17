@@ -84,51 +84,71 @@ file(
   "${CMAKE_SOURCE_DIR}/src/*.h*"
 )
 
-foreach(_source IN ITEMS ${_source_list})
-  get_filename_component(_source_path "${_source}" PATH)
-  file(RELATIVE_PATH _source_path_rel "${CMAKE_SOURCE_DIR}/src/" "${_source_path}")
-  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-  source_group("${_group_path}" FILES "${_source}")
-endforeach()
+#Engine
+add_subdirectory(src/Engine)
 
-add_executable(Stronghold ${_source_list})
+add_executable(Sourcehold 
+  src/Main.cpp
+  src/Commandline.cpp
+  src/StartGame.cpp)
 
-if(MSVC)
-  target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
-  foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
-    string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
-    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
-    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
-  endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
-else()
-  target_compile_options(Stronghold PRIVATE
-                                    -Wno-reorder
-                                    -pedantic-errors
-                                    -Ofast
-                                    -fno-fast-math)
-endif()
-
-set_target_properties(Stronghold PROPERTIES
+set_target_properties(Sourcehold PROPERTIES
   CXX_STANDARD 11
   CXX_STANDARD_REQUIRED YES
   CXX_EXTENSIONS NO
 )
 
-if(MAC_OS)
-  target_link_libraries(Stronghold PRIVATE MacOSUtils)
-endif()
+target_link_libraries(Sourcehold
+  PRIVATE Engine
+  PRIVATE cxxopts)
 
-target_link_libraries(Stronghold
-  PRIVATE Threads::Threads
-  PRIVATE SDL2::SDL2
-  PRIVATE OpenAL::OpenAL
-  PRIVATE FFMPEG::AVCODEC
-  PRIVATE FFMPEG::AVFORMAT
-  PRIVATE FFMPEG::AVUTIL
-  PRIVATE FFMPEG::SWSCALE
-  PRIVATE SWRESAMPLE::SWRESAMPLE
-  PRIVATE blast
-  PRIVATE cxxopts
-  PRIVATE ghc_filesystem
-)
+
+
+#foreach(_source IN ITEMS ${_source_list})
+#  get_filename_component(_source_path "${_source}" PATH)
+#  file(RELATIVE_PATH _source_path_rel "${CMAKE_SOURCE_DIR}/src/" "${_source_path}")
+#  string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+#  source_group("${_group_path}" FILES "${_source}")
+#endforeach()
+#
+#add_executable(Stronghold ${_source_list})
+#
+#if(MSVC)
+#  target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
+#  foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+#    string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+#    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+#    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+#    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
+#  endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+#else()
+#  target_compile_options(Stronghold PRIVATE
+#                                    -Wno-reorder
+#                                    -pedantic-errors
+#                                    -Ofast
+#                                    -fno-fast-math)
+#endif()
+#
+#set_target_properties(Stronghold PROPERTIES
+#  CXX_STANDARD 11
+#  CXX_STANDARD_REQUIRED YES
+#  CXX_EXTENSIONS NO
+#)
+#
+#if(MAC_OS)
+#  target_link_libraries(Stronghold PRIVATE MacOSUtils)
+#endif()
+#
+#target_link_libraries(Stronghold
+#  PRIVATE Threads::Threads
+#  PRIVATE SDL2::SDL2
+#  PRIVATE OpenAL::OpenAL
+#  PRIVATE FFMPEG::AVCODEC
+#  PRIVATE FFMPEG::AVFORMAT
+#  PRIVATE FFMPEG::AVUTIL
+#  PRIVATE FFMPEG::SWSCALE
+#  PRIVATE SWRESAMPLE::SWRESAMPLE
+#  PRIVATE blast
+#  PRIVATE cxxopts
+#  PRIVATE ghc_filesystem
+#)
