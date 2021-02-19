@@ -26,7 +26,7 @@ Run `cmake` in your build directory.
 
 You will have to build the dependencies from source and the most convenient way is to use [vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=msvc-160).  
 This may take a long time, depending on your machine.  
-Alterneratively you may install everything manually (not recommended).
+Alternatively you may install everything manually (not recommended).
 
 #### Quickstart
 
