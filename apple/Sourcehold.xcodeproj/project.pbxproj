@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D3DC12925D96A0100C2E5E9 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D3DC12825D96A0100C2E5E9 /* CoreVideo.framework */; };
 		6D6C454F25D03F93009A45DF /* HlpFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C44E125D03F93009A45DF /* HlpFile.cpp */; };
 		6D6C455025D03F94009A45DF /* TexFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C44E325D03F93009A45DF /* TexFile.cpp */; };
 		6D6C455125D03F94009A45DF /* VolumeTxt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C44E425D03F93009A45DF /* VolumeTxt.cpp */; };
@@ -58,6 +59,7 @@
 		6D6C459225D05B9B009A45DF /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C459125D05B9B009A45DF /* OpenAL.framework */; };
 		6D6C45B025D09F57009A45DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D6C45AF25D09F57009A45DF /* Foundation.framework */; };
 		6D6C496325D1C2B3009A45DF /* blast.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C496225D1C2B3009A45DF /* blast.c */; };
+		6D7B04D525D95D0400C80B9C /* data in Resources */ = {isa = PBXBuildFile; fileRef = 6D7B04D425D95D0400C80B9C /* data */; };
 		6D7BE9BF25D4794D00C80B9C /* SHPathUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BE9BD25D4794D00C80B9C /* SHPathUtils.m */; };
 		6D7BE9C225D47B7E00C80B9C /* FileUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C450425D03F93009A45DF /* FileUtil.cpp */; };
 		6D7BE9C325D47B7E00C80B9C /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C450325D03F93009A45DF /* Logger.cpp */; };
@@ -107,15 +109,28 @@
 		6D7BE9F925D47BB100C80B9C /* TexFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C44E325D03F93009A45DF /* TexFile.cpp */; };
 		6D7BE9FA25D47BB100C80B9C /* FFmpegUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C454125D03F93009A45DF /* FFmpegUtil.cpp */; };
 		6D7BE9FB25D47BB100C80B9C /* HlpFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C44E125D03F93009A45DF /* HlpFile.cpp */; };
-		6D7BEA1025D47C1B00C80B9C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0225D47C1B00C80B9C /* ViewController.m */; };
-		6D7BEA1125D47C1B00C80B9C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0325D47C1B00C80B9C /* SceneDelegate.m */; };
-		6D7BEA1225D47C1B00C80B9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0425D47C1B00C80B9C /* main.m */; };
-		6D7BEA1325D47C1B00C80B9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0525D47C1B00C80B9C /* AppDelegate.m */; };
-		6D7BEA1425D47C1B00C80B9C /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0925D47C1B00C80B9C /* Info.plist */; };
 		6D7BEA1525D47C1B00C80B9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0B25D47C1B00C80B9C /* Assets.xcassets */; };
 		6D7BEA1625D47C1B00C80B9C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0C25D47C1B00C80B9C /* LaunchScreen.storyboard */; };
-		6D7BEA1725D47C1B00C80B9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D7BEA0E25D47C1B00C80B9C /* Main.storyboard */; };
 		6D7BEA2625D4805200C80B9C /* SHPathUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 6D7BE9BD25D4794D00C80B9C /* SHPathUtils.m */; };
+		6D7BED9E25D9523200C80B9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BED9D25D9523200C80B9C /* Foundation.framework */; };
+		6D7BEDA025D9523B00C80B9C /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BED9F25D9523B00C80B9C /* OpenAL.framework */; };
+		6D7BEDB025D952BF00C80B9C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDAF25D952BF00C80B9C /* AudioToolbox.framework */; };
+		6D7BEDB225D952C700C80B9C /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDB125D952C700C80B9C /* AVFoundation.framework */; };
+		6D7BEDB625D952E000C80B9C /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDB525D952E000C80B9C /* CoreAudio.framework */; };
+		6D7BEDBA25D952F100C80B9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDB925D952F100C80B9C /* CoreGraphics.framework */; };
+		6D7BEDBC25D952F800C80B9C /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDBB25D952F800C80B9C /* CoreHaptics.framework */; };
+		6D7BEDC025D9530B00C80B9C /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDBF25D9530B00C80B9C /* CoreMotion.framework */; };
+		6D7BEDC225D9531800C80B9C /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDC125D9531800C80B9C /* GameController.framework */; };
+		6D7BEDC425D9533500C80B9C /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDC325D9533500C80B9C /* Metal.framework */; };
+		6D7BEDC625D9534100C80B9C /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDC525D9534100C80B9C /* OpenGLES.framework */; };
+		6D7BEDC825D9534C00C80B9C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDC725D9534C00C80B9C /* QuartzCore.framework */; };
+		6D7BEDCA25D9535400C80B9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDC925D9535400C80B9C /* UIKit.framework */; };
+		6D7BEDCE25D9543E00C80B9C /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDCD25D9543E00C80B9C /* libz.tbd */; };
+		6D7BEDD225D954B100C80B9C /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDD125D954B000C80B9C /* VideoToolbox.framework */; };
+		6D7BEDD625D954D200C80B9C /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDD525D954D200C80B9C /* libbz2.tbd */; };
+		6D7BEDDA25D954EC00C80B9C /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDD925D954EC00C80B9C /* libiconv.tbd */; };
+		6D7BEDDE25D9553400C80B9C /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D7BEDDD25D9553400C80B9C /* CoreMedia.framework */; };
+		6D7BEDE125D9555300C80B9C /* blast.c in Sources */ = {isa = PBXBuildFile; fileRef = 6D6C496225D1C2B3009A45DF /* blast.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -131,6 +146,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		6D3DC12825D96A0100C2E5E9 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		6D6C44D325D03EE9009A45DF /* Sourcehold */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sourcehold; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D6C44E125D03F93009A45DF /* HlpFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HlpFile.cpp; sourceTree = "<group>"; };
 		6D6C44E225D03F93009A45DF /* VolumeTxt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VolumeTxt.h; sourceTree = "<group>"; };
@@ -239,20 +255,31 @@
 		6D6C459125D05B9B009A45DF /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		6D6C45AF25D09F57009A45DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6D6C496225D1C2B3009A45DF /* blast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = blast.c; path = ../../thirdparty/blast/blast.c; sourceTree = "<group>"; };
+		6D7B04D425D95D0400C80B9C /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = ../../../data; sourceTree = "<group>"; };
 		6D7BE98825D4779E00C80B9C /* SourceholdiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SourceholdiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D7BE9BD25D4794D00C80B9C /* SHPathUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SHPathUtils.m; path = Common/SHPathUtils.m; sourceTree = "<group>"; };
 		6D7BE9BE25D4794D00C80B9C /* SHPathUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SHPathUtils.h; path = Common/SHPathUtils.h; sourceTree = "<group>"; };
-		6D7BEA0125D47C1B00C80B9C /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		6D7BEA0225D47C1B00C80B9C /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		6D7BEA0325D47C1B00C80B9C /* SceneDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SceneDelegate.m; sourceTree = "<group>"; };
-		6D7BEA0425D47C1B00C80B9C /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6D7BEA0525D47C1B00C80B9C /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		6D7BEA0625D47C1B00C80B9C /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		6D7BEA0725D47C1B00C80B9C /* SceneDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
 		6D7BEA0925D47C1B00C80B9C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D7BEA0B25D47C1B00C80B9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6D7BEA0D25D47C1B00C80B9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		6D7BEA0F25D47C1B00C80B9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6D7BED9D25D9523200C80B9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BED9F25D9523B00C80B9C /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/OpenAL.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDAF25D952BF00C80B9C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDB125D952C700C80B9C /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDB525D952E000C80B9C /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDB925D952F100C80B9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDBB25D952F800C80B9C /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreHaptics.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDBF25D9530B00C80B9C /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDC125D9531800C80B9C /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/GameController.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDC325D9533500C80B9C /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDC525D9534100C80B9C /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/OpenGLES.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDC725D9534C00C80B9C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDC925D9535400C80B9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDCD25D9543E00C80B9C /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		6D7BEDD125D954B000C80B9C /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/VideoToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		6D7BEDD525D954D200C80B9C /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/usr/lib/libbz2.tbd; sourceTree = DEVELOPER_DIR; };
+		6D7BEDD925D954EC00C80B9C /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/usr/lib/libiconv.tbd; sourceTree = DEVELOPER_DIR; };
+		6D7BEDDD25D9553400C80B9C /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.3.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +296,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D7BEDDA25D954EC00C80B9C /* libiconv.tbd in Frameworks */,
+				6D7BEDD625D954D200C80B9C /* libbz2.tbd in Frameworks */,
+				6D7BEDCE25D9543E00C80B9C /* libz.tbd in Frameworks */,
+				6D7BED9E25D9523200C80B9C /* Foundation.framework in Frameworks */,
+				6D7BEDB225D952C700C80B9C /* AVFoundation.framework in Frameworks */,
+				6D7BEDB025D952BF00C80B9C /* AudioToolbox.framework in Frameworks */,
+				6D7BEDB625D952E000C80B9C /* CoreAudio.framework in Frameworks */,
+				6D7BEDBA25D952F100C80B9C /* CoreGraphics.framework in Frameworks */,
+				6D7BEDBC25D952F800C80B9C /* CoreHaptics.framework in Frameworks */,
+				6D7BEDDE25D9553400C80B9C /* CoreMedia.framework in Frameworks */,
+				6D7BEDC025D9530B00C80B9C /* CoreMotion.framework in Frameworks */,
+				6D3DC12925D96A0100C2E5E9 /* CoreVideo.framework in Frameworks */,
+				6D7BEDC225D9531800C80B9C /* GameController.framework in Frameworks */,
+				6D7BEDC425D9533500C80B9C /* Metal.framework in Frameworks */,
+				6D7BEDC625D9534100C80B9C /* OpenGLES.framework in Frameworks */,
+				6D7BEDA025D9523B00C80B9C /* OpenAL.framework in Frameworks */,
+				6D7BEDC825D9534C00C80B9C /* QuartzCore.framework in Frameworks */,
+				6D7BEDCA25D9535400C80B9C /* UIKit.framework in Frameworks */,
+				6D7BEDD225D954B100C80B9C /* VideoToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,7 +513,26 @@
 		6D6C459025D05B9B009A45DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6D3DC12825D96A0100C2E5E9 /* CoreVideo.framework */,
+				6D7BEDDD25D9553400C80B9C /* CoreMedia.framework */,
+				6D7BEDD925D954EC00C80B9C /* libiconv.tbd */,
+				6D7BEDD525D954D200C80B9C /* libbz2.tbd */,
+				6D7BEDD125D954B000C80B9C /* VideoToolbox.framework */,
+				6D7BEDCD25D9543E00C80B9C /* libz.tbd */,
+				6D7BEDC925D9535400C80B9C /* UIKit.framework */,
+				6D7BEDC725D9534C00C80B9C /* QuartzCore.framework */,
+				6D7BEDC525D9534100C80B9C /* OpenGLES.framework */,
+				6D7BEDC325D9533500C80B9C /* Metal.framework */,
+				6D7BEDC125D9531800C80B9C /* GameController.framework */,
+				6D7BEDBF25D9530B00C80B9C /* CoreMotion.framework */,
+				6D7BEDBB25D952F800C80B9C /* CoreHaptics.framework */,
+				6D7BEDB925D952F100C80B9C /* CoreGraphics.framework */,
+				6D7BEDB525D952E000C80B9C /* CoreAudio.framework */,
+				6D7BEDB125D952C700C80B9C /* AVFoundation.framework */,
+				6D7BEDAF25D952BF00C80B9C /* AudioToolbox.framework */,
+				6D7BED9F25D9523B00C80B9C /* OpenAL.framework */,
 				6D6C45AF25D09F57009A45DF /* Foundation.framework */,
+				6D7BED9D25D9523200C80B9C /* Foundation.framework */,
 				6D6C459125D05B9B009A45DF /* OpenAL.framework */,
 			);
 			name = Frameworks;
@@ -527,13 +592,6 @@
 		6D7BEA0025D47C1B00C80B9C /* Src */ = {
 			isa = PBXGroup;
 			children = (
-				6D7BEA0125D47C1B00C80B9C /* AppDelegate.h */,
-				6D7BEA0525D47C1B00C80B9C /* AppDelegate.m */,
-				6D7BEA0625D47C1B00C80B9C /* ViewController.h */,
-				6D7BEA0225D47C1B00C80B9C /* ViewController.m */,
-				6D7BEA0725D47C1B00C80B9C /* SceneDelegate.h */,
-				6D7BEA0325D47C1B00C80B9C /* SceneDelegate.m */,
-				6D7BEA0425D47C1B00C80B9C /* main.m */,
 			);
 			name = Src;
 			path = iOS/Src;
@@ -551,9 +609,9 @@
 		6D7BEA0A25D47C1B00C80B9C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				6D7B04D425D95D0400C80B9C /* data */,
 				6D7BEA0B25D47C1B00C80B9C /* Assets.xcassets */,
 				6D7BEA0C25D47C1B00C80B9C /* LaunchScreen.storyboard */,
-				6D7BEA0E25D47C1B00C80B9C /* Main.storyboard */,
 			);
 			name = Resources;
 			path = iOS/Resources;
@@ -584,6 +642,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6D7BE99E25D477A100C80B9C /* Build configuration list for PBXNativeTarget "SourceholdiOS" */;
 			buildPhases = (
+				6D10EAA525E13A010078AB60 /* ShellScript */,
 				6D7BE98425D4779E00C80B9C /* Sources */,
 				6D7BE98525D4779E00C80B9C /* Frameworks */,
 				6D7BE98625D4779E00C80B9C /* Resources */,
@@ -639,14 +698,30 @@
 			files = (
 				6D7BEA1625D47C1B00C80B9C /* LaunchScreen.storyboard in Resources */,
 				6D7BEA1525D47C1B00C80B9C /* Assets.xcassets in Resources */,
-				6D7BEA1425D47C1B00C80B9C /* Info.plist in Resources */,
-				6D7BEA1725D47C1B00C80B9C /* Main.storyboard in Resources */,
+				6D7B04D525D95D0400C80B9C /* data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		6D10EAA525E13A010078AB60 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./install-tools.sh\n./install-dependencies-ios.sh ../thirdparty/ios\n";
+		};
 		6D6C45AC25D07BB3009A45DF /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -662,7 +737,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./install-tools.sh\n./install-dependencies.sh\n";
+			shellScript = "./install-tools.sh\n./install-dependencies-macos.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -728,8 +803,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D7BEDE125D9555300C80B9C /* blast.c in Sources */,
 				6D7BE9CD25D47B8A00C80B9C /* Credits.cpp in Sources */,
-				6D7BEA1125D47C1B00C80B9C /* SceneDelegate.m in Sources */,
 				6D7BE9E025D47B9D00C80B9C /* Texture.cpp in Sources */,
 				6D7BE9CC25D47B8A00C80B9C /* Ingame.cpp in Sources */,
 				6D7BE9F925D47BB100C80B9C /* TexFile.cpp in Sources */,
@@ -753,8 +828,6 @@
 				6D7BE9DC25D47B9D00C80B9C /* BinkVideo.cpp in Sources */,
 				6D7BE9E725D47BB100C80B9C /* Startup.cpp in Sources */,
 				6D7BE9EC25D47BB100C80B9C /* EventHandler.cpp in Sources */,
-				6D7BEA1025D47C1B00C80B9C /* ViewController.m in Sources */,
-				6D7BEA1225D47C1B00C80B9C /* main.m in Sources */,
 				6D7BE9D225D47B8A00C80B9C /* Dialog.cpp in Sources */,
 				6D7BE9C325D47B7E00C80B9C /* Logger.cpp in Sources */,
 				6D7BE9E825D47BB100C80B9C /* Game.cpp in Sources */,
@@ -771,7 +844,6 @@
 				6D7BE9D125D47B8A00C80B9C /* MenuUtils.cpp in Sources */,
 				6D7BE9D925D47B9200C80B9C /* Button.cpp in Sources */,
 				6D7BE9F725D47BB100C80B9C /* Parser.cpp in Sources */,
-				6D7BEA1325D47C1B00C80B9C /* AppDelegate.m in Sources */,
 				6D7BE9F125D47BB100C80B9C /* GameManager.cpp in Sources */,
 				6D7BE9C225D47B7E00C80B9C /* FileUtil.cpp in Sources */,
 				6D7BE9BF25D4794D00C80B9C /* SHPathUtils.m in Sources */,
@@ -793,14 +865,6 @@
 				6D7BEA0D25D47C1B00C80B9C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		6D7BEA0E25D47C1B00C80B9C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6D7BEA0F25D47C1B00C80B9C /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -990,11 +1054,24 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = SourceholdiOS/Info.plist;
+				HEADER_SEARCH_PATHS = (
+					../src,
+					../thirdparty/filesystem/include,
+					../thirdparty/blast,
+					"../thirdparty/ios/sdl2-ios/include",
+					"../thirdparty/ios/ffmpeg-ios/include",
+					../thirdparty/cxxopts/include,
+					"\"$SDKROOT/System/Library/Frameworks/OpenAL.framework/Headers\"",
+				);
+				INFOPLIST_FILE = "iOS/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"../thirdparty/ios/sdl2-ios/lib",
+					"../thirdparty/ios/ffmpeg-ios/lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sourcehold.com.SourceholdiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1010,11 +1087,24 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = SourceholdiOS/Info.plist;
+				HEADER_SEARCH_PATHS = (
+					../src,
+					../thirdparty/filesystem/include,
+					../thirdparty/blast,
+					"../thirdparty/ios/sdl2-ios/include",
+					"../thirdparty/ios/ffmpeg-ios/include",
+					../thirdparty/cxxopts/include,
+					"\"$SDKROOT/System/Library/Frameworks/OpenAL.framework/Headers\"",
+				);
+				INFOPLIST_FILE = "iOS/Supporting Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"../thirdparty/ios/sdl2-ios/lib",
+					"../thirdparty/ios/ffmpeg-ios/lib",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.sourcehold.com.SourceholdiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -10,6 +10,7 @@ extern "C" {
 #endif
 
 bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize);
+bool SHGetMainBundleResourcesDirectoryPath(char *buffer, unsigned long bufferSize);
 
 #ifdef __cplusplus
 }

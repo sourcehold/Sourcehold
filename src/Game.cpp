@@ -19,6 +19,11 @@
 #include "GUI/NarrScreen.h"
 #include "GUI/MainMenu.h"
 
+#if SOURCEHOLD_IOS
+#include "../apple/Common/SHPathUtils.h"
+#endif
+
+
 using namespace Sourcehold;
 using namespace Game;
 using namespace Audio;
@@ -178,7 +183,9 @@ int StartGame(GameOptions& opt)
     return MainLoop(state);
 }
 
+#ifndef SOURCEHOLD_IOS
 #undef main
+#endif
 
 /* Common entry point across all platforms */
 int main(int argc, char **argv)
@@ -226,7 +233,14 @@ int main(int argc, char **argv)
         else opt.color = -1;
 
         opt.ndisp = result["disp"].as<uint16_t>();
+#ifdef SOURCEHOLD_IOS
+        char resourcesPath[512];
+
+        SHGetMainBundleResourcesDirectoryPath(resourcesPath, 512);
+        opt.dataDir = std::string(resourcesPath).append("/data");
+#else
         opt.dataDir = result["path"].as<std::string>();
+#endif
 
         std::regex regex("(\\d+)x(\\d+)");
         std::smatch match;

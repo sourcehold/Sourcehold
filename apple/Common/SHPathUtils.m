@@ -34,3 +34,21 @@ bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize) {
         return true;
     }
 }
+
+bool SHGetMainBundleResourcesDirectoryPath(char *buffer, unsigned long bufferSize) {
+    if (NULL == buffer) {
+        return false;
+    }
+    
+    @autoreleasepool {
+        NSString *path = NSBundle.mainBundle.resourcePath;
+        const NSUInteger pathLength = [path lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1 /*+1 for '\0'*/;
+        
+        if (bufferSize < pathLength) {
+            return false;
+        }
+        
+        strcpy(buffer, path.UTF8String);
+        return true;
+    }
+}
