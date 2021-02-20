@@ -1,10 +1,7 @@
 #!/bin/sh
 
-CLEAN=0
-LIBS_DIR=
-FF_MPEG_DIR=
-SDL2_DIR=
 
+# Functions
 
 usage() {
     echo "usage: $(basename $0) [-c] <libraries dir>"
@@ -14,12 +11,19 @@ usage() {
 
 clean() {
     echo "Removing iOS dependecies..."
+    local FF_MPEG_DIR="$1"
+    local SDL2_DIR="$2"
+    
     [ -d "$FF_MPEG_DIR" ] && rm -rf "$FF_MPEG_DIR"
     [ -d "$SDL2_DIR" ] && rm -rf "$SDL2_DIR"
 }
 
 
-while getopts c opt
+# Script body
+
+CLEAN=0
+
+while getopts "c" opt
 do
     case $opt in
     c)
@@ -29,12 +33,29 @@ do
 done
 shift $((OPTIND-1))
 
-[ -z "$1" ] && usage
-
 LIBS_DIR="$1"
+
+if [[ -z "$LIBS_DIR" ]] ; then
+    usage
+fi
+
 FF_MPEG_DIR="$LIBS_DIR/ffmpeg-ios"
 SDL2_DIR="$LIBS_DIR/sdl2-ios"
 
-[[ $CLEAN -eq 1 ]] && clean
+if [[ $CLEAN -eq 1 ]] ; then
+    clean "$FF_MPEG_DIR" "$SDL2_DIR"
+fi
 
-./install-ffmpeg-ios.sh -c -l -r "$FF_MPEG_DIR"
+if [ ! -d "$FF_MPEG_DIR" ] ; then
+    echo "Installing FFmpeg for iOS..."
+    ./install-ffmpeg-ios.sh -r "$FF_MPEG_DIR"
+else
+    echo "FFmpeg for iOS is already installed..."
+fi
+
+if [ ! -d "$SDL2_DIR" ] ; then
+    echo "Installing SDL2 for iOS..."
+    ./install-sdl2-ios.sh -r "$SDL2_DIR"
+else
+    echo "SDL2 for iOS is already installed..."
+fi

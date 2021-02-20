@@ -1,45 +1,56 @@
 #!/bin/sh
 # This script is based on https://github.com/kewlbear/FFmpeg-iOS-build-script
 
-COMPILE=0
-LIPO=0
 
-FF_VERSION="4.3.1"
-SOURCE=
-# RESULT_DIR should be converted to absolute path to make 'compile' function work properly
-RESULT_DIR="."
-SRC_DIR=
-BUILD_DIR=
-INCLUDE_DIR=
-LIB_DIR=
-FAT_LIB_NAME="fat"
-
-ARCHS="arm64 armv7 x86_64 i386"
-DEPLOYMENT_TARGET="9.0"
-CONFIGURE_FLAGS="--enable-cross-compile --disable-debug --disable-programs \
-                 --disable-doc --enable-pic"
-
+# Functions
 
 usage() {
-    echo "usage: $(basename $0) [-acdlrv]"
+    echo "usage: $(basename $0) [-adrv]"
     echo "options:"
     echo "-a        \tArchitectures to build. You may pass multiple architectures. Default value is 'arm64 armv7 i386 x86_64'"
-    echo "-c        \tIf this option is omitted, then compilation is skipped."
     echo "-d        \tiOS deployment target. Default is '9.0'"
-    echo "-l        \tWhether 'lipo' or not result binaries."
     echo "-r        \tPath to result directory. Default value is '.'."
     echo "-v        \tFFmpeg lib version to compile. Default value is '4.3.1'"
     exit 1
 }
 
-compile() {
-    if [ ! -d "$SRC_DIR" ]
-    then
-        echo 'FFmpeg source not found. Trying to download...'
-        curl http://www.ffmpeg.org/releases/$SOURCE.tar.bz2 | tar xj --directory "$RESULT_DIR" \
-            || exit 1
+install_tools() {
+    if [ ! `which yasm` ] ; then
+        echo "Installing yasm..."
+        brew install yasm || exit 1
     fi
+    
+    if [ ! `which gas-preprocessor.pl` ] ; then
+        echo "Installing gas-preprocessor.pl..."
+        (curl -L https://github.com/libav/gas-preprocessor/raw/master/gas-preprocessor.pl \
+                -o /usr/local/bin/gas-preprocessor.pl \
+                && chmod +x /usr/local/bin/gas-preprocessor.pl) \
+                || exit 1
+    fi
+}
 
+fetch_source() {
+    local SOURCE="$1"
+    local RESULT_DIR="$2"
+    local SRC_DIR="$RESULT_DIR/$SOURCE"
+    
+    if [ ! -d "$SRC_DIR" ] ; then
+        echo 'FFmpeg source not found. Fetching $SOURCE...'
+        curl "http://www.ffmpeg.org/releases/$SOURCE.tar.bz2" | tar xj --directory "$RESULT_DIR" \
+            || exit 1
+    else
+        echo "FFmpeg library source directory already exists."
+    fi
+}
+
+compile() {
+    echo "Compiling..."
+    local ARCHS="$1"
+    local DEPLOYMENT_TARGET="$2"
+    local SRC_DIR="$3"
+    local BUILD_DIR="$4"
+    local LIB_DIR="$5"
+    
     for ARCH in $ARCHS
     do
         echo "Building $ARCH..."
@@ -73,6 +84,7 @@ compile() {
 
         CXXFLAGS="$CFLAGS"
         LDFLAGS="$CFLAGS"
+        CONFIGURE_FLAGS="--enable-cross-compile --disable-debug --disable-programs --disable-doc --enable-pic"
 
         TMPDIR=${TMPDIR/%\/} "$SRC_DIR/configure" \
             --target-os=darwin \
@@ -86,44 +98,63 @@ compile() {
         || exit 1
 
         make -j3 install $EXPORT || exit 1
+        
         popd > /dev/null
     done
 }
 
-createFatBinaries() {
+create_fat_binaries() {
     echo "Building fat binaries..."
-    local FAT_LIB_DIR="$LIB_DIR/$FAT_LIB_NAME/lib"
-    local FAT_INCLUDE_DIR="$LIB_DIR/$FAT_LIB_NAME/include"
+    local ARCHS="$1"
+    local INCLUDE_DIR="$2"
+    local LIB_DIR="$3"
     
-    mkdir -p "$FAT_LIB_DIR"
+    mkdir -p "$LIB_DIR"
     set - $ARCHS
-    local CWD=`pwd`
     
     pushd "$LIB_DIR/$1/lib" > /dev/null
+    
     for LIB in *.a
     do
-        echo lipo -create `find $LIB_DIR -name $LIB` -output "$FAT_LIB_DIR/$LIB" 1>&2
-        lipo -create `find $LIB_DIR -name $LIB` -output "$FAT_LIB_DIR/$LIB" || exit 1
+        echo lipo -create `find $LIB_DIR -name $LIB` -output "$LIB_DIR/$LIB" 1>&2
+        lipo -create `find $LIB_DIR -name $LIB` -output "$LIB_DIR/$LIB" || exit 1
     done
 
     popd > /dev/null
-    cp -rf "$LIB_DIR/$1/include" "$FAT_INCLUDE_DIR"
+    
+    cp -rf "$LIB_DIR/$1/include" "$INCLUDE_DIR"
 }
 
-while getopts "a:cd:lr:v:" opt
+cleanup() {
+    echo "Cleaning up..."
+    local ARCHS="$1"
+    local BUILD_DIR="$2"
+    local LIB_DIR="$3"
+    
+    rm -rf "$BUILD_DIR"
+    
+    for ARCH in $ARCHS
+    do
+        rm -rf "$LIB_DIR/$ARCH"
+    done
+}
+
+
+#Script body
+
+ARCHS="arm64 armv7 x86_64 i386"
+DEPLOYMENT_TARGET="9.0"
+FF_VERSION="4.3.1"
+RESULT_DIR="."
+
+while getopts "a:d:r:v:" opt
 do
     case $opt in
     a)
-        ARCH="$OPTARG"
-        ;;
-    c)
-        COMPILE=1
+        ARCHS="$OPTARG"
         ;;
     d)
         DEPLOYMENT_TARGET="$OPTARG"
-        ;;
-    l)
-        LIPO=1
         ;;
     r)
         RESULT_DIR="$OPTARG"
@@ -137,11 +168,8 @@ do
     esac
 done
 
-
-[[ $COMPILE -eq 0 && $LIPO -eq 0 ]] && usage
-
 mkdir -p "$RESULT_DIR"
-#to get absolute path
+# RESULT_DIR should be converted to absolute path to make 'compile' function work properly
 RESULT_DIR=`cd "$RESULT_DIR"; pwd`
 
 SOURCE="ffmpeg-$FF_VERSION"
@@ -150,14 +178,10 @@ BUILD_DIR="$RESULT_DIR/build"
 INCLUDE_DIR="$RESULT_DIR/include"
 LIB_DIR="$RESULT_DIR/lib"
 
-if [[ $COMPILE -eq 1 ]]
-then
-    compile
-fi
+install_tools
+fetch_source "$SOURCE" "$RESULT_DIR"
+compile "$ARCHS" "$DEPLOYMENT_TARGET" "$SRC_DIR" "$BUILD_DIR" "$LIB_DIR"
+create_fat_binaries "$ARCHS" "$INCLUDE_DIR" "$LIB_DIR"
+cleanup "$ARCHS" "$BUILD_DIR" "$LIB_DIR"
 
-if [[ $LIPO -eq 1 ]]
-then
-    createFatBinaries
-fi
-
-echo Done
+echo "Done"

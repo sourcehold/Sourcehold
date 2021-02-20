@@ -1,11 +1,15 @@
 #!/bin/sh
 
+
+# Global variables
+
 PROJECT_ROOT=".."
 CMAKE_WORKING_DIR="$PROJECT_ROOT"
 BUILD_DIR="$PROJECT_ROOT/build"
-LIBS_DIR="$PROJECT_ROOT/thirdparty"
-CLEAN=0
+IOS_LIBS_DIR="$PROJECT_ROOT/thirdparty/ios"
 
+
+# Functions
 
 usage() {
     echo "usage: $(basename $0) [-c] <platform>"
@@ -17,14 +21,13 @@ usage() {
 
 clean() {
     echo "Cleaning up..."
-    [ -d $BUILD_DIR ] && rm -rf "$BUILD_DIR"
+    [ -d "$BUILD_DIR" ] && rm -rf "$BUILD_DIR"
 }
 
-installDependecies() {
+install_dependecies() {
     echo "Installing dependencies..."
-    mkdir -p "$LIBS_DIR"
-    
-    local PLATFORM="$1"
+    local CLEAN="$1"
+    local PLATFORM="$2"
     
     if [[ "$PLATFORM" == "ios" ]] ; then
         local OPTIONS=
@@ -32,14 +35,15 @@ installDependecies() {
         if [[ $CLEAN -eq 1 ]] ; then
             OPTIONS="-c"
         fi
-        
-        ./install-dependencies-ios.sh "$OPTIONS" "$LIBS_DIR"
+
+        mkdir -p "$IOS_LIBS_DIR"    
+        ./install-dependencies-ios.sh "$OPTIONS" "$IOS_LIBS_DIR"
     else
         ./install-dependencies-macos.sh
     fi
 }
 
-updateSubmodules() {
+update_submodules() {
     echo "Updating submodules..."
     git submodule init
     git submodule update
@@ -47,14 +51,24 @@ updateSubmodules() {
 
 build() {
     echo "Building..."
+    local CLEAN="$1"
+    
     cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR"
-    cd "$BUILD_DIR"
-    make clean
-    make
+    
+    pushd "$BUILD_DIR" > /dev/null
+        if [[ $CLEAN -eq 1 ]] ; then
+            make clean
+        fi
+        make
+    popd > /dev/null
 }
 
 
-while getopts c opt
+# Script body
+
+CLEAN=0
+
+while getopts "c" opt
 do
     case $opt in
     c)
@@ -64,14 +78,21 @@ do
 done
 shift $((OPTIND-1))
 
-
 PLATFORM="$1"
-[ -z $PLATFORM ] && usage
-[[ "$PLATFORM" != "ios" && "$PLATFORM" != "macos" ]] && usage
 
+if [[ -z "$PLATFORM" ]] ; then
+    usage
+fi
 
-[[ $CLEAN -eq 1 ]] && clean "$PLATFORM"
+if [[ "$PLATFORM" != "ios" && "$PLATFORM" != "macos" ]] ; then
+    usage
+fi
 
-installDependecies "$PLATFORM"
-updateSubmodules
-build
+if [[ $CLEAN -eq 1 ]] ; then
+    clean
+fi
+
+./install-tools.sh
+install_dependecies $CLEAN "$PLATFORM"
+update_submodules
+build $CLEAN
