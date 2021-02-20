@@ -22,12 +22,31 @@ Sourcehold uses the following libraries:
 
 Run `cmake` in your build directory.
 
-###Windows
+### Windows
 
-If you're building on Windows or don't have the libraries in your `pkg-config`,
-use the `-DCMAKE_PREFIX_PATH=/custom/path1/;/custom/path2/` option on the command line. Note that you have to give CMake absolute paths.
+You will have to build the dependencies from source and the most convenient way is to use [vcpkg](https://docs.microsoft.com/en-us/cpp/build/vcpkg?view=msvc-160).  
+This may take a long time, depending on your machine.  
+Alternatively you may install everything manually (not recommended).
 
-###Mac OS
+#### Quickstart
+
+Installing vcpkg:
+```bash
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+./bootstrap-vcpkg.bat
+vcpkg integrate install
+```
+Installing the dependencies:
+```bash
+vcpkg --triplet x64-windows install sdl2 ffmpeg openal-soft
+```
+Then continue building Sourcehold with CMake:
+```bash
+cmake -H. -B build -DCMAKE_TOOLCHAIN_FILE=%VCPKG_FOLDER%\scripts\buildsystems\vcpkg.cmake
+cmake --build build
+```
+### Mac OS
 Simply run `set-up-n-build.sh` from `macos` directory in repository root. This script will install Homebrew and all necessary dependencies, build project and create all necessary directories to run Sourcehold.
 
 Also you may build and run Sourcehold using Xcode. Project file is located inside `macos` directory in repository root.
