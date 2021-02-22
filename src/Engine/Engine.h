@@ -7,13 +7,25 @@
 
 class Engine {
  public:
-  Engine(const GameOptions& options);
-  ~Engine() = default;
-  static void InitLogger(bool force_color);
+  // Meyer Singleton
+  static Engine& GetInstance() {
+    InitLogger(game_options_gk.force_color_);
+    static Engine engine;
+    return engine;
+  }
 
- private:
   VideoEngine video_engine_;
   AudioEngine audio_engine_;
   AssetLoader asset_loader_;
+
+ private:
+  Engine() = default;
+  Engine(const Engine& other) = delete;
+  Engine& operator=(const Engine& other) = delete;
+  Engine& operator=(Engine&& other) = delete;
+  ~Engine() = default;
+
+  static void InitLogger(bool force_color);
 };
+
 #endif  // ENGINE_H_

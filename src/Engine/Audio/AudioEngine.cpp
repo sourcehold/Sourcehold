@@ -1,6 +1,7 @@
 #include "AudioEngine.h"
 #include <al.h>
 #include <stdexcept>
+#include "GameOptions.h"
 #include "System/Logger.h"
 
 static const char* getError() {
@@ -37,6 +38,7 @@ AudioEngine::AudioEngine() {
   Logger::message(AUDIO) << "Creating Audio Engine .. " << std::endl;
   try {
     InitOpenAL();
+    muted_ = game_options_gk.nosound_;
   } catch (std::exception& e) {
     Logger::error(AUDIO) << e.what() << std::endl;
     std::exit(EXIT_FAILURE);

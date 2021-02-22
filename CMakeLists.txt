@@ -10,18 +10,29 @@ endif()
 
 # include cmake utilities
 include(AddImportedTarget)
+include(PreventInSourceBuilds)
+include(CompilerWarnings)
+include(Sanitizers)
+include(StaticAnalyzers)
 
 
 # Project
 project(Stronghold)
 set(Stronghold_VERSION, 0.1.2)
 
+# options
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_11)
+enable_sanitizers(project_options)
+set(ENABLE_CLANG_TIDY ON)
+set(ENABLE_INCLUDE_WHAT_YOU_USE ON)
+set(ENABLE_CPPCHECK ON)
 
-if(${PROJECT_SOURCE_DIR} MATCHES ${PROJECT_BINARY_DIR})
-  message(FATAL_ERROR "Please run cmake from a separate directory!")
-endif()
 
-include_directories(src)
+# warnings
+add_library(project_warnings INTERFACE)
+set_project_warnings(project_warnings)
+
 
 # Thirdparty
 
@@ -92,15 +103,16 @@ add_executable(Sourcehold
   src/Commandline.cpp
   src/StartGame.cpp)
 
-set_target_properties(Sourcehold PROPERTIES
-  CXX_STANDARD 11
-  CXX_STANDARD_REQUIRED YES
-  CXX_EXTENSIONS NO
-)
+target_compile_features(Sourcehold PRIVATE cxx_std_11)
+target_include_directories(Sourcehold PRIVATE src)
 
 target_link_libraries(Sourcehold
   PRIVATE Engine
-  PRIVATE cxxopts)
+  PRIVATE cxxopts
+  PRIVATE project_options
+  # PRIVATE project_warnings 
+  # TODO make warnings work with cxxopts and ghc_filesystem
+  )
 
 
 

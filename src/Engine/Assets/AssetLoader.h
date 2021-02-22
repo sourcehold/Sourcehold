@@ -1,14 +1,18 @@
 #ifndef ASSET_LOADER_H_
 #define ASSET_LOADER_H_
+#include "GameOptions.h"
 #include "Parsers/CfgFile.h"
 #include "Parsers/TgxFile.h"
 #include "Parsers/Gm1File.h"
 #include "Parsers/AniFile.h"
+#include "Parsers/MlbFile.h"
+#include "Parsers/TexFile.h"
 #include "Rendering/BinkVideo.h"
 #include "ghc/filesystem.hpp"
 #include <type_traits>
 #include <string>
 #include <unordered_map>
+
 class AssetLoader {
  public:
   // using declarations
@@ -18,12 +22,13 @@ class AssetLoader {
   using Ani = Sourcehold::Parsers::AniFile;
   using Bik = Sourcehold::Rendering::BinkVideo;
   using Cfg = Sourcehold::Parsers::CfgFile;
+  using Mlb = Sourcehold::Parsers::MlbFile;
+  using Tex = Sourcehold::Parsers::TexFile;
   // typedef for a shared_ptr
   template <typename AssetType>
   using AssetHandle = std::shared_ptr<AssetType>;
 
-  // Constructor
-  AssetLoader(const Path& data_directory);
+  AssetLoader();
 
   // Loads an asset and returns a handle to it
   template <typename AssetType>
@@ -34,11 +39,18 @@ class AssetLoader {
   void LoadAndCache(const Path& file);
 
  private:
-  void createDefaultConfig();
-  Cfg config_;
   Path data_folder_;
   Path saves_folder_;
-  Path cfg_path_;
+  Path config_file_path_;
+
+  Cfg cfg_;
+  Tex tex_;
+  Mlb mlb_;
+
+  void CreateAssetFolders(const Path& data_directory_path) noexcept;
+  void LoadCfg(const Path& file);
+  void LoadMlb(const Path& file);
+  void LoadTex(const Path& file);
 
   AssetHandle<Tgx> LoadTgx(const Path& file);
   AssetHandle<Gm1> LoadGm1(const Path& file);

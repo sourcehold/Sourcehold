@@ -23,12 +23,12 @@ static void checkResolution(const Resolution& resolution) noexcept {
                           << std::endl;
   }
 }
-static int getWindowParameters(const GameOptions& options) noexcept {
+static int getWindowParameters() noexcept {
   auto param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
-  if (options.fullscreen_) {
+  if (game_options_gk.fullscreen_) {
     param |= SDL_WINDOW_FULLSCREEN;
   }
-  if (options.noborder_) {
+  if (game_options_gk.noborder_) {
     param |= SDL_WINDOW_BORDERLESS;
   }
   return param;
@@ -41,10 +41,10 @@ static int checkDisplayIndex(int requested_index) noexcept {
 
 // used to center the window
 // SDL_WINDOWPOS_CENTERED should suffice
-static SDL_Rect getDisplayBounds(const GameOptions& options) noexcept {
+static SDL_Rect getDisplayBounds() noexcept {
   auto display_bounds = SDL_Rect{};
 
-  SDL_GetDisplayBounds(checkDisplayIndex(options.monitor_index_),
+  SDL_GetDisplayBounds(checkDisplayIndex(game_options_gk.monitor_index_),
                        &display_bounds);
 
 #ifdef SOURCEHOLD_ANDROID
@@ -59,25 +59,25 @@ static SDL_Rect getDisplayBounds(const GameOptions& options) noexcept {
   return display_bounds;
 }
 
-void VideoEngine::CreateWindow(const GameOptions& options) {
+void VideoEngine::CreateWindow() {
   using namespace Sourcehold::System;
 
-  checkResolution(options.resolution_);
+  checkResolution(game_options_gk.resolution_);
 
-  const auto window_parameters = getWindowParameters(options);
+  const auto window_parameters = getWindowParameters();
 
   window_ = SDL_CreateWindow(  //
       "Sourcehold version " SOURCEHOLD_VERSION_STRING " - " SOURCEHOLD_BUILD,
-      SDL_WINDOWPOS_CENTERED,      //
-      SDL_WINDOWPOS_CENTERED,      //
-      options.resolution_.width,   //
-      options.resolution_.height,  //
+      SDL_WINDOWPOS_CENTERED,              //
+      SDL_WINDOWPOS_CENTERED,              //
+      game_options_gk.resolution_.width,   //
+      game_options_gk.resolution_.height,  //
       window_parameters);
 
   if (window_ == nullptr) {
     throw std::runtime_error(SDL_GetError());
   } else {
-    if (!options.nograb_) {
+    if (!game_options_gk.nograb_) {
       SDL_SetWindowGrab(window_, SDL_TRUE);
     }
   }
@@ -108,12 +108,12 @@ void VideoEngine::CreateRenderer() {
   }
 }
 
-VideoEngine::VideoEngine(const GameOptions& options) {
+VideoEngine::VideoEngine() {
   using namespace Sourcehold::System;
   Logger::message(RENDERING) << "Creating Video Engine .. " << std::endl;
   try {
     InitSDL();
-    CreateWindow(options);
+    CreateWindow();
     CreateRenderer();
   } catch (std::exception& e) {
     Logger::error(RENDERING) << e.what() << std::endl;

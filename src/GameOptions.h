@@ -23,8 +23,9 @@ constexpr auto available_resolutions = std::array<Resolution, 10>  //
       {1920, 1080}}};
 
 struct GameOptions {
-  std::string config_;
-  std::string data_directory_path_;
+  std::string data_directory_path_ = "../data";
+  //  std::string saves_directory_path_;
+  // std::string config_file_path_;
   bool force_color_ = true;
   bool fullscreen_ = false;
   Resolution resolution_;
@@ -37,4 +38,6 @@ struct GameOptions {
   bool nocache_ = false;
   bool debug_ = false;
 };
+
+extern GameOptions game_options_gk;
 #endif  // GAMEOPTIONS_H_

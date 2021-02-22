@@ -2,17 +2,20 @@
 #include "Commandline.h"
 #include "StartGame.h"
 
-int main(int argc, char** argv) {
-  auto game_options = GameOptions{};
+// Initialize GameOptions here
+// TODO(seidl):
+// kind of ugly, find a better solution
+GameOptions game_options_gk;
 
+int main(int argc, char** argv) {
   try {
-    game_options = getGameOptions(argc, argv);
+    game_options_gk = getGameOptions(argc, argv);
   } catch (std::exception& e) {
     std::cerr << e.what() << '\n';
     return EXIT_FAILURE;
   }
 
-  return StartGame(game_options);
+  return StartGame(game_options_gk);
 }
 
 #if SOURCEHOLD_MINGW == 1 && 0

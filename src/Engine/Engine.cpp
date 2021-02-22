@@ -12,8 +12,3 @@ void Engine::InitLogger(bool force_color) {
   Logger::SetColorOutput(force_color);
 }
 
-Engine::Engine(const GameOptions& options)
-    : video_engine_(options), asset_loader_(options.data_directory_path_) {
-  audio_engine_.muted_ = options.nosound_;
-}
-

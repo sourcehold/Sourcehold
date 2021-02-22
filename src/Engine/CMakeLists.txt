@@ -6,19 +6,23 @@ add_library(Engine
   ../System/Logger.cpp
   ../Parsers/CfgFile.cpp
   ../Parsers/Parser.cpp
-  ../Parsers/AniFile.cpp
-  ../Parsers/Gm1File.cpp
-  ../Parsers/TgxFile.cpp
+  #../Parsers/AniFile.cpp
+  #  ../Parsers/Gm1File.cpp
+  #  ../Parsers/TgxFile.cpp
+  ../Parsers/TexFile.cpp
+  ../Parsers/MlbFile.cpp
+  ../System/FileUtil.cpp
 )
 
-set_target_properties(Engine PROPERTIES
-  CXX_STANDARD 11
-  CXX_STANDARD_REQUIRED YES
-  CXX_EXTENSIONS NO
-)
+target_compile_features(Engine PRIVATE cxx_std_11)
+target_include_directories(Engine 
+  PRIVATE "${${PROJECT_NAME}_SOURCE_DIR}/src/")
+
 target_link_libraries(Engine
   PUBLIC SDL2::SDL2
   PUBLIC OpenAL::OpenAL
-  PUBLIC ghc_filesystem)
-
+  PUBLIC ghc_filesystem
+  #PRIVATE project_warnings
+  PRIVATE project_options)
+ 
 

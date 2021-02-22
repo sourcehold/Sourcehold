@@ -4,12 +4,12 @@
 #include <SDL2/SDL.h>
 class VideoEngine {
  public:
-  VideoEngine(const GameOptions& options);
+  VideoEngine();
   ~VideoEngine();
 
  private:
   void InitSDL();
-  void CreateWindow(const GameOptions& options);
+  void CreateWindow();
   void CreateRenderer();
   SDL_Renderer* renderer_;
   SDL_Window* window_;
