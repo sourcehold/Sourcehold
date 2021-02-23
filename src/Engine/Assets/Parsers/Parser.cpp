@@ -123,4 +123,3 @@ void Parser::WriteWord(uint16_t word) {
 void Parser::WriteDWord(uint32_t dword) {
   stream.write(reinterpret_cast<const char *>(&dword), 4);
 }
-

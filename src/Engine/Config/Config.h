@@ -26,7 +26,7 @@
 #define SOURCEHOLD_LINUX 1
 #define SOURCEHOLD_UNIX 1
 #define ATTRIB_PACKED __attribute__((packed))
-#if defined( __ANDROID__)
+#if defined(__ANDROID__)
 #define SOURCEHOLD_BUILD "Android"
 #define SOURCEHOLD_ANDROID 1
 #endif
@@ -48,6 +48,8 @@
 
 /* Configuration of hardcoded stuff */
 
-#define RENDER_LOADING_BORDER 1 // Render the menu border for the loading screen
-#define SCALE_MAIN_MENU 0  // Scale the main menu to fit the screen in classic edition
+#define RENDER_LOADING_BORDER \
+  1  // Render the menu border for the loading screen
+#define SCALE_MAIN_MENU \
+  0  // Scale the main menu to fit the screen in classic edition
 #define INVERT_CAM_ON_ANDROID 1

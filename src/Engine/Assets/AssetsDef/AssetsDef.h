@@ -574,4 +574,3 @@ constexpr std::array<const wchar_t*, 154> lut_names = {
 };
 }  // namespace Assets
 }  // namespace Sourcehold
-

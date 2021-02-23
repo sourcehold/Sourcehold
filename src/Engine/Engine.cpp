@@ -12,4 +12,3 @@ void Engine::InitLogger(bool force_color) {
 
   Logger::SetColorOutput(force_color);
 }
-

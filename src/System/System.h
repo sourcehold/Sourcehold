@@ -13,4 +13,4 @@ enum StrongholdEdition {
   STRONGHOLD_HD
 };
 }
-} // namespace Sourcehold
+}  // namespace Sourcehold
