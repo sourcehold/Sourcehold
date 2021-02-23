@@ -44,8 +44,8 @@ set_target_properties(blast PROPERTIES
 
 
 # cxxopts
-set(CXXOPTS_BUILD_TESTS OFF)
-set(CXXOPTS_BUILD_EXAMPLES OFF)
+set(CXXOPTS_BUILD_TESTS OFF CACHE BOOL "BUILD CXXOPTS TESTS")
+set(CXXOPTS_BUILD_EXAMPLES OFF CACHE BOOL "BUILD CXXOPTS EXAMPLES")
 add_subdirectory(thirdparty/cxxopts)
 
 
@@ -109,9 +109,8 @@ target_include_directories(Sourcehold PRIVATE src)
 target_link_libraries(Sourcehold
   PRIVATE Engine
   PRIVATE cxxopts
+  PRIVATE project_warnings 
   PRIVATE project_options
-  # PRIVATE project_warnings 
-  # TODO make warnings work with cxxopts and ghc_filesystem
   )
 
 

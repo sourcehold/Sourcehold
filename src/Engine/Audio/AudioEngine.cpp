@@ -2,7 +2,7 @@
 #include <al.h>
 #include <stdexcept>
 #include "GameOptions.h"
-#include "System/Logger.h"
+#include "Logger.h"
 
 static const char* getError() {
   auto err = alGetError();

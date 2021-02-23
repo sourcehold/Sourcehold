@@ -1,10 +1,22 @@
 #include "AssetLoader.h"
-#include "System/Logger.h"
-#include "System/FileUtil.h"
-
+#include "Logger.h"
+#include "GameOptions.h"
+AssetLoader::AssetLoader() {
+  using namespace Sourcehold::System;
+  try {
+    CreateAssetFolders(game_options_gk.data_directory_path_);
+    LoadCfg(config_file_path_);
+    LoadMlb(data_folder_ / "stronghold.mlb");
+    LoadTex(data_folder_ / "sh.tex");
+  } catch (std::exception& e) {
+    std::cout << e.what() << std::endl;
+    std::exit(1);
+  }
+}
 void AssetLoader::CreateAssetFolders(
     const Path& data_directory_path_) noexcept {
   using namespace Sourcehold::System;
+  using namespace FileSystem;
   data_folder_ = data_directory_path_;
   saves_folder_ = GetDocumentsPath();
   saves_folder_ /= "Stronghold/Saves/";
@@ -24,6 +36,7 @@ void AssetLoader::CreateAssetFolders(
 void AssetLoader::LoadCfg(const Path& file) {
   using namespace Sourcehold::System;
 
+  using namespace FileSystem;
   Logger::message(GAME) << "Loading config file .." << std::endl;
   if (!DoesFileExist(file)) {
     Logger::message(GAME) << "Missing. Creating new config file .."
@@ -50,16 +63,22 @@ void AssetLoader::LoadTex(const Path& file) {
   }
 }
 
-AssetLoader::AssetLoader() {
-  using namespace Sourcehold::System;
-  try {
-    CreateAssetFolders(game_options_gk.data_directory_path_);
-    LoadCfg(config_file_path_);
-    LoadMlb(data_folder_ / "stronghold.mlb");
-    LoadTex(data_folder_ / "sh.tex");
-  } catch (std::exception& e) {
-    std::cout << e.what() << std::endl;
-    std::exit(1);
-  }
-}
-
+//// Gets a reference to the underlying asset cache
+//// TODO(seidl): if we are moving to a version with if constexpr, change this
+// template <>
+// AssetLoader::Cache_t<AssetLoader::Tgx>& AssetLoader::GetCache() noexcept {
+//  return tgx_cache_;
+//}
+// template <>
+// AssetLoader::Cache_t<AssetLoader::Gm1>& AssetLoader::GetCache() noexcept {
+//  return gm1_cache_;
+//}
+// template <>
+// AssetLoader::Cache_t<AssetLoader::Ani>& AssetLoader::GetCache() noexcept {
+//  return ani_cache_;
+//}
+// template <>
+// AssetLoader::Cache_t<AssetLoader::Bik>& AssetLoader::GetCache() noexcept {
+//  return bik_cache_;
+//}
+//

@@ -1,5 +1,7 @@
 #include "VideoEngine.h"
-#include "System/Logger.h"
+#include "Logger.h"
+#include "Config.h"
+#include "GameOptions.h"
 #include <SDL.h>
 #include <SDL_error.h>
 #include <algorithm>
@@ -23,8 +25,8 @@ static void checkResolution(const Resolution& resolution) noexcept {
                           << std::endl;
   }
 }
-static int getWindowParameters() noexcept {
-  auto param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
+static uint32_t getWindowParameters() noexcept {
+  uint32_t param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
   if (game_options_gk.fullscreen_) {
     param |= SDL_WINDOW_FULLSCREEN;
   }
@@ -32,31 +34,6 @@ static int getWindowParameters() noexcept {
     param |= SDL_WINDOW_BORDERLESS;
   }
   return param;
-}
-
-static int checkDisplayIndex(int requested_index) noexcept {
-  const auto number_of_displays = SDL_GetNumVideoDisplays();
-  return number_of_displays < requested_index ? 0 : requested_index;
-}
-
-// used to center the window
-// SDL_WINDOWPOS_CENTERED should suffice
-static SDL_Rect getDisplayBounds() noexcept {
-  auto display_bounds = SDL_Rect{};
-
-  SDL_GetDisplayBounds(checkDisplayIndex(game_options_gk.monitor_index_),
-                       &display_bounds);
-
-#ifdef SOURCEHOLD_ANDROID
-  // On Android, only use the native resolution
-  SDL_DisplayMode mode;
-  SDL_GetCurrentDisplayMode(index, &mode);
-  // Landscape orientation
-  display_bounds.w = mode.h;
-  display_bounds.h = mode.w;
-#endif  // SOURCEHOLD_ANDROID
-
-  return display_bounds;
 }
 
 void VideoEngine::CreateWindow() {

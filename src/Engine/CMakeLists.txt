@@ -1,28 +1,25 @@
-add_library(Engine
-  Engine.cpp
-  Audio/AudioEngine.cpp
-  Video/VideoEngine.cpp
-  Assets/AssetLoader.cpp
-  ../System/Logger.cpp
-  ../Parsers/CfgFile.cpp
-  ../Parsers/Parser.cpp
-  #../Parsers/AniFile.cpp
-  #  ../Parsers/Gm1File.cpp
-  #  ../Parsers/TgxFile.cpp
-  ../Parsers/TexFile.cpp
-  ../Parsers/MlbFile.cpp
-  ../System/FileUtil.cpp
-)
+add_library(Config INTERFACE)
+target_include_directories(Config INTERFACE "${CMAKE_CURRENT_LIST_DIR}/Config/")
 
+add_library(GameOptions INTERFACE)
+target_include_directories(GameOptions INTERFACE "${CMAKE_CURRENT_LIST_DIR}/GameOptions")
+
+
+add_subdirectory(Logger)
+add_subdirectory(FileSystem)
+add_subdirectory(Video)
+add_subdirectory(Audio)
+add_subdirectory(Assets)
+
+add_library(Engine Engine.cpp)
 target_compile_features(Engine PRIVATE cxx_std_11)
-target_include_directories(Engine 
-  PRIVATE "${${PROJECT_NAME}_SOURCE_DIR}/src/")
-
 target_link_libraries(Engine
-  PUBLIC SDL2::SDL2
-  PUBLIC OpenAL::OpenAL
-  PUBLIC ghc_filesystem
-  #PRIVATE project_warnings
+  PUBLIC Logger
+  PUBLIC VideoEngine
+  PUBLIC AudioEngine
+  PUBLIC AssetLoader
+  PUBLIC GameOptions
+  PUBLIC FileSystem
+  PUBLIC Config
+  PRIVATE project_warnings
   PRIVATE project_options)
- 
-

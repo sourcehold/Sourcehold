@@ -1,5 +1,6 @@
 #include "Engine.h"
-#include "System/Logger.h"
+#include "Config.h"
+#include "Logger.h"
 void Engine::InitLogger(bool force_color) {
   using namespace Sourcehold::System;
 

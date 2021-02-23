@@ -1,6 +1,5 @@
 #ifndef VIDEO_ENGINE_H_
 #define VIDEO_ENGINE_H_
-#include "GameOptions.h"
 #include <SDL2/SDL.h>
 class VideoEngine {
  public:
