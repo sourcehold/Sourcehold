@@ -99,4 +99,3 @@ GameOptions getGameOptions(int argc, char** argv) {
     throw;
   }
 }
-

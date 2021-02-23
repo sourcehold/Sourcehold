@@ -9,18 +9,18 @@ extern "C" {
 }
 
 namespace Sourcehold {
-    namespace Game {
-        /*
-        * Init the avcodec context needed by the BinkVideo class
-        */
-        bool InitAvcodec();
+namespace Game {
+/*
+ * Init the avcodec context needed by the BinkVideo class
+ */
+bool InitAvcodec();
 
-        /*
-        * Destroy a previously created avcodec context and free
-        * associated resources
-        */
-        void DestroyAvcodec();
+/*
+ * Destroy a previously created avcodec context and free
+ * associated resources
+ */
+void DestroyAvcodec();
 
-        AVInputFormat *GetAVInputFormat();
-    }
-}
+AVInputFormat *GetAVInputFormat();
+}  // namespace Game
+}  // namespace Sourcehold
