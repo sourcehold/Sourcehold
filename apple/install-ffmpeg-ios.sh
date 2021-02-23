@@ -142,8 +142,8 @@ cleanup() {
 
 #Script body
 
-ARCHS="arm64 armv7 x86_64 i386"
-DEPLOYMENT_TARGET="9.0"
+ARCHS="arm64 armv7s x86_64 i386"
+DEPLOYMENT_TARGET="10.0"
 FF_VERSION="4.3.1"
 RESULT_DIR="."
 

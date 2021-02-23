@@ -4,8 +4,13 @@
 #include <string>
 #include <cstdio>
 
+#if defined(__APPLE__)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
 #include <al.h>
 #include <alc.h>
+#endif
 
 #include "System/filesystem.h"
 

@@ -7,8 +7,13 @@ extern "C" {
 #include <libavformat/avformat.h>
 }
 
+#if defined(__APPLE__)
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
 #include <al.h>
 #include <alc.h>
+#endif
 
 #include <memory>
 

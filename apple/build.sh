@@ -37,7 +37,7 @@ install_dependecies() {
         fi
 
         mkdir -p "$IOS_LIBS_DIR"    
-        ./install-dependencies-ios.sh "$OPTIONS" "$IOS_LIBS_DIR"
+        ./install-dependencies-ios.sh $OPTIONS "$IOS_LIBS_DIR"
     else
         ./install-dependencies-macos.sh
     fi
@@ -52,15 +52,25 @@ update_submodules() {
 build() {
     echo "Building..."
     local CLEAN="$1"
+    local CLEAN_OPTION=
     
-    cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR"
+    if [[ $CLEAN -eq 1 ]] ; then
+        CLEAN_OPTION="--clean-first"
+    fi
     
-    pushd "$BUILD_DIR" > /dev/null
-        if [[ $CLEAN -eq 1 ]] ; then
-            make clean
-        fi
-        make
-    popd > /dev/null
+    if [[ "$PLATFORM" == "ios" ]] ; then
+        local SYSROOT=`xcode-select -p`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
+
+        cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR" -GXcode \
+            -DCMAKE_SYSTEM_NAME=iOS \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 \
+            -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT;$SYSROOT" \
+            "-DCMAKE_OSX_ARCHITECTURES=i386;x86_64"
+        cmake --build "$BUILD_DIR" --config Release $CLEAN_OPTION -- -sdk iphonesimulator
+    else
+        cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR"
+        cmake --build "$BUILD_DIR" $CLEAN_OPTION
+    fi
 }
 
 
@@ -95,4 +105,4 @@ fi
 ./install-tools.sh
 install_dependecies $CLEAN "$PLATFORM"
 update_submodules
-build $CLEAN
+build $CLEAN "$PLATFORM"
