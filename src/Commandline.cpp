@@ -1,5 +1,8 @@
 #include "Commandline.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 #include <cxxopts.hpp>
+#pragma GCC diagnostic pop
 static cxxopts::Options createCLIConfig(GameOptions& options) {
   using namespace cxxopts;
   Options config("Sourcehold", "Open-source Stronghold");
