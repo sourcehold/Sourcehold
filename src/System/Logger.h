@@ -16,7 +16,8 @@ namespace Sourcehold {
             PARSERS,
             RENDERING,
             GAME,
-            SOURCEHOLD
+            SOURCEHOLD,
+            ECS
         };
 
         /*

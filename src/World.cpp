@@ -2,18 +2,21 @@
 
 #include "Building.h"
 #include "World.h"
+#include "ECS/ECS.h"
 
 #include "Parsers/TgxFile.h"
 #include "Rendering/Font.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
+using namespace Sourcehold::ECS;
 
 World::World() :
     GameMap(WORLD_160), // TODO
     EventConsumer<Keyboard>(),
     EventConsumer<Mouse>()
 {
+    initializeECS();
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }

@@ -19,7 +19,7 @@ jobs:
         os: [macos-latest, ubuntu-latest]
         include:
           - os: ubuntu-latest
-            install_dependencies: "sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev"
+            install_dependencies: "sh ./ubuntu/install-dependencies.sh"
             artifact_name: "sourcehold-linux-amd64"
           - os: macos-latest
             install_dependencies: "./macos/install-dependencies.sh"
