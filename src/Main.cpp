@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   }
 
-  return StartGame(game_options_gk);
+  return StartGame();
 }
 
 #if SOURCEHOLD_MINGW == 1 && 0
