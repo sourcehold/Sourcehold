@@ -66,7 +66,7 @@ build() {
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 \
             -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT;$SYSROOT" \
-            "-DCMAKE_OSX_ARCHITECTURES=i386;x86_64"
+            -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
         cmake --build "$BUILD_DIR" --config Release $CLEAN_OPTION -- -sdk iphonesimulator
     else
         cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR"
