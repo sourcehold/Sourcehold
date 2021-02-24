@@ -147,9 +147,13 @@ if(TARGET_OS_IOS)
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/apple/iOS/Supporting Files/Info.plist"
   )
   
-  add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${DATA_DIR_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
-  )
+  if(EXISTS ${DATA_DIR_PATH})
+    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${DATA_DIR_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+    )
+  else()
+    message("'data' directroy does not exist. Skipping copy to app bundle.")
+  endif()
   
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/include)
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/include)
