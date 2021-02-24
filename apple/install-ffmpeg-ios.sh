@@ -35,7 +35,7 @@ fetch_source() {
     local SRC_DIR="$RESULT_DIR/$SOURCE"
     
     if [ ! -d "$SRC_DIR" ] ; then
-        echo 'FFmpeg source not found. Fetching $SOURCE...'
+        echo "FFmpeg source not found. Fetching $SOURCE..."
         curl "http://www.ffmpeg.org/releases/$SOURCE.tar.bz2" | tar xj --directory "$RESULT_DIR" \
             || exit 1
     else
