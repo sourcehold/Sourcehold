@@ -3,6 +3,7 @@
 
 # Global variables
 
+SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 PROJECT_ROOT=".."
 CMAKE_WORKING_DIR="$PROJECT_ROOT"
 BUILD_DIR="$PROJECT_ROOT/build"
@@ -37,9 +38,9 @@ install_dependecies() {
         fi
 
         mkdir -p "$IOS_LIBS_DIR"    
-        ./install-dependencies-ios.sh $OPTIONS "$IOS_LIBS_DIR"
+        "$SCRIPT_PATH/install-dependencies-ios.sh" $OPTIONS "$IOS_LIBS_DIR"
     else
-        ./install-dependencies-macos.sh
+        "$SCRIPT_PATH/install-dependencies-macos.sh"
     fi
 }
 
@@ -102,7 +103,7 @@ if [[ $CLEAN -eq 1 ]] ; then
     clean
 fi
 
-./install-tools.sh
+"$SCRIPT_PATH/install-tools.sh"
 install_dependecies $CLEAN "$PLATFORM"
 update_submodules
 build $CLEAN "$PLATFORM"

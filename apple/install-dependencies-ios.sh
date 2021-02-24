@@ -1,6 +1,11 @@
 #!/bin/sh
 
 
+# Global variables
+
+SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+
 # Functions
 
 usage() {
@@ -48,14 +53,14 @@ fi
 
 if [ ! -d "$FF_MPEG_DIR" ] ; then
     echo "Installing FFmpeg for iOS..."
-    ./install-ffmpeg-ios.sh -r "$FF_MPEG_DIR"
+    "$SCRIPT_PATH/install-ffmpeg-ios.sh" -r "$FF_MPEG_DIR"
 else
     echo "FFmpeg for iOS is already installed..."
 fi
 
 if [ ! -d "$SDL2_DIR" ] ; then
     echo "Installing SDL2 for iOS..."
-    ./install-sdl2-ios.sh -r "$SDL2_DIR"
+    "$SCRIPT_PATH/install-sdl2-ios.sh" -r "$SDL2_DIR"
 else
     echo "SDL2 for iOS is already installed..."
 fi
