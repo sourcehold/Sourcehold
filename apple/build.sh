@@ -4,7 +4,7 @@
 # Global variables
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-PROJECT_ROOT=".."
+PROJECT_ROOT="$SCRIPT_PATH/.."
 CMAKE_WORKING_DIR="$PROJECT_ROOT"
 BUILD_DIR="$PROJECT_ROOT/build"
 IOS_LIBS_DIR="$PROJECT_ROOT/thirdparty/ios"
