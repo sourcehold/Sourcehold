@@ -12,6 +12,7 @@
 
 #include "Parsers/MlbFile.h"
 #include "Parsers/CfgFile.h"
+#include "Parsers/Gm1File.h"
 
 #include "System/System.h"
 
@@ -19,6 +20,8 @@
 #include "Rendering/Renderer.h"
 
 namespace Sourcehold {
+    using GM1FileSP = std::shared_ptr<Sourcehold::Parsers::Gm1File>;
+
     namespace Events {
         class EventHandler;
     }

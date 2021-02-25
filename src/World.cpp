@@ -1,4 +1,5 @@
 #include <random>
+#include <entt/entt.hpp>
 
 #include "Building.h"
 #include "World.h"
@@ -16,7 +17,8 @@ World::World() :
     EventConsumer<Keyboard>(),
     EventConsumer<Mouse>()
 {
-    initializeECS();
+    registry = initializeECS();
+    renderSystem = new ECS::System::RenderSystem();
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }
@@ -31,10 +33,46 @@ UIState World::Play()
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 160);
 
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        Spawn<Oak>(x, y);
+        spawn(registry, EntityType::TREE_APPLE, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_BIRCH, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_CHESTNUT, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_OAK, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_PINE, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_SHRUB1, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_SHRUB2, x, y);
+    }
+
+    for (int i = 0; i < 200; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::DEER, x, y);
     }
 
     double previous = GetTime();
@@ -54,10 +92,8 @@ UIState World::Play()
         ClearDisplay();
 
         GameMap::Render();
-
-        for (Unit *unit : units) {
-            unit->Render();
-        }
+        updateAnimationFrameIndexes(registry, now);
+        renderSystem->run(registry);
 
         if (!gui.Render()) break;
 
@@ -202,7 +238,7 @@ void World::onEventReceive(Mouse &mouseEvent)
         int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
         int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
 
-        Spawn<Lord>(x, y);
+        spawn(registry, EntityType::LORD, x, y);
     }
 }
 

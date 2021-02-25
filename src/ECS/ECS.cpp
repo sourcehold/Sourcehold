@@ -1,57 +1,77 @@
 #include <entt/entt.hpp>
+#include <SDL.h>
+
+#include "GameManager.h"
+
+#include "Rendering/Renderer.h"
+#include "Rendering/Texture.h"
+#include "Rendering/Camera.h"
+
+#include "Parsers/Gm1File.h"
+
 #include "System/Logger.h"
+#include "ECS.h"
 
+using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
-
-// Test of EnTT, copypasted from EnTT docs
-// It is just to check if pipeline works with new import
+using namespace Sourcehold::Parsers;
+using namespace Sourcehold::Game;
 
 namespace Sourcehold {
     namespace ECS {
-        struct position {
-            float x;
-            float y;
-        };
-
-        struct velocity {
-            float dx;
-            float dy;
-        };
-
         void update (entt::registry &registry) {
-            auto view = registry.view<const position, velocity>();
+        }
 
-            // use a callback
-            view.each([](const auto &pos, auto &vel) { /* ... */ });
+        entt::registry initializeECS () {
+            entt::registry registry;
+            Logger::message(System::ECS) << "Initialized ECS" << std::endl;
 
-            // use an extended callback
-            view.each([](const auto entity, const auto &pos, auto &vel) { /* ... */ });
+            return registry;
+        }
 
-            // use a range-for
-            for(auto [entity, pos, vel]: view.each()) {
-                // ...
+        bool isTreeType (EntityType type) {
+            switch (type) {
+                case EntityType::TREE_APPLE:
+                case EntityType::TREE_BIRCH:
+                case EntityType::TREE_CHESTNUT:
+                case EntityType::TREE_OAK:
+                case EntityType::TREE_PINE:
+                case EntityType::TREE_SHRUB1:
+                case EntityType::TREE_SHRUB2:
+                    return true;
+                default:
+                    return false;
             }
+        }
+        
+        void renderUnit (PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile) {
+            Camera& cam = Camera::instance();
+            auto [x, y] = position;
 
-            // use forward iterators and get only the components of interest
-            for(auto entity: view) {
-                auto &vel = view.get<velocity>(entity);
-                // ...
+            int px = x * 30 - cam.positionX;
+            int py = y * 15 - cam.positionY;
+
+            SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? animationComponent.frameIndex : 0); // TODO: index
+            Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
+        }
+
+        void updateAnimationFrameIndexes (entt::registry &registry, double now) {
+            auto view = registry.view<const EntityTypeComponent, AnimatedComponent>();
+            
+            for(auto [entity, typeComponent, animationComponent]: view.each()) {
+                animationComponent.frameIndex = (24 - abs(int(now * 15.0f) % (2 * 24) - 24));
             }
         }
 
-        void initializeECS () {
-            
-            entt::registry registry;
+        entt::entity spawn (entt::registry &registry, EntityType type, int x, int y) {
+            const entt::entity entity = registry.create();
+            registry.emplace<PositionComponent>(entity, x, y);
+            registry.emplace<EntityTypeComponent>(entity, type);
 
-            for(auto i = 0u; i < 10u; ++i) {
-                const auto entity = registry.create();
-                registry.emplace<position>(entity, i * 1.f, i * 1.f);
-                if(i % 2 == 0) { registry.emplace<velocity>(entity, i * .1f, i * .1f); }
-            }
+            if (isTreeType(type)) registry.emplace<AnimatedComponent>(entity, true, 0);
+            else registry.emplace<AnimatedComponent>(entity, false, 0);
 
-            update(registry);
-
-            Logger::message(System::ECS) << "Initialized ECS" << std::endl;
+            return entity;
         }
     }
 }
