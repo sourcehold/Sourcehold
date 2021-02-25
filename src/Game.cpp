@@ -33,7 +33,7 @@ int MainLoop(UIState state) {
     case MAIN_MENU: {
         MainMenu *menu = new MainMenu();
         state = menu->EnterMenu();
-        delete menu;
+        // delete menu;
 
         MainLoop(state);
     } break;

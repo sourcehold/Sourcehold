@@ -24,7 +24,7 @@ namespace Sourcehold {
         namespace System {
             using namespace Game;
 
-            class RenderSystem : public BasicSystem<const EntityTypeComponent, const PositionComponent, const AnimatedComponent> {
+            class RenderSystem : public virtual BasicSystem<const EntityTypeComponent, const PositionComponent, const AnimatedComponent> {
                 GM1FileSP lordFile;
                 GM1FileSP deerFile;
                 GM1FileSP appleTreeFile;
@@ -35,21 +35,12 @@ namespace Sourcehold {
                 GM1FileSP shrub1TreeFile;
                 GM1FileSP shrub2TreeFile;
 
+                void renderUnit(PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile);
+
                 public:
                 RenderSystem();
-                virtual void each(EachEntityType entity) override;
-
-                private:
-                void renderUnit (PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile) {
-                    Camera& cam = Camera::instance();
-                    auto [x, y] = position;
-
-                    int px = x * 30 - cam.positionX;
-                    int py = y * 15 - cam.positionY;
-
-                    SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? animationComponent.frameIndex * 2 : 0); // TODO: index
-                    Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
-                }
+                virtual void each(entt::registry &registry, EachEntityType entity) override;
+                virtual void beforeRun() override {};
             };
         }
     }

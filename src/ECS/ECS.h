@@ -35,6 +35,5 @@ namespace Sourcehold {
         entt::registry initializeECS();
         entt::entity spawn(entt::registry &registry, EntityType type, int x, int y);
         void render(entt::registry &registry);
-        void updateAnimationFrameIndexes(entt::registry &registry, double nowTime);
     }
 }

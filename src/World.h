@@ -20,6 +20,8 @@
 #include "Events/Touch.h"
 
 #include "ECS/System/RenderSystem.h"
+#include "ECS/System/AnimationFrameSystem.h"
+#include "ECS/System/TestTeleportingDeerSystem.h"
 
 namespace Sourcehold {
     namespace Parsers {
@@ -99,6 +101,8 @@ namespace Sourcehold {
             void UpdateCamera(double dt);
         private:
             ECS::System::RenderSystem* renderSystem;
+            ECS::System::AnimationFrameSystem* animationFrameSystem;
+            ECS::System::TestTeleportingDeerSystem* testTeleportingDeerSystem;
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;
             void onEventReceive(Touch& touchEvent) override;

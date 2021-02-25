@@ -16,15 +16,15 @@ namespace Sourcehold {
                 // defined in .cpp -> maybe figure out later why (probably typing error)
 
                 void run(entt::registry &registry) {
+                    this->beforeRun(); // prepare state for update
                     auto view = registry.view<Selector...>();
-                    for(auto entity: view.each()) {
-                        this->each(entity);
+                    for(EachEntityType entity: view.each()) {
+                        this->each(registry, entity);
                     }
                 };
 
-                virtual void BasicSystem<Selector...>::each(EachEntityType entity) {
-                    Sourcehold::System::Logger::error(Sourcehold::System::ECS) << "Not implemented \"each\"." << std::endl;
-                };
+                virtual void beforeRun() = 0;
+                virtual void each(entt::registry &registry, EachEntityType entity) = 0;
             };
         }
     }

@@ -19,6 +19,8 @@ World::World() :
 {
     registry = initializeECS();
     renderSystem = new ECS::System::RenderSystem();
+    animationFrameSystem = new ECS::System::AnimationFrameSystem();
+    testTeleportingDeerSystem = new ECS::System::TestTeleportingDeerSystem();
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }
@@ -92,7 +94,9 @@ UIState World::Play()
         ClearDisplay();
 
         GameMap::Render();
-        updateAnimationFrameIndexes(registry, now);
+
+        testTeleportingDeerSystem->run(registry);
+        animationFrameSystem->run(registry);
         renderSystem->run(registry);
 
         if (!gui.Render()) break;

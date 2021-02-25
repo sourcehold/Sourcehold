@@ -26,6 +26,8 @@ namespace Sourcehold {
             entt::registry registry;
             Logger::message(System::ECS) << "Initialized ECS" << std::endl;
 
+            // registry.view<PositionComponent>().each();
+
             return registry;
         }
 
@@ -41,25 +43,6 @@ namespace Sourcehold {
                     return true;
                 default:
                     return false;
-            }
-        }
-        
-        void renderUnit (PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile) {
-            Camera& cam = Camera::instance();
-            auto [x, y] = position;
-
-            int px = x * 30 - cam.positionX;
-            int py = y * 15 - cam.positionY;
-
-            SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? animationComponent.frameIndex : 0); // TODO: index
-            Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
-        }
-
-        void updateAnimationFrameIndexes (entt::registry &registry, double now) {
-            auto view = registry.view<const EntityTypeComponent, AnimatedComponent>();
-            
-            for(auto [entity, typeComponent, animationComponent]: view.each()) {
-                animationComponent.frameIndex = (24 - abs(int(now * 15.0f) % (2 * 24) - 24));
             }
         }
 

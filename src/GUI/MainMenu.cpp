@@ -204,7 +204,7 @@ UIState MainMenu::EnterMenu()
             int index = 0;
             NarrScreen* narr = new NarrScreen(index + 1);
             narr->Begin();
-            delete narr;
+            // delete narr;
 
             Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
             music.Play();

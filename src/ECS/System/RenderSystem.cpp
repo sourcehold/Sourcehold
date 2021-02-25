@@ -16,7 +16,7 @@ namespace Sourcehold {
                 shrub2TreeFile = GetGm1(dataRoot.string() + "gm/tree_shrub2.gm1");
             }
 
-            void RenderSystem::each(EachEntityType entity) {
+            void RenderSystem::each(entt::registry &registry, EachEntityType entity) {
                 const auto [entityRef, typeComponent, positionComponent, animationComponent] = entity;
                 switch (typeComponent.type) {
                 case EntityType::LORD: renderUnit(positionComponent, animationComponent, lordFile); break;
@@ -29,6 +29,17 @@ namespace Sourcehold {
                 case EntityType::TREE_SHRUB1: renderUnit(positionComponent, animationComponent, shrub1TreeFile); break;
                 case EntityType::TREE_SHRUB2: renderUnit(positionComponent, animationComponent, shrub2TreeFile); break;
                 }
+            }
+
+            void RenderSystem::renderUnit (PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile) {
+                Camera& cam = Camera::instance();
+                auto [x, y] = position;
+
+                int px = x * 30 - cam.positionX;
+                int py = y * 15 - cam.positionY;
+
+                SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? animationComponent.frameIndex : 0); // TODO: index
+                Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
             }
         }
     }

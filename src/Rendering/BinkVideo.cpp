@@ -135,7 +135,7 @@ void BinkVideo::Close()
         av_frame_free(&frame);
         decoder->close(codecCtx);
         av_free(codecCtx);
-        delete framebuf;
+        // delete framebuf;
 
         if(hasAudio) {
             decoder->close(audioCtx);
