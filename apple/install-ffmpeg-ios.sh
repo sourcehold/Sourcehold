@@ -7,8 +7,8 @@
 usage() {
     echo "usage: $(basename $0) [-adrv]"
     echo "options:"
-    echo "-a        \tArchitectures to build. You may pass multiple architectures. Default value is 'arm64 armv7 i386 x86_64'"
-    echo "-d        \tiOS deployment target. Default is '9.0'"
+    echo "-a        \tArchitectures to build. You may pass multiple architectures. Default value is 'arm64 armv7s i386 x86_64'"
+    echo "-d        \tiOS deployment target. Default is '10.0'"
     echo "-r        \tPath to result directory. Default value is '.'."
     echo "-v        \tFFmpeg lib version to compile. Default value is '4.3.1'"
     exit 1
@@ -31,12 +31,12 @@ install_tools() {
 
 fetch_source() {
     local SOURCE="$1"
-    local RESULT_DIR="$2"
-    local SRC_DIR="$RESULT_DIR/$SOURCE"
+    local RESULT_DIR_PATH="$2"
+    local SRC_DIR_PATH="$RESULT_DIR_PATH/$SOURCE"
     
-    if [ ! -d "$SRC_DIR" ] ; then
+    if [ ! -d "$SRC_DIR_PATH" ] ; then
         echo "FFmpeg source not found. Fetching $SOURCE..."
-        curl "http://www.ffmpeg.org/releases/$SOURCE.tar.bz2" | tar xj --directory "$RESULT_DIR" \
+        curl "http://www.ffmpeg.org/releases/$SOURCE.tar.bz2" | tar xj --directory "$RESULT_DIR_PATH" \
             || exit 1
     else
         echo "FFmpeg library source directory already exists."
@@ -47,15 +47,15 @@ compile() {
     echo "Compiling..."
     local ARCHS="$1"
     local DEPLOYMENT_TARGET="$2"
-    local SRC_DIR="$3"
-    local BUILD_DIR="$4"
-    local LIB_DIR="$5"
+    local SRC_DIR_PATH="$3"
+    local BUILD_DIR_PATH="$4"
+    local LIB_DIR_PATH="$5"
     
     for ARCH in $ARCHS
     do
         echo "Building $ARCH..."
-        mkdir -p "$BUILD_DIR/$ARCH"
-        pushd "$BUILD_DIR/$ARCH" > /dev/null
+        mkdir -p "$BUILD_DIR_PATH/$ARCH"
+        pushd "$BUILD_DIR_PATH/$ARCH" > /dev/null
 
         local CFLAGS="-arch $ARCH"
         local PLATFORM=
@@ -86,7 +86,7 @@ compile() {
         LDFLAGS="$CFLAGS"
         CONFIGURE_FLAGS="--enable-cross-compile --disable-debug --disable-programs --disable-doc --enable-pic"
 
-        TMPDIR=${TMPDIR/%\/} "$SRC_DIR/configure" \
+        TMPDIR=${TMPDIR/%\/} "$SRC_DIR_PATH/configure" \
             --target-os=darwin \
             --arch=$ARCH \
             --cc="$CC" \
@@ -94,7 +94,7 @@ compile() {
             $CONFIGURE_FLAGS \
             --extra-cflags="$CFLAGS" \
             --extra-ldflags="$LDFLAGS" \
-            --prefix="$LIB_DIR/$ARCH" \
+            --prefix="$LIB_DIR_PATH/$ARCH" \
         || exit 1
 
         make -j3 install $EXPORT || exit 1
@@ -106,36 +106,36 @@ compile() {
 create_fat_binaries() {
     echo "Building fat binaries..."
     local ARCHS="$1"
-    local INCLUDE_DIR="$2"
-    local LIB_DIR="$3"
+    local INCLUDE_DIR_PATH="$2"
+    local LIB_DIR_PATH="$3"
     
-    mkdir -p "$LIB_DIR"
+    mkdir -p "$LIB_DIR_PATH"
     set - $ARCHS
     
-    pushd "$LIB_DIR/$1/lib" > /dev/null
+    pushd "$LIB_DIR_PATH/$1/lib" > /dev/null
     
     for LIB in *.a
     do
-        echo lipo -create `find $LIB_DIR -name $LIB` -output "$LIB_DIR/$LIB" 1>&2
-        lipo -create `find $LIB_DIR -name $LIB` -output "$LIB_DIR/$LIB" || exit 1
+        echo lipo -create `find $LIB_DIR_PATH -name $LIB` -output "$LIB_DIR_PATH/$LIB" 1>&2
+        lipo -create `find $LIB_DIR_PATH -name $LIB` -output "$LIB_DIR_PATH/$LIB" || exit 1
     done
 
     popd > /dev/null
     
-    cp -rf "$LIB_DIR/$1/include" "$INCLUDE_DIR"
+    cp -rf "$LIB_DIR_PATH/$1/include" "$INCLUDE_DIR_PATH"
 }
 
 cleanup() {
     echo "Cleaning up..."
     local ARCHS="$1"
-    local BUILD_DIR="$2"
-    local LIB_DIR="$3"
+    local BUILD_DIR_PATH="$2"
+    local LIB_DIR_PATH="$3"
     
-    rm -rf "$BUILD_DIR"
+    rm -rf "$BUILD_DIR_PATH"
     
     for ARCH in $ARCHS
     do
-        rm -rf "$LIB_DIR/$ARCH"
+        rm -rf "$LIB_DIR_PATH/$ARCH"
     done
 }
 
@@ -145,7 +145,7 @@ cleanup() {
 ARCHS="arm64 armv7s x86_64 i386"
 DEPLOYMENT_TARGET="10.0"
 FF_VERSION="4.3.1"
-RESULT_DIR="."
+RESULT_DIR_PATH="."
 
 while getopts "a:d:r:v:" opt
 do
@@ -157,7 +157,7 @@ do
         DEPLOYMENT_TARGET="$OPTARG"
         ;;
     r)
-        RESULT_DIR="$OPTARG"
+        RESULT_DIR_PATH="$OPTARG"
         ;;
     v)
         FF_VERSION="$OPTARG"
@@ -168,20 +168,20 @@ do
     esac
 done
 
-mkdir -p "$RESULT_DIR"
-# RESULT_DIR should be converted to absolute path to make 'compile' function work properly
-RESULT_DIR=`cd "$RESULT_DIR"; pwd`
+mkdir -p "$RESULT_DIR_PATH"
+# RESULT_DIR_PATH should be converted to absolute path to make 'compile' function work properly
+RESULT_DIR_PATH=`cd "$RESULT_DIR_PATH"; pwd`
 
 SOURCE="ffmpeg-$FF_VERSION"
-SRC_DIR="$RESULT_DIR/$SOURCE"
-BUILD_DIR="$RESULT_DIR/build"
-INCLUDE_DIR="$RESULT_DIR/include"
-LIB_DIR="$RESULT_DIR/lib"
+SRC_DIR_PATH="$RESULT_DIR_PATH/$SOURCE"
+BUILD_DIR_PATH="$RESULT_DIR_PATH/build"
+INCLUDE_DIR_PATH="$RESULT_DIR_PATH/include"
+LIB_DIR_PATH="$RESULT_DIR_PATH/lib"
 
 install_tools
-fetch_source "$SOURCE" "$RESULT_DIR"
-compile "$ARCHS" "$DEPLOYMENT_TARGET" "$SRC_DIR" "$BUILD_DIR" "$LIB_DIR"
-create_fat_binaries "$ARCHS" "$INCLUDE_DIR" "$LIB_DIR"
-cleanup "$ARCHS" "$BUILD_DIR" "$LIB_DIR"
+fetch_source "$SOURCE" "$RESULT_DIR_PATH"
+compile "$ARCHS" "$DEPLOYMENT_TARGET" "$SRC_DIR_PATH" "$BUILD_DIR_PATH" "$LIB_DIR_PATH"
+create_fat_binaries "$ARCHS" "$INCLUDE_DIR_PATH" "$LIB_DIR_PATH"
+cleanup "$ARCHS" "$BUILD_DIR_PATH" "$LIB_DIR_PATH"
 
 echo "Done"

@@ -4,10 +4,11 @@
 # Global variables
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-PROJECT_ROOT="$SCRIPT_PATH/.."
-CMAKE_WORKING_DIR="$PROJECT_ROOT"
-BUILD_DIR="$PROJECT_ROOT/build"
-IOS_LIBS_DIR="$PROJECT_ROOT/thirdparty/ios"
+PROJECT_ROOT_PATH="$SCRIPT_PATH/.."
+CMAKE_WORKING_DIR_PATH="$PROJECT_ROOT_PATH"
+BUILD_DIR_PATH="$PROJECT_ROOT_PATH/build"
+IOS_LIBS_DIR_PATH="$PROJECT_ROOT_PATH/thirdparty/ios"
+IOS_DEPLOYMENT_TARGET=10.0
 
 
 # Functions
@@ -16,13 +17,13 @@ usage() {
     echo "usage: $(basename $0) [-c] <platform>"
     echo "options:"
     echo "-c        \tClean build."
-    echo "<platform>\t'ios' or 'macos'"
+    echo "<platform>\t'ios', 'ios-simulator' or 'macos'"
     exit 1
 }
 
 clean() {
     echo "Cleaning up..."
-    [ -d "$BUILD_DIR" ] && rm -rf "$BUILD_DIR"
+    [ -d "$BUILD_DIR_PATH" ] && rm -rf "$BUILD_DIR_PATH"
 }
 
 install_dependecies() {
@@ -30,15 +31,19 @@ install_dependecies() {
     local CLEAN="$1"
     local PLATFORM="$2"
     
-    if [[ "$PLATFORM" == "ios" ]] ; then
-        local OPTIONS=
+    if [[ "$PLATFORM" == "ios-simulator" || "$PLATFORM" == "ios" ]] ; then
+        local OPTIONS="-d $IOS_DEPLOYMENT_TARGET"
         
         if [[ $CLEAN -eq 1 ]] ; then
-            OPTIONS="-c"
+            OPTIONS="$OPTIONS -c"
+        fi
+        
+        if [[ "$PLATFORM" == "ios-simulator" ]] ; then
+            OPTIONS="$OPTIONS -s"
         fi
 
-        mkdir -p "$IOS_LIBS_DIR"    
-        "$SCRIPT_PATH/install-dependencies-ios.sh" $OPTIONS "$IOS_LIBS_DIR"
+        mkdir -p "$IOS_LIBS_DIR_PATH"
+        "$SCRIPT_PATH/install-dependencies-ios.sh" $OPTIONS "$IOS_LIBS_DIR_PATH"
     else
         "$SCRIPT_PATH/install-dependencies-macos.sh"
     fi
@@ -59,18 +64,18 @@ build() {
         CLEAN_OPTION="--clean-first"
     fi
     
-    if [[ "$PLATFORM" == "ios" ]] ; then
+    if [[ "$PLATFORM" == "ios-simulator" ]] ; then
         local SYSROOT=`xcode-select -p`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
 
-        cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR" -GXcode \
+        cmake "$CMAKE_WORKING_DIR_PATH" -B "$BUILD_DIR_PATH" -GXcode \
             -DCMAKE_SYSTEM_NAME=iOS \
-            -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=$IOS_DEPLOYMENT_TARGET \
             -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT;$SYSROOT" \
             -DCMAKE_OSX_ARCHITECTURES="i386;x86_64"
-        cmake --build "$BUILD_DIR" --config Release $CLEAN_OPTION -- -sdk iphonesimulator
+        cmake --build "$BUILD_DIR_PATH" --config Release $CLEAN_OPTION -- -sdk iphonesimulator
     else
-        cmake "$CMAKE_WORKING_DIR" -B "$BUILD_DIR"
-        cmake --build "$BUILD_DIR" $CLEAN_OPTION
+        cmake "$CMAKE_WORKING_DIR_PATH" -B "$BUILD_DIR_PATH"
+        cmake --build "$BUILD_DIR_PATH" $CLEAN_OPTION
     fi
 }
 
@@ -95,8 +100,18 @@ if [[ -z "$PLATFORM" ]] ; then
     usage
 fi
 
-if [[ "$PLATFORM" != "ios" && "$PLATFORM" != "macos" ]] ; then
+if [[ "$PLATFORM" == "ios" ]] ; then
+    echo "Build for device is not currently supported."
+    exit 1
+fi
+
+if [[ "$PLATFORM" != "ios" && "$PLATFORM" != "ios-simulator" && "$PLATFORM" != "macos" ]] ; then
     usage
+fi
+
+if [ ! `which xcodebuild` ] ; then
+  echo "Build failed. Xcode is not installed.";
+  exit 1
 fi
 
 if [[ $CLEAN -eq 1 ]] ; then
