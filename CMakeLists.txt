@@ -13,6 +13,11 @@ include(AddImportedTarget)
 include(PreventInSourceBuilds)
 include(CompilerWarnings)
 include(Sanitizers)
+
+
+set(ENABLE_CLANG_TIDY ON CACHE BOOL "CLANG TIDY")
+set(ENABLE_INCLUDE_WHAT_YOU_USE ON CACHE BOOL "INCLUDE WHAT YOU USE")
+
 include(StaticAnalyzers)
 
 
@@ -24,10 +29,6 @@ set(Stronghold_VERSION, 0.1.2)
 add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_11)
 enable_sanitizers(project_options)
-set(ENABLE_CLANG_TIDY ON)
-set(ENABLE_INCLUDE_WHAT_YOU_USE ON)
-set(ENABLE_CPPCHECK ON)
-
 
 # warnings
 add_library(project_warnings INTERFACE)
