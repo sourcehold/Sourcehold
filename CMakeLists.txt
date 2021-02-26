@@ -16,7 +16,6 @@ include(Sanitizers)
 
 
 set(ENABLE_CLANG_TIDY ON CACHE BOOL "CLANG TIDY")
-set(ENABLE_INCLUDE_WHAT_YOU_USE ON CACHE BOOL "INCLUDE WHAT YOU USE")
 
 include(StaticAnalyzers)
 
