@@ -5,10 +5,21 @@
  * decided defining macros with generic names like this in a library
  * would be a good idea!
  */
+#ifdef __clang__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wrange-loop-construct"
+#elif __GNUG__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuseless-cast"
+#elif _MSC_VER
+#endif
 #include <ghc/filesystem.hpp>
+#ifdef __clang__
 #pragma GCC diagnostic pop
+#elif __GNUG__
+#pragma GCC diagnostic pop
+#elif _MSC_VER
+#endif
 
 #undef ERROR
 #undef min
