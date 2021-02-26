@@ -1,22 +1,33 @@
 #include "Commandline.h"
-#ifdef __clang__
+#if defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#elif __GNUG__
+#endif  // __clang__
+
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-#elif _MSC_VER
-#endif
+#endif  // GCC
+
+#if defined(_MSC_VER)
+#endif  // _MSC_VER
+
 #include <cxxopts.hpp>
-#ifdef __clang__
+
+#if defined(__clang__)
 #pragma GCC diagnostic pop
-#elif __GNUG__
+#endif  // __clang__
+
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
-#elif _MSC_VER
-#endif
+#endif  // GCC
+
+#if defined(_MSC_VER)
+#endif  // _MSC_VER
+
 static cxxopts::Options createCLIConfig(GameOptions& options) {
   using namespace cxxopts;
   Options config("Sourcehold", "Open-source Stronghold");

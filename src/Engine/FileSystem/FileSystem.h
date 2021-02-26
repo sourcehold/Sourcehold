@@ -5,17 +5,17 @@
  * decided defining macros with generic names like this in a library
  * would be a good idea!
  */
-#ifdef __clang__
+#if defined(__clang__)
 #if __clang_major__ > 10
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wrange-loop-construct"
 #endif  // __clang_major__ > 10
 #endif  // __clang__
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
-#endif  // __GNUC__
+#endif  // GCC
 
 #ifdef _MSC_VER
 #endif  // _MSC_VER
@@ -28,9 +28,9 @@
 #endif  // __clang_major__ > 10
 #endif  // __clang__
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic pop
-#endif  // __GNUC__
+#endif  // GCC
 
 #ifdef _MSC_VER
 #endif  //_MSC_VER
