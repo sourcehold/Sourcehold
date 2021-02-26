@@ -7,6 +7,7 @@ sudo add-apt-repository -y ppa:jonathonf/ffmpeg-4
 sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 
 sudo apt update -qq
+sudo apt install -y -qq iwyu
 sudo apt install -y -qq libsdl2-dev
 sudo apt install -y -qq ffmpeg
 sudo apt install -y -qq libavcodec-dev
