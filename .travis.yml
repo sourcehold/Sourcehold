@@ -5,13 +5,16 @@ language: cpp
 sudo: required
 dist: xenial
 
-compiler: gcc
+compiler: 
+  - gcc
+  - clang
 
 script:
-  - mkdir build/
-  - cd build/
+  - mkdir build
+  - pushd build
   - cmake ..
-  - make -j8
+  - popd
+  - cmake --build build
 
 install:
   source ./travis/install.sh
