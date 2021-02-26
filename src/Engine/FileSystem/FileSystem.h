@@ -6,20 +6,34 @@
  * would be a good idea!
  */
 #ifdef __clang__
+#if __clang_major__ > 10
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wrange-loop-construct"
-#elif __GNUG__
+#endif  // __clang_major__ > 10
+#endif  // __clang__
+
+#ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
-#elif _MSC_VER
-#endif
+#endif  // __GNUC__
+
+#ifdef _MSC_VER
+#endif  // _MSC_VER
+
 #include <ghc/filesystem.hpp>
+
 #ifdef __clang__
+#if __clang_major__ > 10
 #pragma GCC diagnostic pop
-#elif __GNUG__
+#endif  // __clang_major__ > 10
+#endif  // __clang__
+
+#ifdef __GNUC__
 #pragma GCC diagnostic pop
-#elif _MSC_VER
-#endif
+#endif  // __GNUC__
+
+#ifdef _MSC_VER
+#endif  //_MSC_VER
 
 #undef ERROR
 #undef min
