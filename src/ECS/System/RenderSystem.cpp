@@ -7,7 +7,7 @@ namespace Sourcehold {
                 _EntityTypeToEntityAssetMapping();
             }
 
-            void RenderSystem::tickEntity(entt::registry &registry, EachEntityType entity) {
+            void RenderSystem::tickEntity(entt::registry &registry, EachEntityType &entity) {
                 const auto [entityRef, typeComponent, positionComponent, animationComponent] = entity;
                 GM1FileSP assetFile;
                 try {

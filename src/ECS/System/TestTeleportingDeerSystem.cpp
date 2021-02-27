@@ -3,7 +3,7 @@
 namespace Sourcehold {
     namespace ECS {
         namespace System {
-            void TestTeleportingDeerSystem::tickEntity(entt::registry &registry, EachEntityType entity) {
+            void TestTeleportingDeerSystem::tickEntity(entt::registry &registry, EachEntityType &entity) {
                 auto [entityRef, typeComponent, positionComponent] = entity;
                 if (typeComponent.type != EntityType::DEER) return;
 

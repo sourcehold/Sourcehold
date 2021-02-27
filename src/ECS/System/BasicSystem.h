@@ -22,7 +22,7 @@ namespace Sourcehold {
                 };
 
                 virtual void prepareTick() = 0;
-                virtual void tickEntity(entt::registry &registry, EachEntityType entity) = 0;
+                virtual void tickEntity(entt::registry &registry, EachEntityType &entity) = 0;
             };
         }
     }

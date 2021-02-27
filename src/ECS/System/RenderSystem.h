@@ -136,7 +136,7 @@ namespace Sourcehold {
                 
                 public:
                 RenderSystem();
-                virtual void tickEntity(entt::registry &registry, EachEntityType entity) override;
+                virtual void tickEntity(entt::registry &registry, EachEntityType &entity) override;
                 virtual void prepareTick() override {};
             };
         }
