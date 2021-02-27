@@ -213,7 +213,8 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg)
             Render(*castle, px, py);
         }
         else {
-            bik.Update();
+            // after deletion it tries to operate on memory
+            // bik.Update();
             Render(bik, px, py);
         }
 

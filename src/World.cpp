@@ -4,6 +4,7 @@
 #include "Building.h"
 #include "World.h"
 #include "ECS/ECS.h"
+#include "ECS/Manager.h"
 
 #include "Parsers/TgxFile.h"
 #include "Rendering/Font.h"
@@ -18,9 +19,6 @@ World::World() :
     EventConsumer<Mouse>()
 {
     registry = initializeECS();
-    renderSystem = new ECS::System::RenderSystem();
-    animationFrameSystem = new ECS::System::AnimationFrameSystem();
-    testTeleportingDeerSystem = new ECS::System::TestTeleportingDeerSystem();
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }
@@ -38,32 +36,37 @@ UIState World::Play()
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_APPLE, x, y);
+        spawn(registry, EntityType::TREE_BIRCH_XL, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_BIRCH, x, y);
+        spawn(registry, EntityType::TREE_CHESTNUT_XL, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_CHESTNUT, x, y);
+        spawn(registry, EntityType::TREE_CHESTNUT_L, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_OAK, x, y);
+        spawn(registry, EntityType::TREE_OAK_XL, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_PINE, x, y);
+        spawn(registry, EntityType::TREE_PINE_XL, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
         int y = dist(rng);
-        spawn(registry, EntityType::TREE_SHRUB1, x, y);
+        spawn(registry, EntityType::TREE_SHRUB1_RED, x, y);
+    }
+    for (int i = 0; i < 100; i++) {
+        int x = dist(rng);
+        int y = dist(rng);
+        spawn(registry, EntityType::TREE_SHRUB1_GREEN, x, y);
     }
     for (int i = 0; i < 100; i++) {
         int x = dist(rng);
@@ -95,9 +98,8 @@ UIState World::Play()
 
         GameMap::Render();
 
-        testTeleportingDeerSystem->run(registry);
-        animationFrameSystem->run(registry);
-        renderSystem->run(registry);
+        ECS::Manager::GetInstance().Update(registry);
+        ECS::Manager::GetInstance().Render(registry);
 
         if (!gui.Render()) break;
 

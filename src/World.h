@@ -100,9 +100,6 @@ namespace Sourcehold {
         protected:
             void UpdateCamera(double dt);
         private:
-            ECS::System::RenderSystem* renderSystem;
-            ECS::System::AnimationFrameSystem* animationFrameSystem;
-            ECS::System::TestTeleportingDeerSystem* testTeleportingDeerSystem;
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;
             void onEventReceive(Touch& touchEvent) override;

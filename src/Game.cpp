@@ -16,6 +16,8 @@
 #include "System/Logger.h"
 #include "System/FileUtil.h"
 
+#include "ECS/Manager.h"
+
 #include "GUI/NarrScreen.h"
 #include "GUI/MainMenu.h"
 
@@ -33,7 +35,7 @@ int MainLoop(UIState state) {
     case MAIN_MENU: {
         MainMenu *menu = new MainMenu();
         state = menu->EnterMenu();
-        // delete menu;
+        delete menu;
 
         MainLoop(state);
     } break;
@@ -96,6 +98,9 @@ int EnterLoadingScreen()
 
         SDL_Delay(1);
     }
+
+    // TODO - Maybe add next loading bar?
+    ECS::Manager::GetInstance();
 
     return Running() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
