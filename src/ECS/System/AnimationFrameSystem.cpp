@@ -60,7 +60,7 @@ namespace Sourcehold {
                 calculateFrame(frame, frameCount, frameOffset);
             }
 
-            void AnimationFrameSystem::each(entt::registry &registry, EachEntityType entity) {
+            void AnimationFrameSystem::tickEntity(entt::registry &registry, EachEntityType entity) {
                 auto [entityRef, typeComponent, animationComponent] = entity;
                 if (!animationComponent.animate) return;
                 long frameDependingOnTime = long(now * 15.0f);
@@ -106,7 +106,7 @@ namespace Sourcehold {
                 );
             }
 
-            void AnimationFrameSystem::beforeRun() {
+            void AnimationFrameSystem::prepareTick() {
                 now = Game::GetTime();
             }
         }

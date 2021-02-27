@@ -16,12 +16,12 @@ namespace Sourcehold {
             }
 
             static void Render(entt::registry &registry) {
-                GetInstance()._RenderSystem.run(registry);
+                GetInstance()._RenderSystem.tick(registry);
             }
 
             static void Update(entt::registry &registry) {
-                GetInstance()._AnimationFrameSystem.run(registry);
-                GetInstance()._TestTeleportingDeerSystem.run(registry);
+                GetInstance()._AnimationFrameSystem.tick(registry);
+                GetInstance()._TestTeleportingDeerSystem.tick(registry);
             }
 
             private:

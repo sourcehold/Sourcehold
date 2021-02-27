@@ -11,8 +11,8 @@ namespace Sourcehold {
             class TestTeleportingDeerSystem: public BasicSystem<const Component::EntityType, Component::Position> {
                 public:
                 TestTeleportingDeerSystem() {};
-                virtual void each(entt::registry &registry, EachEntityType entity) override;
-                virtual void beforeRun() override {};
+                virtual void tickEntity(entt::registry &registry, EachEntityType entity) override;
+                virtual void prepareTick() override {};
             };
         }
     }

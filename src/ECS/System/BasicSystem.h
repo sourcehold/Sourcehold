@@ -13,17 +13,16 @@ namespace Sourcehold {
                 public:
                 using EachEntityType = std::tuple<entt::entity, Selector...>;
 
-                // TODO - I was getting weird errors when bodies of those methods were
-                // defined in .cpp -> maybe figure out later why (probably typing error)
-                void run(entt::registry &registry) {
-                    beforeRun(); // prepare state for update
+                void tick(entt::registry &registry) {
+                    prepareTick(); // prepare state for update
                     auto view = registry.view<Selector...>();
                     for(EachEntityType entity: view.each()) {
-                        each(registry, entity);
+                        tickEntity(registry, entity);
                     }
                 };
-                virtual void beforeRun() = 0;
-                virtual void each(entt::registry &registry, EachEntityType entity) = 0;
+
+                virtual void prepareTick() = 0;
+                virtual void tickEntity(entt::registry &registry, EachEntityType entity) = 0;
             };
         }
     }
