@@ -12,7 +12,7 @@ namespace Sourcehold {
                 std::mt19937 rng(dev());
                 std::uniform_int_distribution<std::mt19937::result_type> dist(0, 2);
 
-                registry.emplace_or_replace<ECS::PositionComponent>(entityRef,
+                registry.emplace_or_replace<Component::Position>(entityRef,
                     positionComponent.x + int(dist(rng)) - 1,
                     positionComponent.y + int(dist(rng)) - 1
                 );

@@ -4,7 +4,7 @@
 #include <entt/entt.hpp>
 
 #include "System/Logger.h"
-
+#include "ECS/Component/Component.h"
 namespace Sourcehold {
     namespace ECS {
         namespace System {

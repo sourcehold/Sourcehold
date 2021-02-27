@@ -20,7 +20,7 @@ namespace Sourcehold {
                 renderUnit(positionComponent, animationComponent, assetFile);
             }
 
-            void RenderSystem::renderUnit (PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile) {
+            void RenderSystem::renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile) {
                 Camera& cam = Camera::instance();
                 auto [x, y] = position;
 

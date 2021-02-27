@@ -6,7 +6,7 @@
 namespace Sourcehold {
     namespace ECS {
         namespace System {
-            class AnimationFrameSystem : public virtual BasicSystem<const EntityTypeComponent, AnimatedComponent> {
+            class AnimationFrameSystem : public virtual BasicSystem<const Component::EntityType, Component::Animation> {
                 // TODO - make proper frame index system
                 double now = 0;
 

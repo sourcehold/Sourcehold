@@ -24,7 +24,7 @@ namespace Sourcehold {
         namespace System {
             using namespace Game;
 
-            class RenderSystem : public virtual BasicSystem<const EntityTypeComponent, const PositionComponent, const AnimatedComponent> {
+            class RenderSystem : public virtual BasicSystem<const Component::EntityType, const Component::Position, const Component::Animation> {
                 enum class EntityAsset {
                     LORD,
                     DEER,
@@ -131,7 +131,7 @@ namespace Sourcehold {
                     }
                 }
 
-                void renderUnit(PositionComponent position, AnimatedComponent animationComponent, std::shared_ptr<Gm1File> assetFile);
+                void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);
                 
                 public:
                 RenderSystem();

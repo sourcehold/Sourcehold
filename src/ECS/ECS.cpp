@@ -10,7 +10,9 @@
 #include "Parsers/Gm1File.h"
 
 #include "System/Logger.h"
+
 #include "ECS.h"
+#include "ECS/Component/Component.h"
 
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
@@ -27,9 +29,9 @@ namespace Sourcehold {
 
         entt::entity spawn (entt::registry &registry, EntityType type, int x, int y) {
             const entt::entity entity = registry.create();
-            registry.emplace<PositionComponent>(entity, x, y);
-            registry.emplace<EntityTypeComponent>(entity, type);
-            registry.emplace<AnimatedComponent>(entity, true, 0);
+            registry.emplace<Component::Position>(entity, x, y);
+            registry.emplace<Component::EntityType>(entity, type);
+            registry.emplace<Component::Animation>(entity, true, 0);
 
             return entity;
         }

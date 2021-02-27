@@ -100,7 +100,7 @@ namespace Sourcehold {
                     break;
                 }
 
-                registry.emplace_or_replace<ECS::AnimatedComponent>(entityRef,
+                registry.emplace_or_replace<Component::Animation>(entityRef,
                     true,
                     frame
                 );
