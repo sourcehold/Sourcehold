@@ -50,6 +50,7 @@ namespace Sourcehold {
                     { EntityAsset::TREE_SHRUB2, GetGm1(dataRoot.string() + "gm/tree_shrub2.gm1") }
                 };
 
+                // TODO - maybe exclude that into external config or add automatic code generation?
                 std::unordered_map<EntityType, EntityAsset> EntityTypeToEntityAssetMapping;
                 void _EntityTypeToEntityAssetMapping() {
                     flatMapIntoMap(
