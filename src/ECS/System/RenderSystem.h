@@ -14,6 +14,8 @@
 
 #include "Parsers/Gm1File.h"
 
+#include "Utils/MultiIndexMap.h"
+
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 using namespace Sourcehold::Parsers;
@@ -51,86 +53,68 @@ namespace Sourcehold {
                 };
 
                 // TODO - maybe exclude that into external config or add automatic code generation?
-                std::unordered_map<EntityType, EntityAsset> EntityTypeToEntityAssetMapping;
-                void _EntityTypeToEntityAssetMapping() {
-                    flatMapIntoMap(
-                        EntityTypeToEntityAssetMapping,
-                        {
-                            {
-                                EntityAsset::LORD, {
-                                    EntityType::LORD
-                                }
-                            },
-                            {
-                                EntityAsset::DEER, {
-                                    EntityType::DEER
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_SHRUB2, {
-                                    EntityType::TREE_SHRUB2
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_APPLE, {
-                                    EntityType::TREE_APPLE_BUD,
-                                    EntityType::TREE_APPLE_EMPTY,
-                                    EntityType::TREE_APPLE_FLOWER,
-                                    EntityType::TREE_APPLE_FRUIT,
-                                    EntityType::TREE_APPLE_STUMP,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_BIRCH, {
-                                    EntityType::TREE_BIRCH_L,
-                                    EntityType::TREE_BIRCH_XL,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_BIRCH, {
-                                    EntityType::TREE_BIRCH_L,
-                                    EntityType::TREE_BIRCH_XL,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_CHESTNUT, {
-                                    EntityType::TREE_CHESTNUT_L,
-                                    EntityType::TREE_CHESTNUT_XL,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_OAK, {
-                                    EntityType::TREE_OAK_L,
-                                    EntityType::TREE_OAK_XL,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_PINE, {
-                                    EntityType::TREE_PINE_L,
-                                    EntityType::TREE_PINE_XL,
-                                }
-                            },
-                            {
-                                EntityAsset::TREE_SHRUB1, {
-                                    EntityType::TREE_SHRUB1_RED,
-                                    EntityType::TREE_SHRUB1_GREEN
-                                }
-                            }
+                std::unordered_map<EntityType, EntityAsset> EntityTypeToEntityAssetMapping = Utils::createMultiIndexMap<EntityType, EntityAsset>({
+                    {
+                        EntityAsset::LORD, {
+                            EntityType::LORD
                         }
-                    );
-                };
-
-                void flatMapIntoMap (
-                    std::unordered_map<EntityType, EntityAsset> &outMap,
-                    std::unordered_map<EntityAsset, std::vector<EntityType>> maps
-                ) {
-                    for (auto map : maps) {
-                        auto [assetEnum, entityTypes] = map;
-                        for (auto entityType : entityTypes) {
-                            outMap.insert_or_assign(entityType, assetEnum);
+                    },
+                    {
+                        EntityAsset::DEER, {
+                            EntityType::DEER
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_SHRUB2, {
+                            EntityType::TREE_SHRUB2
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_APPLE, {
+                            EntityType::TREE_APPLE_BUD,
+                            EntityType::TREE_APPLE_EMPTY,
+                            EntityType::TREE_APPLE_FLOWER,
+                            EntityType::TREE_APPLE_FRUIT,
+                            EntityType::TREE_APPLE_STUMP,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_BIRCH, {
+                            EntityType::TREE_BIRCH_L,
+                            EntityType::TREE_BIRCH_XL,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_BIRCH, {
+                            EntityType::TREE_BIRCH_L,
+                            EntityType::TREE_BIRCH_XL,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_CHESTNUT, {
+                            EntityType::TREE_CHESTNUT_L,
+                            EntityType::TREE_CHESTNUT_XL,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_OAK, {
+                            EntityType::TREE_OAK_L,
+                            EntityType::TREE_OAK_XL,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_PINE, {
+                            EntityType::TREE_PINE_L,
+                            EntityType::TREE_PINE_XL,
+                        }
+                    },
+                    {
+                        EntityAsset::TREE_SHRUB1, {
+                            EntityType::TREE_SHRUB1_RED,
+                            EntityType::TREE_SHRUB1_GREEN
                         }
                     }
-                }
+                });
 
                 void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);
                 
