@@ -12,12 +12,12 @@ namespace Sourcehold {
         class MultiIndexMap {
             public:
             using TypeOfMap = Aggregator<Key, Value>;
-            using Arg = Aggregator<std::vector<Key>, Value>;
-            using ArgReversed = Aggregator<Value, std::vector<Key>>;
+            using Arg = Aggregator<const std::vector<Key>, Value>;
+            using ArgReversed = Aggregator<Value, const std::vector<Key>>;
 
             TypeOfMap outMap;
 
-            MultiIndexMap(Arg config) {
+            MultiIndexMap(const Arg config) {
                 for (auto map : config) {
                     auto [entityTypes, assetEnum] = map;
                     for (auto entityType : entityTypes) {
@@ -25,7 +25,7 @@ namespace Sourcehold {
                     }
                 }
             }
-            MultiIndexMap(ArgReversed config) {
+            MultiIndexMap(const ArgReversed config) {
                 // I like using this "reversed" option, because it feels more json-like in code
                 // Maybe I should do that in the functional way, but it is not a priority now
                 for (auto map : config) {
@@ -42,7 +42,7 @@ namespace Sourcehold {
             typename Value,
             typename IntermediateType = MultiIndexMap<Key, Value>
         >
-        typename IntermediateType::TypeOfMap createMultiIndexMap(typename IntermediateType::Arg Config) {
+        constexpr typename IntermediateType::TypeOfMap createMultiIndexMap(const typename IntermediateType::Arg Config) {
             return IntermediateType(Config).outMap;
         }
         
@@ -51,7 +51,7 @@ namespace Sourcehold {
             typename Value,
             typename IntermediateType = MultiIndexMap<Key, Value>
         >
-        typename IntermediateType::TypeOfMap createMultiIndexMap(typename IntermediateType::ArgReversed Config) {
+        constexpr typename IntermediateType::TypeOfMap createMultiIndexMap(const typename IntermediateType::ArgReversed Config) {
             return IntermediateType(Config).outMap;
         }
     }

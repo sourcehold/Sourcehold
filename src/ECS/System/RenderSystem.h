@@ -1,12 +1,11 @@
 #pragma once
 
-#include "ECS/ECS.h"
-#include "ECS/System/BasicSystem.h"
+#include <SDL.h>
 
 #include "GameManager.h"
 
-#include <SDL.h>
-
+#include "ECS/ECS.h"
+#include "ECS/System/BasicSystem.h"
 
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
@@ -27,20 +26,16 @@ namespace Sourcehold {
             using namespace Game;
 
             class RenderSystem : public virtual BasicSystem<const Component::EntityType, const Component::Position, const Component::Animation> {
-                enum class EntityAsset {
-                    LORD,
-                    DEER,
-                    TREE_APPLE,
-                    TREE_BIRCH,
-                    TREE_CHESTNUT,
-                    TREE_OAK,
-                    TREE_PINE,
-                    TREE_SHRUB1,
-                    TREE_SHRUB2
-                };
-
+                public:
+                RenderSystem();
+                virtual void tickEntity(entt::registry &registry, EachEntityType &entity) override;
+                virtual void prepareTick() override {};
+                
+                private:
                 const ghc::filesystem::path dataRoot = GetDirectory();
-                std::unordered_map<EntityAsset, GM1FileSP> EntityAssetToGMMapping {
+                void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);
+
+                const std::unordered_map<EntityAsset, GM1FileSP> EntityAssetToGMMapping {
                     { EntityAsset::DEER, GetGm1(dataRoot.string() + "gm/body_deer.gm1") },
                     { EntityAsset::LORD, GetGm1(dataRoot.string() + "gm/body_lord.gm1") },
                     { EntityAsset::TREE_APPLE, GetGm1(dataRoot.string() + "gm/tree_apple.gm1") },
@@ -53,7 +48,7 @@ namespace Sourcehold {
                 };
 
                 // TODO - maybe exclude that into external config or add automatic code generation?
-                std::unordered_map<EntityType, EntityAsset> EntityTypeToEntityAssetMapping = Utils::createMultiIndexMap<EntityType, EntityAsset>({
+                const std::unordered_map<EntityType, EntityAsset> EntityTypeToEntityAssetMapping = Utils::createMultiIndexMap<EntityType, EntityAsset>({
                     {
                         EntityAsset::LORD, {
                             EntityType::LORD
@@ -115,13 +110,6 @@ namespace Sourcehold {
                         }
                     }
                 });
-
-                void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);
-                
-                public:
-                RenderSystem();
-                virtual void tickEntity(entt::registry &registry, EachEntityType &entity) override;
-                virtual void prepareTick() override {};
             };
         }
     }

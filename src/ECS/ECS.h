@@ -28,6 +28,18 @@ namespace Sourcehold {
             TREE_SHRUB2
         };
 
+        const enum class EntityAsset {
+            LORD,
+            DEER,
+            TREE_APPLE,
+            TREE_BIRCH,
+            TREE_CHESTNUT,
+            TREE_OAK,
+            TREE_PINE,
+            TREE_SHRUB1,
+            TREE_SHRUB2
+        };
+
         entt::registry initializeECS();
         entt::entity spawn(entt::registry &registry, EntityType type, int x, int y);
         void render(entt::registry &registry);
