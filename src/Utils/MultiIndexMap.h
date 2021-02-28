@@ -18,22 +18,27 @@ namespace Sourcehold {
             TypeOfMap outMap;
 
             MultiIndexMap(const Arg config) {
-                for (auto map : config) {
-                    auto [entityTypes, assetEnum] = map;
-                    for (auto entityType : entityTypes) {
-                        outMap.insert_or_assign(entityType, assetEnum);
+                for (auto mapEntry : config) {
+                    auto [keys, value] = mapEntry;
+                    for (auto key : keys) {
+                        insert_or_assign(outMap, key, value);
                     }
                 }
             }
+
             MultiIndexMap(const ArgReversed config) {
                 // I like using this "reversed" option, because it feels more json-like in code
                 // Maybe I should do that in the functional way, but it is not a priority now
-                for (auto map : config) {
-                    auto [assetEnum, entityTypes] = map;
-                    for (auto entityType : entityTypes) {
-                        outMap.insert_or_assign(entityType, assetEnum);
+                for (auto mapEntry : config) {
+                    auto [value, keys] = mapEntry;
+                    for (auto key : keys) {
+                        insert_or_assign(outMap, key, value);
                     }
                 }
+            }
+
+            constexpr inline void insert_or_assign(TypeOfMap &out, Key key, Value value) {
+                out.insert_or_assign(key, value);
             }
         };
 

@@ -75,20 +75,32 @@ namespace Sourcehold {
                     },
                     {
                         EntityAsset::TREE_BIRCH, {
-                            EntityType::TREE_BIRCH_L,
                             EntityType::TREE_BIRCH_XL,
-                        }
-                    },
-                    {
-                        EntityAsset::TREE_BIRCH, {
+                            EntityType::TREE_BIRCH_XL_FALLING,
+                            EntityType::TREE_BIRCH_XL_RESOURCE,
                             EntityType::TREE_BIRCH_L,
-                            EntityType::TREE_BIRCH_XL,
+                            EntityType::TREE_BIRCH_L_FALLING,
+                            EntityType::TREE_BIRCH_L_RESOURCE,
+                            EntityType::TREE_BIRCH_DEAD,
+                            EntityType::TREE_BIRCH_STUMP,
                         }
                     },
                     {
                         EntityAsset::TREE_CHESTNUT, {
-                            EntityType::TREE_CHESTNUT_L,
                             EntityType::TREE_CHESTNUT_XL,
+                            EntityType::TREE_CHESTNUT_XL_FALLING,
+                            EntityType::TREE_CHESTNUT_XL_RESOURCE,
+                            EntityType::TREE_CHESTNUT_L,
+                            EntityType::TREE_CHESTNUT_L_FALLING,
+                            EntityType::TREE_CHESTNUT_L_RESOURCE,
+                            EntityType::TREE_CHESTNUT_M,
+                            EntityType::TREE_CHESTNUT_M_FALLING,
+                            EntityType::TREE_CHESTNUT_M_RESOURCE,
+                            EntityType::TREE_CHESTNUT_S,
+                            EntityType::TREE_CHESTNUT_S_FALLING,
+                            EntityType::TREE_CHESTNUT_S_RESOURCE,
+                            EntityType::TREE_CHESTNUT_DEAD,
+                            EntityType::TREE_CHESTNUT_STUMP,
                         }
                     },
                     {
