@@ -107,38 +107,46 @@ namespace Sourcehold {
                     { FrameDataGroup::TREE_APPLE_STUMP, { SINGLE_FRAME, treeFrameOffset(4, 0, 0), DONT_ANIMATE } },
 
                     // BIRCH
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET 0
                     { FrameDataGroup::TREE_BIRCH_XL_FALLING, { TREE_FALLING_FRAMES, treeFrameOffset(2, 0, _RESOURCE_OFFSET), NONE }},
                     { FrameDataGroup::TREE_BIRCH_XL_RESOURCE, { BIRCH_XL_RESOURCE_FRAMES, treeFrameOffset(2, 1, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET BIRCH_XL_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_BIRCH_L_FALLING, { TREE_FALLING_FRAMES, treeFrameOffset(2, 1, _RESOURCE_OFFSET), NONE }},
                     { FrameDataGroup::TREE_BIRCH_L_RESOURCE, { BIRCH_L_RESOURCE_FRAMES, treeFrameOffset(2, 2, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET BIRCH_XL_RESOURCE_FRAMES + BIRCH_L_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_BIRCH_DEAD, { SINGLE_FRAME, treeFrameOffset(2, 2, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET BIRCH_XL_RESOURCE_FRAMES + BIRCH_L_RESOURCE_FRAMES + SINGLE_FRAME // SINGLE_FRAME from TREE_BIRCH_DEAD
                     { FrameDataGroup::TREE_BIRCH_STUMP, { SINGLE_FRAME, treeFrameOffset(2, 2, _RESOURCE_OFFSET), DONT_ANIMATE }},
-                    #undef _RESOURCE_OFFSET
 
                     // CHESTNUT
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET 0
                     { FrameDataGroup::TREE_CHESTNUT_XL_FALLING, { TREE_FALLING_FRAMES, treeFrameOffset(4, 0, _RESOURCE_OFFSET), NONE }},
                     { FrameDataGroup::TREE_CHESTNUT_XL_RESOURCE, { CHESTNUT_XL_RESOURCE_FRAMES, treeFrameOffset(4, 1, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_CHESTNUT_L_FALLING, { TREE_FALLING_FRAMES, treeFrameOffset(4, 1, _RESOURCE_OFFSET), NONE }},
                     { FrameDataGroup::TREE_CHESTNUT_L_RESOURCE, { CHESTNUT_L_RESOURCE_FRAMES, treeFrameOffset(4, 2, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES + CHESTNUT_L_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_CHESTNUT_M_FALLING, { TREE_FALLING_FRAMES, treeFrameOffset(4, 2, _RESOURCE_OFFSET), NONE }},
                     { FrameDataGroup::TREE_CHESTNUT_M_RESOURCE, { CHESTNUT_M_RESOURCE_FRAMES, treeFrameOffset(4, 3, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES + CHESTNUT_L_RESOURCE_FRAMES + CHESTNUT_M_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_CHESTNUT_S_FALLING, { CHESTNUT_S_FALLING_FRAMES, treeFrameOffset(4, 3, _RESOURCE_OFFSET), NONE }}, // special case!
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES + CHESTNUT_L_RESOURCE_FRAMES + CHESTNUT_M_RESOURCE_FRAMES + CHESTNUT_S_FALLING_FRAMES
                     { FrameDataGroup::TREE_CHESTNUT_S_RESOURCE, { CHESTNUT_S_RESOURCE_FRAMES, treeFrameOffset(4, 3, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES + CHESTNUT_L_RESOURCE_FRAMES + CHESTNUT_M_RESOURCE_FRAMES + CHESTNUT_S_FALLING_FRAMES + CHESTNUT_S_RESOURCE_FRAMES
                     { FrameDataGroup::TREE_CHESTNUT_DEAD, { SINGLE_FRAME, treeFrameOffset(4, 3, _RESOURCE_OFFSET), DONT_ANIMATE }},
+                    #undef _RESOURCE_OFFSET
                     #define _RESOURCE_OFFSET CHESTNUT_XL_RESOURCE_FRAMES + CHESTNUT_L_RESOURCE_FRAMES + CHESTNUT_M_RESOURCE_FRAMES + CHESTNUT_S_FALLING_FRAMES + CHESTNUT_S_RESOURCE_FRAMES + SINGLE_FRAME // SINGLE_FRAME from TREE_CHESTNUT_DEAD
                     { FrameDataGroup::TREE_CHESTNUT_STUMP, { SINGLE_FRAME, treeFrameOffset(4, 3, _RESOURCE_OFFSET), DONT_ANIMATE }},
-                    #undef _RESOURCE_OFFSET
-
 
                     { FrameDataGroup::SHRUB1_GREEN, { TREE_WIND_FRAMES, NO_OFFSET, WITH_MIRROR, FrameFilter::EVEN } },
                     { FrameDataGroup::SHRUB1_RED, { TREE_WIND_FRAMES, NO_OFFSET, WITH_MIRROR, FrameFilter::ODD } },
