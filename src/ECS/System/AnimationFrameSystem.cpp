@@ -56,7 +56,6 @@ namespace Sourcehold {
                         case FrameFilter::ODD: calculateOddFrame(frame, frameData.frameCount, frameData.frameOffset, frameData.frameMeta); break;
                     }
                 }
-                
 
                 registry.emplace_or_replace<Component::Animation>(entityRef,
                     true,

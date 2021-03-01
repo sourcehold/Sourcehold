@@ -48,8 +48,6 @@ namespace Sourcehold {
             const FrameMeta DONT_ANIMATE = FrameMeta { false, true };
             const int NO_OFFSET = 0;
 
-            // Notes:
-            // 2 Birch wind animations
             enum class FrameDataGroup {
                 // I wanted to call those tree groups via "tree_group_xl" but it was unwieldy for longer run
                 TREE_GROUP_1,
