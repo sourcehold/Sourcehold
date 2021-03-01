@@ -80,6 +80,10 @@ namespace Sourcehold {
                 SHRUB1_GREEN,
                 SHRUB1_RED
             };
+
+            constexpr int treeFrameOffset (int windAnimations, int fallingAnimations, int resourceFrames) {
+                return windAnimations * TREE_WIND_FRAMES + fallingAnimations * TREE_FALLING_FRAMES + resourceFrames;
+            }
             
             class AnimationFrameSystem : public virtual BasicSystem<const Component::EntityType, Component::Animation> {
                 public:
@@ -90,10 +94,6 @@ namespace Sourcehold {
                 private:
                 // TODO - make proper frame index system
                 double now = 0;
-
-                constexpr int treeFrameOffset (int windAnimations, int fallingAnimations, int resourceFrames) {
-                    return windAnimations * TREE_WIND_FRAMES + fallingAnimations * TREE_FALLING_FRAMES + resourceFrames;
-                }
 
                 #undef _RESOURCE_OFFSET
                 #define _RESOURCE_OFFSET 0
