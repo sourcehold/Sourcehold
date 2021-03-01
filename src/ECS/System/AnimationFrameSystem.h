@@ -10,7 +10,7 @@
 namespace Sourcehold {
     namespace ECS {
         namespace System {
-            const enum class FrameFilter {
+            enum class FrameFilter {
                 EVEN,
                 ODD,
                 NONE
@@ -50,7 +50,7 @@ namespace Sourcehold {
 
             // Notes:
             // 2 Birch wind animations
-            const enum class FrameDataGroup {
+            enum class FrameDataGroup {
                 // I wanted to call those tree groups via "tree_group_xl" but it was unwieldy for longer run
                 TREE_GROUP_1,
                 TREE_GROUP_2,
@@ -146,6 +146,24 @@ namespace Sourcehold {
                 };
 
                 const std::unordered_map<EntityType, FrameDataGroup> EntityTypeToFrameDataGroupMapping = Utils::createMultiIndexMap<EntityType, FrameDataGroup>({
+                    { FrameDataGroup::TREE_CHESTNUT_XL_FALLING, { EntityType::TREE_CHESTNUT_XL_FALLING } },
+                    { FrameDataGroup::TREE_CHESTNUT_XL_RESOURCE, { EntityType::TREE_CHESTNUT_XL_RESOURCE } },
+                    { FrameDataGroup::TREE_CHESTNUT_L_FALLING, { EntityType::TREE_CHESTNUT_L_FALLING } },
+                    { FrameDataGroup::TREE_CHESTNUT_L_RESOURCE, { EntityType::TREE_CHESTNUT_L_RESOURCE } },
+                    { FrameDataGroup::TREE_CHESTNUT_M_FALLING, { EntityType::TREE_CHESTNUT_M_FALLING } },
+                    { FrameDataGroup::TREE_CHESTNUT_M_RESOURCE, { EntityType::TREE_CHESTNUT_M_RESOURCE } },
+                    { FrameDataGroup::TREE_CHESTNUT_S_FALLING, { EntityType::TREE_CHESTNUT_S_FALLING } },
+                    { FrameDataGroup::TREE_CHESTNUT_S_RESOURCE, { EntityType::TREE_CHESTNUT_S_RESOURCE } },
+                    { FrameDataGroup::TREE_CHESTNUT_DEAD, { EntityType::TREE_CHESTNUT_DEAD } },
+                    { FrameDataGroup::TREE_CHESTNUT_STUMP, { EntityType::TREE_CHESTNUT_STUMP } },
+
+                    { FrameDataGroup::TREE_BIRCH_XL_FALLING, { EntityType::TREE_BIRCH_XL_FALLING } },
+                    { FrameDataGroup::TREE_BIRCH_XL_RESOURCE, { EntityType::TREE_BIRCH_XL_RESOURCE } },
+                    { FrameDataGroup::TREE_BIRCH_L_FALLING, { EntityType::TREE_BIRCH_L_FALLING } },
+                    { FrameDataGroup::TREE_BIRCH_L_RESOURCE, { EntityType::TREE_BIRCH_L_RESOURCE } },
+                    { FrameDataGroup::TREE_BIRCH_DEAD, { EntityType::TREE_BIRCH_DEAD } },
+                    { FrameDataGroup::TREE_BIRCH_STUMP, { EntityType::TREE_BIRCH_STUMP } },
+
                     { FrameDataGroup::TREE_APPLE_STUMP, { EntityType::TREE_APPLE_STUMP } },
                     {
                         FrameDataGroup::TREE_GROUP_4, {

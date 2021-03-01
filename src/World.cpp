@@ -27,58 +27,62 @@ World::~World()
 {
 }
 
+int x, startX = 30;
+int paddingX = 4;
+int maxX = 140;
+int y, startY = 30;
+int paddingY = 5;
+void placeDebug(entt::registry &registry, EntityType et) {
+    spawn(registry, et, x, y);
+    x += paddingX;
+    if (x > maxX) {
+        x = startX;
+        y += paddingY;
+    }
+}
+
 UIState World::Play()
 {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 160);
 
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_BIRCH_XL, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_CHESTNUT_XL, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_CHESTNUT_L, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_OAK_XL, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_PINE_XL, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_SHRUB1_RED, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_SHRUB1_GREEN, x, y);
-    }
-    for (int i = 0; i < 100; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::TREE_SHRUB2, x, y);
-    }
+    placeDebug(registry, EntityType::DEER);
+    placeDebug(registry, EntityType::LORD);
+    
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_DEAD);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_STUMP);
 
-    for (int i = 0; i < 200; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        spawn(registry, EntityType::DEER, x, y);
-    }
+    placeDebug(registry, EntityType::TREE_BIRCH_XL);
+    placeDebug(registry, EntityType::TREE_BIRCH_XL_FALLING);
+    placeDebug(registry, EntityType::TREE_BIRCH_XL_RESOURCE);
+    placeDebug(registry, EntityType::TREE_BIRCH_L);
+    placeDebug(registry, EntityType::TREE_BIRCH_L_FALLING);
+    placeDebug(registry, EntityType::TREE_BIRCH_L_RESOURCE);
+    placeDebug(registry, EntityType::TREE_BIRCH_DEAD);
+    placeDebug(registry, EntityType::TREE_BIRCH_STUMP);
+
+    placeDebug(registry, EntityType::TREE_SHRUB1_RED);
+    placeDebug(registry, EntityType::TREE_SHRUB1_GREEN);
+    placeDebug(registry, EntityType::TREE_SHRUB2);
+
+    placeDebug(registry, EntityType::TREE_APPLE_BUD);
+    placeDebug(registry, EntityType::TREE_APPLE_FLOWER);
+    placeDebug(registry, EntityType::TREE_APPLE_FRUIT);
+    placeDebug(registry, EntityType::TREE_APPLE_EMPTY);
+    placeDebug(registry, EntityType::TREE_APPLE_STUMP);
 
     double previous = GetTime();
     while(Running()) {

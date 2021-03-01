@@ -11,6 +11,7 @@ namespace Sourcehold {
                 if (frameMeta.mirror) {
                     int _frameCount = frameCount - 1;
                     frame = (_frameCount - abs(frame % (2 * _frameCount) - _frameCount)); // TODO - remove first and last doubled frame
+                    frame += frameOffset;
                 } else {
                     frame %= frameCount;
                     frame += frameOffset;
@@ -37,6 +38,9 @@ namespace Sourcehold {
                 FrameData frameData;
                 try {
                     FrameDataGroup frameDataGroup = EntityTypeToFrameDataGroupMapping.at(typeComponent.type);
+                    if (frameDataGroup == FrameDataGroup::TREE_BIRCH_XL_FALLING) {
+                        std::cout << "asd" << std::endl;
+                    }
                     frameData = FrameDataGroupToFrameDataMapping.at(frameDataGroup);
                 } catch (std::exception& e) {
                     // no config - don't use this frame system

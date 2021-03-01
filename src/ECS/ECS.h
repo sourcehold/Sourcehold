@@ -4,7 +4,7 @@
 
 namespace Sourcehold {
     namespace ECS {
-        const enum class EntityType {
+        enum class EntityType {
             LORD,
             DEER,
 
@@ -48,7 +48,7 @@ namespace Sourcehold {
             TREE_SHRUB2
         };
 
-        const enum class EntityAsset {
+        enum class EntityAsset {
             LORD,
             DEER,
             TREE_APPLE,
