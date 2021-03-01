@@ -22,7 +22,7 @@ jobs:
             install_dependencies: "sh ./ubuntu/install-dependencies.sh"
             artifact_name: "sourcehold-linux-amd64"
           - os: macos-latest
-            install_dependencies: "./macos/install-dependencies.sh"
+            install_dependencies: "sh ./macos/install-dependencies.sh"
             artifact_name: "sourcehold-mac-os"
     
     steps:
