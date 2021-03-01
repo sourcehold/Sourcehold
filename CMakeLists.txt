@@ -102,7 +102,6 @@ endforeach()
 
 add_executable(Stronghold ${_source_list})
 
-
 if(MSVC)
   target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
