@@ -71,7 +71,7 @@ create_static_library() {
         -project "$XCODE_PROJECT" \
         -target "$XCODE_TARGET" \
         -sdk "iphonesimulator" \
-        -arch i386 -arch x86_64 \
+        -arch x86_64 \
         build \
         IPHONEOS_DEPLOYMENT_TARGET=$DEPLOYMENT_TARGET \
         ONLY_ACTIVE_ARCH=NO \
@@ -138,8 +138,6 @@ do
         ;;
     esac
 done
-
-echo "DEPLO = $DEPLOYMENT_TARGET, ONLY SIM = $ONLY_SIMULATOR_BUILD"
 
 # RESULT_DIR_PATH should be converted to absolute path to make 'create_static_library' function work properly
 mkdir -p "$RESULT_DIR_PATH"

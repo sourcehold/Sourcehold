@@ -61,7 +61,7 @@ compile() {
         local PLATFORM=
         local EXPORT=
         
-        if [ "$ARCH" = "i386" -o "$ARCH" = "x86_64" ] ; then
+        if [ "$ARCH" = "x86_64" ] ; then
             PLATFORM="iPhoneSimulator"
             CFLAGS="$CFLAGS -mios-simulator-version-min=$DEPLOYMENT_TARGET"
         else
@@ -142,7 +142,7 @@ cleanup() {
 
 #Script body
 
-ARCHS="arm64 armv7s x86_64 i386"
+ARCHS="arm64 armv7s x86_64"
 DEPLOYMENT_TARGET="10.0"
 FF_VERSION="4.3.1"
 RESULT_DIR_PATH="."

@@ -44,7 +44,7 @@ do
         DEPLOYMENT_TARGET="$OPTARG"
         ;;
     s)
-        ARCHS="i386 x86_64"
+        ARCHS="x86_64"
         SDL2_INSTALL_OPTIONS="-s"
         ;;
     esac
