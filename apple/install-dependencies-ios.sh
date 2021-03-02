@@ -11,7 +11,7 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 usage() {
     echo "usage: $(basename $0) [-cds] <libraries dir>"
     echo "-c        \tClean build."
-    echo "-d        \tDeployment target. Default value is '10.0'."
+    echo "-d        \tDeployment target. Default value is '11.0'."
     echo "-s        \tBuild for Simulator. This option allows to skip compilation\n"
          "          \tfor some architectures when building dependencies to speed up build."
     exit 1
@@ -30,8 +30,8 @@ clean() {
 # Script body
 
 CLEAN=0
-ARCHS="armv7 armv7s arm64"
-DEPLOYMENT_TARGET=10.0
+ARCHS="arm64"
+DEPLOYMENT_TARGET=11.0
 SDL2_INSTALL_OPTIONS=
 
 while getopts "cd:s" opt

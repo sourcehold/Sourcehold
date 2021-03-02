@@ -7,8 +7,8 @@
 usage() {
     echo "usage: $(basename $0) [-adrv]"
     echo "options:"
-    echo "-a        \tArchitectures to build. You may pass multiple architectures. Default value is 'arm64 armv7s i386 x86_64'"
-    echo "-d        \tiOS deployment target. Default is '10.0'"
+    echo "-a        \tArchitectures to build. You may pass multiple architectures. Default value is 'arm64 x86_64'"
+    echo "-d        \tiOS deployment target. Default is '11.0'"
     echo "-r        \tPath to result directory. Default value is '.'."
     echo "-v        \tFFmpeg lib version to compile. Default value is '4.3.1'"
     exit 1
@@ -142,8 +142,8 @@ cleanup() {
 
 #Script body
 
-ARCHS="arm64 armv7s x86_64"
-DEPLOYMENT_TARGET="10.0"
+ARCHS="arm64 x86_64"
+DEPLOYMENT_TARGET="11.0"
 FF_VERSION="4.3.1"
 RESULT_DIR_PATH="."
 

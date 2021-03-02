@@ -32,11 +32,11 @@ jobs:
           # Use different target platform here just to force new job spawning
           - target-platform: "ios-simulator"
             os: macos-latest
-            install-dependencies: "./apple/install-dependencies-ios.sh -s -d 10.0 ./thirdparty/ios"
+            install-dependencies: "./apple/install-dependencies-ios.sh -s -d 11.0 ./thirdparty/ios"
             env:
               XCODE_PATH="$(xcode-select -p)"
               SIMULATOR_SYSROOT_PATH="$XCODE_PATH/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
-            cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=10.0 -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT_PATH" -DCMAKE_OSX_ARCHITECTURES="x86_64"'
+            cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT_PATH" -DCMAKE_OSX_ARCHITECTURES="x86_64"'
             cmake-build-options: "-- -sdk iphonesimulator"
             uploaded-artifact-name: "sourcehold-ios"
     

@@ -6,7 +6,7 @@
 usage() {
     echo "usage: $(basename $0) [-drsv]"
     echo "options:"
-    echo "-d        \tiOS deployment target. Default is '10.0'"
+    echo "-d        \tiOS deployment target. Default is '11.0'"
     echo "-r        \tPath to result directory. Default value is '.'."
     echo "-s        \tBuild for Simulator. This option allows to skip unnecessary architectures\n"
          "          \tcompilation to speed up build."
@@ -115,7 +115,7 @@ cleanup() {
 
 SDL2_VERSION="2.0.14"
 RESULT_DIR_PATH="."
-DEPLOYMENT_TARGET=10.0
+DEPLOYMENT_TARGET=11.0
 ONLY_SIMULATOR_BUILD=0
 
 while getopts "d:r:sv:" opt
