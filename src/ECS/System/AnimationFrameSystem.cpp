@@ -38,9 +38,6 @@ namespace Sourcehold {
                 FrameData frameData;
                 try {
                     FrameDataGroup frameDataGroup = EntityTypeToFrameDataGroupMapping.at(typeComponent.type);
-                    if (frameDataGroup == FrameDataGroup::TREE_BIRCH_XL_FALLING) {
-                        std::cout << "asd" << std::endl;
-                    }
                     frameData = FrameDataGroupToFrameDataMapping.at(frameDataGroup);
                 } catch (std::exception& e) {
                     // no config - don't use this frame system

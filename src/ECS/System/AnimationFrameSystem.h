@@ -42,7 +42,6 @@ namespace Sourcehold {
             const int CHESTNUT_S_FALLING_FRAMES = 5; // special case!
             const int CHESTNUT_S_RESOURCE_FRAMES = 2;
 
-
             const FrameMeta NONE = FrameMeta { false, false };
             const FrameMeta WITH_MIRROR = FrameMeta { true, false };
             const FrameMeta DONT_ANIMATE = FrameMeta { false, true };
@@ -147,8 +146,7 @@ namespace Sourcehold {
                     { FrameDataGroup::TREE_CHESTNUT_STUMP, { SINGLE_FRAME, treeFrameOffset(4, 3, _RESOURCE_OFFSET), DONT_ANIMATE }},
 
                     { FrameDataGroup::SHRUB1_GREEN, { TREE_WIND_FRAMES, NO_OFFSET, WITH_MIRROR, FrameFilter::EVEN } },
-                    { FrameDataGroup::SHRUB1_RED, { TREE_WIND_FRAMES, NO_OFFSET, WITH_MIRROR, FrameFilter::ODD } },
-
+                    { FrameDataGroup::SHRUB1_RED, { TREE_WIND_FRAMES, NO_OFFSET, WITH_MIRROR, FrameFilter::ODD } }
                 };
 
                 const std::unordered_map<EntityType, FrameDataGroup> EntityTypeToFrameDataGroupMapping = Utils::createMultiIndexMap<EntityType, FrameDataGroup>({
