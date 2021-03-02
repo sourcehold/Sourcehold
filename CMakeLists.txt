@@ -29,6 +29,13 @@ add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_11)
 enable_sanitizers(project_options)
 
+option(ENABLE_TESTING "Enable Testing?" ON)
+
+if(ENABLE_TESTING)
+  enable_testing()
+endif()
+
+
 # warnings
 add_library(project_warnings INTERFACE)
 set_project_warnings(project_warnings)
@@ -94,6 +101,12 @@ file(
   "${CMAKE_SOURCE_DIR}/src/*.cpp*"
   "${CMAKE_SOURCE_DIR}/src/*.h*"
 )
+
+# Google Test
+if(ENABLE_TESTING)
+  find_package(GTest REQUIRED)
+endif()
+
 
 #Engine
 add_subdirectory(src/Engine)
