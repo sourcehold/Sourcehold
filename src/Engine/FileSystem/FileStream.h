@@ -1,52 +1,111 @@
-#pragma once
-
-#include <string>
+#ifndef FILE_STREAM_H_
+#define FILE_STREAM_H_
+#include <algorithm>
+#include <array>
 #include <cinttypes>
-#include <fstream>
-#include <sstream>
-#include <locale>
 #include <codecvt>
+#include <fstream>
+#include <iterator>
+#include <locale>
+#include <sstream>
+#include <string>
+#include <vector>
 
-namespace Sourcehold {
-namespace Parsers {
+#include "FileSystem.h"
 
-/*
- * Parser super class, provide an interface for file IO
- * TODO: DO __NOT__ assume everyone is using little-endian
- */
-class Parser {
-  uint32_t length = 0;
-  std::fstream stream;
-
+// std::fstream wrapper.
+// Handles read and write operations on a file.
+// Throws on failure
+class FileStream {
  public:
-  Parser() = default;
-  ~Parser() = default;
+  using Path = ghc::filesystem::path;
+  using OpenMode = std::ios_base::openmode;
+  using PosType = std::fstream::pos_type;
+  // Creates and opens a fstream at path with mode
+  FileStream(const Path &path, OpenMode mode);
+  // Closes the fstream
+  ~FileStream();
+  // The following functions resemble fstream counterparts
+  void Skip(PosType n) noexcept;
+  void SeekG(PosType pos) noexcept;
+  void SeekP(PosType pos) noexcept;
+  PosType TellG() noexcept;
 
-  bool Open(const std::string &path, std::ios_base::openmode mode);
-  void Close();
-  bool Ok();
-  void Skip(uint32_t n);
-  void SeekG(uint32_t pos);
-  void SeekP(uint32_t pos);
-  uint32_t Tell();
+  // Reads T from stream.
+  // reinterpret_cast from T to char*
+  template <typename T>
+  T Get();
+  template <typename T, bool reversed = false>
+  std::vector<T> Get(size_t n);
+  template <typename T, size_t n, bool reversed = false>
+  std::array<T, n> Get();
+  template <typename T>
+  std::vector<T> GetToEOF();
 
-  bool GetData(void *buf, size_t bufsize);
-  bool GetWhole(void *buf);
-  std::wstring GetUTF16(uint32_t len);
-  std::wstring GetUTF16();
   std::string GetLine();
-  uint8_t GetByte();
-  uint16_t GetWord();
-  uint32_t GetDWord();
 
-  void WriteData(void *buf, size_t bufsize);
-  void WriteBytes(uint8_t byte, size_t num);
-  void WriteUTF16(std::wstring str);
-  void WriteByte(uint8_t byte);
-  void WriteWord(uint16_t word);
-  void WriteDWord(uint32_t dword);
+  // Writes T to stream
+  // reinterpret_cast from T to char*
+  template <typename T>
+  void Write(T data);
+  template <typename T, size_t n>
+  void Write(const std::array<T, n> &data);
 
-  inline uint32_t GetLength() { return length; }
+ private:
+  std::fstream stream_;
 };
-}  // namespace Parsers
-}  // namespace Sourcehold
+
+template <typename T>
+T FileStream::Get() {
+  T data;
+  stream_.read(reinterpret_cast<char *>(&data), sizeof(data));
+  // Logging
+  if (stream_.bad()) {
+    throw std::runtime_error("I/O Error: Reading from file");
+  }
+  return data;
+}
+
+template <typename T, bool reversed>
+std::vector<T> FileStream::Get(size_t n) {
+  std::vector<T> data(n);
+
+  reversed
+      ? std::generate(data.rbegin(), data.rend(), [&]() { return Get<T>(); })
+      : std::generate(data.begin(), data.end(), [&]() { return Get<T>(); });
+  return data;
+}
+template <typename T, size_t n, bool reversed>
+std::array<T, n> FileStream::Get() {
+  std::array<T, n> data;
+
+  reversed
+      ? std::generate(data.rbegin(), data.rend(), [&]() { return Get<T>(); })
+      : std::generate(data.begin(), data.end(), [&]() { return Get<T>(); });
+  return data;
+}
+template <typename T>
+std::vector<T> FileStream::GetToEOF() {
+  std::vector<T> result;
+  std::transform(std::istream_iterator<uint8_t>(stream_),  //
+                 std::istream_iterator<uint8_t>(),         //
+                 std::back_inserter(result),               //
+                 Get<T>());
+  return result;
+}
+
+template <typename T>
+void FileStream::Write(T data) {
+  stream_.write(reinterpret_cast<char *>(&data), sizeof(T));
+  // Logging
+  if (stream_.bad()) {
+    throw std::runtime_error("I/O Error: Writing to file");
+  }
+}
+template <typename T, size_t n>
+void FileStream::Write(const std::array<T, n> &data) {
+  for (auto &i : data) {
+    Write<T>(i);
+  }
+}
+#endif  // FILE_STREAM_H_
