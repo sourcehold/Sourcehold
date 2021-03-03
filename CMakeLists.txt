@@ -43,6 +43,9 @@ find_package(SDL2 REQUIRED)
 # OpenAL
 find_package(OpenAL REQUIRED)
 
+# EnTT
+find_package(EnTT REQUIRED)
+
 # Mac OS frameworks should be handled in a special way. 
 # See more info about cmake issues with Mac OS frameworks here:
 # https://cmake.org/pipermail/cmake/2016-April/063179.html
@@ -99,7 +102,6 @@ endforeach()
 
 add_executable(Stronghold ${_source_list})
 
-
 if(MSVC)
   target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
@@ -131,6 +133,7 @@ endif()
 
 target_link_libraries(Stronghold
   PRIVATE Threads::Threads
+  PRIVATE EnTT::EnTT
   PRIVATE SDL2::SDL2
   PRIVATE OpenAL::OpenAL
   PRIVATE FFMPEG::AVCODEC

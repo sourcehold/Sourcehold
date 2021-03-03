@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <entt/entt.hpp>
 
 #include "GameMap.h"
 #include "GameManager.h"
@@ -17,6 +18,10 @@
 #include "Events/Keyboard.h"
 #include "Events/Mouse.h"
 #include "Events/Touch.h"
+
+#include "ECS/System/RenderSystem.h"
+#include "ECS/System/AnimationFrameSystem.h"
+#include "ECS/System/TestTeleportingDeerSystem.h"
 
 namespace Sourcehold {
     namespace Parsers {
@@ -70,22 +75,6 @@ namespace Sourcehold {
             std::shared_ptr<Gm1File> file;
         };
 
-        class Lord : Unit {
-        public:
-            Lord(int x, int y) : Unit(x, y, "body_lord")
-            {}
-        };
-
-        class Oak : Unit {
-        public:
-            Oak(int x, int y) : Unit(x, y, "tree_oak")
-            {}
-
-            void Update(double dt) {
-                index = (24 - abs(int(GetTime() * 15.0f) % (2 * 24) - 24));
-            }
-        };
-
         /**
          * Handles everything related to the game world, including
          * loading, rendering and moving the camera
@@ -101,6 +90,7 @@ namespace Sourcehold {
             ScrollInformation scroll;
             IngameGUI gui;
             std::vector<Unit*> units;
+            entt::registry registry;
         public:
             World();
             World(const World&) = delete;
@@ -109,11 +99,6 @@ namespace Sourcehold {
             UIState Play();
         protected:
             void UpdateCamera(double dt);
-
-            template<class T>
-            void Spawn(int x, int y) {
-                units.push_back((Unit*)new T( x, y ));
-            }
         private:
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;

@@ -19,6 +19,7 @@ Sourcehold uses the following libraries:
 *   OpenAL
 *   FFmpeg (avcodec, avutil, avformat, swscale)
 *   zlib's blast for PKWARE decompression
+*   EnTT
 
 Run `cmake` in your build directory.
 
@@ -39,7 +40,7 @@ vcpkg integrate install
 ```
 Installing the dependencies:
 ```bash
-vcpkg --triplet x64-windows install sdl2 ffmpeg openal-soft
+vcpkg --triplet x64-windows install sdl2 ffmpeg openal-soft entt
 ```
 Then continue building Sourcehold with CMake:
 ```bash

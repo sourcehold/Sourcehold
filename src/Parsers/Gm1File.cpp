@@ -295,7 +295,7 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
                     tile.x + (15 - lines[l] / 2 + i),
                     tile.y + l,
                     r, g, b, 0xFF
-                    );
+                );
 /*
   textureAtlas->GetSurface().SetPixel(
   part.x + entries[index].tileX + (15 - lines[l] / 2 + i),

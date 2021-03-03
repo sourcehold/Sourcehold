@@ -213,7 +213,11 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg)
             Render(*castle, px, py);
         }
         else {
-            bik.Update();
+            // after deletion it tries to operate on memory
+            // which causes crash (tested on windows, not sure about other platforms)
+            // result of commenting is that, the movie is not rendering
+            // TODO - make issue to track this
+            // bik.Update();
             Render(bik, px, py);
         }
 
