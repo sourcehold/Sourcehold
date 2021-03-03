@@ -46,6 +46,12 @@ find_package(OpenAL REQUIRED)
 # EnTT
 find_package(EnTT REQUIRED)
 
+# LuaJIT
+find_package(Lua REQUIRED)
+set(INCLUDE_DIRS ${LUA_INCLUDE_DIR})
+add_definitions(-DLUA)
+include_directories(${INCLUDE_DIRS})
+
 # Mac OS frameworks should be handled in a special way. 
 # See more info about cmake issues with Mac OS frameworks here:
 # https://cmake.org/pipermail/cmake/2016-April/063179.html
@@ -144,4 +150,5 @@ target_link_libraries(Stronghold
   PRIVATE blast
   PRIVATE cxxopts
   PRIVATE ghc_filesystem
+  PRIVATE ${LUA_LIBRARY}
 )
