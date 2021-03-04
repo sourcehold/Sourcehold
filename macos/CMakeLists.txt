@@ -5,9 +5,7 @@ if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin" AND APPLE)
 
 
 # MacOSUtils
-add_library(MacOSUtils macos/src/PathUtils.m)
-set_target_properties(MacOSUtils PROPERTIES
-  INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/macos/src)
+add_library(MacOSUtils src/PathUtils.m)
 target_link_libraries(MacOSUtils
   PRIVATE "-framework Foundation"
 )
