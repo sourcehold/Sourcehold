@@ -137,7 +137,11 @@ endif()
 if(TARGET_OS_IOS)
   set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO)
   set(DATA_DIR_PATH ${CMAKE_SOURCE_DIR}/data)
-  set(THIRDPARTY_IOS_DIR_PATH ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/ios)
+  set(THIRDPARTY_IOS_DIR_PATH ${CMAKE_SOURCE_DIR}/thirdparty/ios)
+  
+  set(BUNDLE_DIR_PATH $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+  set(RESOURCES_DIR_PATH ${CMAKE_SOURCE_DIR}/apple/iOS/Resources)
+  set(INFO_PLIST_BUNDLE_DIR_PATH ${BUNDLE_DIR_PATH}/Info.plist)
   
   set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
@@ -148,12 +152,37 @@ if(TARGET_OS_IOS)
   
   if(EXISTS ${DATA_DIR_PATH})
     add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_directory ${DATA_DIR_PATH} $<TARGET_FILE_DIR:${PROJECT_NAME}>/data
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${DATA_DIR_PATH} ${BUNDLE_DIR_PATH}/data
     )
   else()
     message("'data' directroy does not exist. Skipping copy to app bundle.")
   endif()
   
+  # All storyboards in the Base.lproj directory
+  set(STORYBOARDS ${RESOURCES_DIR_PATH}/Base.lproj/*.storyboard)
+
+  # The output folder for compiled storyboards
+  set(STORYBOARD_OUT_DIR_PATH ${BUNDLE_DIR_PATH}/Base.lproj)
+
+  add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND mkdir -p ${STORYBOARD_OUT_DIR_PATH}
+    COMMAND for storyboard_path in ${STORYBOARDS}\; do ibtool $storyboard_path --compilation-directory ${STORYBOARD_OUT_DIR_PATH}\; done
+  )
+
+  add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+    COMMAND xcrun actool Assets.xcassets --compile ${BUNDLE_DIR_PATH} --compress-pngs --app-icon AppIcon --output-partial-info-plist ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist --platform iphoneos --minimum-deployment-target ${CMAKE_OSX_DEPLOYMENT_TARGET}
+    WORKING_DIRECTORY ${RESOURCES_DIR_PATH}
+    COMMENT "Compiling assets catalog"
+  )
+  
+  add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND plutil -replace UIDeviceFamily -json '[1, 2]' ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -insert UIRequiresFullScreen -bool YES ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -insert UILaunchStoryboardName -string LaunchScreen ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -insert CFBundleIcons -json `plutil -extract CFBundleIcons json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -insert CFBundleIcons~ipad -json `plutil -extract CFBundleIcons~ipad json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
+  )
+
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/include)
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/include)
   
