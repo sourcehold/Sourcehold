@@ -44,7 +44,7 @@ find_package(SDL2 REQUIRED)
 find_package(OpenAL REQUIRED)
 
 # EnTT
-find_package(EnTT REQUIRED)
+add_subdirectory(thirdparty/entt)
 
 # Mac OS frameworks should be handled in a special way. 
 # See more info about cmake issues with Mac OS frameworks here:
