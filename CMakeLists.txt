@@ -26,8 +26,8 @@ set_target_properties(blast PROPERTIES
   INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/thirdparty/blast)
 
 # cxxopts
-set(CXXOPTS_BUILD_TESTS OFF)
-set(CXXOPTS_BUILD_EXAMPLES OFF)
+set(CXXOPTS_BUILD_TESTS OFF CACHE BOOL "Build cxxopts tests")
+set(CXXOPTS_BUILD_EXAMPLES OFF CACHE BOOL "Build cxxopts examples")
 
 add_subdirectory(thirdparty/cxxopts)
 
