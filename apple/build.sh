@@ -14,9 +14,10 @@ IOS_DEPLOYMENT_TARGET=11.0
 # Functions
 
 usage() {
-    echo "usage: $(basename $0) [-c] <platform>"
+    echo "usage: $(basename $0) [-ct] <platform>"
     echo "options:"
     echo "-c        \tClean build."
+    echo "-t        \tBuild type (Debug or Release). Default is Release."
     echo "<platform>\t'ios', 'ios-simulator' or 'macos'"
     exit 1
 }
@@ -58,6 +59,8 @@ update_submodules() {
 build() {
     echo "Building..."
     local CLEAN="$1"
+    local BUILD_TYPE="$2"
+    local PLATFORM="$3"
     local CLEAN_OPTION=
     
     if [[ $CLEAN -eq 1 ]] ; then
@@ -72,10 +75,10 @@ build() {
             -DCMAKE_OSX_DEPLOYMENT_TARGET=$IOS_DEPLOYMENT_TARGET \
             -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT" \
             -DCMAKE_OSX_ARCHITECTURES="x86_64"
-        cmake --build "$BUILD_DIR_PATH" --config Release $CLEAN_OPTION -- -sdk iphonesimulator
+        cmake --build "$BUILD_DIR_PATH" --config $BUILD_TYPE $CLEAN_OPTION -- -sdk iphonesimulator
     else
         cmake "$CMAKE_WORKING_DIR_PATH" -B "$BUILD_DIR_PATH"
-        cmake --build "$BUILD_DIR_PATH" $CLEAN_OPTION
+        cmake --build "$BUILD_DIR_PATH" --config $BUILD_TYPE $CLEAN_OPTION
     fi
 }
 
@@ -83,16 +86,24 @@ build() {
 # Script body
 
 CLEAN=0
+BUILD_TYPE="Release"
 
-while getopts "c" opt
+while getopts "ct:" opt
 do
     case $opt in
     c)
         CLEAN=1
         ;;
+    t)
+        BUILD_TYPE="$OPTARG"
+        ;;
     esac
 done
 shift $((OPTIND-1))
+
+if [[ "$BUILD_TYPE" != "Release" && "$BUILD_TYPE" != "Debug" ]] ; then
+    usage
+fi
 
 PLATFORM="$1"
 
@@ -121,4 +132,4 @@ fi
 "$SCRIPT_PATH/install-tools.sh"
 install_dependecies $CLEAN "$PLATFORM"
 update_submodules
-build $CLEAN "$PLATFORM"
+build $CLEAN "$BUILD_TYPE" "$PLATFORM"
