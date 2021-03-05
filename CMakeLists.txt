@@ -43,7 +43,7 @@ add_subdirectory(thirdparty/cxxopts)
 add_subdirectory(thirdparty/filesystem)
 
 # EnTT
-find_package(EnTT REQUIRED)
+add_subdirectory(thirdparty/entt)
 
 if(NOT TARGET_OS_IOS)
   # pthread
@@ -116,7 +116,8 @@ add_executable(${PROJECT_NAME}
 )
   
 set_target_properties(${PROJECT_NAME} PROPERTIES
-  CXX_STANDARD 11
+  # Switched from c++ 11 to c++ 17 only because of the EnTT lib. 
+  CXX_STANDARD 17
   CXX_STANDARD_REQUIRED YES
   CXX_EXTENSIONS NO
 )
@@ -202,10 +203,12 @@ if(TARGET_OS_IOS)
 
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/include)
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/include)
+  # For some reason when building using Xcode cmake does not provide correct include directory path,
+  # thus we have to set it manually
+  include_directories(thirdparty/entt/src)
   
   target_link_libraries(${PROJECT_NAME}
     PRIVATE AppleUtils
-    PRIVATE EnTT::EnTT
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/lib/libSDL2.a
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/lib/libavcodec.a
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/lib/libavformat.a
@@ -245,7 +248,6 @@ else()
 
   target_link_libraries(${PROJECT_NAME}
     PRIVATE Threads::Threads
-    PRIVATE EnTT::EnTT
     PRIVATE SDL2::SDL2
     PRIVATE OpenAL::OpenAL
     PRIVATE FFMPEG::AVCODEC
