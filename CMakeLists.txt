@@ -177,10 +177,11 @@ if(TARGET_OS_IOS)
   
   add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND plutil -replace UIDeviceFamily -json '[1, 2]' ${INFO_PLIST_BUNDLE_DIR_PATH}
-    COMMAND plutil -insert UIRequiresFullScreen -bool YES ${INFO_PLIST_BUNDLE_DIR_PATH}
-    COMMAND plutil -insert UILaunchStoryboardName -string LaunchScreen ${INFO_PLIST_BUNDLE_DIR_PATH}
-    COMMAND plutil -insert CFBundleIcons -json `plutil -extract CFBundleIcons json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
-    COMMAND plutil -insert CFBundleIcons~ipad -json `plutil -extract CFBundleIcons~ipad json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -replace UIRequiresFullScreen -bool YES ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -replace UILaunchStoryboardName -string LaunchScreen ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -replace UIRequiredDeviceCapabilities -json '[\"arm64\"]' ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -replace CFBundleIcons -json `plutil -extract CFBundleIcons json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
+    COMMAND plutil -replace CFBundleIcons~ipad -json `plutil -extract CFBundleIcons~ipad json -o - -- ${CMAKE_BINARY_DIR}/assetcatalog_generated_info.plist` ${INFO_PLIST_BUNDLE_DIR_PATH}
   )
 
   include_directories(${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/include)
