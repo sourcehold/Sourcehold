@@ -134,6 +134,9 @@ std::string Logger::SubsystemName(Subsystem sys)
     case GAME:
         s = "GAME";
         break;
+    case ECS:
+        s = "ECS";
+        break;
     case SOURCEHOLD:
     default:
         s = "UNKNOWN";

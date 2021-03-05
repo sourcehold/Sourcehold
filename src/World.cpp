@@ -1,19 +1,24 @@
 #include <random>
+#include <entt/entt.hpp>
 
 #include "Building.h"
 #include "World.h"
+#include "ECS/ECS.h"
+#include "ECS/Manager.h"
 
 #include "Parsers/TgxFile.h"
 #include "Rendering/Font.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
+using namespace Sourcehold::ECS;
 
 World::World() :
     GameMap(WORLD_160), // TODO
     EventConsumer<Keyboard>(),
     EventConsumer<Mouse>()
 {
+    registry = initializeECS();
     Camera& cam = Camera::instance();
     cam.SetPos(15, 8);
 }
@@ -22,17 +27,62 @@ World::~World()
 {
 }
 
+int x, startX = 30;
+int paddingX = 4;
+int maxX = 140;
+int y, startY = 30;
+int paddingY = 5;
+void placeDebug(entt::registry &registry, EntityType et) {
+    spawn(registry, et, x, y);
+    x += paddingX;
+    if (x > maxX) {
+        x = startX;
+        y += paddingY;
+    }
+}
+
 UIState World::Play()
 {
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 160);
 
-    for (int i = 0; i < 1000; i++) {
-        int x = dist(rng);
-        int y = dist(rng);
-        Spawn<Oak>(x, y);
-    }
+    placeDebug(registry, EntityType::DEER);
+    placeDebug(registry, EntityType::LORD);
+    
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_L_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_M_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S_FALLING);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_S_RESOURCE);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_DEAD);
+    placeDebug(registry, EntityType::TREE_CHESTNUT_STUMP);
+
+    placeDebug(registry, EntityType::TREE_BIRCH_XL);
+    placeDebug(registry, EntityType::TREE_BIRCH_XL_FALLING);
+    placeDebug(registry, EntityType::TREE_BIRCH_XL_RESOURCE);
+    placeDebug(registry, EntityType::TREE_BIRCH_L);
+    placeDebug(registry, EntityType::TREE_BIRCH_L_FALLING);
+    placeDebug(registry, EntityType::TREE_BIRCH_L_RESOURCE);
+    placeDebug(registry, EntityType::TREE_BIRCH_DEAD);
+    placeDebug(registry, EntityType::TREE_BIRCH_STUMP);
+
+    placeDebug(registry, EntityType::TREE_SHRUB1_RED);
+    placeDebug(registry, EntityType::TREE_SHRUB1_GREEN);
+    placeDebug(registry, EntityType::TREE_SHRUB2);
+
+    placeDebug(registry, EntityType::TREE_APPLE_BUD);
+    placeDebug(registry, EntityType::TREE_APPLE_FLOWER);
+    placeDebug(registry, EntityType::TREE_APPLE_FRUIT);
+    placeDebug(registry, EntityType::TREE_APPLE_EMPTY);
+    placeDebug(registry, EntityType::TREE_APPLE_STUMP);
 
     double previous = GetTime();
     while(Running()) {
@@ -52,9 +102,8 @@ UIState World::Play()
 
         GameMap::Render();
 
-        for (Unit *unit : units) {
-            unit->Render();
-        }
+        ECS::Manager::GetInstance().Update(registry);
+        ECS::Manager::GetInstance().Render(registry);
 
         if (!gui.Render()) break;
 
@@ -199,7 +248,7 @@ void World::onEventReceive(Mouse &mouseEvent)
         int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
         int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
 
-        Spawn<Lord>(x, y);
+        spawn(registry, EntityType::LORD, x, y);
     }
 }
 

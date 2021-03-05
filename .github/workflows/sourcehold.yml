@@ -20,7 +20,7 @@ jobs:
         target-platform: ["host"]
         include:
           - os: ubuntu-latest
-            install-dependencies: "sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev"
+            install_dependencies: "sh ./ubuntu/install-dependencies.sh"
             cmake-configure-options: ""
             cmake-build-options: ""
             uploaded-artifact-name: "sourcehold-linux-amd64"

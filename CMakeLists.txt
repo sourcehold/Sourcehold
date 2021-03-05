@@ -42,6 +42,9 @@ add_subdirectory(thirdparty/cxxopts)
 # ghc filesystem
 add_subdirectory(thirdparty/filesystem)
 
+# EnTT
+find_package(EnTT REQUIRED)
+
 if(NOT TARGET_OS_IOS)
   # pthread
   find_package(Threads REQUIRED)
@@ -91,7 +94,7 @@ if(TARGET_OS_MAC_OS OR TARGET_OS_IOS)
     PRIVATE "-framework Foundation"
   )
 endif()
-  
+
 
 # Include sources / headers
 file(
@@ -202,6 +205,7 @@ if(TARGET_OS_IOS)
   
   target_link_libraries(${PROJECT_NAME}
     PRIVATE AppleUtils
+    PRIVATE EnTT::EnTT
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios/lib/libSDL2.a
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/lib/libavcodec.a
     PRIVATE ${THIRDPARTY_IOS_DIR_PATH}/ffmpeg-ios/lib/libavformat.a
@@ -241,6 +245,7 @@ else()
 
   target_link_libraries(${PROJECT_NAME}
     PRIVATE Threads::Threads
+    PRIVATE EnTT::EnTT
     PRIVATE SDL2::SDL2
     PRIVATE OpenAL::OpenAL
     PRIVATE FFMPEG::AVCODEC

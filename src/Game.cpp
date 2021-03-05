@@ -16,6 +16,8 @@
 #include "System/Logger.h"
 #include "System/FileUtil.h"
 
+#include "ECS/Manager.h"
+
 #include "GUI/NarrScreen.h"
 #include "GUI/MainMenu.h"
 
@@ -101,6 +103,9 @@ int EnterLoadingScreen()
 
         SDL_Delay(1);
     }
+
+    // TODO - Maybe add next loading bar?
+    ECS::Manager::GetInstance();
 
     return Running() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
