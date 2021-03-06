@@ -86,7 +86,7 @@ UIState World::Play()
 
     double previous = GetTime();
     while(Running()) {
-        // Timing is good enough for now (TODO obviously) //
+        // Timing is good enough for now (TODO obviously)
         double now = GetTime();
         double frame = now - previous;
         previous = now;
