@@ -1,5 +1,7 @@
 #include <random>
 #include <entt/entt.hpp>
+#include <luajit/lua.hpp>
+#include <regex>
 
 #include "Building.h"
 #include "World.h"
@@ -8,10 +10,88 @@
 
 #include "Parsers/TgxFile.h"
 #include "Rendering/Font.h"
+#include "Utils/betterenums.h"
 
 using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::ECS;
+
+int wrap_exceptions(lua_State *L, lua_CFunction f) {
+  try {
+    return f(L);  // Call wrapped function and return result.
+  } catch (const char *s) {  // Catch and convert exceptions.
+    lua_pushstring(L, s);
+  } catch (std::exception& e) {
+    lua_pushstring(L, e.what());
+  } catch (...) {
+    lua_pushliteral(L, "caught (...)");
+  }
+  return lua_error(L);  // Rethrow as a Lua error.
+}
+
+std::string load (char *filename) {
+    std::string ret = "";
+    try {
+        lua_State* L = lua_open();
+
+        luaL_openlibs(L);
+        luaopen_base(L);
+        luaopen_io(L);
+        luaopen_string(L);
+        luaopen_math(L);
+
+        std::string fullPath = GetDirectory().concat(filename).c_str();
+
+        if (luaL_loadfile(L, fullPath.c_str()) || lua_pcall(L, 0, 0, 0)) {
+            std::cout << "Can't open LUA file '" << fullPath.c_str() << "'" << std::endl
+                << lua_tostring(L, -1) << std::endl;
+        }
+
+        // lua_getglobal(L, "config");
+        // lua_call(L, 0, 1);
+        lua_getglobal(L, "result");
+        // const char *result = luaL_checkstring(L, -1);
+        // lua_pop(L, 1);
+        std::cout << lua_tostring(L, -1) << std::endl;
+        ret = lua_tostring(L, -1);
+
+        lua_close(L);
+    }
+    catch (std::exception e) {
+        std::cout << e.what() << std::endl;
+    }
+
+    return ret;
+}
+
+std::vector<std::string> split(std::string text, std::string regexDelimiter) {
+    std::vector<std::string> result;
+    std::stringstream stringstream("");
+    std::regex ws_re(regexDelimiter);
+    std::copy(std::sregex_token_iterator(text.begin(), text.end(), ws_re, -1),
+            std::sregex_token_iterator(),
+            std::ostream_iterator<std::string>(stringstream, "\n"));
+    std::string line;
+    while (getline(stringstream, line)) {
+        result.push_back(line);
+    }
+    return result;
+}
+
+EntityType stringToEntityType(std::string string) {
+    EntityType::_from
+}
+
+void useWhatLuaDid (entt::registry& registry, std::string luaString) {
+    std::cout << "Generated" << std::endl;
+    std::vector<std::string> substrings = split(luaString, ";");
+    for (std::string substring : substrings) {
+        std::vector<std::string> command = split(substring, "@");
+        if (command.at(0) == "placeDebug") {
+            placeDebug(registry, stringToEntityType(command.at(1)));
+        }
+    }
+}
 
 World::World() :
     GameMap(WORLD_160), // TODO
@@ -47,42 +127,7 @@ UIState World::Play()
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 160);
 
-    placeDebug(registry, EntityType::DEER);
-    placeDebug(registry, EntityType::LORD);
-    
-    placeDebug(registry, EntityType::TREE_CHESTNUT_XL);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_FALLING);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_XL_RESOURCE);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_L);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_L_FALLING);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_L_RESOURCE);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_M);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_M_FALLING);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_M_RESOURCE);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_S);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_S_FALLING);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_S_RESOURCE);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_DEAD);
-    placeDebug(registry, EntityType::TREE_CHESTNUT_STUMP);
-
-    placeDebug(registry, EntityType::TREE_BIRCH_XL);
-    placeDebug(registry, EntityType::TREE_BIRCH_XL_FALLING);
-    placeDebug(registry, EntityType::TREE_BIRCH_XL_RESOURCE);
-    placeDebug(registry, EntityType::TREE_BIRCH_L);
-    placeDebug(registry, EntityType::TREE_BIRCH_L_FALLING);
-    placeDebug(registry, EntityType::TREE_BIRCH_L_RESOURCE);
-    placeDebug(registry, EntityType::TREE_BIRCH_DEAD);
-    placeDebug(registry, EntityType::TREE_BIRCH_STUMP);
-
-    placeDebug(registry, EntityType::TREE_SHRUB1_RED);
-    placeDebug(registry, EntityType::TREE_SHRUB1_GREEN);
-    placeDebug(registry, EntityType::TREE_SHRUB2);
-
-    placeDebug(registry, EntityType::TREE_APPLE_BUD);
-    placeDebug(registry, EntityType::TREE_APPLE_FLOWER);
-    placeDebug(registry, EntityType::TREE_APPLE_FRUIT);
-    placeDebug(registry, EntityType::TREE_APPLE_EMPTY);
-    placeDebug(registry, EntityType::TREE_APPLE_STUMP);
+    useWhatLuaDid(registry, load("lua/test.lua"));
 
     double previous = GetTime();
     while(Running()) {

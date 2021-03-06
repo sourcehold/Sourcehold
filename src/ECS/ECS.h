@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include "Utils/betterenums.h"
 
 namespace Sourcehold {
     namespace ECS {
@@ -47,6 +48,7 @@ namespace Sourcehold {
             TREE_SHRUB1_RED,
             TREE_SHRUB2
         };
+        constexpr auto entityTypesToStringMapping = better_enums::make_map(EntityType);
 
         enum class EntityAsset {
             LORD,
