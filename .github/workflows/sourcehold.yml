@@ -20,19 +20,19 @@ jobs:
         target-platform: ["host"]
         include:
           - os: ubuntu-latest
-            install_dependencies: "sh ./ubuntu/install-dependencies.sh"
+            install-dependencies: "sh ./ubuntu/install-dependencies.sh"
             cmake-configure-options: ""
             cmake-build-options: ""
             uploaded-artifact-name: "sourcehold-linux-amd64"
           - os: macos-latest
-            install-dependencies: "./apple/install-dependencies-macos.sh"
+            install-dependencies: "sh ./apple/install-dependencies-macos.sh"
             cmake-configure-options: ""
             cmake-build-options: ""
             uploaded-artifact-name: "sourcehold-mac-os"
           # Use different target platform here just to force new job spawning
           - target-platform: "ios-simulator"
             os: macos-latest
-            install-dependencies: "./apple/install-dependencies-ios.sh -s -d 11.0 ./thirdparty/ios"
+            install-dependencies: "sh ./apple/install-dependencies-ios.sh -s -d 11.0 ./thirdparty/ios"
             env:
               XCODE_PATH="$(xcode-select -p)"
               SIMULATOR_SYSROOT_PATH="$XCODE_PATH/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
