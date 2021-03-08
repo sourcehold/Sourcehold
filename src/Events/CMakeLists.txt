@@ -6,4 +6,5 @@ add_library(Events
 target_include_directories(Events PRIVATE ../)
 target_compile_features(Events PRIVATE cxx_std_11)
 target_link_libraries(Events
+  PRIVATE ProjectOptions
   PRIVATE SDL2::SDL2)

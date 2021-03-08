@@ -14,6 +14,7 @@ add_library(Parsers
 target_compile_features(Parsers PRIVATE cxx_std_11)
 target_include_directories(Parsers PRIVATE ../)
 target_link_libraries(Parsers 
+  PRIVATE ProjectOptions
   PRIVATE blast
   PRIVATE System
   PRIVATE Rendering)

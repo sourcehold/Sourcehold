@@ -7,6 +7,7 @@ if(MAC_OS)
 add_library(MacOSUtils src/PathUtils.m)
 target_link_libraries(MacOSUtils
   PRIVATE "-framework Foundation"
+  PRIVATE ProjectOptions
 )
 endif() # MAC_OS
 

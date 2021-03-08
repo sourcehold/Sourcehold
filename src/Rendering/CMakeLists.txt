@@ -14,6 +14,7 @@ target_compile_features(Rendering PRIVATE cxx_std_11)
 target_include_directories(Rendering PRIVATE ../)
 
 target_link_libraries(Rendering 
+  PRIVATE ProjectOptions
   PRIVATE System
   PUBLIC SDL2::SDL2
   PRIVATE FFMPEG::AVCODEC
