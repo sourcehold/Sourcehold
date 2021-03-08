@@ -10,6 +10,8 @@ include(cmake/Preamble.cmake)
 add_subdirectory(macos)
 add_subdirectory(src)
 
+# TODO(seidl):
+# still some modules hidden here..
 add_executable(Stronghold 
   src/Assets.cpp
   src/Building.cpp
@@ -53,11 +55,6 @@ endif()
 target_include_directories(Stronghold PRIVATE src/)
 target_link_libraries(Stronghold
   PRIVATE Threads::Threads
-  PRIVATE FFMPEG::AVCODEC
-  PRIVATE FFMPEG::AVFORMAT
-  PRIVATE FFMPEG::AVUTIL
-  PRIVATE FFMPEG::SWSCALE 
-  PRIVATE SWRESAMPLE::SWRESAMPLE
   PRIVATE Rendering
   PRIVATE cxxopts
   PRIVATE ECS
