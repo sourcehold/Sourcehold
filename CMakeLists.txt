@@ -8,25 +8,18 @@ set(Stronghold_VERSION, 0.1.2)
 include(cmake/Preamble.cmake)
 
 add_subdirectory(macos)
+add_subdirectory(src)
 
-include_directories(src)
-
-# Include sources / headers
-file(
-    GLOB_RECURSE _source_list
-    LIST_DIRECTORIES false
-    "${CMAKE_SOURCE_DIR}/src/*.cpp*"
-    "${CMAKE_SOURCE_DIR}/src/*.h*"
+add_executable(Stronghold 
+  src/Assets.cpp
+  src/Building.cpp
+  src/FFmpegUtil.cpp
+  src/Game.cpp
+  src/GameManager.cpp
+  src/GameMap.cpp
+  src/Startup.cpp
+  src/World.cpp
 )
-
-foreach(_source IN ITEMS ${_source_list})
-    get_filename_component(_source_path "${_source}" PATH)
-    file(RELATIVE_PATH _source_path_rel "${CMAKE_SOURCE_DIR}/src/" "${_source_path}")
-    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
-    source_group("${_group_path}" FILES "${_source}")
-endforeach()
-
-add_executable(Stronghold ${_source_list})
 
 if(MSVC)
   target_compile_options(Stronghold PRIVATE -D_CRT_SECURE_NO_WARNINGS)
@@ -57,17 +50,20 @@ if(MAC_OS)
   )
 endif()
 
+target_include_directories(Stronghold PRIVATE src/)
 target_link_libraries(Stronghold
   PRIVATE Threads::Threads
-  PRIVATE EnTT::EnTT
-  PRIVATE SDL2::SDL2
-  PRIVATE OpenAL::OpenAL
   PRIVATE FFMPEG::AVCODEC
   PRIVATE FFMPEG::AVFORMAT
   PRIVATE FFMPEG::AVUTIL
-  PRIVATE FFMPEG::SWSCALE
+  PRIVATE FFMPEG::SWSCALE 
   PRIVATE SWRESAMPLE::SWRESAMPLE
-  PRIVATE blast
+  PRIVATE Rendering
   PRIVATE cxxopts
-  PRIVATE ghc_filesystem
+  PRIVATE ECS
+  PRIVATE System
+  PRIVATE Audio
+  PRIVATE GUI
+  PRIVATE Events
+  PRIVATE Parsers
 )

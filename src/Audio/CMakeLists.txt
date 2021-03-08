@@ -1,0 +1,14 @@
+add_library(Audio 
+  Audio.cpp
+  Effect.cpp
+  Song.cpp)
+
+# TODO(seidl):
+# change headers to correct paths
+target_include_directories(Audio PRIVATE ../)
+
+target_compile_features(Audio PRIVATE cxx_std_11)
+target_link_libraries(Audio 
+  PRIVATE System
+  PUBLIC OpenAL::OpenAL
+  PRIVATE SDL2::SDL2)
