@@ -1,6 +1,5 @@
 # Sourcehold 
 [![Build Status](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml/badge.svg?event=push)](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml)
-[![PR Status](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml/badge.svg?event=pull_request)](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml)
 
 [![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/dzdBuNy)
 
