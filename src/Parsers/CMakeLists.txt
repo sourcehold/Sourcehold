@@ -16,4 +16,5 @@ target_link_libraries(Parsers
   PRIVATE ProjectOptions
   PRIVATE blast
   PRIVATE System
-  PRIVATE Rendering)
+  PRIVATE Rendering
+)

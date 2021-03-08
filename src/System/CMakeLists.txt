@@ -6,4 +6,5 @@ add_library(System
 target_include_directories(System PRIVATE ../)
 target_link_libraries(System 
   PRIVATE ProjectOptions
-  PUBLIC ghc_filesystem)
+  PUBLIC ghc_filesystem
+)

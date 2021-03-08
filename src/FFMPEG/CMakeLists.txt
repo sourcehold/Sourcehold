@@ -1,5 +1,6 @@
 add_library(FFmpegUtil
-  FFmpegUtil.cpp)
+  FFmpegUtil.cpp
+  )
 target_include_directories(FFmpegUtil PRIVATE ../)
 target_link_libraries(FFmpegUtil
   PRIVATE ProjectOptions

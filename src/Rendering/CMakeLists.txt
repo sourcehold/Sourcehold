@@ -19,4 +19,5 @@ target_link_libraries(Rendering
   PRIVATE System
   PRIVATE FFmpegUtil
   PUBLIC SDL2::SDL2
-  PRIVATE OpenAL::OpenAL)
+  PRIVATE OpenAL::OpenAL
+)

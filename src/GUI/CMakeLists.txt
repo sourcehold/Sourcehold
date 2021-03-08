@@ -21,5 +21,6 @@ target_link_libraries(GUI
   # GUI includes World.h .. fix this !
   # GUI doesnt use EnTT!
   PRIVATE EnTT::EnTT
-  PRIVATE Audio)
+  PRIVATE Audio
+)
 
