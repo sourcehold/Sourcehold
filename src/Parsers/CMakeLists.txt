@@ -11,7 +11,6 @@ add_library(Parsers
   VolumeTxt.cpp
 )
 
-target_compile_features(Parsers PRIVATE cxx_std_11)
 target_include_directories(Parsers PRIVATE ../)
 target_link_libraries(Parsers 
   PRIVATE ProjectOptions

@@ -8,7 +8,6 @@ add_library(ECS
   )
 
 target_include_directories(ECS PRIVATE ../)
-target_compile_features(ECS PRIVATE cxx_std_11)
 target_link_libraries(ECS 
   PRIVATE ProjectOptions
   PRIVATE System

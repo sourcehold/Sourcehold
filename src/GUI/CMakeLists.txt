@@ -14,7 +14,6 @@ add_library(GUI
 )
 
 target_include_directories(GUI PRIVATE ../)
-target_compile_features(GUI PRIVATE cxx_std_11)
 target_link_libraries(GUI
   PRIVATE ProjectOptions
   PRIVATE System

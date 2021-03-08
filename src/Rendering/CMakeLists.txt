@@ -10,7 +10,6 @@ add_library(Rendering
   Tileset.cpp
 )
 
-target_compile_features(Rendering PRIVATE cxx_std_11)
 target_include_directories(Rendering 
   PRIVATE ../
   PRIVATE ../FFMPEG)

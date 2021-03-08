@@ -9,7 +9,6 @@ target_include_directories(Audio
   PRIVATE ../
   PUBLIC ../FFMPEG)
 
-target_compile_features(Audio PRIVATE cxx_std_11)
 target_link_libraries(Audio 
   PRIVATE ProjectOptions
   PRIVATE System
