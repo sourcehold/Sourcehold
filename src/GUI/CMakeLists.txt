@@ -21,6 +21,7 @@ target_link_libraries(GUI
   PRIVATE SDL2::SDL2
   # GUI includes World.h .. fix this !
   # GUI doesnt use EnTT!
+  PRIVATE FFMPEG::AVUTIL
   PRIVATE EnTT::EnTT
   PRIVATE Audio)
 
