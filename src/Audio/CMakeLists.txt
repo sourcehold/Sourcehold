@@ -5,12 +5,15 @@ add_library(Audio
 
 # TODO(seidl):
 # change headers to correct paths
-target_include_directories(Audio PRIVATE ../)
+target_include_directories(Audio 
+  PRIVATE ../
+  PUBLIC ../FFMPEG)
 
 target_compile_features(Audio PRIVATE cxx_std_11)
 target_link_libraries(Audio 
   PRIVATE ProjectOptions
   PRIVATE System
-  PRIVATE FFMPEG::AVUTIL
+  PUBLIC FFmpegUtil
   PUBLIC OpenAL::OpenAL
+  PRIVATE SWRESAMPLE::SWRESAMPLE
   PRIVATE SDL2::SDL2)

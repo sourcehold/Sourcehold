@@ -15,7 +15,6 @@ add_subdirectory(src)
 add_executable(Stronghold 
   src/Assets.cpp
   src/Building.cpp
-  src/FFmpegUtil.cpp
   src/Game.cpp
   src/GameManager.cpp
   src/GameMap.cpp

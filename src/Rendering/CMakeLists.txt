@@ -11,15 +11,13 @@ add_library(Rendering
 )
 
 target_compile_features(Rendering PRIVATE cxx_std_11)
-target_include_directories(Rendering PRIVATE ../)
+target_include_directories(Rendering 
+  PRIVATE ../
+  PRIVATE ../FFMPEG)
 
 target_link_libraries(Rendering 
   PRIVATE ProjectOptions
   PRIVATE System
+  PRIVATE FFmpegUtil
   PUBLIC SDL2::SDL2
-  PRIVATE FFMPEG::AVCODEC
-  PRIVATE FFMPEG::AVFORMAT
-  PRIVATE FFMPEG::AVUTIL
-  PRIVATE FFMPEG::SWSCALE 
-  PRIVATE SWRESAMPLE::SWRESAMPLE
   PRIVATE OpenAL::OpenAL)
