@@ -1,0 +1,8 @@
+add_subdirectory(System)
+add_subdirectory(FFMPEG)
+add_subdirectory(Audio)
+add_subdirectory(Events)
+add_subdirectory(ECS)
+add_subdirectory(GUI)
+add_subdirectory(Rendering)
+add_subdirectory(Parsers)
