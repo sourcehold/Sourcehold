@@ -4,3 +4,6 @@
 [submodule "thirdparty/filesystem"]
 	path = thirdparty/filesystem
 	url = https://github.com/gulrak/filesystem
+[submodule "thirdparty/entt"]
+	path = thirdparty/entt
+	url = https://github.com/skypjack/entt

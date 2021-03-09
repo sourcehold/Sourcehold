@@ -40,7 +40,7 @@ vcpkg integrate install
 ```
 Installing the dependencies:
 ```bash
-vcpkg --triplet x64-windows install sdl2 ffmpeg openal-soft entt
+vcpkg --triplet x64-windows install sdl2 ffmpeg openal-soft
 ```
 Then continue building Sourcehold with CMake:
 ```bash
