@@ -7,5 +7,3 @@ include(cmake/PlatformCheck.cmake)
 include(cmake/AddImportedTarget.cmake)
 include(cmake/Dependencies.cmake)
 include(cmake/ProjectOptions.cmake)
-
-

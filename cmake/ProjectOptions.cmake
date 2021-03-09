@@ -2,6 +2,8 @@ add_library(ProjectOptions INTERFACE)
 target_compile_features(ProjectOptions INTERFACE cxx_std_11)
 
 if(MSVC)
+# TODO(seidl):
+# move this somewhere else
   target_compile_options(ProjectOptions INTERFACE -D_CRT_SECURE_NO_WARNINGS)
   foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
     string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
@@ -16,8 +18,5 @@ else()
     -Ofast
     -fno-fast-math)
 endif()
-
-
 # TODO(seidl):
-#add warnings and linting
-
+#add stricter warnings and linting

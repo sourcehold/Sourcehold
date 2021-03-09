@@ -7,12 +7,15 @@ function(AddImportedTarget NAME LIBRARY INCLUDE)
   if(MAC_OS AND ${LIBRARY} MATCHES "\\.framework$")
     add_library(${NAME} INTERFACE IMPORTED)
     set_target_properties(${NAME} PROPERTIES
-      INTERFACE_LINK_LIBRARIES ${LIBRARY})
+      INTERFACE_LINK_LIBRARIES ${LIBRARY}
+    )
   else()
     add_library(${NAME} UNKNOWN IMPORTED)
     set_target_properties(${NAME} PROPERTIES
-      IMPORTED_LOCATION ${LIBRARY})
+      IMPORTED_LOCATION ${LIBRARY}
+    )
   endif()
   set_target_properties(${NAME} PROPERTIES
-    INTERFACE_INCLUDE_DIRECTORIES ${INCLUDE})
+    INTERFACE_INCLUDE_DIRECTORIES ${INCLUDE}
+  )
 endfunction()

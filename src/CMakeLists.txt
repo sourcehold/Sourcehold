@@ -6,5 +6,3 @@ add_subdirectory(ECS)
 add_subdirectory(GUI)
 add_subdirectory(Rendering)
 add_subdirectory(Parsers)
-
-

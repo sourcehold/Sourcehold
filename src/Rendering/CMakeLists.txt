@@ -12,7 +12,8 @@ add_library(Rendering
 
 target_include_directories(Rendering 
   PRIVATE ../
-  PRIVATE ../FFMPEG)
+  PRIVATE ../FFMPEG
+)
 
 target_link_libraries(Rendering 
   PRIVATE ProjectOptions
