@@ -7,7 +7,7 @@
 
 namespace Sourcehold {
     namespace Rendering {
-        bool InitDisplay(const std::string &title, int width, int height, int index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false, bool resize = false);
+        bool InitDisplay(const std::string &title, int width, int height, size_t index = 0, bool fullscreen = false, bool noborder = false, bool nograb = false, bool resize = false);
         void DestroyDisplay();
         void ToggleFullscreen();
         void GrabMouse();

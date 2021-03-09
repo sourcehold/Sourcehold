@@ -4,8 +4,7 @@
 #include <vector>
 #include <regex>
 
-#include <cxxopts.hpp>
-
+#include "cxxopts.h"
 #include "World.h"
 #include "GameManager.h"
 #include "Startup.h"
@@ -84,7 +83,7 @@ int EnterLoadingScreen()
         index++;
 
         /* Normalized loading progess */
-        double progress = (double)index / (double)files.size();
+        double progress = static_cast<double>(index) / static_cast<double>(files.size());
 
         /* Render the background */
         Render(*tgx_loading, px, py);
@@ -133,7 +132,7 @@ int StartGame(GameOptions& opt)
     Resolution res;
     // Convert resolution //
     bool found = false;
-    for (int i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
+    for (size_t i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
         int w = resolutions[i][0];
         int h = resolutions[i][1];
 
@@ -189,8 +188,6 @@ int StartGame(GameOptions& opt)
 int main(int argc, char **argv)
 {
     namespace po = cxxopts;
-    namespace fs = ghc::filesystem;
-
     // Parse commandline //
     try {
         GameOptions opt;
@@ -221,7 +218,7 @@ int main(int argc, char **argv)
         }
 
         if (result["resolutions"].as<bool>()) {
-            for (int i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
+            for (size_t i = 0; i < (sizeof(resolutions) / sizeof(int)) / 2; i++) {
                 std::cout << resolutions[i][0] << "x" << resolutions[i][1] << std::endl;
             }
             return EXIT_SUCCESS;

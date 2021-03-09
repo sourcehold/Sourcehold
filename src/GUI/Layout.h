@@ -58,13 +58,16 @@ namespace Sourcehold {
             void AddPic(std::shared_ptr<TgxFile> pic, PicPosition pos);
             void NewParagraph();
 
-            inline void SetBounds(Rect<double> bounds) { this->bounds = bounds;  }
+            inline void SetBounds(Rect<double> bounds) { 
+              bounds_ = bounds;
+            }
         protected:
-            Rect<double> bounds;
-            std::vector<LayoutElement> elems;
-            Font currentFont = FONT_SMALL;
-            uint32_t width = 0, height = 0;
-            std::vector<std::shared_ptr<TgxFile>> pics;
+            Rect<double> bounds_;
+            std::vector<LayoutElement> elements_;
+            Font current_font_ = FONT_SMALL;
+            uint32_t width_ = 0;
+            uint32_t height_ = 0;
+            std::vector<std::shared_ptr<TgxFile>> pics_;
         };
     }
 }

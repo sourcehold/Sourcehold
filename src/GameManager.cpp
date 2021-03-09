@@ -53,7 +53,7 @@ StrongholdEdition _edition;
 Resolution _resolution;
 bool _running = false;
 
-bool IsAssetCached(ghc::filesystem::path path)
+bool IsAssetCached([[maybe_unused]] ghc::filesystem::path path)
 {
     // todo
     return false;
@@ -394,7 +394,7 @@ std::wstring Game::GetString(TextSection sec, uint16_t index)
 
 double Game::GetTime()
 {
-    return SDL_GetTicks() / 1000.0f;
+    return SDL_GetTicks() / 1000.0;
 }
 
 ghc::filesystem::path Game::GetDirectory()

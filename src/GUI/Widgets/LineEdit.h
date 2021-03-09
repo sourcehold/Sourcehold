@@ -21,9 +21,9 @@ namespace Sourcehold {
         using namespace Rendering;
 
         class LineEdit : protected EventConsumer<Keyboard>, public Widget {
-            const uint16_t MAX_LENGTH = 100, LINE_SEGMENT_W = 10;
-            std::wstring line;
-            int nx,cp; // number of line segments, character position
+            [[maybe_unused]] const uint16_t MAX_LENGTH = 100, LINE_SEGMENT_W = 10;
+            std::wstring line_;
+            int nx_,cp_; // number of line segments, character position
         public:
             LineEdit(int nx, const std::wstring& line = L"");
             ~LineEdit();
@@ -33,9 +33,12 @@ namespace Sourcehold {
             void EndInput();
             void Update(Rect<int> constraints) override;
 
-            inline void SetLine(const std::wstring &line) { this->line = line; cp = line.size(); }
-            inline void SetPos(uint16_t cp) { this->cp = cp; }
-            inline std::wstring &GetLine() { return line; }
+            inline void SetLine(const std::wstring &line) {
+              line_ = line;
+              cp_ = static_cast<int>(line.size());
+            }
+            inline void SetPos(uint16_t cp) { cp_ = cp; }
+            inline std::wstring &GetLine() { return line_; }
         protected:
             void onEventReceive(Keyboard &event) override;
         };

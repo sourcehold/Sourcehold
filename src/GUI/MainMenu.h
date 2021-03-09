@@ -67,7 +67,7 @@ namespace Sourcehold {
          * Handles the main menu and all submenus
          */
         class MainMenu {
-            StrongholdEdition edition;
+            [[maybe_unused]] StrongholdEdition edition;
             Credits cred;
             Song aud_chantloop;
             Effect aud_greetings, aud_exit;

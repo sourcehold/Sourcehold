@@ -32,7 +32,9 @@ namespace Sourcehold {
                 MENU_TOWN = 3,
                 MENU_WEAPONS = 4,
                 MENU_FOOD_PROCESSING = 5
-            } currentTab = MENU_CASTLE;
+            };
+            [[maybe_unused]] 
+              MenuPage currentTab = MENU_CASTLE;
             StaticElement ui_disk, ui_info, ui_delete, ui_revert, ui_tabs[6];
             StaticElement ui_compass, ui_magnify, ui_lower, ui_hide;
             std::shared_ptr<TgxFile> tgx_right, tgx_left;

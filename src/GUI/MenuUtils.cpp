@@ -23,7 +23,7 @@ using namespace GUI;
 std::shared_ptr<TgxFile> tgx_border;
 
 void GUI::InitMenuUtils()
-{    
+{
     if (GetEdition() == STRONGHOLD_HD) {
         tgx_border = GetTgx("gfx/SH1_Back.tgx");
     }
@@ -44,7 +44,7 @@ void GUI::RenderMenuText(const std::wstring &text)
 void GUI::RenderMenuBorder()
 {
     if(GetEdition() == STRONGHOLD_HD) {
-        SDL_Rect border_rect;
+        [[maybe_unused]] SDL_Rect border_rect;
 
 #if 0
         /**
@@ -61,7 +61,7 @@ void GUI::RenderMenuBorder()
     }
 }
 
-bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
+bool GUI::CheckButtonCollision([[maybe_unused]] uint32_t rx, [[maybe_unused]] uint32_t ry)
 {
     // todo
     return false;
@@ -114,8 +114,8 @@ std::shared_ptr<Dialog> GUI::CombatMenuDialog()
     );
 
     auto table = res->Add<Table>(21, 1);
-    for (int i = 0; i < 21; i++) {
-        table->SetText(i, 0, std::to_wstring(i + 1) + L" " + GetString(T_MISSION_NAMES, 1 + i));
+    for (auto i = 0; i < 21; i++) {
+        table->SetText(static_cast<uint32_t>(i), 0, std::to_wstring(i + 1) + L" " + GetString(T_MISSION_NAMES, 1 + static_cast<uint16_t>(i)));
     }
 
     table->RenderNames(false);

@@ -26,9 +26,9 @@ namespace Sourcehold {
 
         void LoadFonts();
         void UnloadFonts();
-        void RenderText(const std::wstring& text, int32_t x, int32_t y, Font type = FONT_SMALL, bool illumination = false, double scaleFactor = 1.0);
+        void RenderText(const std::wstring& text, uint32_t x, uint32_t y, Font type = FONT_SMALL, bool illumination = false, double scaleFactor = 1.0);
         /* Render text inside the rect */
-        void RenderText(const std::wstring& text, Rect<int> bounds, Align al = Align::CENTER, Font type = FONT_SMALL, bool illumination = false);
+        void RenderText(const std::wstring& text, Rect<uint32_t> bounds, Align al = Align::CENTER, Font type = FONT_SMALL, bool illumination = false);
         std::pair<uint32_t, uint32_t> GetStringPixelDim(const std::wstring& text, Font type);
     }
 }

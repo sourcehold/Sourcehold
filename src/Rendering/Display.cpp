@@ -10,7 +10,7 @@ SDL_Window *_window;
 bool _fullscreen, _nograb;
 int _width, _height;
 
-static int ResizeEventWatcher(void *data, SDL_Event *event)
+static int ResizeEventWatcher([[maybe_unused]] void *data, SDL_Event *event)
 {
     if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED) {
         SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
@@ -22,14 +22,14 @@ static int ResizeEventWatcher(void *data, SDL_Event *event)
     return 0;
 }
 
-bool Rendering::InitDisplay(const std::string &title, int width, int height, int index, bool fullscreen, bool noborder, bool nograb, bool resize)
+bool Rendering::InitDisplay(const std::string &title, int width, int height, size_t index, bool fullscreen, bool noborder, bool nograb, bool resize)
 {
     if(SDL_Init(SDL_INIT_VIDEO) < 0) {
         Logger::error(RENDERING) << SDL_GetError() << std::endl;
         return false;
     }
 
-    int param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
+    unsigned int param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
 
     _fullscreen = fullscreen;
     _nograb = nograb;
@@ -47,13 +47,16 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
     }
 
     // Select display //
-    int displays = SDL_GetNumVideoDisplays();
-    if(index >= displays) index = 0;
+    auto displays = SDL_GetNumVideoDisplays();
+    if(static_cast<int>(index) >= displays){
+      index = 0;
+    }
 
-    auto displayBounds = std::vector<SDL_Rect>(displays);
-    for(int i = 0; i < displays; i++) {
-        displayBounds[i] = { 0, 0, 0, 0 };
-        SDL_GetDisplayBounds(i, &displayBounds[i]);
+    auto displayBounds = std::vector<SDL_Rect>(static_cast<size_t>(displays));
+    for(auto i = 0; i < displays; ++i) {
+      auto idx = static_cast<size_t>(i);
+        displayBounds[idx] = { 0, 0, 0, 0 };
+        SDL_GetDisplayBounds(i, &displayBounds[idx]);
     }
 
 #ifdef SOURCEHOLD_ANDROID

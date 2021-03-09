@@ -31,7 +31,7 @@ namespace Sourcehold {
             void MoveDown();
             void Stop();
 
-            void Update(double dt);
+            void Update(float dt);
 
             void ZoomOut();
             void ZoomIn();
@@ -40,15 +40,22 @@ namespace Sourcehold {
             void TranslateCam(int x, int y);
 
             void SetBounds(SDL_Rect bounds);
+
         public:
-            Rotation rotation = UP;
-            ZoomLevel zoomLevel = ZOOM_FAR;
-            int positionX = 0, positionY = 0;
-            float accX = 0.0f, accY = 0.0f;
-            double start = 0.0;
+            Rotation rotation_ = UP;
+            ZoomLevel zoom_level_ = ZOOM_FAR;
+
+            int pos_x_ = 0;
+            int pos_y_ = 0;
+
+            float acc_x_ = 0.0f;
+            float acc_y_ = 0.0f;
+
+            float start_ = 0.0f;
+
         protected:
-            const uint8_t zoomStep = 2;
-            SDL_Rect bounds;
+            const uint8_t zoom_step_ = 2;
+            SDL_Rect bounds_;
         };
     }
 }

@@ -17,7 +17,8 @@ namespace Sourcehold {
          * Constructs a tileset from a GM1 container
          */
         class Tileset : public Texture {
-            uint32_t numRows, num;
+            uint32_t numRows_;
+            uint32_t num_;
             Surface surf;
         public:
             Tileset();
@@ -32,7 +33,7 @@ namespace Sourcehold {
             void Unlock();
 
             inline uint32_t GetNumTiles() {
-                return num;
+                return num_;
             }
             inline Surface& GetSurface() {
                 return surf;

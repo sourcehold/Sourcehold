@@ -18,10 +18,10 @@ Tileset::~Tileset()
 
 void Tileset::Allocate(uint32_t num)
 {
-    this->num = num;
+    this->num_ = num;
 
-    numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-    surf.AllocNew(30 * numRows, 16 * numRows);
+    numRows_ = static_cast<uint32_t>(std::sqrt(static_cast<float>(num)) + 0.5f);
+    surf.AllocNew(static_cast<int>(30 * numRows_), static_cast<int>(16 * numRows_));
 }
 
 void Tileset::Create()
@@ -36,7 +36,7 @@ void Tileset::SetTile(Texture &image, uint32_t index)
 
     image.LockTexture();
     Texture::LockTexture();
-    Texture::Copy(image, coords.first, coords.second);
+    Texture::Copy(image, static_cast<int>(coords.first), static_cast<int>(coords.second));
     image.UnlockTexture();
     Texture::UnlockTexture();
 }
@@ -46,8 +46,8 @@ SDL_Rect Tileset::GetTile(uint32_t index)
     auto coords = IndexToCoords(index);
 
     SDL_Rect rect;
-    rect.x = coords.first;
-    rect.y = coords.second;
+    rect.x = static_cast<int>(coords.first);
+    rect.y = static_cast<int>(coords.second);
     rect.w = 30;
     rect.h = 16;
 
@@ -76,5 +76,5 @@ void Tileset::Unlock()
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index)
 {
-    return { 30 * (index % numRows), 16 * (index / numRows) };
+    return { 30 * (index % numRows_), 16 * (index / numRows_) };
 }

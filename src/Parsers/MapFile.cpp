@@ -159,20 +159,20 @@ void MapFile::ParsePreview()
     // Thanks to https://github.com/gynt //
     MapSec prev = BlastSection();
 
-    const static uint32_t PALSIZE = 512;
-    uint32_t dim = std::sqrt(prev.num - PALSIZE);
+    constexpr uint32_t pal_size = 512;
+    auto dim = static_cast<uint32_t>((std::sqrt(prev.num - pal_size)));
 
     // copy pixels into temporary surface
     Surface surf;
-    surf.AllocNew(dim, dim);
+    surf.AllocNew(static_cast<int>(dim), static_cast<int>(dim));
     surf.LockSurface();
 
     Uint8 r, g, b, a;
-    for (int y = 0; y < dim; y++) {
-        for (int x = 0; x < dim; x++) {
-            uint8_t index = prev.data[PALSIZE+x+y*dim];
+    for (auto y = 0u; y < dim; y++) {
+        for (auto x = 0u; x < dim; x++) {
+            uint8_t index = prev.data[pal_size+x+y*dim];
             TgxFile::ReadPixel(reinterpret_cast<uint16_t*>(prev.data)[index], r, g, b, a);
-            surf.SetPixel(x, y, r, g, b, a);
+            surf.SetPixel(static_cast<int>(x), static_cast<int>(y), r, g, b, a);
         }
     }
 
@@ -181,7 +181,7 @@ void MapFile::ParsePreview()
     delete[] prev.data;
 }
 
-uint32_t MapFile::ComputeCRC32(const void *data, size_t size)
+uint32_t MapFile::ComputeCRC32([[maybe_unused]] const void *data, [[maybe_unused]] size_t size)
 {
     //boost::crc_32_type res;
     //res.process_bytes(data, size);

@@ -86,61 +86,61 @@ Gm1File::~Gm1File()
 {
 }
 
-bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
+bool Gm1File::LoadFromDisk(ghc::filesystem::path path, [[maybe_unused]] bool cached)
 {
     if(!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
         Logger::error(PARSERS)  << "Unable to open Gm1 file '" << path.string() << "'!" << std::endl;
         return false;
     }
 
-    Gm1Header header;
+    Gm1Header gm1_header;
     Parser::Skip(3*sizeof(uint32_t));
-    header.num = Parser::GetDWord();
+    gm1_header.num = Parser::GetDWord();
     Parser::Skip(1*sizeof(uint32_t));
-    header.type = (Gm1Header::DataType)Parser::GetDWord();
+    gm1_header.type = static_cast<Gm1Header::DataType>(Parser::GetDWord());
     Parser::Skip(14*sizeof(uint32_t));
-    header.len = Parser::GetDWord();
+    gm1_header.len = Parser::GetDWord();
     Parser::Skip(1*sizeof(uint32_t));
 
     /* Boundary check */
-    if(header.num > MAX_NUM) {
+    if(gm1_header.num > MAX_NUM) {
         Logger::error(PARSERS) << "Gm1 file header from '" << path.string() << "' contains too many images!" << std::endl;
         Parser::Close();
         return false;
     }
 
     /* Reserve size in vectors to fit all entries */
-    std::vector<Gm1Entry> entries(header.num);
+    std::vector<Gm1Entry> entries(gm1_header.num);
 
     /* Read Gm1 palette */
     ReadPalette();
 
-    uint32_t n;
+    uint16_t n;
 
     /* Read offsets */
-    for(n = 0; n < header.num; n++) {
+    for(n = 0; n < gm1_header.num; n++) {
         Parser::GetData(&(entries.begin() + n)->offset, sizeof(uint32_t));
     }
 
     /* Read sizes */
-    for(n = 0; n < header.num; n++) {
+    for(n = 0; n < gm1_header.num; n++) {
         Parser::GetData(&(entries.begin() + n)->size, sizeof(uint32_t));
     }
 
-    for(n = 0; n < header.num; n++) {
+    for(n = 0; n < gm1_header.num; n++) {
         /* Read image header */
-        ImageHeader *header = &(entries.begin() + n)->header;
-        header->width = GetWord();
-        header->height = GetWord();
-        header->offsetX = GetWord();
-        header->offsetY = GetWord();
-        header->part =  GetByte();
-        header->parts = GetByte();
-        header->tileOffsetY = GetWord();
-        header->direction = (ImageHeader::Direction)GetByte();
-        header->horizOffset = GetByte();
-        header->partWidth = GetByte();
-        header->color = GetByte();
+        ImageHeader *image_header = &(entries.begin() + n)->header;
+        image_header->width = GetWord();
+        image_header->height = GetWord();
+        image_header->offsetX = GetWord();
+        image_header->offsetY = GetWord();
+        image_header->part =  GetByte();
+        image_header->parts = GetByte();
+        image_header->tileOffsetY = GetWord();
+        image_header->direction = static_cast<ImageHeader::Direction>(GetByte());
+        image_header->horizOffset = GetByte();
+        image_header->partWidth = GetByte();
+        image_header->color = GetByte();
     }
 
     /* Get offset of data start */
@@ -161,26 +161,29 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
      * the texture atlas (i.e. building + ground).
      */
     uint32_t numCollections = 0;
-    for(n = 0; n < header.num; n++) {
-        if(entries[n].header.part == 0 && header.type == Gm1Header::TYPE_TILE) {
+    for(n = 0; n < gm1_header.num; n++) {
+        if(entries[n].header.part == 0 && gm1_header.type == Gm1Header::TYPE_TILE) {
             numCollections++;
         }
     }
 
-    if(header.type == Gm1Header::TYPE_TILE) {
+    if(gm1_header.type == Gm1Header::TYPE_TILE) {
         /* Allocate collections */
         std::vector<std::pair<uint32_t, uint32_t>> entryDims(numCollections);
         uint32_t currentEntry = 0;
         for(n = 0; n < numCollections; n++) {
-            uint32_t top = UINT_MAX, left = UINT_MAX, bottom = 0, right = 0;
-            uint32_t cnt = uint32_t(entries[currentEntry].header.parts);
+            auto top = std::numeric_limits<uint16_t>::max();
+            auto left = top;
+            auto bottom = 0;
+            auto right = 0;
+            auto cnt = entries[currentEntry].header.parts;
 
             /* Go through every entry and find the image bounds */
-            for(uint32_t i = currentEntry; i < currentEntry + cnt; i++) {
-                uint32_t x = entries[i].header.offsetX;
-                uint32_t y = entries[i].header.offsetY;
-                uint32_t w = entries[i].header.width;
-                uint32_t h = entries[i].header.height;
+            for(auto i = currentEntry; i < currentEntry + cnt; i++) {
+                auto x = entries[i].header.offsetX;
+                auto y = entries[i].header.offsetY;
+                auto w = entries[i].header.width;
+                auto h = entries[i].header.height;
 
                 left = std::min(left, x);
                 top = std::min(top, y);
@@ -189,12 +192,12 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
             }
 
             /* Calculate the offset relative to the texture atlas rectangle for every entry */
-            for(uint32_t d = currentEntry + cnt; currentEntry < d; currentEntry++) {
+            for(auto d = currentEntry + cnt; currentEntry < d; currentEntry++) {
                 entries[currentEntry].collection = n;
-                entries[currentEntry].offX = int(entries[currentEntry].header.offsetX + entries[currentEntry].header.horizOffset) - left;
-                entries[currentEntry].offY = int(entries[currentEntry].header.offsetY) - top;
-                entries[currentEntry].tileX = int(entries[currentEntry].header.offsetX) - left;
-                entries[currentEntry].tileY = int(entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
+                entries[currentEntry].offX = (entries[currentEntry].header.offsetX + entries[currentEntry].header.horizOffset) - left;
+                entries[currentEntry].offY = (entries[currentEntry].header.offsetY) - top;
+                entries[currentEntry].tileX = (entries[currentEntry].header.offsetX) - left;
+                entries[currentEntry].tileY = (entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
             }
 
             /* Hand the width/height to the texture atlas  */
@@ -203,10 +206,10 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
         /* One collection -> one texture */
         textureAtlas->Allocate(entryDims);
         textureAtlas->Lock();
-        tileset->Allocate(header.num);
+        tileset->Allocate(gm1_header.num);
         tileset->Lock();
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n, entries, imgdata, &header);
+            GetImage(n, entries, imgdata, &gm1_header);
         }
         tileset->Unlock();
         tileset->Create();
@@ -215,8 +218,8 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
     }
     else {
         /* Allocate images */
-        std::vector<std::pair<uint32_t, uint32_t>> entryDims(header.num);
-        for(n = 0; n < header.num; n++) {
+        std::vector<std::pair<uint32_t, uint32_t>> entryDims(gm1_header.num);
+        for(n = 0; n < gm1_header.num; n++) {
             int w = entries[n].header.width;
             int h = entries[n].header.height;
             std::pair<uint32_t, uint32_t> dim(w, h);
@@ -226,7 +229,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached)
         textureAtlas->Lock();
         /* One entry -> one texture */
         for(n = 0; n < entries.size(); n++) {
-            GetImage(n, entries, imgdata, &header);
+            GetImage(n, entries, imgdata, &gm1_header);
         }
         textureAtlas->Unlock();
         textureAtlas->Create();
@@ -252,12 +255,12 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
     case Gm1Header::TYPE_FONT:
     case Gm1Header::TYPE_CONSTSIZE: {
         SDL_Rect part = textureAtlas->Get(index);
-        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, nullptr, 0);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, static_cast<uint16_t>(part.x), static_cast<uint16_t>(part.y), nullptr, 0);
     }
         break;
     case Gm1Header::TYPE_ANIMATION: {
         SDL_Rect part = textureAtlas->Get(index);
-        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, part.x, part.y, palette, entries[index].header.color % 10);
+        TgxFile::ReadTgx(textureAtlas->GetSurface(), position, entries[index].size, static_cast<uint16_t>(part.x), static_cast<uint16_t>(part.y), palette, entries[index].header.color % 10);
     }
         break;
     case Gm1Header::TYPE_TILE: {
@@ -268,8 +271,8 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
         TgxFile::ReadTgx(textureAtlas->GetSurface(),
                          position+512,
                          entries[index].size-512,
-                         part.x + entries[index].offX,
-                         part.y + entries[index].offY,
+                         static_cast<uint16_t>(part.x) + entries[index].offX,
+                         static_cast<uint16_t>(part.y) + entries[index].offY,
                          nullptr,
                          0);
 
@@ -313,9 +316,9 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
     case Gm1Header::TYPE_MISC2: {
         SDL_Rect part = textureAtlas->Get(index);
 
-        for(uint32_t x = 0; x < entries[index].header.width; x++) {
-            for(uint32_t y = 0; y < entries[index].header.height; y++) {
-                uint16_t pixel = *reinterpret_cast<uint16_t*>(position);
+        for(auto x = 0; x < entries[index].header.width; x++) {
+            for(auto y = 0; y < entries[index].header.height; y++) {
+                auto pixel = *reinterpret_cast<uint16_t*>(position);
                 position += 2;
 
                 /* Read RGB */
@@ -323,7 +326,7 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries, char *img
                 TgxFile::ReadPixel(pixel, r, g, b, a);
 
                 /* Add to texture */
-                textureAtlas->GetSurface().SetPixel(x+part.x, y+part.y, r, g, b, a);
+                textureAtlas->GetSurface().SetPixel(x + part.x, y + part.y, r, g, b, a);
             }
         }
     }

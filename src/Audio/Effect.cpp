@@ -11,8 +11,8 @@ using namespace Sourcehold::System;
 
 Effect::Effect()
 {
-    ic = avformat_alloc_context();
-    if(!ic) {
+    ic_ = avformat_alloc_context();
+    if(!ic_) {
         Logger::error(AUDIO) << "Unable to allocate input format context!" << std::endl;
     }
 }
@@ -24,10 +24,10 @@ Effect::~Effect()
 
 bool Effect::Load(ghc::filesystem::path path, bool looping)
 {
-    this->looping = looping;
+    looping_ = looping;
 
     int out = avformat_open_input(
-        &ic,
+        &ic_,
         path.string().c_str(),
         GetAVInputFormat(),
         NULL
@@ -36,79 +36,79 @@ bool Effect::Load(ghc::filesystem::path path, bool looping)
         return false;
     }
 
-    ic->max_analyze_duration = 10000;
-    if(avformat_find_stream_info(ic, NULL) < 0) {
+    ic_->max_analyze_duration = 10000;
+    if(avformat_find_stream_info(ic_, NULL) < 0) {
         return false;
     };
 
-    audioStream = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, &audioDecoder, 0);
-    if(audioStream < 0) {
+    audio_stream_ = av_find_best_stream(ic_, AVMEDIA_TYPE_AUDIO, -1, -1, &audio_decoder_, 0);
+    if(audio_stream_ < 0) {
         return false;
     }
 
-    audioCtx = avcodec_alloc_context3(audioDecoder);
-    if(!audioCtx) {
+    audio_ctx_ = avcodec_alloc_context3(audio_decoder_);
+    if(!audio_ctx_) {
         return false;
     }
 
-    avcodec_parameters_to_context(audioCtx, ic->streams[audioStream]->codecpar);
-    int ca = avcodec_open2(audioCtx, audioDecoder, NULL);
+    avcodec_parameters_to_context(audio_ctx_, ic_->streams[audio_stream_]->codecpar);
+    int ca = avcodec_open2(audio_ctx_, audio_decoder_, NULL);
     if(ca < 0) {
         return false;
     }
 
-    audioFrame = av_frame_alloc();
+    audio_frame_ = av_frame_alloc();
 
-    valid = true;
-    audioInit = false;
+    valid_ = true;
+    audioInit_ = false;
     return true;
 }
 
 void Effect::Destroy()
 {
-    if(valid) {
-        av_frame_free(&audioFrame);
-        alSourceStop(alSource);
-        alDeleteSources(1, &alSource);
-        alDeleteBuffers(NUM_AUDIO_BUFFERS, alBuffers);
+    if(valid_) {
+        av_frame_free(&audio_frame_);
+        alSourceStop(al_source_);
+        alDeleteSources(1, &al_source_);
+        alDeleteBuffers(num_audio_buffers_, al_buffers_);
 
-        valid = false;
+        valid_ = false;
     }
 }
 
 void Effect::Play()
 {
-    playing = true;
+    playing_ = true;
 }
 
 void Effect::Stop()
 {
-    playing = false;
+    playing_ = false;
 }
 
 void Effect::Update()
 {
-    if(!playing || !valid) return;
+    if(!playing_ || !valid_) return;
 
-    av_init_packet(&audioPacket);
+    av_init_packet(&audio_packet_);
 
     int ret = 0;
-    if (av_read_frame(ic, &audioPacket) < 0) {
-        if (looping) {
-            av_seek_frame(ic, -1, 0, 0);
-            if (av_read_frame(ic, &audioPacket) < 0) {
+    if (av_read_frame(ic_, &audio_packet_) < 0) {
+        if (looping_) {
+            av_seek_frame(ic_, -1, 0, 0);
+            if (av_read_frame(ic_, &audio_packet_) < 0) {
                 return;
             }
         }
         else {
-            playing = false;
+            playing_ = false;
             return;
         }
     }
 
-    av_frame_unref(audioFrame);
+    av_frame_unref(audio_frame_);
 
-    ret = avcodec_send_packet(audioCtx, &audioPacket);
+    ret = avcodec_send_packet(audio_ctx_, &audio_packet_);
 
 /*
   double dur_ms = (double)audioPacket.duration * av_q2d(audioCtx->time_base);
@@ -116,89 +116,89 @@ void Effect::Update()
 */
 
     while (ret >= 0) {
-        ret = avcodec_receive_frame(audioCtx, audioFrame);
+        ret = avcodec_receive_frame(audio_ctx_, audio_frame_);
         if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
             return;
         }
 
-        if (!audioInit) {
-            alGenSources(1, &alSource);
+        if (!audioInit_) {
+            alGenSources(1, &al_source_);
             Audio::PrintError();
-            alGenBuffers(NUM_AUDIO_BUFFERS, alBuffers);
+            alGenBuffers(num_audio_buffers_, al_buffers_);
             Audio::PrintError();
 
-            alSource3f(alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
-            alSource3f(alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-            alSourcef(alSource, AL_PITCH, 1.0f);
-            alSourcef(alSource, AL_GAIN, 1.0f);
+            alSource3f(al_source_, AL_POSITION, 0.0f, 0.0f, 0.0f);
+            alSource3f(al_source_, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+            alSourcef(al_source_, AL_PITCH, 1.0f);
+            alSourcef(al_source_, AL_GAIN, 1.0f);
 
-            alFormat = AL_FORMAT_MONO16;
-            alNumChannels = 1;
+            al_format_ = AL_FORMAT_MONO16;
+            al_num_channels_ = 1;
 
-            alNumFreeBuffers = NUM_AUDIO_BUFFERS;
+            al_num_free_buffers_ = num_audio_buffers_;
 
-            std::copy(alBuffers, alBuffers + NUM_AUDIO_BUFFERS, alFreeBuffers);
+            std::copy(al_buffers_, al_buffers_ + num_audio_buffers_, al_free_buffers_);
 
-            alSampleRate = 22050;
-            size = alNumChannels * audioFrame->nb_samples * av_get_bytes_per_sample((AVSampleFormat)audioFrame->format);
-            audioBuffer = (char*)std::malloc(size);
+            al_sample_rate_ = 22050;
+            size_ = al_num_channels_ * static_cast<unsigned int>(audio_frame_->nb_samples) * static_cast<unsigned int>(av_get_bytes_per_sample(static_cast<AVSampleFormat>(audio_frame_->format)));
+            audio_buffer_ = static_cast<char*>(std::malloc(size_));
 
-            swr = swr_alloc_set_opts(
+            swr_ = swr_alloc_set_opts(
                 NULL,
                 AV_CH_LAYOUT_MONO,
                 AV_SAMPLE_FMT_S16,
-                alSampleRate,
+                static_cast<int>(al_sample_rate_),
                 /*audioFrame->channel_layout*/AV_CH_LAYOUT_MONO,
-                (AVSampleFormat)audioCtx->sample_fmt,
-                audioCtx->sample_rate,
+                static_cast<AVSampleFormat>(audio_ctx_->sample_fmt),
+                audio_ctx_->sample_rate,
                 0,
                 NULL
                 );
-            if(!swr) {
+            if(!swr_) {
                 Logger::error(AUDIO) << "Unable to allocate swresample context!" << std::endl;
                 return;
             }
 
-            if(swr_init(swr) < 0) {
+            if(swr_init(swr_) < 0) {
                 Logger::error(AUDIO) << "Unable to init swresample context!" << std::endl;
                 return;
             }
 
-            audioInit = true;
+            audioInit_ = true;
         }
-        std::memset(audioBuffer, 0, size);
+        std::memset(audio_buffer_, 0, size_);
 
         int buffersFinished = 0;
-        alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &buffersFinished);
+        alGetSourcei(al_source_, AL_BUFFERS_PROCESSED, &buffersFinished);
         Audio::PrintError();
 
         if (buffersFinished > 0) {
-            alSourceStop(alSource);
+            alSourceStop(al_source_);
 
             for (; buffersFinished > 0; buffersFinished--) {
                 ALuint buffer = 0;
-                alSourceUnqueueBuffers(alSource, 1, &buffer);
+                alSourceUnqueueBuffers(al_source_, 1, &buffer);
                 Audio::PrintError();
 
                 if (buffer > 0) {
-                    alFreeBuffers[alNumFreeBuffers] = buffer;
+                    al_free_buffers_[al_num_free_buffers_] = buffer;
                     Audio::PrintError();
-                    alNumFreeBuffers++;
+                    al_num_free_buffers_++;
                 }
             }
 
-            alSourcePlay(alSource);
+            alSourcePlay(al_source_);
         }
 
-        if (alNumFreeBuffers > 0) {
-            ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
+        if (al_num_free_buffers_ > 0) {
+            ALuint alBuffer = al_free_buffers_[al_num_free_buffers_ - 1];
 
             int smp = swr_convert(
-                swr,
-                (uint8_t**)audioBuffer,
-                size,
-                (const uint8_t**)audioFrame->extended_data,
-                audioFrame->nb_samples
+                swr_,
+                reinterpret_cast<uint8_t**>(audio_buffer_),
+                static_cast<int>(size_),
+                const_cast<const uint8_t**>(audio_frame_->extended_data),
+                audio_frame_->nb_samples
                 );
 
             if(smp < 0) {
@@ -206,17 +206,17 @@ void Effect::Update()
                 return;
             }
 
-            alSourceStop(alSource);
+            alSourceStop(al_source_);
 
-            alBufferData(alBuffer, alFormat, audioBuffer, smp*2, alSampleRate);
+            alBufferData(alBuffer, static_cast<ALenum>(al_format_), audio_buffer_, smp*2, static_cast<ALsizei>(al_sample_rate_));
             Audio::PrintError();
-            alSourceQueueBuffers(alSource, 1, &alBuffer);
+            alSourceQueueBuffers(al_source_, 1, &alBuffer);
             Audio::PrintError();
 
-            alSourcePlay(alSource);
+            alSourcePlay(al_source_);
 
-            alNumFreeBuffers--;
-            alFreeBuffers[alNumFreeBuffers] = 0;
+            al_num_free_buffers_--;
+            al_free_buffers_[al_num_free_buffers_] = 0;
         }
     }
 }

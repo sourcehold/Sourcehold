@@ -29,7 +29,7 @@ Layout::~Layout()
     Destroy();
 }
 
-void Layout::CreateFromHlp(HlpSection *hlp)
+void Layout::CreateFromHlp([[maybe_unused]] HlpSection *hlp)
 {
     /*
     for(int i = 0; i < hlp->children.size(); i++) {
@@ -87,10 +87,10 @@ void Layout::CreateFromHlp(HlpSection *hlp)
 
 void Layout::Destroy()
 {
-    elems.clear();
+    elements_.clear();
 }
 
-void Layout::Render(double x, double y)
+void Layout::Render([[maybe_unused]] double x, [[maybe_unused]] double y)
 {
 }
 
@@ -98,12 +98,12 @@ void Layout::Render(int x, int y)
 {
     int winH = GetHeight();
 
-    for (auto &elem : elems)
+    for (auto &elem : elements_)
     {
         if(y + elem.y > winH) return;
 
         if(elem.type == LayoutElement::LINE) {
-            RenderText(elem.text, elem.x + x, elem.y + y, elem.font);
+            RenderText(elem.text,  static_cast<uint32_t>(elem.x + x), static_cast<uint32_t>(elem.y + y), elem.font);
         }else if(elem.type == LayoutElement::PIC) {
             ::Render(*elem.pic, elem.x + x, elem.y + y);
         }else if(elem.type == LayoutElement::PARAGRAPH) {
@@ -114,23 +114,23 @@ void Layout::Render(int x, int y)
 
 void Layout::SetFont(Font index)
 {
-    currentFont = index;
+    current_font_ = index;
 }
 
 void Layout::AddText(const std::wstring &str)
 {
-    auto dim = GetStringPixelDim(str, currentFont);
+    auto dim = GetStringPixelDim(str, current_font_);
 
     LayoutElement elem;
     elem.type = LayoutElement::LINE;
     elem.text = str;
-    elem.font = currentFont;
+    elem.font = current_font_;
     elem.x = 0;
-    elem.y = height;
-    elems.push_back(elem);
+    elem.y = static_cast<int>(height_);
+    elements_.push_back(elem);
 
-    width = std::max(width, dim.first);
-    height += dim.second;
+    width_ = std::max(width_, dim.first);
+    height_ += dim.second;
 }
 
 void Layout::AddPic(std::shared_ptr<TgxFile> pic, PicPosition pos)
@@ -139,23 +139,23 @@ void Layout::AddPic(std::shared_ptr<TgxFile> pic, PicPosition pos)
     elem.type = LayoutElement::PIC;
     elem.pic = pic;
     elem.pos = pos;
-    elem.y = height;
+    elem.y = static_cast<int>(height_);
     if(pos == PicPosition::LEFT) {
         elem.x = 0;
     }else if(pos == PicPosition::RIGHT) {
-        elem.x = width - pic->GetWidth();
+        elem.x = static_cast<int>(width_) - pic->GetWidth();
     }else if(pos == PicPosition::CENTRE) {
-        elem.x = (width - pic->GetWidth()) / 2;
+        elem.x = (static_cast<int>(width_) - pic->GetWidth()) / 2;
     }
-    elems.push_back(elem);
+    elements_.push_back(elem);
 
-    width = std::max((int)width, pic->GetWidth());
-    height += pic->GetHeight();
+    width_ = std::max(width_, static_cast<uint32_t>(pic->GetWidth()));
+    height_ += static_cast<uint32_t>(pic->GetHeight());
 }
 
 void Layout::NewParagraph()
 {
     LayoutElement elem;
     elem.type = LayoutElement::PARAGRAPH;
-    elems.push_back(elem);
+    elements_.push_back(elem);
 }

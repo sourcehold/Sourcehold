@@ -5,7 +5,7 @@ namespace Sourcehold {
         namespace System {
             RenderSystem::RenderSystem() {}
 
-            void RenderSystem::tickEntity(entt::registry &registry, EachEntityType &entity) {
+            void RenderSystem::tickEntity([[maybe_unused]] entt::registry &registry, EachEntityType &entity) {
                 const auto [entityRef, typeComponent, positionComponent, animationComponent] = entity;
                 GM1FileSP assetFile;
                 try {
@@ -22,10 +22,10 @@ namespace Sourcehold {
                 Camera& cam = Camera::instance();
                 auto [x, y] = position;
 
-                int px = x * 30 - cam.positionX;
-                int py = y * 15 - cam.positionY;
+                int px = x * 30 - cam.pos_x_;
+                int py = y * 15 - cam.pos_y_;
 
-                SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? animationComponent.frameIndex : 0); // TODO: index
+                SDL_Rect r = assetFile->GetTextureAtlas()->Get(animationComponent.animate ? static_cast<Uint32>(animationComponent.frameIndex) : 0); // TODO: index
                 Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
             }
         }

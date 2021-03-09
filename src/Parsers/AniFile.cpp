@@ -17,22 +17,9 @@ struct AniFile::RiffChunk {
     uint32_t size;
 };
 
-AniFile::AniFile() : Parser()
-{
-}
-
-AniFile::AniFile(const AniFile &other)
-{
-}
-
 AniFile::AniFile(ghc::filesystem::path path) : Parser()
 {
     this->LoadFromDisk(path);
-}
-
-AniFile::~AniFile()
-{
-
 }
 
 bool AniFile::LoadFromDisk(ghc::filesystem::path path)
@@ -63,8 +50,8 @@ bool AniFile::ParseChunks()
         RiffChunk header;
         Parser::GetData(&header, sizeof(RiffChunk));
 
-        std::string id((const char*)&header.id, sizeof(uint32_t));
-        size_t bytes = header.size % 2 == 0 ? header.size : header.size + 1;
+        std::string id(reinterpret_cast<const char*>(&header.id), sizeof(uint32_t));
+        auto bytes = header.size % 2 == 0 ? header.size : header.size + 1;
 
         if(id == "anih") {
             /* TODO */

@@ -30,7 +30,7 @@ bool TexFile::LoadFromDisk(ghc::filesystem::path path)
             fp += str.size()*2 + 4;
             Parser::SeekG(fp);
 
-            strings[(TextSection)i].push_back(str);
+            strings[static_cast<TextSection>(i)].push_back(str);
         }
     }
 

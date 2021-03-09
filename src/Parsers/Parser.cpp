@@ -16,7 +16,7 @@ bool Parser::Open(const std::string &path, std::ios_base::openmode mode)
         stream.seekg(0, std::ios::end);
         fsize = stream.tellg() - fsize;
         stream.seekg(0, std::ios::beg);
-        length = (uint32_t)fsize;
+        length = static_cast<uint32_t>(fsize);
     }
 
     return true;
@@ -49,20 +49,20 @@ void Parser::SeekP(uint32_t pos)
 
 uint32_t Parser::Tell()
 {
-    return stream.tellg();
+    return static_cast<uint32_t>(stream.tellg());
 }
 
 bool Parser::GetData(void *buf, size_t bufsize)
 {
     if(stream.rdstate() & std::fstream::failbit) return false;
-    stream.read((char*)buf, bufsize);
+    stream.read(static_cast<char*>(buf), static_cast<std::streamsize>(bufsize));
     return true;
 }
 
 bool Parser::GetWhole(void *buf)
 {
     if(stream.rdstate() & std::fstream::failbit) return false;
-    stream.read((char*)buf, length);
+    stream.read(static_cast<char*>(buf), length);
     return true;
 }
 
@@ -112,7 +112,7 @@ std::string Parser::GetLine()
 
 uint8_t Parser::GetByte()
 {
-    return stream.get();
+    return static_cast<uint8_t>(stream.get());
 }
 
 uint16_t Parser::GetWord()
@@ -131,7 +131,7 @@ uint32_t Parser::GetDWord()
 
 void Parser::WriteData(void *buf, size_t bufsize)
 {
-    stream.write((const char*)buf, bufsize);
+    stream.write(static_cast<const char*>(buf), static_cast<std::streamsize>(bufsize));
 }
 
 void Parser::WriteBytes(uint8_t byte, size_t num)
@@ -144,22 +144,23 @@ void Parser::WriteBytes(uint8_t byte, size_t num)
 void Parser::WriteUTF16(std::wstring str)
 {
     for(wchar_t c : str) {
-        stream.write((const char*)&c, 2);
+        stream.write(reinterpret_cast<const char*>(&c), 2);
     }
 }
 
 void Parser::WriteByte(uint8_t byte)
 {
-    stream.write((const char*)&byte, 1);
+    stream.write(reinterpret_cast<const char*>(&byte), 1);
 }
 
 void Parser::WriteWord(uint16_t word)
 {
-    stream.write((const char*)&word, 2);
+    stream.write(reinterpret_cast<const char*>(&word), 2);
 }
 
+// TODO: DRY
 void Parser::WriteDWord(uint32_t dword)
 {
-    stream.write((const char*)&dword, 4);
+    stream.write(reinterpret_cast<const char*>(&dword), 4);
 }
 

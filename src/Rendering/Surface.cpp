@@ -66,7 +66,7 @@ void Surface::UnlockSurface()
 void Surface::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
 {
     if(!locked) return;
-    ((Uint32*)surface->pixels)[(y * surface->w) + x] = ToPixel(r, g, b, a);
+    (static_cast<Uint32*>(surface->pixels))[(y * surface->w) + x] = ToPixel(r, g, b, a);
 }
 
 void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect)
@@ -74,7 +74,7 @@ void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     if(!locked || !other.IsLocked()) return;
 
     SDL_Rect dest = {
-        (int)x, (int)y, (int)other.GetWidth(), (int)other.GetHeight()
+        static_cast<int>(x), static_cast<int>(y), static_cast<int>(other.GetWidth()), static_cast<int>(other.GetHeight())
     };
 
     int err = SDL_BlitSurface(
@@ -102,6 +102,6 @@ Uint32* Surface::GetData()
 
 Uint32 Surface::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-    return r << 24 | g << 16 | b << 8 | a;
+    return static_cast<Uint32>(r << 24 | g << 16 | b << 8 | a);
 }
 

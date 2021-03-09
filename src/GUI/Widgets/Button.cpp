@@ -24,11 +24,11 @@ Button::~Button()
 
 void Button::Update(Rect<int> constraints)
 {
-    const static int button_indices[] = {
+    const static uint32_t button_indices[] = {
         20, 23, 29, 32, 35, 38, 41, 44, 96,
     };
 
-    auto dim = GetStringPixelDim(text, FONT_SMALL);
+    [[maybe_unused]] auto dim = GetStringPixelDim(text, FONT_SMALL);
     auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
     auto atlas = interface_icons;
@@ -71,7 +71,7 @@ void Button::Update(Rect<int> constraints)
     atlas->SetAlphaMod(255);
 
     // text
-    Rendering::RenderText(text, Rect<int>(x + 4, y + 4, rect.w - 4, rect.h - 4), Align::CENTER, FONT_LARGE, false);
+    Rendering::RenderText(text, Rect<uint32_t>(static_cast<uint32_t>(x) + 4, static_cast<uint32_t>(y) + 4, static_cast<uint32_t>(rect.w) - 4, static_cast<uint32_t>(rect.h) - 4), Align::CENTER, FONT_LARGE, false);
 }
 
 void Button::onEventReceive(Mouse& event)

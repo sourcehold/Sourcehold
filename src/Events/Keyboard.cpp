@@ -12,7 +12,7 @@ Keyboard::~Keyboard()
 
 SDL_Keysym Keyboard::Key()
 {
-    return event.key.keysym;
+    return event_.key.keysym;
 }
 
 EventType Keyboard::GetType()
@@ -22,12 +22,12 @@ EventType Keyboard::GetType()
 
 SDL_Event Keyboard::Get()
 {
-    return event;
+    return event_;
 }
 
 void Keyboard::eventCallback(SDL_Event &event)
 {
-    this->event = event;
+    this->event_ = event;
 
     Event::SetHandled(true);
     type = ConvertTypes(event.type);

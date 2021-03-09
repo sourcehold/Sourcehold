@@ -51,7 +51,7 @@ void VolumeTxt::ParseLine(std::string &line)
     const std::string str = line;
     if(std::regex_search(str.begin(), str.end(), match, regex)) {
         std::string f = match[1];
-        uint8_t v = std::stoi(match[2]);
+        uint8_t v = static_cast<uint8_t>(std::stoi(match[2]));
 
         volumes.insert(std::pair<std::string, uint8_t>(f, v));
     }

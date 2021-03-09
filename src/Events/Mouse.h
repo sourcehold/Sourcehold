@@ -10,7 +10,7 @@ namespace Sourcehold {
          * Mouse event handler
          */
         class Mouse : public Event {
-            SDL_Event event;
+            SDL_Event event_;
         public:
             Mouse();
             Mouse(const Mouse &mouse) = delete;

@@ -32,7 +32,7 @@ namespace Sourcehold {
 
             void Create(uint32_t rows, uint32_t columns);
             void Destroy();
-            
+
             void Update(Rect<int> constraints) override;
 
             void SetNumRows(uint32_t n);
@@ -43,7 +43,7 @@ namespace Sourcehold {
             inline int GetSelected() { return selected; }
             inline int GetHighlight() { return highlight; }
 
-            inline void Scrollable(bool b) { scrollbar = true; }
+            inline void Scrollable([[maybe_unused]] bool b) { scrollbar = true; }
             inline void RenderNames(bool b) { renderNames = b; }
         protected:
             void onEventReceive(Mouse &mouse) override;

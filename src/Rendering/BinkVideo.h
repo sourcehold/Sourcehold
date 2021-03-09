@@ -42,10 +42,14 @@ namespace Sourcehold {
             char *audioBuffer;
             int videoStream, audioStream, size;
             float fps;
-            uint32_t *framebuf;
+            std::vector<uint32_t> framebuf;
             int delayTimer;
             bool packetFinished;
-            bool hasAudio = false, audioInit = false, looping, running = false, valid = false;
+            bool hasAudio = false;
+            bool audioInit = false;
+            bool looping;
+            bool running = false; 
+            bool valid = false;
         public:
             BinkVideo();
             BinkVideo(ghc::filesystem::path path, bool looping = false);

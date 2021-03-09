@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <entt/entt.hpp>
+#include "ECS/EnTT.h"
 
 #include "GameMap.h"
 #include "GameManager.h"
@@ -56,16 +56,17 @@ namespace Sourcehold {
             Unit(int x, int y, const char *f) : x(x), y(y) {
                 file = GetGm1(std::string("gm/") + f + std::string(".gm1"));
             }
+            virtual ~Unit() = default;
 
-            virtual void Update(double dt) {};
+            virtual void Update([[maybe_unused]]double dt) {};
 
             void Render() {
                 Camera& cam = Camera::instance();
 
-                int px = x * 30 - cam.positionX;
-                int py = y * 15 - cam.positionY;
+                int px = x * 30 - cam.pos_x_;
+                int py = y * 15 - cam.pos_y_;
 
-                SDL_Rect r = file->GetTextureAtlas()->Get(index);
+                SDL_Rect r = file->GetTextureAtlas()->Get(static_cast<uint32_t>(index));
                 Rendering::Render(*file->GetTextureAtlas(), px, py, &r);
             }
 
@@ -98,7 +99,7 @@ namespace Sourcehold {
 
             UIState Play();
         protected:
-            void UpdateCamera(double dt);
+            void UpdateCamera(float dt);
         private:
             void onEventReceive(Keyboard& keyEvent) override;
             void onEventReceive(Mouse& mouseEvent) override;

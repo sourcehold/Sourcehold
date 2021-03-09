@@ -189,20 +189,20 @@ UIState MainMenu::EnterMenu()
         } break;
         case COMBAT_MENU: {
             Render(*bg_combat[0], mx, my);
-            RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);            
+            RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);
         } break;
         case MILITARY_CAMPAIGN_MENU: {
             Render(*bg_combat[1], mx, my);
             RenderButtons(COMBAT_CAMPAIGN_BACK, COMBAT_CAMPAIGN_NEXT);
 
-            combatMenuDlg->Update(Dialog::CENTRE, 0, -60);
+            combatMenuDlg->Render(Dialog::CENTRE, 0, -60);
         } break;
         case MILITARY_CAMPAIGN_MISSION: {
             // Start the selected campaign mission (TODO) //
             aud_chantloop.Stop();
 
             int index = 0;
-            NarrScreen* narr = new NarrScreen(index + 1);
+            NarrScreen* narr = new NarrScreen(static_cast<uint8_t>(index) + 1);
             narr->Begin();
             delete narr;
 
@@ -233,18 +233,18 @@ UIState MainMenu::EnterMenu()
         } break;
         case LOAD_SAVED_MENU: {
             Render(*bg_main[1], mx, my);
-            loadDlg->Update(Dialog::CENTRE, 0, 0);
+            loadDlg->Render(Dialog::CENTRE, 0, 0);
         } break;
         case EXIT_GAME: {
             Render(*bg_main[1], mx, my);
-            quitDlg->Update(Dialog::CENTRE, 0, 0);
+            quitDlg->Render(Dialog::CENTRE, 0, 0);
         } break;
         case SETTINGS_MENU: {
             Render(*bg_main[1], mx, my);
         } break;
         }
 
-        RenderText(L"V." SOURCEHOLD_VERSION_STRING, mx+6, my+4, FONT_LARGE, false, 0.5);
+        RenderText(L"V." SOURCEHOLD_VERSION_STRING, static_cast<uint32_t>(mx)+6, static_cast<uint32_t>(my)+4, FONT_LARGE, false, 0.5);
 
         /*if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
 #if SCALE_MAIN_MENU == 1
@@ -297,16 +297,16 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
 {
     if (start >= end) return;
 
-    int glareTicks = (int)(GetTime() * 10.0);
+    int glareTicks = static_cast<int>(GetTime() * 10.0);
     int glareCounter = (glareTicks / 14) % 4;
 
-    for (int i = start; i <= end; i++) {
-        const MenuButtonInfo& inf = lut_buttons[i];
+    for (size_t i = start; i <= end; i++) {
+        const auto& inf = lut_buttons[i];
         auto tex = ui_tex[inf.atlasIndex];
 
         // Animate the inactive graphic //
         SDL_Rect inactive = tex->Get(inf.index);
-        if (inf.hasGlare && inf.glareOrder == glareCounter) {            
+        if (inf.hasGlare && inf.glareOrder == glareCounter) {
             ui_elems[i].SetInactiveRect(tex->Get(inf.glareIndex + (glareTicks % 14)));
         }
         else {
@@ -327,7 +327,7 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
 void MainMenu::HideButtons()
 {
     // hack
-    for (int i = 0; i < BUTTON_END; i++) {
+    for (size_t i = 0; i < BUTTON_END; i++) {
         ui_elems[i].visible = false;
     }
 }

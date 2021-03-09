@@ -36,7 +36,7 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path)
 
     /* Allocate image */
     Surface surf;
-    surf.AllocNew(header.width, header.height);
+    surf.AllocNew(static_cast<int>(header.width), static_cast<int>(header.height));
 
     /* Calculate size */
     size_t size = Parser::GetLength() - Parser::Tell();
@@ -68,10 +68,10 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
 
     while(buf < end) {
         /* Read token byte */
-        uint8_t b = *(uint8_t*)buf;
+        uint8_t token = static_cast<uint8_t>(*buf);
         buf++;
-        uint8_t len = (b & 0x1F) + 1;
-        uint8_t flag = b >> 5;
+        uint8_t len = (token & 0x1F) + 1;
+        uint8_t flag = token >> 5;
 
         switch(flag) {
         case 0x00: {
@@ -79,7 +79,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
             for(uint8_t i = 0; i < len; ++i,++x) {
                 uint16_t pixelColor;
                 if(pal) {
-                    uint8_t index = *(uint8_t*)buf;
+                    uint8_t index = static_cast<uint8_t>(*buf);
                     buf++;
                     pixelColor = pal[256 * color + index];
                 }
@@ -103,7 +103,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
             // repeated pixel
             uint16_t pixelColor;
             if(pal) {
-                uint8_t index = *(uint8_t*)buf;
+                uint8_t index = static_cast<uint8_t>(*buf);
                 buf++;
                 pixelColor = pal[256 * color + index];
             }
@@ -138,7 +138,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX, uint1
 void TgxFile::ReadPixel(uint16_t pixel, uint8_t &r, uint8_t &g, uint8_t &b, uint8_t &a)
 {
     a = 0xFF;
-    r = ((pixel >> 10) & 0x1F) << 3;
-    g = ((pixel >> 5) & 0x1F) << 3;
-    b = (pixel & 0x1F) << 3;
+    r = static_cast<uint8_t>(((pixel >> 10) & 0x1F) << 3);
+    g = static_cast<uint8_t>(((pixel >> 5) & 0x1F) << 3);
+    b = static_cast<uint8_t>((pixel & 0x1F) << 3);
 }

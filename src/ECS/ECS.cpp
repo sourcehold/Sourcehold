@@ -1,4 +1,3 @@
-#include <entt/entt.hpp>
 #include <SDL.h>
 
 #include "System/Logger.h"

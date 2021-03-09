@@ -173,7 +173,7 @@ void Parsers::UnloadStrongholdHlp()
     _sections.clear();
 }
 
-HlpSection *Parsers::GetHlpSection(std::wstring name)
+HlpSection *Parsers::GetHlpSection([[maybe_unused]] std::wstring name)
 {
     // TODO: speed up
     //for(std::vector<HlpSection>::iterator it = _sections.begin(); it != _sections.end(); ++it) {

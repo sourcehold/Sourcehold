@@ -18,10 +18,9 @@ namespace Sourcehold {
          */
         class AniFile : public Parser {
         public:
-            AniFile();
-            AniFile(const AniFile&);
+            AniFile() = default;
             AniFile(ghc::filesystem::path path);
-            ~AniFile();
+            ~AniFile() = default;
 
             bool LoadFromDisk(ghc::filesystem::path path);
         protected:

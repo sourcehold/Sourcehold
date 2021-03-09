@@ -19,9 +19,9 @@ namespace Sourcehold {
          * to a static texture.
          */
         class TextureAtlas : public Texture {
-            uint32_t num;
-            Surface surf;
-            std::vector<SDL_Rect> entries;
+            uint32_t num_;
+            std::vector<SDL_Rect> entries_;
+            Surface surf_;
         public:
             TextureAtlas() = default;
             TextureAtlas(const TextureAtlas &atlas);
@@ -36,13 +36,13 @@ namespace Sourcehold {
             Uint32 *GetData();
 
             inline uint32_t GetNumTextures() {
-                return num;
+                return num_;
             }
             inline Surface& GetSurface() {
-                return surf;
+                return surf_;
             }
         protected:
-            const uint32_t MAX_X_RESOLUTION = 2048;
+            const uint32_t max_x_resolution_ = 2048;
             std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
         };
     }

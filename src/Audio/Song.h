@@ -14,17 +14,20 @@
 namespace Sourcehold {
     namespace Audio {
         class Song {
-            const static uint32_t SAMPLING_RATE = 44100;
-            ALuint source;
-            ALuint buffer;
-            uint8_t *ptr;
-            size_t size;
-            bool repeat, valid = false, fading = false;
-            float gain;
-            double fadeBase = 0.0, fadeAmount = 0.0;
-            bool fadeIn;
+            constexpr static uint32_t sampling_rate_ = 44100;
+            ALuint source_;
+            ALuint buffer_;
+            uint8_t *ptr_;
+            size_t size_;
+            bool repeat_;
+            bool valid_ = false;
+            bool fading_ = false;
+            float gain_;
+            double fade_base_ = 0.0;
+            double fade_amount_ = 0.0;
+            bool fade_in_;
         public:
-            Song(const Song &source);
+            Song(const Song &source) = default;
             Song(ghc::filesystem::path path, bool repeat = false);
             Song(uint8_t *ptr = NULL, size_t size = 0, bool repeat = false);
             ~Song();
@@ -43,16 +46,16 @@ namespace Sourcehold {
             bool IsPlaying();
 
             inline bool IsValid() {
-                return valid;
+                return valid_;
             }
             inline bool IsFading() {
-                return fading;
+                return fading_;
             }
-            inline void SetGain(double g) {
-                gain = g;
+            inline void SetGain(float g) {
+                gain_ = g;
             }
             inline bool IsRepeating() {
-                return repeat;
+                return repeat_;
             }
         };
     }

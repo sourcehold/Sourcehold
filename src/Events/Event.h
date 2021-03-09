@@ -32,7 +32,7 @@ namespace Sourcehold {
         public:
             Event() = default;
             Event(const Event& event) = delete;
-            ~Event() = default;
+            virtual ~Event() = default;
 
             inline void SetHandled(bool h) {
                 handled = h;
@@ -86,7 +86,7 @@ namespace Sourcehold {
             T event;
             int id = 0;
         public:
-            ~EventConsumer() {
+            virtual ~EventConsumer() {
                 RemoveEventListener(id);
             };
             EventConsumer(const EventConsumer&) = delete;

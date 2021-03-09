@@ -9,7 +9,7 @@
 namespace Sourcehold {
     namespace Events {
         class Keyboard : public Event {
-            SDL_Event event;
+            SDL_Event event_;
         public:
             Keyboard();
             Keyboard(const Keyboard &key) = delete;

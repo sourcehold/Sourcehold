@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <entt/entt.hpp>
+#include "ECS/EnTT.h"
 
 #include "System/Logger.h"
 #include "ECS/Component/Component.h"
@@ -12,6 +12,7 @@ namespace Sourcehold {
             class BasicSystem {
                 public:
                 using EachEntityType = std::tuple<entt::entity, Selector...>;
+                virtual ~BasicSystem() = default;
 
                 void tick(entt::registry &registry) {
                     prepareTick(); // prepare state for update

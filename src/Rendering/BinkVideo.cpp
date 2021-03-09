@@ -36,9 +36,9 @@ BinkVideo::~BinkVideo()
     Close();
 }
 
-bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool looping)
+bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool is_looping)
 {
-    this->looping = looping;
+    looping = is_looping;
 
     int out = avformat_open_input(
                   &ic,
@@ -61,7 +61,7 @@ bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool looping)
         return false;
     }
 
-    fps = (float)ic->streams[videoStream]->avg_frame_rate.num / (float)ic->streams[videoStream]->avg_frame_rate.den;
+    fps = static_cast<float>(ic->streams[videoStream]->avg_frame_rate.num) / static_cast<float>(ic->streams[videoStream]->avg_frame_rate.den);
 
     if(audioStream >= 0) {
         audioCtx = avcodec_alloc_context3(audioDecoder);
@@ -118,7 +118,7 @@ bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool looping)
     }
 
     Texture::AllocNewStreaming(codecCtx->width, codecCtx->height, SDL_PIXELFORMAT_RGB888);
-    framebuf = new uint32_t[codecCtx->width * codecCtx->height];
+    framebuf = std::vector<uint32_t>(static_cast<size_t>(codecCtx->width * codecCtx->height));
 
     valid = true;
     running = true;
@@ -135,7 +135,6 @@ void BinkVideo::Close()
         av_frame_free(&frame);
         decoder->close(codecCtx);
         av_free(codecCtx);
-        delete framebuf;
 
         if(hasAudio) {
             decoder->close(audioCtx);
@@ -178,8 +177,8 @@ void BinkVideo::Update()
 
         /* TODO: don't block the thread by sleeping and use internal
           timer or callback instead */
-        double dur_ms = (double)packet.duration * av_q2d(codecCtx->time_base);
-        std::this_thread::sleep_for(std::chrono::milliseconds((uint64_t)dur_ms));
+        uint64_t dur_ms = static_cast<uint64_t>(packet.duration  * static_cast<int64_t>(av_q2d(codecCtx->time_base)));
+        std::this_thread::sleep_for(std::chrono::milliseconds(dur_ms));
 
         /* Receive one video frame */
         ret = avcodec_receive_frame(codecCtx, frame);
@@ -188,13 +187,13 @@ void BinkVideo::Update()
         }
 
         /* Decode video frame into framebuffer texture */
-        uint8_t* slices[3] = { (uint8_t*)&framebuf[0], 0, 0 };
+        uint8_t* slices[3] = { reinterpret_cast<uint8_t*>(&framebuf[0]), 0, 0 };
         int strides[3] = { codecCtx->width * 4, 0, 0 };
 
         Texture::LockTexture();
 
         sws_scale(sws, frame->data, frame->linesize, 0, codecCtx->height, slices, strides);
-        std::memcpy(Texture::GetData(), framebuf, codecCtx->width * codecCtx->height * sizeof(uint32_t));
+        std::memcpy(Texture::GetData(), framebuf.data(), static_cast<uint64_t>(codecCtx->width * codecCtx->height) * sizeof(uint32_t));
 
         Texture::UnlockTexture();
     }
@@ -245,13 +244,13 @@ void BinkVideo::Update()
                     alFreeBuffers[i] = alBuffers[i];
                 }
 
-                alSampleRate = audioFrame->sample_rate;
-                size = alNumChannels * audioFrame->nb_samples * 2;
-                audioBuffer = (char*)std::malloc(size);
+                alSampleRate = static_cast<ALuint>(audioFrame->sample_rate);
+                size = static_cast<int32_t>(alNumChannels) * audioFrame->nb_samples * 2;
+                audioBuffer = static_cast<char*>(std::malloc(static_cast<size_t>(size)));
 
                 audioInit = true;
             }
-            std::memset(audioBuffer, 0, size);
+            std::memset(audioBuffer, 0, static_cast<size_t>(size));
 
             int buffersFinished = 0;
             alGetSourcei(alSource, AL_BUFFERS_PROCESSED, &buffersFinished);
@@ -285,22 +284,22 @@ void BinkVideo::Update()
                 }
 
                 ALuint alBuffer = alFreeBuffers[alNumFreeBuffers - 1];
-                uint32_t numSamples = audioFrame->nb_samples * alNumChannels;
+                uint32_t numSamples = static_cast<uint32_t>(audioFrame->nb_samples) * alNumChannels;
                 uint32_t dataSize = numSamples * 2;
 
                 /* Convert samples */
-                float *src = (float*)audioFrame->extended_data[0];
-                short *dst = (short*)audioBuffer;
+                float *src = reinterpret_cast<float*>(audioFrame->extended_data[0]);
+                short *dst = reinterpret_cast<short*>(audioBuffer);
                 for (uint32_t i = 0; i < numSamples; i++) {
                     float v = src[i] * 32768.0f;
                     if (v > 32767.0f) v = 32767.0f;
                     if (v < -32768.0f) v = 32768.0f;
-                    dst[i] = (short)v;
+                    dst[i] = static_cast<short>(v);
                 }
 
                 alSourceStop(alSource);
 
-                alBufferData(alBuffer, alFormat, audioBuffer, dataSize, alSampleRate);
+                alBufferData(alBuffer, static_cast<ALenum>(alFormat), audioBuffer, static_cast<ALsizei>(dataSize), static_cast<ALsizei>(alSampleRate));
                 Audio::PrintError();
                 alSourceQueueBuffers(alSource, 1, &alBuffer);
                 Audio::PrintError();

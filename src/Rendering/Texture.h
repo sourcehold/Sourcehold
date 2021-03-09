@@ -17,8 +17,8 @@ namespace Sourcehold {
         class Renderer;
         class Surface;
         class Texture {
-            SDL_Texture *texture = nullptr;
-            Uint32* pixels = nullptr;
+            SDL_Texture *texture_ = nullptr;
+            Uint32* pixels_ = nullptr;
         public:
             Texture() = default;
             Texture(const Texture &tex);
@@ -29,7 +29,7 @@ namespace Sourcehold {
              * a streaming texture.
              * Use LockTexture / UnlockTexture to access the pixel data
              */
-            bool AllocNewStreaming(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
+            bool AllocNewStreaming(int width, int height, Uint32 format = SDL_PIXELFORMAT_RGBA4444);
 
             /**
              * Allocate a new texture using an existing surface. The texture
@@ -43,7 +43,7 @@ namespace Sourcehold {
              * SetTarget. Reset the render target by calling ResetTarget
              * afterwards.
              */
-            bool AllocNewTarget(int width, int height, int format = SDL_PIXELFORMAT_RGBA4444);
+            bool AllocNewTarget(int width, int height, Uint32 format = SDL_PIXELFORMAT_RGBA4444);
 
             void UpdateTexture();
             void Destroy();
@@ -55,7 +55,7 @@ namespace Sourcehold {
             void Rotate(double angle);
             void SetAlphaMod(Uint8 alpha);
             void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
-            void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
+            void Copy(Texture &other, int32_t x, int32_t y, SDL_Rect *rect = nullptr);
             void SetBlendMode(SDL_BlendMode mode);
 
             int GetWidth();
@@ -65,10 +65,10 @@ namespace Sourcehold {
             Uint32 *GetData();
 
             inline bool IsValid() {
-                return texture;
+                return texture_;
             }
             inline SDL_Texture *GetTexture() {
-                return texture;
+                return texture_;
             }
         protected:
             Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);

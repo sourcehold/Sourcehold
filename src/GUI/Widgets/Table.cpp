@@ -28,38 +28,38 @@ void Table::Update(Rect<int> constraints)
 {
     if(cols.empty()) return;
 
-    Column &col = cols[0];
+    auto &col = cols[0];
 
-    int mx = GetMouseX();
-    int my = GetMouseY();
+    auto mx = GetMouseX();
+    auto my = GetMouseY();
 
-    int width   = constraints.w;
-    int height  = 20 * numRows;
+    auto width   = constraints.w;
+    auto height  = 20 * static_cast<int>(numRows);
 
-    int x = constraints.x + ((constraints.w -  width) / 2);
-    int y = constraints.y + ((constraints.h - height) / 2);
+    auto x = constraints.x + ((constraints.w -  width) / 2);
+    auto y = constraints.y + ((constraints.h - height) / 2);
 
     auto target = GetTarget();
-    int rx = target.x + x;
-    int ry = target.y + y + (renderNames ? 20 : 0);
+    auto rx = target.x + x;
+    auto ry = target.y + y + (renderNames ? 20 : 0);
 
-    if(mx > rx && mx < rx + width && my > ry && my < ry+20*numRows) {
+    if(mx > rx && mx < rx + width && my > ry && my < ry+20*static_cast<int>(numRows)) {
         highlight = (my - ry) / 20;
     }else highlight = -1;
 
     if(renderNames) {
         RenderRect(Rect<int>(x, y, width, 20), 104, 120, 88, 152, true);
         RenderRect(Rect<int>(x, y, width, 20), 239, 239, 189, 255, false);
-        RenderText(col.name, x + 10, y + 2, FONT_SMALL);
+        RenderText(col.name, static_cast<uint32_t>(x) + 10, static_cast<uint32_t>(y) + 2, FONT_SMALL);
         y += 20;
     }
 
     for(size_t i = 0; i < col.rows.size(); i++) {
-        std::wstring &row = col.rows[i];
+        auto &row = col.rows[i];
 
-        if(i == highlight || i == selected) {
-            RenderRect(Rect<int>(x, y+20*i, width, 20), 144, 160, 136, 152, true);
-            RenderRect(Rect<int>(x, y+20*i, width, 20), 239, 239, 189, 255, false);
+        if(static_cast<long>(i) == highlight || static_cast<long>(i) == selected) {
+            RenderRect(Rect<int>(x, y+20*static_cast<int>(i), width, 20), 144, 160, 136, 152, true);
+            RenderRect(Rect<int>(x, y+20*static_cast<int>(i), width, 20), 239, 239, 189, 255, false);
         }else {
             Uint8 r, g, b;
             // Slightly lighter color for even rows //
@@ -72,15 +72,17 @@ void Table::Update(Rect<int> constraints)
                 g = 80;
                 b = 24;
             }
-            RenderRect(Rect<int>(x, y+20*i, width, 20), r, g, b, 152, true);
+            RenderRect(Rect<int>(x, y+20*static_cast<int>(i), width, 20), r, g, b, 152, true);
         }
 
         // Render row contents //
-        RenderText(row, Rect<int>(x + 10, 2+y+20*i, width, 20), Align::LEFT, FONT_LARGE, false);
+        RenderText(row,
+            Rect<uint32_t>(static_cast<uint32_t>(x) + 10, 2+static_cast<uint32_t>(y)+20*static_cast<uint32_t>(i), static_cast<uint32_t>(width), 20),
+            Align::LEFT, FONT_LARGE, false);
     }
 
     // Render border around table //
-    RenderRect(Rect<int>(x, y, width, 20*numRows), 239, 239, 189, 255, false);
+    RenderRect(Rect<int>(x, y, width, 20*static_cast<int>(numRows)), 239, 239, 189, 255, false);
 }
 
 void Table::SetNumRows(uint32_t n)
@@ -114,7 +116,7 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring& text)
 
 void Table::onEventReceive(Mouse &mouse)
 {
-    if(cols.empty() || highlight > numRows || cols[0].rows.empty()) return;
+    if(cols.empty() || highlight > static_cast<int>(numRows) || cols[0].rows.empty()) return;
     if(mouse.type == BUTTONDOWN) {
         selected = highlight;
     }

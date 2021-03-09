@@ -1,6 +1,6 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include "ECS/EnTT.h"
 
 namespace Sourcehold {
     namespace ECS {
@@ -13,7 +13,7 @@ namespace Sourcehold {
             TREE_APPLE_FRUIT,
             TREE_APPLE_EMPTY,
             TREE_APPLE_STUMP,
-    
+
             TREE_BIRCH_XL,
             TREE_BIRCH_XL_FALLING,
             TREE_BIRCH_XL_RESOURCE,

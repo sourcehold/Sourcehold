@@ -27,7 +27,7 @@ bool MlbFile::LoadFromDisk(ghc::filesystem::path path)
         Parser::GetDWord();
         Parser::GetDWord();
         Parser::GetWord();
-        uint16_t len = Parser::GetDWord();
+        auto len = Parser::GetDWord();
 
         std::wstring s = Parser::GetUTF16(len);
         if(!s.empty()) field.push_back(s);

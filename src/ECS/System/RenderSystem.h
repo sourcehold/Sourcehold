@@ -30,7 +30,7 @@ namespace Sourcehold {
                 RenderSystem();
                 virtual void tickEntity(entt::registry &registry, EachEntityType &entity) override;
                 virtual void prepareTick() override {};
-                
+
                 private:
                 const ghc::filesystem::path dataRoot = GetDirectory();
                 void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);

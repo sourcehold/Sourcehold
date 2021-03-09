@@ -30,12 +30,12 @@ namespace Sourcehold {
          * the one in the main menu and the endgame credits.
          */
         class Credits : protected EventConsumer<Mouse> {
-            bool playing;
-            Layout layout;
+            bool playing_;
+            Layout layout_;
         public:
-            Credits();
+            Credits(); 
             Credits(const Credits&) = delete;
-            ~Credits();
+            ~Credits() = default;
 
             bool Play(bool endgame, bool fadein, bool loop);
         protected:

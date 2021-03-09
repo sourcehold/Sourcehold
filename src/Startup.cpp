@@ -37,8 +37,8 @@ UIState Startup::Begin()
     const std::wstring &startupStr = GetString(T_START_TEXT, 1);
     auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(startupStr, FONT_LARGE);
-    dim.first *= 0.7;
-    dim.second *= 0.7;
+    dim.first = static_cast<uint32_t>(static_cast<double>(dim.first) * 0.7);
+    dim.second = static_cast<uint32_t>(static_cast<double>(dim.second) *0.7);
 
     Uint8 alpha = 255;
     startTime = GetTime();
@@ -133,8 +133,8 @@ UIState Startup::Begin()
                 font->SetAlphaMod(alpha);
                 RenderText(
                            startupStr,
-                           (GetWidth() / 2) - (dim.first / 2),
-                           (GetHeight() / 2) - (dim.second / 2),
+                           static_cast<uint32_t>(GetWidth() / 2) - static_cast<uint32_t>(dim.first / 2),
+                           static_cast<uint32_t>(GetHeight() / 2) - static_cast<uint32_t>(dim.second / 2),
                            FONT_LARGE, false, 0.7);
               }
               break;

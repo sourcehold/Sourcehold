@@ -15,8 +15,8 @@ using namespace Sourcehold::Game;
 
 GameMap::GameMap(MapDimension type)
 {
-    static const int dimensions[] = { 160, 200, 300, 400 }; 
-    dim = dimensions[(int)type];
+    static const int dimensions[] = { 160, 200, 300, 400 };
+    dim = dimensions[type];
 }
 
 GameMap::GameMap(ghc::filesystem::path path)
@@ -37,15 +37,15 @@ void GameMap::LoadFromDisk(ghc::filesystem::path path)
     gm1_tile = GetGm1("gm/tile_land8.gm1");
 
     tileset = gm1_tile->GetTileset();
-    tiles.resize(dim * dim);
+    tiles.resize(static_cast<size_t>(dim * dim));
 
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 8);
 
     for (uint32_t i = 0; i < tiles.size(); i++) {
-        int tile = dist(rng);
-        tiles[i] = tileset->GetTile(tile);
+        int tile = static_cast<int>(dist(rng));
+        tiles[i] = tileset->GetTile(static_cast<uint32_t>(tile));
     }
 }
 
@@ -53,20 +53,21 @@ void GameMap::Render()
 {
     Camera& cam = Camera::instance();
 
-    mult = cam.zoomLevel == ZOOM_NEAR ? 2 : 1;
+    mult = cam.zoom_level_ == ZOOM_NEAR ? 2 : 1;
 
-    for(uint32_t i = 0; i < tiles.size(); i++) {
+    for(size_t i = 0; i < tiles.size(); i++) {
         SDL_Rect clip = tiles[i];
 
-        int iy = i / dim;
-        int ix = i % dim;
+        auto iy = static_cast<int>(i) / dim;
+        auto ix = static_cast<int>(i) % dim;
 
-        int y = (8 * iy);
-        int x = (30 * ix) + (iy % 2 == 0 ? 15 : 0);
+        auto y = (8 * iy);
+        auto x = (30 * ix) + (iy % 2 == 0 ? 15 : 0);
 
         Rendering::Render(
             *tileset,
-            int(mult * x - cam.positionX), int(mult * y - cam.positionY),
+            static_cast<int>(mult) * x - static_cast<int>(cam.pos_x_),
+            static_cast<int>(mult) * y - static_cast<int>( cam.pos_y_),
             30*mult,
             16*mult,
             &clip

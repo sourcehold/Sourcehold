@@ -10,19 +10,19 @@ namespace Sourcehold {
     namespace Events {
         class Touch : public Event
         {
-            SDL_Event event;
+            SDL_Event event_;
         public:
             Touch() = default;
             Touch(const Touch&) = delete;
 
-            float GetDx() { return event.tfinger.dx; }
-            float GetDy() { return event.tfinger.dy; }
+            float GetDx() { return event_.tfinger.dx; }
+            float GetDy() { return event_.tfinger.dy; }
 
-            float GetX() { return event.tfinger.x; }
-            float GetY() { return event.tfinger.y; }
+            float GetX() { return event_.tfinger.x; }
+            float GetY() { return event_.tfinger.y; }
 
             void eventCallback(SDL_Event &event) override {
-                this->event = event;
+                event_ = event;
 
                 type = ConvertTypes(event.type);
                 Event::SetHandled(type != FINGERMOTION && type != FINGERUP && type != FINGERDOWN);

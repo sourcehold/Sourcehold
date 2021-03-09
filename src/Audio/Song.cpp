@@ -6,20 +6,10 @@
 using namespace Sourcehold::Audio;
 using namespace Sourcehold::System;
 
-Song::Song(const Song &source)
-{
-    this->source = source.source;
-    this->buffer = source.buffer;
-    this->ptr = source.ptr;
-    this->size = source.size;
-    this->repeat = source.repeat;
-    this->valid = source.valid;
-    this->fading = source.fading;
-}
 
 Song::Song(ghc::filesystem::path path, bool repeat) :
-    repeat(repeat),
-    valid(false)
+    repeat_(repeat),
+    valid_(false)
 {
     if(!Load(path, repeat)) {
         Logger::error(AUDIO) << "Song::Song() argument 'path' resulted in an error!" << std::endl;
@@ -27,9 +17,9 @@ Song::Song(ghc::filesystem::path path, bool repeat) :
 }
 
 Song::Song(uint8_t *ptr, size_t size, bool repeat) :
-    ptr(ptr),
-    size(size),
-    repeat(repeat)
+    ptr_(ptr),
+    size_(size),
+    repeat_(repeat)
 { }
 
 Song::~Song()
@@ -40,16 +30,16 @@ Song::~Song()
 bool Song::Load(ghc::filesystem::path path, bool repeat)
 {
     /* Parameters */
-    this->repeat = repeat;
-    this->gain = 1.0f;
-    alGenSources((ALuint)1, &source);
-    alSourcef(source, AL_PITCH, 1.0f);
-    alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain);
-    alSource3f(source, AL_POSITION, 0.0f, 0.0f, 0.0f);
-    alSource3f(source, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-    alSourcei(source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+    repeat_ = repeat;
+    gain_ = 1.0f;
+    alGenSources(1, &source_);
+    alSourcef(source_, AL_PITCH, 1.0f);
+    alSourcef(source_, AL_GAIN, IsOpenALMuted() ? 0.0f : gain_);
+    alSource3f(source_, AL_POSITION, 0.0f, 0.0f, 0.0f);
+    alSource3f(source_, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+    alSourcei(source_, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
 
-    alGenBuffers((ALuint)1, &buffer);
+    alGenBuffers(1, &buffer_);
     Audio::PrintError();
 
     /* Read raw file into buffer */
@@ -59,27 +49,27 @@ bool Song::Load(ghc::filesystem::path path, bool repeat)
         return false;
     }
     fseek(fp, 0, SEEK_END);
-    size = ftell(fp);
+    size_ = static_cast<size_t>(ftell(fp));
     fseek(fp, 0, SEEK_SET);
 
-    ptr = (uint8_t*)std::malloc(size);
-    fread(ptr, size, 1, fp);
+    ptr_ = static_cast<uint8_t*>(std::malloc(size_));
+    fread(ptr_, size_, 1, fp);
     fclose(fp);
 
-    alBufferData(buffer, AL_FORMAT_MONO16, (const ALvoid*)ptr, size, SAMPLING_RATE);
+    alBufferData(buffer_, AL_FORMAT_MONO16, static_cast<const ALvoid*>(ptr_), static_cast<ALsizei>(size_), sampling_rate_);
     Audio::PrintError();
-    alSourcei(source, AL_BUFFER, buffer);
+    alSourcei(source_, AL_BUFFER, static_cast<ALint>(buffer_));
     Audio::PrintError();
 
-    valid = true;
+    valid_ = true;
     return true;
 }
 
 bool Song::Play()
 {
-    alSourceRewind(source);
+    alSourceRewind(source_);
     Audio::PrintError();
-    alSourcePlay(source);
+    alSourcePlay(source_);
     Audio::PrintError();
 
     return true;
@@ -87,92 +77,92 @@ bool Song::Play()
 
 void Song::Pause()
 {
-    alSourcePause(source);
+    alSourcePause(source_);
     Audio::PrintError();
 }
 
 void Song::Resume()
 {
-    alSourcePlay(source);
+    alSourcePlay(source_);
     Audio::PrintError();
 }
 
 void Song::Stop()
 {
-    alSourceStop(source);
+    alSourceStop(source_);
     Audio::PrintError();
 }
 
 void Song::Rewind()
 {
-    alSourceRewind(source);
+    alSourceRewind(source_);
     Audio::PrintError();
 }
 
 void Song::SetFadeOut(double amount)
 {
-    if(fading) return;
-    fadeAmount = amount;
-    fading = true;
-    fadeBase = (double)SDL_GetTicks() / 1000.0;
-    fadeIn = false;
+    if(fading_) return;
+    fade_amount_ = amount;
+    fading_ = true;
+    fade_base_ = SDL_GetTicks() / 1000.0;
+    fade_in_ = false;
 }
 
 void Song::SetFadeIn(double amount)
 {
-    if(fading) return;
-    fadeAmount = amount;
-    fading = true;
-    fadeBase = (double)SDL_GetTicks() / 1000.0;
-    fadeIn = true;
+    if(fading_) return;
+    fade_amount_ = amount;
+    fading_ = true;
+    fade_base_ = SDL_GetTicks() / 1000.0;
+    fade_in_ = true;
 }
 
 void Song::UpdateFade()
 {
-    if(!fading) return;
+    if(!fading_) return;
 
-    if(fadeIn) {
-        double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
-        if(t > fadeAmount) {
+    if(fade_in_) {
+        auto t = SDL_GetTicks() / 1000.0 - fade_base_;
+        if(t > fade_amount_) {
             Pause();
-            fading = false;
-            gain = 1.0;
+            fading_ = false;
+            gain_ = 1.0;
         }
         else {
-            alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (t / fadeAmount));
+            alSourcef(source_, AL_GAIN, IsOpenALMuted() ? 0.0f : static_cast<float>(static_cast<double>(gain_) * (t / fade_amount_)));
         }
     }
     else {
-        double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
-        if(t > fadeAmount) {
+        auto t = SDL_GetTicks() / 1000.0 - fade_base_;
+        if(t > fade_amount_) {
             Pause();
-            fading = false;
-            gain = 1.0;
+            fading_ = false;
+            gain_ = 1.0;
         }
         else {
-            alSourcef(source, AL_GAIN, IsOpenALMuted() ? 0.0f : gain * (1.0 - t / fadeAmount));
+            alSourcef(source_, AL_GAIN, IsOpenALMuted() ? 0.0f : static_cast<float>(static_cast<double>(gain_) * (1.0 - t / fade_amount_)));
         }
     }
 }
 
 void Song::Destroy()
 {
-    if (valid) {
-        alDeleteSources(1, &source);
+    if (valid_) {
+        alDeleteSources(1, &source_);
         //Audio::PrintError();
-        alDeleteBuffers(1, &buffer);
+        alDeleteBuffers(1, &buffer_);
         //Audio::PrintError();
 
-        free(ptr);
+        free(ptr_);
 
-        valid = false;
+        valid_ = false;
     }
 }
 
 bool Song::IsPlaying()
 {
     ALenum state;
-    alGetSourcei(source, AL_SOURCE_STATE, &state);
+    alGetSourcei(source_, AL_SOURCE_STATE, &state);
     return state == AL_PLAYING;
 }
 

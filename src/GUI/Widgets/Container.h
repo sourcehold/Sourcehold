@@ -16,9 +16,9 @@ namespace Sourcehold {
         using namespace Rendering;
         class Container : public Widget
         {
-            std::vector<std::shared_ptr<Widget>> widgets;
-            WidgetLayout layout;
-            Rect<int> constraints;
+            std::vector<std::shared_ptr<Widget>> widgets_;
+            WidgetLayout layout_;
+            Rect<int> constraints_;
         public:
             Container(WidgetLayout l);
             ~Container() {}
@@ -30,7 +30,7 @@ namespace Sourcehold {
             std::shared_ptr<T> Add(Args... args) {
                 static_assert(std::is_base_of<Widget, T>::value, "Template parameter must be a widget!");
                 auto widget = std::make_shared<T>(args...);
-                widgets.push_back(widget);
+                widgets_.push_back(widget);
                 return widget;
             }
         };

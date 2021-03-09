@@ -1,3 +1,4 @@
+#include <bits/stdint-uintn.h>
 #include <utility>
 
 #include "Rendering/Font.h"
@@ -16,7 +17,7 @@ static std::pair<uint8_t, uint8_t> _table_width_height[3] = {
 };
 
 void Rendering::LoadFonts()
-{	
+{
     _fonts[0] = GetGm1("gm/font_slanted.gm1");
     _fonts[1] = GetGm1("gm/font_stronghold.gm1");
     _fonts[2] = GetGm1("gm/font_stronghold_aa.gm1");
@@ -29,7 +30,7 @@ void Rendering::UnloadFonts()
     _fonts[2].reset();
 }
 
-void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font type, bool illumination, double scaleFactor)
+void Rendering::RenderText(const std::wstring& text, uint32_t x, uint32_t y, Font type, bool illumination, double scaleFactor)
 {
     auto font = _fonts[type];
     if (illumination && text.size() != 1) {
@@ -43,7 +44,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
         if(c < 0x20) continue;
         /* Space */
         if(c == 0x20) {
-            x += _table_width_height[type].first*scaleFactor;
+            x += _table_width_height[type].first * static_cast<uint32_t>(scaleFactor);
         }
         else {
             /* Calculate lowercase offset */
@@ -73,30 +74,30 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y, Font 
             default:
                 break;
             }
-            glyph = font->GetTextureAtlas()->Get(c - 0x21);
+            glyph = font->GetTextureAtlas()->Get(static_cast<uint32_t>(c) - 0x21);
             Render(*font->GetTextureAtlas(),
-                   illumination ? (x + (13 - glyph.w)/2) : x,
-                   y + int(_table_width_height[type].second*scaleFactor)- int(glyph.h*scaleFactor) + int(lowercaseOffset*scaleFactor),
+                   static_cast<int>(illumination ? (x + (13 - static_cast<uint32_t>(glyph.w)) / 2) : x),
+                   static_cast<int>(y) + int(_table_width_height[type].second*scaleFactor)- int(glyph.h*scaleFactor) + int(lowercaseOffset*scaleFactor),
                    int(glyph.w*scaleFactor),
                    int(glyph.h*scaleFactor),
                    &glyph);
-            x += glyph.w*scaleFactor+1;
+            x += static_cast<uint32_t>(glyph.w*scaleFactor + 1);
         }
     }
 }
 
-void Rendering::RenderText(const std::wstring& text, Rect<int> bounds, Align al, Font type, bool illumination)
+void Rendering::RenderText(const std::wstring& text, Rect<uint32_t> bounds, Align al, Font type, bool illumination)
 {
     auto dim = GetStringPixelDim(text, type);
 
     double factor = (double(bounds.h) / dim.second) * 0.75;
 
-    dim.first *= factor;
-    dim.second *= factor;
+    dim.first *= static_cast<uint32_t>(factor);
+    dim.second *= static_cast<uint32_t>(factor);
 
-    int x=0, y=0;
+    unsigned int x=0, y=0;
     if(al == Align::CENTER) {
-        x = bounds.x + bounds.w/2 - dim.first/2;
+        x = bounds.x + bounds.w / 2 - dim.first / 2;
     } else if(al == Align::LEFT) {
         x = bounds.x + 4;
     } else if(al == Align::RIGHT) {
@@ -152,9 +153,9 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(const std::wstring& t
             default:
                 break;
             }
-            glyph = font->GetTextureAtlas()->Get(c - 0x21);
+            glyph = font->GetTextureAtlas()->Get(static_cast<uint32_t>(c) - 0x21);
 
-            dim.first += glyph.w +1;
+            dim.first += static_cast<uint32_t>(glyph.w) +1;
         }
     }
 

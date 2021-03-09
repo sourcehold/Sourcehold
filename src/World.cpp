@@ -1,5 +1,4 @@
 #include <random>
-#include <entt/entt.hpp>
 
 #include "Building.h"
 #include "World.h"
@@ -49,7 +48,7 @@ UIState World::Play()
 
     placeDebug(registry, EntityType::DEER);
     placeDebug(registry, EntityType::LORD);
-    
+
     placeDebug(registry, EntityType::TREE_CHESTNUT_XL);
     placeDebug(registry, EntityType::TREE_CHESTNUT_XL_FALLING);
     placeDebug(registry, EntityType::TREE_CHESTNUT_XL_RESOURCE);
@@ -87,13 +86,13 @@ UIState World::Play()
     double previous = GetTime();
     while(Running()) {
         // Timing is good enough for now (TODO obviously) //
-        double now = GetTime();
-        double frame = now - previous;
+        auto now = GetTime();
+        auto frame = now - previous;
         previous = now;
 
         while(frame > 0.0) {
-            double delta = std::min(frame, 1.0 / 60.0);
-            UpdateCamera(frame);
+            auto delta = std::min(frame, 1.0 / 60.0);
+            UpdateCamera(static_cast<float>(frame));
             for (Unit* unit : units) unit->Update(frame);
             frame -= delta;
         }
@@ -119,7 +118,7 @@ UIState World::Play()
     return EXIT_GAME;
 }
 
-void World::UpdateCamera(double dt)
+void World::UpdateCamera(float dt)
 {
     Camera& cam = Camera::instance();
     cam.SetBounds({ 15, 8, 160 * 30 - 15, 87 * 16 }); // TODO
@@ -155,7 +154,7 @@ void World::onEventReceive(Keyboard &keyEvent)
             scroll.down.setByKeyboard = true;
             break;
         case SDLK_SPACE:
-            if(cam.zoomLevel == ZOOM_NEAR) cam.ZoomOut();
+            if(cam.zoom_level_ == ZOOM_NEAR) cam.ZoomOut();
             else cam.ZoomIn();
             break;
         default:
@@ -195,8 +194,8 @@ void World::onEventReceive(Mouse &mouseEvent)
     if(mouseEvent.GetType() == MOTION) {
         const int scrollThreshold = 2;
 
-        int x = mouseEvent.GetPosX();
-        int y = mouseEvent.GetPosY();
+        x = static_cast<int>(mouseEvent.GetPosX());
+        y = static_cast<int>(mouseEvent.GetPosY());
 
         bool shouldReset = false;
 
@@ -245,8 +244,8 @@ void World::onEventReceive(Mouse &mouseEvent)
         }
     }
     else if (mouseEvent.GetType() == BUTTONDOWN) {
-        int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
-        int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
+        x = (cam.pos_x_ + static_cast<int>(mouseEvent.GetPosX())) / 30;
+        y = (cam.pos_y_ + static_cast<int>(mouseEvent.GetPosY())) / 15;
 
         spawn(registry, EntityType::LORD, x, y);
     }
@@ -261,30 +260,30 @@ void World::onEventReceive(Touch& touchEvent)
         float dy = touchEvent.GetDy();
 
         // To screen coord
-        int sdx = (int)(dx * (float)GetWidth() * 0.5f + 0.5f),
-            sdy = (int)(dy * (float)GetHeight() * 0.5f + 0.5f);
+        int sdx = static_cast<int>(dx * static_cast<float>(GetWidth()) * 0.5f + 0.5f),
+            sdy = static_cast<int>(dy * static_cast<float>(GetHeight()) * 0.5f + 0.5f);
 
         const float CAMERA_ACC_MINMAX = 10.0f;
 
         // Move horizontally
-        cam.accX += sdx;
-        cam.accX = std::max<float>(-CAMERA_ACC_MINMAX, cam.accX);
-        cam.accX = std::min<float>(CAMERA_ACC_MINMAX, cam.accX);
+        cam.acc_x_ += static_cast<float>(sdx);
+        cam.acc_x_ = std::max<float>(-CAMERA_ACC_MINMAX, cam.acc_x_);
+        cam.acc_x_ = std::min<float>(CAMERA_ACC_MINMAX, cam.acc_x_);
 
         // Move vertically
-        cam.accY += sdy;
-        cam.accY = std::max<float>(-CAMERA_ACC_MINMAX, cam.accY);
-        cam.accY = std::min<float>(CAMERA_ACC_MINMAX, cam.accY);
+        cam.acc_y_ += static_cast<float>(sdy);
+        cam.acc_y_ = std::max<float>(-CAMERA_ACC_MINMAX, cam.acc_y_);
+        cam.acc_y_ = std::min<float>(CAMERA_ACC_MINMAX, cam.acc_y_);
     }
     else if (touchEvent.GetType() == FINGERDOWN) {
-        float x = touchEvent.GetY();
-        float y = touchEvent.GetX();
+        float dx = touchEvent.GetY();
+        float dy = touchEvent.GetX();
 
         // To screen coord
-        int sx = (int)(x * (float)GetWidth() * 0.5f + 0.5f),
-            sy = (int)(y * (float)GetHeight() * 0.5f + 0.5f);
+        int sx = static_cast<int>(dx * static_cast<float>(GetWidth()) * 0.5f + 0.5f),
+            sy = static_cast<int>(dy * static_cast<float>(GetHeight()) * 0.5f + 0.5f);
 
-        int wpX = (cam.positionX + sx) / 30;
-        int wpY = (cam.positionY + sy) / 15;
+        [[maybe_unused]]int wpX = (cam.pos_x_ + sx) / 30;
+        [[maybe_unused]]int wpY = (cam.pos_y_ + sy) / 15;
     }
 }

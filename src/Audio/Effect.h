@@ -14,23 +14,27 @@
 namespace Sourcehold {
     namespace Audio {
         class Effect {
-            const static uint8_t NUM_AUDIO_BUFFERS = 4;
-            bool playing, valid = false, looping, audioInit;
-            AVFormatContext *ic;
-            SwrContext *swr;
-            AVCodec *audioDecoder;
-            AVPacket audioPacket;
-            AVFrame *audioFrame;
-            AVCodecContext *audioCtx;
-            ALuint alSource;
-            ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
-            ALuint alBuffers[NUM_AUDIO_BUFFERS];
-            ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-            ALuint alNumChannels;
-            ALuint alFormat;
-            ALuint alSampleRate;
-            char *audioBuffer;
-            int audioStream, size;
+            constexpr static uint8_t num_audio_buffers_ = 4;
+            bool playing_;
+            bool valid_ = false;
+            bool looping_; 
+            bool audioInit_;
+            AVFormatContext *ic_;
+            SwrContext *swr_;
+            AVCodec *audio_decoder_;
+            AVPacket audio_packet_;
+            AVFrame *audio_frame_;
+            AVCodecContext *audio_ctx_;
+            ALuint al_source_;
+            ALuint al_free_buffers_[num_audio_buffers_];
+            ALuint al_buffers_[num_audio_buffers_];
+            ALuint al_num_free_buffers_ = num_audio_buffers_;
+            ALuint al_num_channels_;
+            ALuint al_format_;
+            ALuint al_sample_rate_;
+            char *audio_buffer_;
+            int audio_stream_;
+            size_t size_;
         public:
             Effect();
             ~Effect();
@@ -41,7 +45,7 @@ namespace Sourcehold {
             void Stop();
             void Update();
 
-            inline bool IsPlaying() { return playing; }
+            inline bool IsPlaying() { return playing_; }
         protected:
         };
     }

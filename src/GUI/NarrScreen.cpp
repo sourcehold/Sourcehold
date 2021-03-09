@@ -45,9 +45,9 @@ const char *anim_paths[NUM_ANIM_FRAMES*3] = {
 };
 
 NarrScreen::NarrScreen(uint8_t mission) :
-           mission(mission),
            EventConsumer<Mouse>(),
-           skipped(false)
+           skipped(false),
+           mission(mission)
 {
     std::string path = std::string("fx/music/mandloop") +
         (mission % 2 == 0 ? "1.raw" : "2.raw");
@@ -105,8 +105,8 @@ bool NarrScreen::BeginAct(TextSection text)
     auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
     auto dim = GetStringPixelDim(str, FONT_LARGE);
 
-    int px = (GetWidth() / 2) - (dim.first / 2);
-    int py = (GetHeight() / 2) - (dim.second / 2);
+    int px = (GetWidth() / 2) - static_cast<int>(dim.first / 2);
+    int py = (GetHeight() / 2) - static_cast<int>(dim.second / 2);
 
     double startTime = GetTime();
     while (Running()) {
@@ -135,7 +135,7 @@ bool NarrScreen::BeginAct(TextSection text)
         ClearDisplay();
 
         font->SetAlphaMod(alpha);
-        RenderText(str, px, py, FONT_LARGE, false);
+        RenderText(str, static_cast<uint32_t>(px), static_cast<uint32_t>(py), FONT_LARGE, false);
 
         FlushDisplay();
     }
@@ -226,7 +226,7 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg)
     return Running();
 }
 
-bool NarrScreen::BeginNpcIntro(NPC npc)
+bool NarrScreen::BeginNpcIntro([[maybe_unused]] NPC npc)
 {
     return Running();
 }
@@ -255,5 +255,5 @@ void NarrScreen::NarrationText(TextSection text)
     /* Split narration text into lines
        TODO: move into some utils file */
 
-    const std::wstring &str = GetString(text, 3);
+    [[maybe_unused]] const std::wstring &str = GetString(text, 3);
 }

@@ -5,21 +5,21 @@ using namespace Sourcehold::Rendering;
 
 StaticElement::StaticElement(Rect<int> tp, Texture* t, SDL_Rect& inactive, SDL_Rect& active, size_t id) :
     EventConsumer<Mouse>(),
-    tp{tp},
     tex{t},
+    tp{tp},
+    id{id},
     inactive{inactive},
     active{active},
-    id{id},
     visible{true}
 {}
 
 StaticElement::StaticElement(const StaticElement& e) :
     EventConsumer<Mouse>(),
-    tp{e.tp},
     tex{e.tex},
+    tp{e.tp},
+    id{e.id},
     inactive{e.inactive},
     active{e.active},
-    id{e.id},
     visible{e.visible}
 {}
 
@@ -35,7 +35,7 @@ void StaticElement::Render()
 
 void StaticElement::onEventReceive(Mouse& event)
 {
-    if (visible && DetectMouseOver(event.GetPosX(), event.GetPosY()) && onEvent) {
+    if (visible && DetectMouseOver(static_cast<int>(event.GetPosX()), static_cast<int>(event.GetPosY())) && onEvent) {
         onEvent(id, event);
     }
 }

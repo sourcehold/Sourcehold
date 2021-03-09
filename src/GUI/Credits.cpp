@@ -8,17 +8,13 @@ using namespace Sourcehold::Rendering;
 
 Credits::Credits() :
     EventConsumer<Mouse>(),
-    layout(GetHlpSection(L"credits.hlp"), { 0.5, 0.0, 0.5, 1.0 })
+    layout_(GetHlpSection(L"credits.hlp"), { 0.5, 0.0, 0.5, 1.0 })
 {
 }
 
-Credits::~Credits()
+bool Credits::Play(bool endgame, [[maybe_unused]] bool fade_in, [[maybe_unused]] bool loop)
 {
-}
-
-bool Credits::Play(bool endgame, bool fadein, bool loop)
-{
-    playing = true;
+    playing_ = true;
     uint8_t currentImage = 0;
 
     Song music;
@@ -54,7 +50,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
     MouseOff();
 
     Resolution res = GetResolution();
-    while (Running() && playing) {
+    while (Running() && playing_) {
         ClearDisplay();
 
         double now = GetTime();
@@ -115,7 +111,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
         int sy = GetHeight() - scrollOffset;
         scrollOffset = int((now - startTime) * 60.0);
 
-        layout.Render(sx, sy);
+        layout_.Render(sx, sy);
 
         // TODO: Rest of credits, colored titles
 
@@ -131,6 +127,6 @@ bool Credits::Play(bool endgame, bool fadein, bool loop)
 void Credits::onEventReceive(Mouse &event)
 {
     if(event.LmbDown() || event.RmbDown()) {
-        playing = false;
+        playing_ = false;
     }
 }

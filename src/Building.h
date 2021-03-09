@@ -17,7 +17,8 @@ namespace Sourcehold {
         class Building {
             std::shared_ptr<Gm1File> gm1;
             std::vector<uint32_t> walkableTiles;
-            uint32_t px, py, mapW, mapH;
+            uint32_t px, py;
+           [[maybe_unused]] uint32_t mapW, mapH;
             bool loaded = false, placed = false;
         public:
             Building(uint32_t mw = 160, uint32_t mh = 160);

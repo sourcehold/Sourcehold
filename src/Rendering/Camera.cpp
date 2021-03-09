@@ -13,30 +13,30 @@ using namespace Game;
 
 void Camera::MoveLeft()
 {
-    accX = std::max(accX - 1.0, -10.0);
+    acc_x_ = std::max(acc_x_ - 1.0f, -10.0f);
 }
 
 void Camera::MoveRight()
 {
-    accX = std::min(accX + 1.0, 10.0);
+    acc_x_ = std::min(acc_x_ + 1.0f, 10.0f);
 }
 
 void Camera::MoveUp()
 {
-    accY = std::max(accY - 1.0, -10.0);
+    acc_y_ = std::max(acc_y_ - 1.0f, -10.0f);
 }
 
 void Camera::MoveDown()
 {
-    accY = std::min(accY + 1.0, 10.0);
+    acc_y_ = std::min(acc_y_ + 1.0f, 10.0f);
 }
 
 void Camera::Stop()
 {
-    accX = accY = 0.0f;
+    acc_x_ = acc_y_ = 0.0f;
 }
 
-void Camera::Update(double dt)
+void Camera::Update(float dt)
 {
 #if defined(SOURCEHOLD_ANDROID) && defined(INVERT_CAM_ON_ANDROID)
     positionX -= 60.0 * dt * accX;
@@ -46,40 +46,40 @@ void Camera::Update(double dt)
     accX *= 0.96f;
     accY *= 0.96f;
 #else
-    positionX += 100.0 * dt * accX;
-    positionY += 100.0 * dt * accY;
+    pos_x_ += static_cast<int>(100.0f * dt * acc_x_);
+    pos_y_ += static_cast<int>(100.0f * dt * acc_y_);
 #endif
 
-    positionX = std::max(bounds.x, positionX);
-    positionY = std::max(bounds.y, positionY);
+    pos_x_ = std::max(bounds_.x, pos_x_);
+    pos_y_ = std::max(bounds_.y, pos_y_);
 
-    positionX = std::min(bounds.x + bounds.w - GetWidth(), positionX);
-    positionY = std::min(bounds.x + bounds.h - GetHeight(), positionY);
+    pos_x_ = std::min(bounds_.x + bounds_.w - GetWidth(), pos_x_);
+    pos_y_ = std::min(bounds_.x + bounds_.h - GetHeight(), pos_y_);
 }
 
 void Camera::ZoomOut()
 {
-    zoomLevel = ZOOM_FAR;
+    zoom_level_ = ZOOM_FAR;
 }
 
 void Camera::ZoomIn()
 {
-    zoomLevel = ZOOM_NEAR;
+    zoom_level_ = ZOOM_NEAR;
 }
 
 void Camera::SetPos(int x, int y)
 {
-    positionX = x;
-    positionY = y;
+    pos_x_ = x;
+    pos_y_ = y;
 }
 
 void Camera::TranslateCam(int x, int y)
 {
-    positionX += x;
-    positionY += y;
+    pos_x_ += x;
+    pos_y_ += y;
 }
 
 void Camera::SetBounds(SDL_Rect bounds)
 {
-    this->bounds = bounds;
+    bounds = bounds_;
 }

@@ -14,48 +14,48 @@ Mouse::~Mouse()
 
 bool Mouse::LmbDown()
 {
-    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_LEFT) return true;
+    if(event_.button.state == SDL_PRESSED && event_.button.button == SDL_BUTTON_LEFT) return true;
     return false;
 }
 
 bool Mouse::MmbDown()
 {
-    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_MIDDLE) return true;
+    if(event_.button.state == SDL_PRESSED && event_.button.button == SDL_BUTTON_MIDDLE) return true;
     return false;
 }
 
 bool Mouse::RmbDown()
 {
-    if(event.button.state == SDL_PRESSED && event.button.button == SDL_BUTTON_RIGHT) return true;
+    if(event_.button.state == SDL_PRESSED && event_.button.button == SDL_BUTTON_RIGHT) return true;
     return false;
 }
 
 bool Mouse::LmbUp()
 {
-    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_LEFT) return true;
+    if(event_.button.state == SDL_RELEASED && event_.button.button == SDL_BUTTON_LEFT) return true;
     return false;
 }
 
 bool Mouse::MmbUp()
 {
-    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_MIDDLE) return true;
+    if(event_.button.state == SDL_RELEASED && event_.button.button == SDL_BUTTON_MIDDLE) return true;
     return false;
 }
 
 bool Mouse::RmbUp()
 {
-    if(event.button.state == SDL_RELEASED && event.button.button == SDL_BUTTON_RIGHT) return true;
+    if(event_.button.state == SDL_RELEASED && event_.button.button == SDL_BUTTON_RIGHT) return true;
     return false;
 }
 
 uint32_t Mouse::GetPosX()
 {
-    return event.motion.x;
+    return static_cast<uint32_t>(event_.motion.x);
 }
 
 uint32_t Mouse::GetPosY()
 {
-    return event.motion.y;
+    return static_cast<uint32_t>(event_.motion.y);
 }
 
 EventType Mouse::GetType()
@@ -65,7 +65,7 @@ EventType Mouse::GetType()
 
 void Mouse::eventCallback(SDL_Event &event)
 {
-    this->event = event;
+    event_ = event;
 
     Event::SetHandled(true);
     type = ConvertTypes(event.type);

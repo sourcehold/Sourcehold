@@ -6,9 +6,9 @@
 using namespace Sourcehold::Rendering;
 
 TextureAtlas::TextureAtlas(const TextureAtlas &atlas) :
-    num(atlas.num),
-    entries(atlas.entries),
-    surf(atlas.surf)
+    num_(atlas.num_),
+    entries_(atlas.entries_),
+    surf_(atlas.surf_)
 {
 }
 
@@ -24,7 +24,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
 
     struct Elem {
         std::pair<uint32_t, uint32_t> dim;
-        uint32_t index;
+        size_t index;
     };
 
     std::vector<Elem> sorted(entries.size());
@@ -37,50 +37,50 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
 
     std::sort(
         sorted.begin(),
-        sorted.begin() + sorted.size(),
+        sorted.end(),
     [](Elem& e1, Elem& e2) -> bool {
         return e1.dim.first > e2.dim.first;
     }
     );
 
-    this->entries.resize(entries.size());
+    this->entries_.resize(entries.size());
 
     uint32_t width = 0, height = 0;
     uint32_t px = 0, py = 0;
     for(size_t i = 0; i < sorted.size(); i++) {
         Elem e = sorted[i];
 
-        if(px > MAX_X_RESOLUTION) {
+        if(px > max_x_resolution_) {
             px = 0;
             py = height;
         }
 
         SDL_Rect rect;
-        rect.x = px;
-        rect.y = py;
-        rect.w = e.dim.first;
-        rect.h = e.dim.second;
+        rect.x = static_cast<int>(px);
+        rect.y = static_cast<int>(py);
+        rect.w = static_cast<int>(e.dim.first);
+        rect.h = static_cast<int>(e.dim.second);
 
         px += e.dim.first;
 
         width = std::max(width, px);
         height = std::max(height, py + e.dim.second);
 
-        this->entries[e.index] = rect;
+        this->entries_[e.index] = rect;
     }
 
-    surf.AllocNew(width, height);
+    surf_.AllocNew(static_cast<int>(width), static_cast<int>(height));
 }
 
 void TextureAtlas::Create()
 {
-    Texture::AllocFromSurface(surf);
-    surf.Destroy();
+    Texture::AllocFromSurface(surf_);
+    surf_.Destroy();
 }
 
 SDL_Rect TextureAtlas::Get(uint32_t index)
 {
-    if(index < entries.size()) return entries[index];
+    if(index < entries_.size()) return entries_[index];
     else return { 0, 0, 0, 0 };
 }
 
@@ -91,20 +91,22 @@ void TextureAtlas::Clear()
 
 void TextureAtlas::Lock()
 {
-    surf.LockSurface();
+    surf_.LockSurface();
 }
 
 void TextureAtlas::Unlock()
 {
-    surf.UnlockSurface();
+    surf_.UnlockSurface();
 }
 
 Uint32 *TextureAtlas::GetData()
 {
-    return surf.GetData();
+    return surf_.GetData();
 }
 
-std::pair<uint32_t, uint32_t> TextureAtlas::IndexToCoords(uint32_t index)
+// TODO:
+// Missing implementation
+std::pair<uint32_t, uint32_t> TextureAtlas::IndexToCoords([[maybe_unused]] uint32_t index)
 {
     return std::pair<uint32_t, uint32_t>(0, 0);
 }

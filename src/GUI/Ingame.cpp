@@ -16,20 +16,20 @@ IngameGUI::IngameGUI() :
     ui_hide.SetTexture(atlas.get());
     ui_magnify.SetTexture(atlas.get());
     ui_lower.SetTexture(atlas.get());
-    
+
     atlas = gm1_icons->GetTextureAtlas();
     SDL_Rect rect = atlas->Get(25);
     ui_disk.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
     ui_disk.SetTexture(atlas.get());
-    
+
     rect = atlas->Get(27);
     ui_info.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
     ui_info.SetTexture(atlas.get());
-    
+
     rect = atlas->Get(29);
     ui_delete.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
     ui_delete.SetTexture(atlas.get());
-    
+
     rect = atlas->Get(68);
     ui_revert.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
     ui_revert.SetTexture(atlas.get());
@@ -118,6 +118,7 @@ void IngameGUI::RenderQuickMenu()
  * 3. Selected index
  * 4. Relative x pos
  */
+[[maybe_unused]]
 static uint16_t lut_ui_tabs[6][5] = {
     {  7,  8,  9,  24 },
     { 10, 11, 12,  60 },
