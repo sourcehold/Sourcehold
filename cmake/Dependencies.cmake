@@ -30,11 +30,6 @@ AddImportedTarget(OpenAL::OpenAL
 if(TARGET_OS_IOS)
   set(THIRDPARTY_IOS_DIR_PATH ${CMAKE_SOURCE_DIR}/thirdparty/ios)
   
-  # EnTT
-  # For some reason when building using Xcode cmake does not provide correct include directory path,
-  # thus we have to set it manually
-  #include_directories(${THIRDPARTY_IOS_DIR_PATH}/entt/src)
-  
   # SDL2
   set(SDL2_IOS_DIR_PATH ${THIRDPARTY_IOS_DIR_PATH}/sdl2-ios)
     
