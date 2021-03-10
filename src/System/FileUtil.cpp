@@ -68,7 +68,7 @@ ghc::filesystem::path System::GetDocumentsPath()
     * Why the f*** isn't this part of boost?
     */
 #if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
-    SHGetUserDocumentsDirectoryPath(path, maxPathLength);
+    SHQueryUserDocumentsDirectoryPath(path, maxPathLength);
 #elif SOURCEHOLD_UNIX
     /* Requires ~/.config/user-dirs.dirs from the FreeDesktop xdg standard */
     const char *home = getenv("HOME");

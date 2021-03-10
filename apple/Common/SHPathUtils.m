@@ -9,8 +9,8 @@
 #import "SHPathUtils.h"
 
 
-bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize) {
-    if (NULL == buffer) {
+bool SHQueryUserDocumentsDirectoryPath(char *outBuffer, unsigned long outBufferSize) {
+    if (NULL == outBuffer) {
         return false;
     }
     
@@ -26,17 +26,17 @@ bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize) {
         NSString *path = pathsList.firstObject;
         const NSUInteger pathLength = [path lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1 /*+1 for '\0'*/;
         
-        if (bufferSize < pathLength) {
+        if (outBufferSize < pathLength) {
             return false;
         }
         
-        strcpy(buffer, path.UTF8String);
+        strcpy(outBuffer, path.UTF8String);
         return true;
     }
 }
 
-bool SHGetMainBundleResourcesDirectoryPath(char *buffer, unsigned long bufferSize) {
-    if (NULL == buffer) {
+bool SHQueryMainBundleResourcesDirectoryPath(char *outBuffer, unsigned long outBufferSize) {
+    if (NULL == outBuffer) {
         return false;
     }
     
@@ -44,11 +44,11 @@ bool SHGetMainBundleResourcesDirectoryPath(char *buffer, unsigned long bufferSiz
         NSString *path = NSBundle.mainBundle.resourcePath;
         const NSUInteger pathLength = [path lengthOfBytesUsingEncoding:NSUTF8StringEncoding] + 1 /*+1 for '\0'*/;
         
-        if (bufferSize < pathLength) {
+        if (outBufferSize < pathLength) {
             return false;
         }
         
-        strcpy(buffer, path.UTF8String);
+        strcpy(outBuffer, path.UTF8String);
         return true;
     }
 }

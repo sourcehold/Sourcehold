@@ -242,7 +242,7 @@ int main(int argc, char **argv)
 #ifdef SOURCEHOLD_IOS
         char resourcesPath[512];
 
-        SHGetMainBundleResourcesDirectoryPath(resourcesPath, 512);
+        SHQueryMainBundleResourcesDirectoryPath(resourcesPath, 512);
         opt.dataDir = std::string(resourcesPath).append("/data");
 #else
         opt.dataDir = result["path"].as<std::string>();
