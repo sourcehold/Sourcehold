@@ -7,11 +7,11 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif // __cplusplus
 
 bool SHGetUserDocumentsDirectoryPath(char *buffer, unsigned long bufferSize);
 bool SHGetMainBundleResourcesDirectoryPath(char *buffer, unsigned long bufferSize);
 
 #ifdef __cplusplus
 }
-#endif
+#endif // __cplusplus

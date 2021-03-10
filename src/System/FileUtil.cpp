@@ -15,7 +15,7 @@
 
 #if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 #include "../apple/Common/SHPathUtils.h"
-#endif
+#endif // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
 
 using namespace Sourcehold;
@@ -107,7 +107,7 @@ ghc::filesystem::path System::GetDocumentsPath()
     LPITEMIDLIST pidl;
     SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
     SHGetPathFromIDList(pidl, path);
-#endif
+#endif // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
     return ghc::filesystem::path(path);
 }

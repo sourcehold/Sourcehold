@@ -47,7 +47,7 @@
 
 #error "Unsupported platform"
 
-#endif // TARGET_OS_OSX
+#endif // TARGET_OS_IOS || TARGET_OS_SIMULATOR
 
 #define SOURCEHOLD_UNIX 1
 #define ATTRIB_PACKED __attribute__((packed))
