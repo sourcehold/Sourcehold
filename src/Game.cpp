@@ -22,7 +22,7 @@
 #include "GUI/MainMenu.h"
 
 #if SOURCEHOLD_IOS
-#include "../apple/Common/SHPathUtils.h"
+#include "Common/SHPathUtils.h"
 #endif
 
 

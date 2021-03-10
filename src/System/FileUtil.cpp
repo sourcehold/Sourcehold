@@ -14,7 +14,7 @@
 #include "System/filesystem.h"
 
 #if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
-#include "../apple/Common/SHPathUtils.h"
+#include "Common/SHPathUtils.h"
 #endif // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
 
