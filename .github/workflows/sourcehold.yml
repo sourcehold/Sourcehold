@@ -48,7 +48,6 @@ jobs:
       # (see https://github.community/t/how-to-set-and-access-a-workflow-variable/17335)
       # in our case this is BUILD_TYPE. Thus we have to define it here in such weird way.
       run: |
-          echo "CMKAE VERSION = `cmake --version`"
           if [[ ${{ matrix.target-platform }} == 'ios-simulator' ]]; then
             echo "BUILD_ARTIFACT_PARENT_DIR_PATH=${{ github.workspace }}/build/${{ env.BUILD_TYPE }}-iphonesimulator" >> $GITHUB_ENV
             echo "BUILD_ARTIFACT_NAME=Stronghold.app" >> $GITHUB_ENV
