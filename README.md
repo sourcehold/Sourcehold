@@ -21,11 +21,11 @@ Sourcehold uses the following libraries:
 * OpenAL
 * FFmpeg (avcodec, avutil, avformat, swscale)
 * zlib's blast for PKWARE decompression
-* EnTT
+* [EnTT](https://github.com/skypjack/entt) as submodule
 * [filesystem](https://github.com/gulrak/filesystem) as submodule
 * [cxxopts](https://github.com/jarro2783/cxxopts) as submodule
 
-After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [filesystem](https://github.com/gulrak/filesystem) and [cxxopts](https://github.com/jarro2783/cxxopts). 
+After cloning the repository, make sure to run `git submodule init` and `git submodule update` to fetch [EnTT](https://github.com/skypjack/entt), [filesystem](https://github.com/gulrak/filesystem) and [cxxopts](https://github.com/jarro2783/cxxopts).
 
 Run `cmake` in your build directory.
 
