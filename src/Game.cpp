@@ -188,9 +188,10 @@ int StartGame(GameOptions& opt)
     return MainLoop(state);
 }
 
+// Do not #undef main on iOS, because in other case it will be not possible to build project
 #ifndef SOURCEHOLD_IOS
 #undef main
-#endif
+#endif // SOURCEHOLD_IOS
 
 /* Common entry point across all platforms */
 int main(int argc, char **argv)
@@ -245,7 +246,7 @@ int main(int argc, char **argv)
         opt.dataDir = std::string(resourcesPath).append("/data");
 #else
         opt.dataDir = result["path"].as<std::string>();
-#endif
+#endif // SOURCEHOLD_IOS
 
         std::regex regex("(\\d+)x(\\d+)");
         std::smatch match;
