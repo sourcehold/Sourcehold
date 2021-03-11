@@ -46,15 +46,15 @@ const char *anim_paths[NUM_ANIM_FRAMES*3] = {
 
 NarrScreen::NarrScreen(uint8_t mission) :
            EventConsumer<Mouse>(),
-           skipped(false),
-           mission(mission)
+           skipped_(false),
+           mission_(mission)
 {
     std::string path = std::string("fx/music/mandloop") +
         (mission % 2 == 0 ? "1.raw" : "2.raw");
 
-    song.Load(GetDirectory() / path, true);
+    song_.Load(GetDirectory() / path, true);
 
-    tgx_bg1 =      GetTgx("gfx/narrbase.tgx");
+    tgx_bg1_ =      GetTgx("gfx/narrbase.tgx");
 
     // Load animation frames //
     for(uint8_t i = 0; i < NUM_ANIM_FRAMES; i++) {
@@ -62,11 +62,11 @@ NarrScreen::NarrScreen(uint8_t mission) :
         const std::string suffix(".tgx");
 
         // Flame //
-        tgx_flame[0][i] = GetTgx(prefix + anim_paths[i] + suffix); // color
-        tgx_flame[1][i] = GetTgx(prefix + anim_paths[i+NUM_ANIM_FRAMES] + suffix); // alpha
+        tgx_flame_[0][i] = GetTgx(prefix + anim_paths[i] + suffix); // color
+        tgx_flame_[1][i] = GetTgx(prefix + anim_paths[i+NUM_ANIM_FRAMES] + suffix); // alpha
 
         // Candle //
-        tgx_candle[i] = GetTgx(prefix + anim_paths[i+NUM_ANIM_FRAMES*2] + suffix); // color
+        tgx_candle_[i] = GetTgx(prefix + anim_paths[i+NUM_ANIM_FRAMES*2] + suffix); // color
     }
 }
 
@@ -76,8 +76,8 @@ NarrScreen::~NarrScreen()
 
 bool NarrScreen::Begin()
 {
-    song.Play();
-    switch (mission) {
+    song_.Play();
+    switch (mission_) {
     // TODO: add all campaign missions
     case 1:
         if (!BeginAct(T_START_ACT_ONE)) break;
@@ -86,7 +86,7 @@ bool NarrScreen::Begin()
         break;
     default: break;
     }
-    song.Stop();
+    song_.Stop();
 
     return Running();
 }
@@ -94,7 +94,7 @@ bool NarrScreen::Begin()
 void NarrScreen::onEventReceive(Mouse &mouse)
 {
     if (mouse.type == BUTTONDOWN) {
-        skipped = true;
+        skipped_ = true;
     }
 }
 
@@ -110,8 +110,8 @@ bool NarrScreen::BeginAct(TextSection text)
 
     double startTime = GetTime();
     while (Running()) {
-        if (skipped) {
-            skipped = false;
+        if (skipped_) {
+            skipped_ = false;
             font->SetAlphaMod(255);
             break;
         }
@@ -155,9 +155,9 @@ bool NarrScreen::BeginNarration()
     Uint8 alpha = 0;
     double fadeBase = GetTime();
     while (Running()) {
-        if (skipped) {
-            skipped = false;
-            tgx_bg1->SetAlphaMod(255);
+        if (skipped_) {
+            skipped_ = false;
+            tgx_bg1_->SetAlphaMod(255);
             break;
         }
 
@@ -167,7 +167,7 @@ bool NarrScreen::BeginNarration()
         if(delta > 2.) alpha = 255;
         else alpha = Uint8(((now - fadeBase) * 255.0) / 2.0);
 
-        tgx_bg1->SetAlphaMod(alpha);
+        tgx_bg1_->SetAlphaMod(alpha);
 
         ClearDisplay();
 
@@ -178,7 +178,7 @@ bool NarrScreen::BeginNarration()
 
         int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));
 
-        Render(*tgx_bg1, px, py);
+        Render(*tgx_bg1_, px, py);
         RenderFlameAnim(px, py, index, alpha);
 
         FlushDisplay();
@@ -202,8 +202,8 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg)
     int py = (GetHeight() / 2) - (200 / 2);
 
     while (Running()) {
-        if (skipped) {
-            skipped = false;
+        if (skipped_) {
+            skipped_ = false;
             return true;
         }
 
@@ -233,9 +233,9 @@ bool NarrScreen::BeginNpcIntro([[maybe_unused]] NPC npc)
 
 void NarrScreen::RenderFlameAnim(int px, int py, int index, Uint8 a)
 {
-    auto color  = tgx_flame[0][index];
-    auto alpha  = tgx_flame[1][index];
-    auto candle = tgx_candle[index];
+    auto color  = tgx_flame_[0][index];
+    auto alpha  = tgx_flame_[1][index];
+    auto candle = tgx_candle_[index];
 
     color->SetAlphaMod(a);
     candle->SetAlphaMod(a);

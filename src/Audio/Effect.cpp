@@ -149,7 +149,7 @@ void Effect::Update()
                 AV_SAMPLE_FMT_S16,
                 static_cast<int>(al_sample_rate_),
                 /*audioFrame->channel_layout*/AV_CH_LAYOUT_MONO,
-                static_cast<AVSampleFormat>(audio_ctx_->sample_fmt),
+                audio_ctx_->sample_fmt,
                 audio_ctx_->sample_rate,
                 0,
                 NULL

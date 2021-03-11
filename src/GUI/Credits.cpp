@@ -66,7 +66,7 @@ bool Credits::Play(bool endgame, [[maybe_unused]] bool fade_in, [[maybe_unused]]
         }
         else if(now > fadeBase + 18.0) {
             alpha = 0;
-            currentImage = (currentImage + 1) % 4;
+            currentImage = static_cast<uint8_t>(currentImage + 1) % 4;
             fadeBase = now;
         }
 
@@ -124,9 +124,9 @@ bool Credits::Play(bool endgame, [[maybe_unused]] bool fade_in, [[maybe_unused]]
     return true;
 }
 
-void Credits::onEventReceive(Mouse &event)
+void Credits::onEventReceive(Mouse &mouse_event)
 {
-    if(event.LmbDown() || event.RmbDown()) {
+    if(mouse_event.LmbDown() || mouse_event.RmbDown()) {
         playing_ = false;
     }
 }

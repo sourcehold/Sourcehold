@@ -25,31 +25,31 @@ namespace Sourcehold {
          * A single bink video file, exposes a texture as a frame buffer
          */
         class BinkVideo : public Texture {
-            AVFormatContext *ic;
-            AVCodec *decoder, *audioDecoder;
-            AVPacket packet;
-            AVFrame *frame, *audioFrame;
-            AVCodecContext *codecCtx, *audioCtx;
-            SwsContext *sws;
-            const static uint32_t NUM_AUDIO_BUFFERS = 4;
-            ALuint alSource;
-            ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
-            ALuint alBuffers[NUM_AUDIO_BUFFERS];
-            ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-            ALuint alNumChannels;
-            ALuint alFormat;
-            ALuint alSampleRate;
-            char *audioBuffer;
-            int videoStream, audioStream, size;
-            float fps;
-            std::vector<uint32_t> framebuf;
-            int delayTimer;
-            bool packetFinished;
-            bool hasAudio = false;
-            bool audioInit = false;
-            bool looping;
-            bool running = false; 
-            bool valid = false;
+            AVFormatContext *ic_;
+            AVCodec *decoder, *audioDecoder_;
+            AVPacket packet_;
+            AVFrame *frame_, *audioFrame_;
+            AVCodecContext *codecCtx_, *audioCtx_;
+            SwsContext *sws_;
+            const static uint32_t NUM_AUDIO_BUFFERS_ = 4;
+            ALuint alSource_;
+            ALuint alFreeBuffers_[NUM_AUDIO_BUFFERS_];
+            ALuint alBuffers_[NUM_AUDIO_BUFFERS_];
+            ALuint alNumFreeBuffers_ = NUM_AUDIO_BUFFERS_;
+            ALuint amNumChannels_;
+            ALuint alFormat_;
+            ALuint anSampleRate_;
+            char *audioBuffer_;
+            int videoStream_, audioStream_, size_;
+            float fps_;
+            std::vector<uint32_t> framebuf_;
+            int delayTimer_;
+            bool packetFinished_;
+            bool hasAudio_ = false;
+            bool audioInit_ = false;
+            bool looping_;
+            bool running_ = false; 
+            bool valid_ = false;
         public:
             BinkVideo();
             BinkVideo(ghc::filesystem::path path, bool looping = false);
@@ -60,7 +60,7 @@ namespace Sourcehold {
             void Update();
 
             inline bool IsRunning() {
-                return running;
+                return running_;
             }
         protected:
             void test();

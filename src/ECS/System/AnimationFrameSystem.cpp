@@ -33,7 +33,7 @@ namespace Sourcehold {
                 auto [entityRef, typeComponent, animationComponent] = entity;
                 if (!animationComponent.animate) return;
                 long frameDependingOnTime = long(now * 15.0);
-                int frame = frameDependingOnTime % 1000;
+                int frame = static_cast<int>(frameDependingOnTime % 1000);
 
                 FrameData frameData;
                 try {
@@ -43,7 +43,7 @@ namespace Sourcehold {
                     // no config - don't use this frame system
                     return;
                 }
-                
+
                 if (frameData.frameMeta.dontAnimate) {
                     frame = frameData.frameOffset + animationComponent.subanimationState;
                 } else {

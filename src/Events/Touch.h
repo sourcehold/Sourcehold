@@ -24,8 +24,8 @@ namespace Sourcehold {
             void eventCallback(SDL_Event &event) override {
                 event_ = event;
 
-                type = ConvertTypes(event.type);
-                Event::SetHandled(type != FINGERMOTION && type != FINGERUP && type != FINGERDOWN);
+                type_ = ConvertTypes(event.type);
+                Event::SetHandled(type_ != FINGERMOTION && type_ != FINGERUP && type_ != FINGERDOWN);
             }
         };
     }

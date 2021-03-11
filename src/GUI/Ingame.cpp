@@ -73,8 +73,8 @@ void IngameGUI::LoadMenuAssets()
     if (res != RESOLUTION_800x600 && res != RESOLUTION_DYNAMIC) {
         std::string base(_res_to_edge[res][0]);
 
-        tgx_right = GetTgx(std::string("gfx/" + base + "r.tgx"));
-        tgx_left  = GetTgx(std::string("gfx/" + base + "l.tgx"));
+        tgx_right = GetTgx("gfx/" + base + "r.tgx");
+        tgx_left  = GetTgx("gfx/" + base + "l.tgx");
     }
     else if (res == RESOLUTION_DYNAMIC) {
         // TODO
@@ -94,16 +94,16 @@ void IngameGUI::RenderQuickMenu()
     int mouseX = GetMouseX(), mouseY = GetMouseY();
 
     SDL_Rect rect = atlas->Get(37);
-    ui_compass.Transform(Rect<int>(int(mouseX - (rect.w / 2)), int(mouseY - rect.h - 25), rect.w, rect.h));
+    ui_compass.Transform(Rect<int>((mouseX - (rect.w / 2)), (mouseY - rect.h - 25), rect.w, rect.h));
 
     rect = atlas->Get(124);
-    ui_hide.Transform(Rect<int>(int(mouseX - rect.w - 45), int(mouseY - (rect.h / 2)), rect.w, rect.h));
+    ui_hide.Transform(Rect<int>((mouseX - rect.w - 45), (mouseY - (rect.h / 2)), rect.w, rect.h));
 
     rect = atlas->Get(45);
-    ui_magnify.Transform(Rect<int>(int(mouseX + 45), int(mouseY - (rect.h / 2)), rect.w, rect.h));
+    ui_magnify.Transform(Rect<int>((mouseX + 45), (mouseY - (rect.h / 2)), rect.w, rect.h));
 
     rect = atlas->Get(35);
-    ui_lower.Transform(Rect<int>(int(mouseX - (rect.w / 2)), int(mouseY + 25), rect.w, rect.h));
+    ui_lower.Transform(Rect<int>((mouseX - (rect.w / 2)), (mouseY + 25), rect.w, rect.h));
 
     ui_compass.Render();
     ui_hide.Render();
@@ -132,7 +132,7 @@ void IngameGUI::RenderMenubar()
 {
     auto atlas = gm1_face->GetTextureAtlas();
     SDL_Rect rect = atlas->Get(0);
-    int width, height = GetHeight(), menuOffsetX, menuOffsetY = height - rect.h;
+    [[maybe_unused]] int width = GetWidth(), height = GetHeight(), menuOffsetX, menuOffsetY = height - rect.h;
 
     Resolution res = GetResolution();
     if (res == RESOLUTION_800x600) {
@@ -157,6 +157,10 @@ void IngameGUI::RenderMenubar()
         Rendering::Render(*tgx_right, tgx_left->GetWidth() + 800, height - tgx_right->GetHeight());
         Rendering::Render(*tgx_left, 0, height - tgx_left->GetHeight());
     }
+
+    //TODO(seidl): remove this
+    // silence clang
+    (void)currentTab;
 
     // Calculate button positions //
     /*ui_disk.Translate  (menuOffsetX+800-287, menuOffsetY+16);

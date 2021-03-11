@@ -27,7 +27,7 @@ bool TexFile::LoadFromDisk(ghc::filesystem::path path)
 
         while(Parser::Ok() && fp < end) {
             std::wstring str = Parser::GetUTF16();
-            fp += str.size()*2 + 4;
+            fp += static_cast<uint32_t>(str.size()*2) + 4;
             Parser::SeekG(fp);
 
             strings[static_cast<TextSection>(i)].push_back(str);

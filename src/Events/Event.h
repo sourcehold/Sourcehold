@@ -35,14 +35,14 @@ namespace Sourcehold {
             virtual ~Event() = default;
 
             inline void SetHandled(bool h) {
-                handled = h;
+                handled_ = h;
             }
             inline bool IsHandled() {
-                return handled;
+                return handled_;
             }
 
             inline EventType GetType() {
-                return type;
+                return type_;
             }
 
             virtual void eventCallback(SDL_Event& event) = 0;
@@ -73,8 +73,8 @@ namespace Sourcehold {
                 }
             }
         protected:
-            EventType type;
-            bool handled = false;
+            EventType type_;
+            bool handled_ = false;
         };
 
         /*
@@ -83,23 +83,23 @@ namespace Sourcehold {
          */
         template<class T>
         class EventConsumer {
-            T event;
-            int id = 0;
+            T event_;
+            int id_ = 0;
         public:
             virtual ~EventConsumer() {
-                RemoveEventListener(id);
+                RemoveEventListener(id_);
             };
             EventConsumer(const EventConsumer&) = delete;
-            EventConsumer() : event() {
+            EventConsumer() : event_() {
                 std::function<void(SDL_Event&)> fn(std::bind(&EventConsumer::_callback, this, std::placeholders::_1));
-                id = AddEventListener(fn);
+                id_ = AddEventListener(fn);
             }
         private:
             void _callback(SDL_Event& ev) {
                 /* Forward event to implementation */
-                event.eventCallback(ev);
+                event_.eventCallback(ev);
                 /* If not handled already, hand to consumer */
-                if (!event.IsHandled()) onEventReceive(event);
+                if (!event_.IsHandled()) onEventReceive(event_);
             }
             virtual void onEventReceive(T& event) = 0;
         };

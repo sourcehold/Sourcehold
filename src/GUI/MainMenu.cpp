@@ -140,8 +140,8 @@ MainMenu::MainMenu()
         ui_elems[i].SetInactiveRect(inactive);
         ui_elems[i].SetID(i);
 
-        ui_elems[i].onEvent = [&](size_t id, Mouse& m) {
-            if (id >= BUTTON_END || id < 0) return;
+        ui_elems[i].onEvent_ = [&](size_t id, Mouse& m) {
+            if (id >= BUTTON_END) return;
             if (m.type == BUTTONDOWN && m.LmbDown()) {
                 MenuButton selected = static_cast<MenuButton>(id);
                 if (selected != BUTTON_END) {
@@ -155,6 +155,9 @@ MainMenu::MainMenu()
             }
         };
     }
+    //TODO(seidl): remove
+    // silence clang, unused variable
+    (void)edition;
 }
 
 MainMenu::~MainMenu()
@@ -307,7 +310,7 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
         // Animate the inactive graphic //
         SDL_Rect inactive = tex->Get(inf.index);
         if (inf.hasGlare && inf.glareOrder == glareCounter) {
-            ui_elems[i].SetInactiveRect(tex->Get(inf.glareIndex + (glareTicks % 14)));
+            ui_elems[i].SetInactiveRect(tex->Get(static_cast<uint32_t>(inf.glareIndex + (glareTicks % 14))));
         }
         else {
             ui_elems[i].SetInactiveRect(inactive);
@@ -317,7 +320,7 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end)
         int mx = (GetWidth() - 1024) / 2;
         int my = (GetHeight() - 768) / 2;
 
-        ui_elems[i].visible = true;
+        ui_elems[i].visible_ = true;
 
         ui_elems[i].Transform(Rect<int>(mx + inf.x, my + inf.y, inactive.w, inactive.h));
         ui_elems[i].Render();
@@ -328,6 +331,6 @@ void MainMenu::HideButtons()
 {
     // hack
     for (size_t i = 0; i < BUTTON_END; i++) {
-        ui_elems[i].visible = false;
+        ui_elems[i].visible_ = false;
     }
 }

@@ -129,7 +129,7 @@ void Texture::Copy(Texture &other, int32_t x, int32_t y, SDL_Rect *rect)
     int width, height;
     GetDim(&width, &height);
 
-    if( int(x + ow) > width || int(y + oh) > height ) {
+    if( (x + ow) > width || (y + oh) > height ) {
         Logger::error(RENDERING) << "Attempted to copy a texture which is too large for the target (or goes out of bounds)!" << std::endl;
         return;
     }
@@ -202,7 +202,7 @@ Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 
 void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a)
 {
-    *r = value >> 24;
+    *r = static_cast<uint8_t>(value >> 24);
     *g = (value >> 16) & 0xFF;
     *b = (value >> 8) & 0xFF;
     *a = value & 0xFF;

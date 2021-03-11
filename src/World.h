@@ -53,7 +53,7 @@ namespace Sourcehold {
         // Just testing. Nothing to see here, move along! //
         class Unit {
         public:
-            Unit(int x, int y, const char *f) : x(x), y(y) {
+            Unit(int x, int y, const char *f) : x_(x), y_(y) {
                 file = GetGm1(std::string("gm/") + f + std::string(".gm1"));
             }
             virtual ~Unit() = default;
@@ -63,14 +63,14 @@ namespace Sourcehold {
             void Render() {
                 Camera& cam = Camera::instance();
 
-                int px = x * 30 - cam.pos_x_;
-                int py = y * 15 - cam.pos_y_;
+                int px = x_ * 30 - cam.pos_x_;
+                int py = y_ * 15 - cam.pos_y_;
 
                 SDL_Rect r = file->GetTextureAtlas()->Get(static_cast<uint32_t>(index));
                 Rendering::Render(*file->GetTextureAtlas(), px, py, &r);
             }
 
-            int x, y;
+            int x_, y_;
         protected:
             int index=0;
             std::shared_ptr<Gm1File> file;

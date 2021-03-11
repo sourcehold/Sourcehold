@@ -19,6 +19,11 @@ Building::Building(std::weak_ptr<Gm1File> file, uint32_t x, uint32_t y, uint32_t
     mapW(mw),
     mapH(mh)
 {
+  //TODO(seidl): remove
+  //silence clang, unused variable
+  (void)mapW;
+  (void)mapH;
+
     PlaceAt(x, y);
 }
 

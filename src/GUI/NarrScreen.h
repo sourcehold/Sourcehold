@@ -29,12 +29,12 @@ namespace Sourcehold {
 
         #define NUM_ANIM_FRAMES 13
         class NarrScreen : protected EventConsumer<Mouse> {
-            std::vector<std::wstring> lines;
-            Song song;
-            bool skipped;
-            uint8_t mission;
-            std::shared_ptr<TgxFile> tgx_bg1, tgx_bg2,
-                tgx_candle[NUM_ANIM_FRAMES], tgx_flame[2][NUM_ANIM_FRAMES];
+            std::vector<std::wstring> lines_;
+            Song song_;
+            bool skipped_;
+            uint8_t mission_;
+            std::shared_ptr<TgxFile> tgx_bg1_, tgx_bg2_,
+                tgx_candle_[NUM_ANIM_FRAMES], tgx_flame_[2][NUM_ANIM_FRAMES];
         public:
             /* Create sequence based on mission index */
             NarrScreen(uint8_t mission);

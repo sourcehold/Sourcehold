@@ -44,7 +44,7 @@ void Rendering::RenderText(const std::wstring& text, uint32_t x, uint32_t y, Fon
         if(c < 0x20) continue;
         /* Space */
         if(c == 0x20) {
-            x += _table_width_height[type].first * static_cast<uint32_t>(scaleFactor);
+            x += static_cast<uint32_t>(_table_width_height[type].first * scaleFactor);
         }
         else {
             /* Calculate lowercase offset */
@@ -56,11 +56,11 @@ void Rendering::RenderText(const std::wstring& text, uint32_t x, uint32_t y, Fon
             case 0x79: /* y */
             case 0x51: /* Q */
             case 0x4A: { /* J */
-                lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
+                lowercaseOffset = static_cast<int8_t>(_table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5));
             }
             break;
             case 0x6A: { /* j */
-                lowercaseOffset = _table_width_height[type].second / 2;
+                lowercaseOffset = static_cast<int8_t>(_table_width_height[type].second / 2);
             }
             break;
             case 0x2D: { /* - */
@@ -92,8 +92,8 @@ void Rendering::RenderText(const std::wstring& text, Rect<uint32_t> bounds, Alig
 
     double factor = (double(bounds.h) / dim.second) * 0.75;
 
-    dim.first *= static_cast<uint32_t>(factor);
-    dim.second *= static_cast<uint32_t>(factor);
+    dim.first = static_cast<uint32_t>(dim.first * factor);
+    dim.second = static_cast<uint32_t>(dim.second * factor);
 
     unsigned int x=0, y=0;
     if(al == Align::CENTER) {
@@ -127,7 +127,7 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(const std::wstring& t
         }
         else {
             /* Calculate lowercase offset */
-            int8_t lowercaseOffset = 0;
+            [[maybe_unused]] int8_t lowercaseOffset = 0;
             switch(c) {
             case 0x67: /* g */
             case 0x70: /* p */
@@ -135,11 +135,11 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(const std::wstring& t
             case 0x79: /* y */
             case 0x51: /* Q */
             case 0x4A: { /* J */
-                lowercaseOffset = _table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5);
+                lowercaseOffset = static_cast<int8_t>(_table_width_height[type].second / 2 - (type == FONT_SMALL ? 1 : 5));
             }
             break;
             case 0x6A: { /* j */
-                lowercaseOffset = _table_width_height[type].second / 2;
+                lowercaseOffset = static_cast<int8_t>(_table_width_height[type].second / 2);
             }
             break;
             case 0x2D: { /* - */

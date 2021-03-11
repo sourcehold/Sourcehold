@@ -73,8 +73,8 @@ std::wstring Parser::GetUTF16(uint32_t len)
     while(Ok() && ws.length() < len) {
         uint16_t word = GetWord();
 
-        uint8_t lo = word & 0xFF;
-        uint8_t hi = word >> 8;
+        uint8_t lo = static_cast<uint8_t>(word & 0xFF);
+        uint8_t hi = static_cast<uint8_t>(word >> 8);
 
         int byte = hi << 8 | lo;
 
@@ -91,8 +91,8 @@ std::wstring Parser::GetUTF16()
     while(Ok()) {
         uint16_t word = GetWord();
 
-        uint8_t lo = word & 0xFF;
-        uint8_t hi = word >> 8;
+        uint8_t lo = static_cast<uint8_t>(word & 0xFF);
+        uint8_t hi = static_cast<uint8_t>(word >> 8);
 
         int byte = hi << 8 | lo;
         if(!byte) break;

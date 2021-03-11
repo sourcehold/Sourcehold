@@ -133,8 +133,8 @@ UIState Startup::Begin()
                 font->SetAlphaMod(alpha);
                 RenderText(
                            startupStr,
-                           static_cast<uint32_t>(GetWidth() / 2) - static_cast<uint32_t>(dim.first / 2),
-                           static_cast<uint32_t>(GetHeight() / 2) - static_cast<uint32_t>(dim.second / 2),
+                           static_cast<uint32_t>(GetWidth() / 2) - dim.first / 2,
+                           static_cast<uint32_t>(GetHeight() / 2) - dim.second / 2,
                            FONT_LARGE, false, 0.7);
               }
               break;

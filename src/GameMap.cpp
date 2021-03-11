@@ -66,8 +66,8 @@ void GameMap::Render()
 
         Rendering::Render(
             *tileset,
-            static_cast<int>(mult) * x - static_cast<int>(cam.pos_x_),
-            static_cast<int>(mult) * y - static_cast<int>( cam.pos_y_),
+            mult * x - cam.pos_x_,
+            mult * y - cam.pos_y_,
             30*mult,
             16*mult,
             &clip

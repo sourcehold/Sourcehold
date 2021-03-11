@@ -52,7 +52,10 @@ bool AniFile::ParseChunks()
 
         std::string id(reinterpret_cast<const char*>(&header.id), sizeof(uint32_t));
         auto bytes = header.size % 2 == 0 ? header.size : header.size + 1;
-
+        (void)bytes; // For some reason clang defines 'bytes' as unused
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wduplicated-branches"
         if(id == "anih") {
             /* TODO */
             Parser::SeekG(Parser::Tell() + bytes);
@@ -72,8 +75,9 @@ bool AniFile::ParseChunks()
         else {
             Parser::SeekG(Parser::Tell() + bytes);
         }
+#pragma GCC diagnostic pop
+#endif // __GNUC__
     }
-
     Parser::Close();
     return true;
 }

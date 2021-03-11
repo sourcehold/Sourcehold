@@ -194,10 +194,10 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, [[maybe_unused]] bool cac
             /* Calculate the offset relative to the texture atlas rectangle for every entry */
             for(auto d = currentEntry + cnt; currentEntry < d; currentEntry++) {
                 entries[currentEntry].collection = n;
-                entries[currentEntry].offX = (entries[currentEntry].header.offsetX + entries[currentEntry].header.horizOffset) - left;
+                entries[currentEntry].offX = static_cast<uint16_t>(entries[currentEntry].header.offsetX + entries[currentEntry].header.horizOffset) - left;
                 entries[currentEntry].offY = (entries[currentEntry].header.offsetY) - top;
                 entries[currentEntry].tileX = (entries[currentEntry].header.offsetX) - left;
-                entries[currentEntry].tileY = (entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
+                entries[currentEntry].tileY = static_cast<uint16_t>(entries[currentEntry].header.offsetY + entries[currentEntry].header.tileOffsetY) - top;
             }
 
             /* Hand the width/height to the texture atlas  */

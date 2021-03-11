@@ -26,17 +26,17 @@ namespace Sourcehold {
         using namespace Events;
         class Button : public EventConsumer<Mouse>, public Widget
         {
-            DialogButton style;
-            std::wstring text;
-            bool selected;
-            std::function<void(Mouse & ev)> handler;
+            DialogButton style_;
+            std::wstring text_;
+            bool selected_;
+            std::function<void(Mouse & ev)> handler_;
         public:
             Button(DialogButton style, const std::wstring &text);
             ~Button();
-            
+
             void Update(Rect<int> constraints) override;
 
-            inline void SetOnClick(std::function<void(Mouse & ev)> fn) { handler = fn; }
+            inline void SetOnClick(std::function<void(Mouse & ev)> fn) { handler_ = fn; }
         protected:
             void onEventReceive(Mouse& event) override;
         };

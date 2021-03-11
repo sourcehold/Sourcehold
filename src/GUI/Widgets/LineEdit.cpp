@@ -18,6 +18,9 @@ LineEdit::~LineEdit()
 
 void LineEdit::Init()
 {
+  //TODO(seidl): remove
+  // silence clang, unused variable
+  (void)MAX_LENGTH;
     cp_ = static_cast<int>(line_.size());
 }
 
@@ -62,25 +65,25 @@ void LineEdit::Update(Rect<int> constraints)
     RenderRect(Rect<int>(x+static_cast<int>(dim.first), y, 2, 34), 24, 80, 24, 255, true);
 }
 
-void LineEdit::onEventReceive(Keyboard &event)
+void LineEdit::onEventReceive(Keyboard &keyboard_event)
 {
-    if(event.type == KEYDOWN) {
-        if(event.Key().sym == SDLK_BACKSPACE) {
+    if(keyboard_event.type == KEYDOWN) {
+        if(keyboard_event.Key().sym == SDLK_BACKSPACE) {
             if(line_.size() >= 1 && cp_) {
                 line_.erase(line_.begin() + cp_ - 1);
                 cp_--;
             }
-        }else if(event.Key().sym == SDLK_DELETE) {
+        }else if(keyboard_event.Key().sym == SDLK_DELETE) {
             if(cp_ < static_cast<int>(line_.size())) {
                 line_.erase(line_.begin() + cp_);
             }
-        }else if(event.Key().sym == SDLK_LEFT) {
+        }else if(keyboard_event.Key().sym == SDLK_LEFT) {
             if(cp_) cp_--;
-        }else if(event.Key().sym == SDLK_RIGHT) {
+        }else if(keyboard_event.Key().sym == SDLK_RIGHT) {
             if(cp_ < static_cast<int>(line_.size())) cp_++;
         }
-    }else if(event.type == TEXTINPUT && cp_ <= static_cast<int>(line_.size())) {
-        char c = event.Get().text.text[0];
+    }else if(keyboard_event.type == TEXTINPUT && cp_ <= static_cast<int>(line_.size())) {
+        char c = keyboard_event.Get().text.text[0];
         line_.insert(line_.begin() + cp_, c);
         cp_++;
     }

@@ -6,6 +6,7 @@
 using namespace Sourcehold::Rendering;
 
 TextureAtlas::TextureAtlas(const TextureAtlas &atlas) :
+    Texture(atlas),
     num_(atlas.num_),
     entries_(atlas.entries_),
     surf_(atlas.surf_)

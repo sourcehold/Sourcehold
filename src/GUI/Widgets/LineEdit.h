@@ -21,7 +21,8 @@ namespace Sourcehold {
         using namespace Rendering;
 
         class LineEdit : protected EventConsumer<Keyboard>, public Widget {
-            [[maybe_unused]] const uint16_t MAX_LENGTH = 100, LINE_SEGMENT_W = 10;
+            const uint16_t MAX_LENGTH = 100;
+            const uint16_t LINE_SEGMENT_W = 10;
             std::wstring line_;
             int nx_,cp_; // number of line segments, character position
         public:

@@ -30,10 +30,10 @@ bool Surface::AllocNew(int width, int height)
                   width,
                   height,
                   32,
-                  Uint32(0xFF000000), // r
-                  Uint32(0x00FF0000), // g
-                  Uint32(0x0000FF00), // b
-                  Uint32(0x000000FF)  // a
+                  Uint32{0xFF000000}, // r
+                  Uint32{0x00FF0000}, // g
+                  Uint32{0x0000FF00}, // b
+                  Uint32{0x000000FF}  // a
               );
     if(!surface) {
         Logger::error(RENDERING) << "Unable to create surface: " << SDL_GetError() << std::endl;
@@ -74,7 +74,7 @@ void Surface::Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect)
     if(!locked || !other.IsLocked()) return;
 
     SDL_Rect dest = {
-        static_cast<int>(x), static_cast<int>(y), static_cast<int>(other.GetWidth()), static_cast<int>(other.GetHeight())
+        static_cast<int>(x), static_cast<int>(y), other.GetWidth(), other.GetHeight()
     };
 
     int err = SDL_BlitSurface(
