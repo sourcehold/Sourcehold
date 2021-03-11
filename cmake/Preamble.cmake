@@ -10,8 +10,6 @@ if(MSVC)
     set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
   endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 endif()
-
-
 include(cmake/PreventInSourceBuild.cmake)
 include(cmake/PlatformCheck.cmake)
 include(cmake/AddImportedTarget.cmake)
