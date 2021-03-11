@@ -21,6 +21,7 @@ jobs:
           - os: ubuntu-latest
             install_dependencies: "sh ./ubuntu/install-dependencies.sh"
             artifact_name: "sourcehold-linux-amd64"
+            compiler: [gcc, clang]
           - os: macos-latest
             install_dependencies: "sh ./macos/install-dependencies.sh"
             artifact_name: "sourcehold-mac-os"
