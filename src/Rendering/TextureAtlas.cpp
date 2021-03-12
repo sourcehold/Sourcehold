@@ -24,7 +24,7 @@ void TextureAtlas::Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries)
 
     struct Elem {
         std::pair<uint32_t, uint32_t> dim;
-        uint32_t index;
+        size_t index;
     };
 
     std::vector<Elem> sorted(entries.size());

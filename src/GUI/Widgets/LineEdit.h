@@ -33,7 +33,7 @@ namespace Sourcehold {
             void EndInput();
             void Update(Rect<int> constraints) override;
 
-            inline void SetLine(const std::wstring &line) { this->line = line; cp = line.size(); }
+            inline void SetLine(const std::wstring &line) { this->line = line; cp = (int)line.size(); }
             inline void SetPos(uint16_t cp) { this->cp = cp; }
             inline std::wstring &GetLine() { return line; }
         protected:
