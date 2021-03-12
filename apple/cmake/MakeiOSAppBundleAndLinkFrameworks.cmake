@@ -41,7 +41,7 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
   
 # Update app Info.plist with necessary values
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-  # Specify that app is universal and can be run on iPhone (1) and iPad (20). By default cmake set this value to 1
+  # Specify that app is universal and can be run on iPhone (1) and iPad (2). By default cmake set this value to 1
   # and thus we get scaled iPhone app on iPad.
   COMMAND plutil -replace UIDeviceFamily -json '[1, 2]' ${INFO_PLIST_BUNDLE_DIR_PATH}
   # We do not want to participate in Slide Over and Split View, thus we have to set this flag to YES.
