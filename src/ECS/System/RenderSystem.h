@@ -36,15 +36,15 @@ namespace Sourcehold {
                 void renderUnit(Component::Position position, Component::Animation animationComponent, std::shared_ptr<Gm1File> assetFile);
 
                 const std::unordered_map<EntityAsset, GM1FileSP> EntityAssetToGMMapping {
-                    { EntityAsset::DEER, GetGm1(dataRoot.string() + "gm/body_deer.gm1") },
-                    { EntityAsset::LORD, GetGm1(dataRoot.string() + "gm/body_lord.gm1") },
-                    { EntityAsset::TREE_APPLE, GetGm1(dataRoot.string() + "gm/tree_apple.gm1") },
-                    { EntityAsset::TREE_BIRCH, GetGm1(dataRoot.string() + "gm/tree_birch.gm1") },
-                    { EntityAsset::TREE_CHESTNUT, GetGm1(dataRoot.string() + "gm/Tree_Chestnut.gm1") },
-                    { EntityAsset::TREE_OAK, GetGm1(dataRoot.string() + "gm/tree_oak.gm1") },
-                    { EntityAsset::TREE_PINE, GetGm1(dataRoot.string() + "gm/tree_pine.gm1") },
-                    { EntityAsset::TREE_SHRUB1, GetGm1(dataRoot.string() + "gm/tree_shrub1.gm1") },
-                    { EntityAsset::TREE_SHRUB2, GetGm1(dataRoot.string() + "gm/tree_shrub2.gm1") }
+                    { EntityAsset::DEER, GetGm1(dataRoot / "gm/body_deer.gm1") },
+                    { EntityAsset::LORD, GetGm1(dataRoot / "gm/body_lord.gm1") },
+                    { EntityAsset::TREE_APPLE, GetGm1(dataRoot / "gm/tree_apple.gm1") },
+                    { EntityAsset::TREE_BIRCH, GetGm1(dataRoot / "gm/tree_birch.gm1") },
+                    { EntityAsset::TREE_CHESTNUT, GetGm1(dataRoot / "gm/Tree_Chestnut.gm1") },
+                    { EntityAsset::TREE_OAK, GetGm1(dataRoot / "gm/tree_oak.gm1") },
+                    { EntityAsset::TREE_PINE, GetGm1(dataRoot / "gm/tree_pine.gm1") },
+                    { EntityAsset::TREE_SHRUB1, GetGm1(dataRoot / "gm/tree_shrub1.gm1") },
+                    { EntityAsset::TREE_SHRUB2, GetGm1(dataRoot / "gm/tree_shrub2.gm1") }
                 };
 
                 // TODO - maybe exclude that into external config or add automatic code generation?
