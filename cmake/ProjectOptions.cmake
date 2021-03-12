@@ -1,5 +1,5 @@
 add_library(ProjectOptions INTERFACE)
-target_compile_features(ProjectOptions INTERFACE cxx_std_11)
+target_compile_features(ProjectOptions INTERFACE cxx_std_17)
 
 if(MSVC)
 # TODO(seidl):
