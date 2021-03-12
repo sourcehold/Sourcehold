@@ -69,7 +69,7 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
             std::swap(width, height);
         }
     }
-#endif
+#endif // defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
 
     _window = SDL_CreateWindow(
                   title.c_str(),
