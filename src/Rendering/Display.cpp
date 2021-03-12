@@ -56,14 +56,18 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height, int
         SDL_GetDisplayBounds(i, &displayBounds[i]);
     }
 
-#ifdef SOURCEHOLD_ANDROID
-    // On Android, only use the native resolution //
+#if defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
+    // On Android and iOS, only use the native resolution //
     if (width < 0 || height < 0) {
         SDL_DisplayMode mode;
         SDL_GetCurrentDisplayMode(index, &mode);
+        
+        width = mode.w;
+        height = mode.h;
         // Flip width and height to force landscape orientation //
-        width = mode.h;
-        height = mode.w;
+        if (height > width) {
+            std::swap(width, height);
+        }
     }
 #endif
 
