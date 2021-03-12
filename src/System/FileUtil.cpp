@@ -13,9 +13,9 @@
 
 #include "System/filesystem.h"
 
-#if SOURCEHOLD_MAC_OS
-#include "../macos/src/PathUtils.h"
-#endif
+#if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+#include "Common/SHPathUtils.h"
+#endif // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
 
 using namespace Sourcehold;
@@ -67,8 +67,8 @@ ghc::filesystem::path System::GetDocumentsPath()
     * TODO: better way to do this
     * Why the f*** isn't this part of boost?
     */
-#if SOURCEHOLD_MAC_OS
-    GetUserDocumentsDirectoryPath(path, maxPathLength);
+#if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+    SHQueryUserDocumentsDirectoryPath(path, maxPathLength);
 #elif SOURCEHOLD_UNIX
     /* Requires ~/.config/user-dirs.dirs from the FreeDesktop xdg standard */
     const char *home = getenv("HOME");
@@ -107,7 +107,7 @@ ghc::filesystem::path System::GetDocumentsPath()
     LPITEMIDLIST pidl;
     SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
     SHGetPathFromIDList(pidl, path);
-#endif
+#endif // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
     return ghc::filesystem::path(path);
 }

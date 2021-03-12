@@ -4,7 +4,7 @@ function(AddImportedTarget NAME LIBRARY INCLUDE)
 # https://cmake.org/pipermail/cmake/2016-April/063179.html
 # and here
 # https://gitlab.kitware.com/cmake/cmake/-/issues/19410
-  if(MAC_OS AND ${LIBRARY} MATCHES "\\.framework$")
+  if(TARGET_OS_MAC_OS AND ${LIBRARY} MATCHES "\\.framework$")
     add_library(${NAME} INTERFACE IMPORTED)
     set_target_properties(${NAME} PROPERTIES
       INTERFACE_LINK_LIBRARIES ${LIBRARY}

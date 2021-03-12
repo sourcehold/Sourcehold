@@ -1,18 +1,17 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project
-project(Stronghold)
-set(Stronghold_VERSION, 0.1.2)
+project(Stronghold VERSION 0.1.2)
 
 
 include(cmake/Preamble.cmake)
 
-add_subdirectory(macos)
+add_subdirectory(apple)
 add_subdirectory(src)
 
 # TODO(seidl):
 # still some modules hidden here..
-add_executable(Stronghold 
+add_executable(${PROJECT_NAME}
   src/Assets.cpp
   src/Building.cpp
   src/Game.cpp
@@ -22,14 +21,19 @@ add_executable(Stronghold
   src/World.cpp
 )
 
-if(MAC_OS)
-  target_link_libraries(Stronghold
-    PRIVATE MacOSUtils
-  )
-endif()
+target_include_directories(${PROJECT_NAME} PRIVATE src/)
 
-target_include_directories(Stronghold PRIVATE src/)
-target_link_libraries(Stronghold
+if(TARGET_OS_MAC_OS OR TARGET_OS_IOS)
+  target_link_libraries(${PROJECT_NAME}
+    PRIVATE AppleUtils
+  )
+endif() #TARGET_OS_MAC_OS OR TARGET_OS_IOS
+
+if(TARGET_OS_IOS)
+  include(apple/cmake/MakeiOSAppBundleAndLinkFrameworks.cmake)
+endif() # TARGET_OS_IOS
+
+target_link_libraries(${PROJECT_NAME}
   PRIVATE Threads::Threads
   PRIVATE Rendering
   PRIVATE cxxopts
