@@ -68,12 +68,9 @@ build() {
     fi
     
     if [[ "$PLATFORM" == "ios-simulator" ]] ; then
-        local SYSROOT=`xcode-select -p`/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk
-
         cmake "$CMAKE_WORKING_DIR_PATH" -B "$BUILD_DIR_PATH" -GXcode \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_DEPLOYMENT_TARGET=$IOS_DEPLOYMENT_TARGET \
-            -DCMAKE_APPLE_ARCH_SYSROOTS="$SYSROOT" \
             -DCMAKE_OSX_ARCHITECTURES="x86_64"
         cmake --build "$BUILD_DIR_PATH" --config $BUILD_TYPE $CLEAN_OPTION -- -sdk iphonesimulator
     else
