@@ -21,7 +21,14 @@ jobs:
         include:
           - os: ubuntu-latest
             install-dependencies: "sh ./ubuntu/install-dependencies.sh"
-            cmake-configure-options: ""
+            #TODO: (seidl, @github: skrax)
+            # enable warnings as errors later
+            cmake-configure-options: "-DWARNINGS_AS_ERRORS=OFF
+                                      -DENABLE_COVERAGE=ON
+                                      -DENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON
+                                      -DENABLE_CLANG_TIDY=ON
+                                      -DENABLE_SANITIZER_ADDRESS=ON
+                                      -DENABLE_SANITIZER_LEAK=ON"
             cmake-build-options: ""
             uploaded-artifact-name: "sourcehold-linux-amd64"
           - os: macos-latest
