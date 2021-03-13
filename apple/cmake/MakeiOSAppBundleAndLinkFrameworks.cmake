@@ -1,6 +1,4 @@
-set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO)
 set(DATA_DIR_PATH ${CMAKE_SOURCE_DIR}/data)
-  
 set(BUNDLE_DIR_PATH $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 set(RESOURCES_DIR_PATH ${CMAKE_SOURCE_DIR}/apple/iOS/Resources)
 set(INFO_PLIST_BUNDLE_DIR_PATH ${BUNDLE_DIR_PATH}/Info.plist)
@@ -13,6 +11,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
   MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
   XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${BUNDLE_IDENTIFIER}
+  XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO
 )
   
 if(EXISTS ${DATA_DIR_PATH})
@@ -21,7 +20,7 @@ if(EXISTS ${DATA_DIR_PATH})
   )
 else()
   message("'data' directroy does not exist. Skipping copy to app bundle.")
-endif()
+endif() # If data dir path exists
   
 # All storyboards in the Base.lproj directory
 set(STORYBOARDS ${RESOURCES_DIR_PATH}/Base.lproj/*.storyboard)
@@ -43,7 +42,7 @@ add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
   
 # Update app Info.plist with necessary values
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-  # Specify that app is universal and can be run on iPhone (1) and iPad (20). By default cmake set this value to 1
+  # Specify that app is universal and can be run on iPhone (1) and iPad (2). By default cmake set this value to 1
   # and thus we get scaled iPhone app on iPad.
   COMMAND plutil -replace UIDeviceFamily -json '[1, 2]' ${INFO_PLIST_BUNDLE_DIR_PATH}
   # We do not want to participate in Slide Over and Split View, thus we have to set this flag to YES.

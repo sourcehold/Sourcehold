@@ -1,8 +1,18 @@
-add_library(System
+set(SYSTEM_SOURCE_FILES
+  Config.h
+  filesystem.h
+  FileUtil.h
   FileUtil.cpp
+  Logger.h
   Logger.cpp
+  ModCampaign.h
   ModCampaign.cpp
+  System.h
 )
+
+add_library(System ${SYSTEM_SOURCE_FILES})
+source_group("Source Files" FILES ${SYSTEM_SOURCE_FILES})
+
 target_include_directories(System PRIVATE ../)
 target_link_libraries(System 
   PRIVATE ProjectOptions
