@@ -79,13 +79,6 @@ jobs:
       # Install all the required dependencies to build Sourcehold
       run: $INSTALL_DEPENDENCIES
 
-    - name: Check Formatting Style
-      shell: bash
-      run: |
-          if [[ ${{ matrix.os }} == 'ubuntu-latest' ]]; then
-            clang-format $(find src -regex ".*\.\(hpp\|cpp\|cc\|c\|h\)$") -n
-          fi
-
     - name: Create build environment
       # Some projects don't allow in-source building, so create a separate build directory
       # We'll use this as our working directory for all subsequent commands
