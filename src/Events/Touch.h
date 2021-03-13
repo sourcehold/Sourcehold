@@ -7,26 +7,27 @@
 #include "Event.h"
 
 namespace Sourcehold {
-    namespace Events {
-        class Touch : public Event
-        {
-            SDL_Event event;
-        public:
-            Touch() = default;
-            Touch(const Touch&) = delete;
+namespace Events {
+class Touch : public Event {
+  SDL_Event event;
 
-            float GetDx() { return event.tfinger.dx; }
-            float GetDy() { return event.tfinger.dy; }
+ public:
+  Touch() = default;
+  Touch(const Touch &) = delete;
 
-            float GetX() { return event.tfinger.x; }
-            float GetY() { return event.tfinger.y; }
+  float GetDx() { return event.tfinger.dx; }
+  float GetDy() { return event.tfinger.dy; }
 
-            void eventCallback(SDL_Event &event) override {
-                this->event = event;
+  float GetX() { return event.tfinger.x; }
+  float GetY() { return event.tfinger.y; }
 
-                type = ConvertTypes(event.type);
-                Event::SetHandled(type != FINGERMOTION && type != FINGERUP && type != FINGERDOWN);
-            }
-        };
-    }
-}
+  void eventCallback(SDL_Event &event) override {
+    this->event = event;
+
+    type = ConvertTypes(event.type);
+    Event::SetHandled(type != FINGERMOTION && type != FINGERUP &&
+                      type != FINGERDOWN);
+  }
+};
+}  // namespace Events
+}  // namespace Sourcehold
