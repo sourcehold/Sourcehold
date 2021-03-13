@@ -1,8 +1,16 @@
 # Thirdparty
 # blast
-add_library(blast ${CMAKE_SOURCE_DIR}/thirdparty/blast/blast.c)
+set(BLAST_SOURCE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/blast)
+set(BLAST_SOURCE_FILES
+  ${BLAST_SOURCE_DIR}/blast.h
+  ${BLAST_SOURCE_DIR}/blast.c
+)
+
+add_library(blast ${BLAST_SOURCE_FILES})
+source_group("Source Files" FILES ${BLAST_SOURCE_FILES})
+
 target_include_directories(blast
-  PUBLIC ${CMAKE_SOURCE_DIR}/thirdparty/blast
+  PUBLIC ${BLAST_SOURCE_DIR}
 )
 
 # cxxopts
