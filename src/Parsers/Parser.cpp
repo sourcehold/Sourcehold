@@ -49,7 +49,7 @@ void Parser::SeekP(uint32_t pos)
 
 uint32_t Parser::Tell()
 {
-    return stream.tellg();
+    return static_cast<uint32_t>(stream.tellg());
 }
 
 bool Parser::GetData(void *buf, size_t bufsize)

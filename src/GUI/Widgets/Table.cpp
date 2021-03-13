@@ -54,7 +54,7 @@ void Table::Update(Rect<int> constraints)
         y += 20;
     }
 
-    for(size_t i = 0; i < col.rows.size(); i++) {
+    for(int i = 0; i < col.rows.size(); i++) {
         std::wstring &row = col.rows[i];
 
         if(i == highlight || i == selected) {

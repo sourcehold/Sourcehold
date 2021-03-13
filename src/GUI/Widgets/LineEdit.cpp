@@ -18,7 +18,7 @@ LineEdit::~LineEdit()
 
 void LineEdit::Init()
 {
-    cp = line.size();
+    cp = static_cast<int>(line.size());
 }
 
 void LineEdit::BeginInput()

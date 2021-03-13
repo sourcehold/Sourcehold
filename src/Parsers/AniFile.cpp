@@ -64,7 +64,7 @@ bool AniFile::ParseChunks()
         Parser::GetData(&header, sizeof(RiffChunk));
 
         std::string id((const char*)&header.id, sizeof(uint32_t));
-        size_t bytes = header.size % 2 == 0 ? header.size : header.size + 1;
+        uint32_t bytes = header.size % 2 == 0 ? header.size : header.size + 1;
 
         if(id == "anih") {
             /* TODO */

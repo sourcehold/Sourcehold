@@ -66,7 +66,7 @@ bool Song::Load(ghc::filesystem::path path, bool repeat)
     fread(ptr, size, 1, fp);
     fclose(fp);
 
-    alBufferData(buffer, AL_FORMAT_MONO16, (const ALvoid*)ptr, size, SAMPLING_RATE);
+    alBufferData(buffer, AL_FORMAT_MONO16, static_cast<const ALvoid*>(ptr), static_cast<ALsizei>(size), SAMPLING_RATE);
     Audio::PrintError();
     alSourcei(source, AL_BUFFER, buffer);
     Audio::PrintError();
