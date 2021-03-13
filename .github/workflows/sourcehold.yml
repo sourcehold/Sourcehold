@@ -21,7 +21,12 @@ jobs:
         include:
           - os: ubuntu-latest
             install-dependencies: "sh ./ubuntu/install-dependencies.sh"
-            cmake-configure-options: "-DWARNINGS_AS_ERRORS=ON -DENABLE_CLANG_TIDY=ON -DENABLE_COVERAGE=ON -DENABLE_SANITIZER_ADDRESS=ON -DENABLE_SANITIZER_LEAK=ON -DENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" #, "-DWARNINGS_AS_ERRORS -DENABLE_SANITIZER_MEMORY", "-DWARNINGS_AS_ERRORS -DENABLE_SANITIZER_THREAD"
+            cmake-configure-options: "-DWARNINGS_AS_ERRORS=ON
+                                      -DENABLE_CLANG_TIDY=ON
+                                      -DENABLE_COVERAGE=ON
+                                      -DENABLE_SANITIZER_ADDRESS=ON
+                                      -DENABLE_SANITIZER_LEAK=ON
+                                      -DENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" #, "-DWARNINGS_AS_ERRORS -DENABLE_SANITIZER_MEMORY", "-DWARNINGS_AS_ERRORS -DENABLE_SANITIZER_THREAD"
             cmake-build-options: ""
             uploaded-artifact-name: "sourcehold-linux-amd64"
           - os: macos-latest
