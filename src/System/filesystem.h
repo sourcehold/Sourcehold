@@ -10,6 +10,8 @@
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuseless-cast"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
 #endif  // GCC
 
 #ifdef _MSC_VER
@@ -24,6 +26,7 @@
 #endif  // __clang__
 
 #if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
 #pragma GCC diagnostic pop
 #endif  // GCC
 
