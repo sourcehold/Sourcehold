@@ -12,10 +12,16 @@ if(MSVC)
     set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} ${CMAKE_BINARY_DIR} )
   endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 else()
+  if(NOT DEFINED CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(OPTIMIZATION_LEVEL -Ofast)
+  else()
+    set(OPTIMIZATION_LEVEL -O0)
+  endif() # If Release build type
+  
   target_compile_options(ProjectOptions INTERFACE
     -Wno-reorder
     -pedantic-errors
-    -Ofast
+    ${OPTIMIZATION_LEVEL}
     -fno-fast-math)
 endif()
 # TODO(seidl):

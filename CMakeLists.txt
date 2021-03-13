@@ -11,17 +11,28 @@ add_subdirectory(src)
 
 # TODO(seidl):
 # still some modules hidden here..
-add_executable(${PROJECT_NAME}
+set(SOURCE_FILES 
+  src/Assets.h
   src/Assets.cpp
+  src/Building.h
   src/Building.cpp
   src/Game.cpp
+  src/GameManager.h
   src/GameManager.cpp
+  src/GameMap.h
   src/GameMap.cpp
+  src/Startup.h
   src/Startup.cpp
+  src/World.h
   src/World.cpp
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE src/)
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+source_group("Source Files" FILES ${SOURCE_FILES})
+
+target_include_directories(${PROJECT_NAME}
+  PRIVATE src/
+)
 
 if(TARGET_OS_MAC_OS OR TARGET_OS_IOS)
   target_link_libraries(${PROJECT_NAME}
