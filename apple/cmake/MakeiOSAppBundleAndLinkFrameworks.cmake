@@ -1,6 +1,4 @@
-set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO)
 set(DATA_DIR_PATH ${CMAKE_SOURCE_DIR}/data)
-  
 set(BUNDLE_DIR_PATH $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 set(RESOURCES_DIR_PATH ${CMAKE_SOURCE_DIR}/apple/iOS/Resources)
 set(INFO_PLIST_BUNDLE_DIR_PATH ${BUNDLE_DIR_PATH}/Info.plist)
@@ -11,6 +9,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   MACOSX_BUNDLE_GUI_IDENTIFIER "com.sourcehold.\${PRODUCT_NAME:identifier}"
   MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION}
   MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+  XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH NO
 )
   
 if(EXISTS ${DATA_DIR_PATH})
@@ -19,7 +18,7 @@ if(EXISTS ${DATA_DIR_PATH})
   )
 else()
   message("'data' directroy does not exist. Skipping copy to app bundle.")
-endif()
+endif() # If data dir path exists
   
 # All storyboards in the Base.lproj directory
 set(STORYBOARDS ${RESOURCES_DIR_PATH}/Base.lproj/*.storyboard)

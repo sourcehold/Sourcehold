@@ -251,8 +251,8 @@ int main(int argc, char **argv)
         std::regex regex("(\\d+)x(\\d+)");
         std::smatch match;
 
-#ifdef SOURCEHOLD_ANDROID
-        // Width and height arguments will be ignored on Android //
+#if defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
+        // Width and height arguments will be ignored on Android and iOS //
         opt.width = opt.height = -1;
 #else
         const std::string str = result["resolution"].as<std::string>();
@@ -264,7 +264,7 @@ int main(int argc, char **argv)
             // Fallback to 800x600 if the resolution is ill-formed
             opt.width = 800; opt.height = 600;
         }
-#endif
+#endif // defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
 
         return StartGame(opt);
     }
