@@ -61,7 +61,7 @@ jobs:
       with:
         submodules: 'true'
       
-    - name: Cache ios dependencies
+    - name: Cache dependencies
       if: ${{ matrix.target-platform == 'ios-simulator' }}
       uses: actions/cache@v2
       env:
