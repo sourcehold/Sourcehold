@@ -43,9 +43,9 @@ jobs:
             cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_OSX_ARCHITECTURES="x86_64"'
             cmake-build-options: "-- -sdk iphonesimulator"
             uploaded-artifact-name: "sourcehold-ios"
-    
+
     name: ${{ matrix.os }} - ${{ matrix.target-platform }}
-    
+
     steps:
     - name: Set up environment variables
       # Unfortunately workflow level env variables can not be accessed at job level
@@ -59,12 +59,11 @@ jobs:
             echo "BUILD_ARTIFACT_PARENT_DIR_PATH=${{ github.workspace }}/build" >> $GITHUB_ENV
             echo "BUILD_ARTIFACT_NAME=Stronghold" >> $GITHUB_ENV
           fi
-    
+
     - name: Checkout sources
       uses: actions/checkout@v2
       with:
         submodules: 'true'
-      
     - name: Cache dependencies
       if: ${{ matrix.target-platform == 'ios-simulator' }}
       uses: actions/cache@v2
@@ -73,12 +72,19 @@ jobs:
       with:
         path: ${{ github.workspace }}/thirdparty/ios
         key: ${{ env.cache-name }}
-      
+
     - name: Install dependencies
       env:
         INSTALL_DEPENDENCIES: ${{ matrix.install-dependencies }}
       # Install all the required dependencies to build Sourcehold
       run: $INSTALL_DEPENDENCIES
+
+    - name: Check Formatting Style
+      shell: bash
+      run: |
+          if [[ ${{ matrix.os }} == 'ubuntu-latest' ]]; then
+            clang-format $(find src -regex ".*\.\(hpp\|cpp\|cc\|c\|h\)$") -n
+          fi
 
     - name: Create build environment
       # Some projects don't allow in-source building, so create a separate build directory
@@ -92,8 +98,8 @@ jobs:
       working-directory: ${{github.workspace}}/build
       env:
         CMAKE_CONFIGURE_OPTIONS: ${{ matrix.cmake-configure-options }}
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
+      # Note the current convention is to use the -S and -B options here to specify source
+      # and build directories, but this is only available with CMake 3.13 and higher.
       # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_CONFIGURE_OPTIONS
 
