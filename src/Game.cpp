@@ -21,7 +21,7 @@
 #include "GUI/NarrScreen.h"
 #include "GUI/MainMenu.h"
 
-#if SOURCEHOLD_IOS
+#ifdef SOURCEHOLD_IOS
 #include "Common/SHPathUtils.h"
 #endif
 
