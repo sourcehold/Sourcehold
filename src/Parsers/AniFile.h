@@ -12,22 +12,23 @@
 #include "System/filesystem.h"
 
 namespace Sourcehold {
-    namespace Parsers {
-        /*
-         * Animated cursor parser
-         */
-        class AniFile : public Parser {
-        public:
-            AniFile();
-            AniFile(const AniFile&);
-            AniFile(ghc::filesystem::path path);
-            ~AniFile();
+namespace Parsers {
+/*
+ * Animated cursor parser
+ */
+class AniFile : public Parser {
+ public:
+  AniFile();
+  AniFile(const AniFile&);
+  AniFile(ghc::filesystem::path path);
+  ~AniFile();
 
-            bool LoadFromDisk(ghc::filesystem::path path);
-        protected:
-            bool ParseChunks();
-            struct RiffHeader;
-            struct RiffChunk;
-        };
-    }
-}
+  bool LoadFromDisk(ghc::filesystem::path path);
+
+ protected:
+  bool ParseChunks();
+  struct RiffHeader;
+  struct RiffChunk;
+};
+}  // namespace Parsers
+}  // namespace Sourcehold

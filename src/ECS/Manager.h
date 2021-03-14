@@ -6,36 +6,38 @@
 #include "ECS/System/TestTeleportingDeerSystem.h"
 
 namespace Sourcehold {
-    namespace ECS {
-        class Manager {
-            public:
-            // Meyer Singleton
-            static Manager& GetInstance() {
-                static Manager manager;
-                return manager;
-            }
+namespace ECS {
+class Manager {
+ public:
+  // Meyer Singleton
+  static Manager& GetInstance() {
+    static Manager manager;
+    return manager;
+  }
 
-            static void Render(entt::registry &registry) {
-                GetInstance()._RenderSystem.tick(registry);
-            }
+  static void Render(entt::registry& registry) {
+    GetInstance()._RenderSystem.tick(registry);
+  }
 
-            static void Update(entt::registry &registry) {
-                GetInstance()._AnimationFrameSystem.tick(registry);
-                GetInstance()._TestTeleportingDeerSystem.tick(registry);
-            }
+  static void Update(entt::registry& registry) {
+    GetInstance()._AnimationFrameSystem.tick(registry);
+    GetInstance()._TestTeleportingDeerSystem.tick(registry);
+  }
 
-            private:
-            Manager() = default;
-            Manager(const Manager& other) = delete;
-            Manager& operator=(const Manager& other) = delete;
-            Manager& operator=(Manager&& other) = delete;
-            ~Manager() = default;
-            
-            ECS::System::RenderSystem _RenderSystem = ECS::System::RenderSystem();
-            ECS::System::AnimationFrameSystem _AnimationFrameSystem = ECS::System::AnimationFrameSystem();
-            ECS::System::TestTeleportingDeerSystem _TestTeleportingDeerSystem = ECS::System::TestTeleportingDeerSystem();
-        };
-    }
-}
+ private:
+  Manager() = default;
+  Manager(const Manager& other) = delete;
+  Manager& operator=(const Manager& other) = delete;
+  Manager& operator=(Manager&& other) = delete;
+  ~Manager() = default;
+
+  ECS::System::RenderSystem _RenderSystem = ECS::System::RenderSystem();
+  ECS::System::AnimationFrameSystem _AnimationFrameSystem =
+      ECS::System::AnimationFrameSystem();
+  ECS::System::TestTeleportingDeerSystem _TestTeleportingDeerSystem =
+      ECS::System::TestTeleportingDeerSystem();
+};
+}  // namespace ECS
+}  // namespace Sourcehold
 
 #endif  // ECS__MANAGER_H_

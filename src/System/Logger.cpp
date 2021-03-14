@@ -7,141 +7,122 @@ using namespace Sourcehold::System;
 
 // https://stackoverflow.com/questions/8870174/is-stdcout-usable-in-android-ndk/8870278#8870278
 static class AndroidBuf : public std::streambuf {
-public:
-    enum { bufsize = 128 }; // ... or some other suitable buffer size
-    AndroidBuf() { this->setp(buffer, buffer + bufsize - 1); }
+ public:
+  enum { bufsize = 128 };  // ... or some other suitable buffer size
+  AndroidBuf() { this->setp(buffer, buffer + bufsize - 1); }
 
-private:
-    int overflow(int c)
-    {
-        if (c == traits_type::eof()) {
-            *this->pptr() = traits_type::to_char_type(c);
-            this->sbumpc();
-        }
-        return this->sync() ? traits_type::eof() : traits_type::not_eof(c);
+ private:
+  int overflow(int c) {
+    if (c == traits_type::eof()) {
+      *this->pptr() = traits_type::to_char_type(c);
+      this->sbumpc();
     }
+    return this->sync() ? traits_type::eof() : traits_type::not_eof(c);
+  }
 
-    int sync()
-    {
-        int rc = 0;
-        if (this->pbase() != this->pptr()) {
-            char writebuf[bufsize + 1];
-            memcpy(writebuf, this->pbase(), this->pptr() - this->pbase());
-            writebuf[this->pptr() - this->pbase()] = '\0';
+  int sync() {
+    int rc = 0;
+    if (this->pbase() != this->pptr()) {
+      char writebuf[bufsize + 1];
+      memcpy(writebuf, this->pbase(), this->pptr() - this->pbase());
+      writebuf[this->pptr() - this->pbase()] = '\0';
 
-            rc = __android_log_write(ANDROID_LOG_INFO, "std", writebuf) > 0;
-            this->setp(buffer, buffer + bufsize - 1);
-        }
-        return rc;
+      rc = __android_log_write(ANDROID_LOG_INFO, "std", writebuf) > 0;
+      this->setp(buffer, buffer + bufsize - 1);
     }
+    return rc;
+  }
 
-    char buffer[bufsize];
+  char buffer[bufsize];
 } androidbuf;
 std::ostream stream(&androidbuf);
 #endif
 
 static bool coloredOutput = false;
 
-Logger::Logger()
-{
-}
+Logger::Logger() {}
 
-Logger::~Logger()
-{
-}
+Logger::~Logger() {}
 
-std::ostream& Logger::log(LogType type, const std::string& subsystem)
-{
-    std::string msg = "";
-    if (coloredOutput) {
-        switch (type) {
-        case LogType::ERROR:
-            msg = "\033[1;31m[ " + subsystem + " ]\033[0m -> ";
-            break;
-        case LogType::WARNING:
-            msg = "\033[1;33m[ " + subsystem + " ]\033[0m -> ";
-            break;
-        case LogType::MESSAGE:
-            msg = "\033[1;34m[ " + subsystem + " ]\033[0m -> ";
-            break;
-        case LogType::SUCCESS:
-            msg = "\033[1;32m[ " + subsystem + " ]\033[0m -> ";
-            break;
-        default:
-            break;
-        }
+std::ostream& Logger::log(LogType type, const std::string& subsystem) {
+  std::string msg = "";
+  if (coloredOutput) {
+    switch (type) {
+      case LogType::ERROR:
+        msg = "\033[1;31m[ " + subsystem + " ]\033[0m -> ";
+        break;
+      case LogType::WARNING:
+        msg = "\033[1;33m[ " + subsystem + " ]\033[0m -> ";
+        break;
+      case LogType::MESSAGE:
+        msg = "\033[1;34m[ " + subsystem + " ]\033[0m -> ";
+        break;
+      case LogType::SUCCESS:
+        msg = "\033[1;32m[ " + subsystem + " ]\033[0m -> ";
+        break;
+      default:
+        break;
     }
-    else {
-        msg = "[ " + subsystem + " ] -> ";
-    }
+  } else {
+    msg = "[ " + subsystem + " ] -> ";
+  }
 #ifdef SOURCEHOLD_ANDROID
-    return stream << msg;
+  return stream << msg;
 #else
-    return std::cout << msg;
+  return std::cout << msg;
 #endif
 }
 
-std::ostream& Logger::error(Subsystem subsystem)
-{
-    return log(LogType::ERROR, SubsystemName(subsystem));
+std::ostream& Logger::error(Subsystem subsystem) {
+  return log(LogType::ERROR, SubsystemName(subsystem));
 }
 
-std::ostream& Logger::warning(Subsystem subsystem)
-{
-    return log(LogType::WARNING, SubsystemName(subsystem));
+std::ostream& Logger::warning(Subsystem subsystem) {
+  return log(LogType::WARNING, SubsystemName(subsystem));
 }
 
-std::ostream& Logger::message(Subsystem subsystem)
-{
-    return log(LogType::MESSAGE, SubsystemName(subsystem));
+std::ostream& Logger::message(Subsystem subsystem) {
+  return log(LogType::MESSAGE, SubsystemName(subsystem));
 }
 
-std::ostream& Logger::success(Subsystem subsystem)
-{
-    return log(LogType::SUCCESS, SubsystemName(subsystem));
+std::ostream& Logger::success(Subsystem subsystem) {
+  return log(LogType::SUCCESS, SubsystemName(subsystem));
 }
 
-void Logger::SetColorOutput(bool a)
-{
-    coloredOutput = a;
-}
+void Logger::SetColorOutput(bool a) { coloredOutput = a; }
 
-bool Logger::GetColorOutput()
-{
-    return coloredOutput;
-}
+bool Logger::GetColorOutput() { return coloredOutput; }
 
-std::string Logger::SubsystemName(Subsystem sys)
-{
-    std::string s;
+std::string Logger::SubsystemName(Subsystem sys) {
+  std::string s;
 
-    switch (sys) {
+  switch (sys) {
     case AUDIO:
-        s = "AUDIO";
-        break;
+      s = "AUDIO";
+      break;
     case EVENTS:
-        s = "EVENTS";
-        break;
+      s = "EVENTS";
+      break;
     case GUI:
-        s = "GUI";
-        break;
+      s = "GUI";
+      break;
     case PARSERS:
-        s = "PARSERS";
-        break;
+      s = "PARSERS";
+      break;
     case RENDERING:
-        s = "RENDERING";
-        break;
+      s = "RENDERING";
+      break;
     case GAME:
-        s = "GAME";
-        break;
+      s = "GAME";
+      break;
     case ECS:
-        s = "ECS";
-        break;
+      s = "ECS";
+      break;
     case SOURCEHOLD:
     default:
-        s = "UNKNOWN";
-        break;
-    }
+      s = "UNKNOWN";
+      break;
+  }
 
-    return s;
+  return s;
 }

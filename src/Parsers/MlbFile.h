@@ -10,27 +10,29 @@
 #include "System/filesystem.h"
 
 namespace Sourcehold {
-    namespace Parsers {
-        /*
-         * The file containing all of the localized
-         * mission descriptions.
-         */
-        class MlbFile : private Parser {
-            /* Encoded in UTF-16LE */
-            std::vector<std::wstring> field;
-            uint16_t num = 0;
-        public:
-            MlbFile();
-            ~MlbFile();
+namespace Parsers {
+/*
+ * The file containing all of the localized
+ * mission descriptions.
+ */
+class MlbFile : private Parser {
+  /* Encoded in UTF-16LE */
+  std::vector<std::wstring> field;
+  uint16_t num = 0;
 
-            bool LoadFromDisk(ghc::filesystem::path path);
-            void Clear();
+ public:
+  MlbFile();
+  ~MlbFile();
 
-            inline std::wstring& GetString(Assets::MissionDescription index) {
-                return field.at(index);
-            }
-        protected:
-            struct SectionHeader;
-        };
-    }
-}
+  bool LoadFromDisk(ghc::filesystem::path path);
+  void Clear();
+
+  inline std::wstring& GetString(Assets::MissionDescription index) {
+    return field.at(index);
+  }
+
+ protected:
+  struct SectionHeader;
+};
+}  // namespace Parsers
+}  // namespace Sourcehold

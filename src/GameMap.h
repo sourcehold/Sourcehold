@@ -14,35 +14,37 @@
 #include "Assets.h"
 
 namespace Sourcehold {
-    namespace Parsers {
-        class Gm1File;
-        class TgxFile;
-    }
-    namespace Game {
-        using namespace Assets;
+namespace Parsers {
+class Gm1File;
+class TgxFile;
+}  // namespace Parsers
+namespace Game {
+using namespace Assets;
 
-        struct WorldInformation {
-            MapDimension type;
-            std::map<Building, bool> unlockedBuildings;
-        };
+struct WorldInformation {
+  MapDimension type;
+  std::map<Building, bool> unlockedBuildings;
+};
 
-        using namespace Rendering;
-        using namespace Parsers;
+using namespace Rendering;
+using namespace Parsers;
 
-        class GameMap : public MapFile {
-            int mult = 1, dim;
-            std::shared_ptr<Gm1File> gm1_tile;
-            std::shared_ptr<Tileset> tileset;
-            std::vector<SDL_Rect> tiles;
-        public:
-            GameMap(MapDimension type);
-            GameMap(ghc::filesystem::path path);
-            GameMap(const GameMap&) = delete;
-            ~GameMap();
+class GameMap : public MapFile {
+  int mult = 1, dim;
+  std::shared_ptr<Gm1File> gm1_tile;
+  std::shared_ptr<Tileset> tileset;
+  std::vector<SDL_Rect> tiles;
 
-            void LoadFromDisk(ghc::filesystem::path path);
-            void Render();            
-        protected:
-        };
-    }
-}
+ public:
+  GameMap(MapDimension type);
+  GameMap(ghc::filesystem::path path);
+  GameMap(const GameMap&) = delete;
+  ~GameMap();
+
+  void LoadFromDisk(ghc::filesystem::path path);
+  void Render();
+
+ protected:
+};
+}  // namespace Game
+}  // namespace Sourcehold

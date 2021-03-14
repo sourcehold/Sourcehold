@@ -7,20 +7,21 @@
 #include "Events/Event.h"
 
 namespace Sourcehold {
-    namespace Events {
-        class Keyboard : public Event {
-            SDL_Event event;
-        public:
-            Keyboard();
-            Keyboard(const Keyboard &key) = delete;
-            ~Keyboard();
+namespace Events {
+class Keyboard : public Event {
+  SDL_Event event;
 
-            SDL_Keysym Key();
-            EventType GetType();
-            SDL_Event Get();
-            EventType type;
+ public:
+  Keyboard();
+  Keyboard(const Keyboard &key) = delete;
+  ~Keyboard();
 
-            void eventCallback(SDL_Event &event) override;
-        };
-    }
-}
+  SDL_Keysym Key();
+  EventType GetType();
+  SDL_Event Get();
+  EventType type;
+
+  void eventCallback(SDL_Event &event) override;
+};
+}  // namespace Events
+}  // namespace Sourcehold

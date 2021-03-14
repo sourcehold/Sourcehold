@@ -22,29 +22,26 @@ using namespace GUI;
 
 std::shared_ptr<TgxFile> tgx_border;
 
-void GUI::InitMenuUtils()
-{    
-    if (GetEdition() == STRONGHOLD_HD) {
-        tgx_border = GetTgx("gfx/SH1_Back.tgx");
-    }
+void GUI::InitMenuUtils() {
+  if (GetEdition() == STRONGHOLD_HD) {
+    tgx_border = GetTgx("gfx/SH1_Back.tgx");
+  }
 }
 
-void GUI::RenderMenuText(const std::wstring &text)
-{
-    if(text.empty()) return;
+void GUI::RenderMenuText(const std::wstring &text) {
+  if (text.empty()) return;
 
-    auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
+  auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
-    auto rect = interface_icons->Get(18);
-    Render(*interface_icons, 312, 400, &rect);
-    RenderText(text.substr(0,1), 317, 406, FONT_SMALL, true);
-    RenderText(text.substr(1,text.size()), 338, 406, FONT_SMALL);
+  auto rect = interface_icons->Get(18);
+  Render(*interface_icons, 312, 400, &rect);
+  RenderText(text.substr(0, 1), 317, 406, FONT_SMALL, true);
+  RenderText(text.substr(1, text.size()), 338, 406, FONT_SMALL);
 }
 
-void GUI::RenderMenuBorder()
-{
-    if(GetEdition() == STRONGHOLD_HD) {
-        SDL_Rect border_rect;
+void GUI::RenderMenuBorder() {
+  if (GetEdition() == STRONGHOLD_HD) {
+    SDL_Rect border_rect;
 
 #if 0
         /**
@@ -57,68 +54,65 @@ void GUI::RenderMenuBorder()
         border_rect.h = GetHeight();
 #endif
 
-        Render(*tgx_border, (GetWidth() - 1920) / 2, (GetHeight() - 1200) / 2/*, &border_rect*/);
-    }
+    Render(*tgx_border, (GetWidth() - 1920) / 2,
+           (GetHeight() - 1200) / 2 /*, &border_rect*/);
+  }
 }
 
-bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry)
-{
-    // todo
-    return false;
+bool GUI::CheckButtonCollision(uint32_t rx, uint32_t ry) {
+  // todo
+  return false;
 }
 
-std::shared_ptr<Dialog> GUI::QuitDialog()
-{
-    auto res = std::make_shared<Dialog>(
-        WidgetLayout::HORIZONTAL, 18, 6, GetString(T_MAIN_MENU, 5), true, Deco::LARGE, 18
-    );
-    // Yes //
-    res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 22))->SetOnClick(
-        [](Mouse &m) {
-            if (m.LmbDown()) {
-                SaveConfig();
-                ExitGame();
-            }
+std::shared_ptr<Dialog> GUI::QuitDialog() {
+  auto res = std::make_shared<Dialog>(WidgetLayout::HORIZONTAL, 18, 6,
+                                      GetString(T_MAIN_MENU, 5), true,
+                                      Deco::LARGE, 18);
+  // Yes //
+  res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 22))
+      ->SetOnClick([](Mouse &m) {
+        if (m.LmbDown()) {
+          SaveConfig();
+          ExitGame();
         }
-    );
+      });
 
-    // No //
-    res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 23))->SetOnClick(
-        [res](Mouse& m) {
-            if (m.LmbDown() && res->onExit) {
-                res->onExit();
-            }
+  // No //
+  res->Add<Button>(BUTTON_4, GetString(T_GAME_OPTIONS, 23))
+      ->SetOnClick([res](Mouse &m) {
+        if (m.LmbDown() && res->onExit) {
+          res->onExit();
         }
-    );
+      });
 
-    return res;
+  return res;
 }
 
-std::shared_ptr<Dialog> GUI::LoadDialog()
-{
-    auto res = std::make_shared<Dialog>(
-        WidgetLayout::HORIZONTAL, 30, 17, GetString(T_GAME_OPTIONS, 2), true, Deco::LARGE, 12
-    );
-    // TODO
-    auto table = res->Add<Table>(16, 2);
-    table->SetColName(0, GetString(T_GAME_OPTIONS, 27));
-    table->SetColName(1, GetString(T_GAME_OPTIONS, 28));
+std::shared_ptr<Dialog> GUI::LoadDialog() {
+  auto res = std::make_shared<Dialog>(WidgetLayout::HORIZONTAL, 30, 17,
+                                      GetString(T_GAME_OPTIONS, 2), true,
+                                      Deco::LARGE, 12);
+  // TODO
+  auto table = res->Add<Table>(16, 2);
+  table->SetColName(0, GetString(T_GAME_OPTIONS, 27));
+  table->SetColName(1, GetString(T_GAME_OPTIONS, 28));
 
-    return res;
+  return res;
 }
 
-std::shared_ptr<Dialog> GUI::CombatMenuDialog()
-{
-    auto res = std::make_shared<Dialog>(
-        WidgetLayout::VERTICAL, 17, 22, GetString(T_MAIN_MENU, 15), true, Deco::LARGE, 17, false
-    );
+std::shared_ptr<Dialog> GUI::CombatMenuDialog() {
+  auto res = std::make_shared<Dialog>(WidgetLayout::VERTICAL, 17, 22,
+                                      GetString(T_MAIN_MENU, 15), true,
+                                      Deco::LARGE, 17, false);
 
-    auto table = res->Add<Table>(21, 1);
-    for (int i = 0; i < 21; i++) {
-        table->SetText(i, 0, std::to_wstring(i + 1) + L" " + GetString(T_MISSION_NAMES, 1 + i));
-    }
+  auto table = res->Add<Table>(21, 1);
+  for (int i = 0; i < 21; i++) {
+    table->SetText(
+        i, 0,
+        std::to_wstring(i + 1) + L" " + GetString(T_MISSION_NAMES, 1 + i));
+  }
 
-    table->RenderNames(false);
+  table->RenderNames(false);
 
-    return res;
+  return res;
 }
