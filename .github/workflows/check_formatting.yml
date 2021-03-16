@@ -12,4 +12,4 @@ jobs:
       - name: install clang-format
         run: sudo apt-get install clang-format
       - name: checking files
-        run: sh ./ubuntu/check-formatting.sh
+        run: sh ./unix/check-formatting.sh
