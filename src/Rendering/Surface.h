@@ -31,11 +31,21 @@ class Surface {
   void Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
   Uint32 *GetData();
-  inline bool IsValid() { return surface; }
-  inline bool IsLocked() { return locked; }
-  inline SDL_Surface *GetSurface() { return surface; }
-  inline int GetWidth() { return surface->w; }
-  inline int GetHeight() { return surface->h; }
+  inline bool IsValid() {
+    return surface;
+  }
+  inline bool IsLocked() {
+    return locked;
+  }
+  inline SDL_Surface *GetSurface() {
+    return surface;
+  }
+  inline int GetWidth() {
+    return surface->w;
+  }
+  inline int GetHeight() {
+    return surface->h;
+  }
 
  protected:
   Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);

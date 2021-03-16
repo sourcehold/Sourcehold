@@ -80,7 +80,8 @@ Gm1File::Gm1File(ghc::filesystem::path path, bool cache) : Parser() {
   this->LoadFromDisk(path, cache);
 }
 
-Gm1File::~Gm1File() {}
+Gm1File::~Gm1File() {
+}
 
 bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
   if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {

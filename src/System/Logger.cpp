@@ -9,7 +9,9 @@ using namespace Sourcehold::System;
 static class AndroidBuf : public std::streambuf {
  public:
   enum { bufsize = 128 };  // ... or some other suitable buffer size
-  AndroidBuf() { this->setp(buffer, buffer + bufsize - 1); }
+  AndroidBuf() {
+    this->setp(buffer, buffer + bufsize - 1);
+  }
 
  private:
   int overflow(int c) {
@@ -40,9 +42,11 @@ std::ostream stream(&androidbuf);
 
 static bool coloredOutput = false;
 
-Logger::Logger() {}
+Logger::Logger() {
+}
 
-Logger::~Logger() {}
+Logger::~Logger() {
+}
 
 std::ostream& Logger::log(LogType type, const std::string& subsystem) {
   std::string msg = "";
@@ -89,9 +93,13 @@ std::ostream& Logger::success(Subsystem subsystem) {
   return log(LogType::SUCCESS, SubsystemName(subsystem));
 }
 
-void Logger::SetColorOutput(bool a) { coloredOutput = a; }
+void Logger::SetColorOutput(bool a) {
+  coloredOutput = a;
+}
 
-bool Logger::GetColorOutput() { return coloredOutput; }
+bool Logger::GetColorOutput() {
+  return coloredOutput;
+}
 
 std::string Logger::SubsystemName(Subsystem sys) {
   std::string s;

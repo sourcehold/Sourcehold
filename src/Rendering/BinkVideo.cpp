@@ -31,7 +31,9 @@ BinkVideo::BinkVideo(ghc::filesystem::path path, bool looping) : Texture() {
   LoadFromDisk(path, looping);
 }
 
-BinkVideo::~BinkVideo() { Close(); }
+BinkVideo::~BinkVideo() {
+  Close();
+}
 
 bool BinkVideo::LoadFromDisk(ghc::filesystem::path path, bool looping) {
   this->looping = looping;
@@ -135,7 +137,8 @@ void BinkVideo::Close() {
 }
 
 void BinkVideo::Update() {
-  if (!running || !valid) return;
+  if (!running || !valid)
+    return;
 
   av_init_packet(&packet);
 
@@ -157,7 +160,8 @@ void BinkVideo::Update() {
 
     /* Receive new packet on start or if the last one was processed */
     if (packetFinished) {
-      if (avcodec_send_packet(codecCtx, &packet) < 0) return;
+      if (avcodec_send_packet(codecCtx, &packet) < 0)
+        return;
     }
 
     /* TODO: don't block the thread by sleeping and use internal
@@ -282,8 +286,10 @@ void BinkVideo::Update() {
         short *dst = (short *)audioBuffer;
         for (uint32_t i = 0; i < numSamples; i++) {
           float v = src[i] * 32768.0f;
-          if (v > 32767.0f) v = 32767.0f;
-          if (v < -32768.0f) v = 32768.0f;
+          if (v > 32767.0f)
+            v = 32767.0f;
+          if (v < -32768.0f)
+            v = 32768.0f;
           dst[i] = (short)v;
         }
 

@@ -3,9 +3,12 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-MlbFile::MlbFile() : Parser() {}
+MlbFile::MlbFile() : Parser() {
+}
 
-MlbFile::~MlbFile() { Clear(); }
+MlbFile::~MlbFile() {
+  Clear();
+}
 
 bool MlbFile::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
@@ -24,11 +27,14 @@ bool MlbFile::LoadFromDisk(ghc::filesystem::path path) {
     uint16_t len = Parser::GetDWord();
 
     std::wstring s = Parser::GetUTF16(len);
-    if (!s.empty()) field.push_back(s);
+    if (!s.empty())
+      field.push_back(s);
   }
 
   Parser::Close();
   return true;
 }
 
-void MlbFile::Clear() { field.clear(); }
+void MlbFile::Clear() {
+  field.clear();
+}

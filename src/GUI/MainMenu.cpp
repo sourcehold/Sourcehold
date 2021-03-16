@@ -142,7 +142,8 @@ MainMenu::MainMenu() {
     ui_elems[i].SetID(i);
 
     ui_elems[i].onEvent = [&](size_t id, Mouse& m) {
-      if (id >= BUTTON_END || id < 0) return;
+      if (id >= BUTTON_END || id < 0)
+        return;
       if (m.type == BUTTONDOWN && m.LmbDown()) {
         MenuButton selected = static_cast<MenuButton>(id);
         if (selected != BUTTON_END) {
@@ -157,7 +158,8 @@ MainMenu::MainMenu() {
   }
 }
 
-MainMenu::~MainMenu() {}
+MainMenu::~MainMenu() {
+}
 
 UIState MainMenu::EnterMenu() {
   currentState = MAIN_MENU;
@@ -167,7 +169,9 @@ UIState MainMenu::EnterMenu() {
 
   auto quitDlg = QuitDialog(), loadDlg = LoadDialog(),
        combatMenuDlg = CombatMenuDialog();
-  quitDlg->onExit = [&]() { currentState = MAIN_MENU; };
+  quitDlg->onExit = [&]() {
+    currentState = MAIN_MENU;
+  };
 
   while (Running()) {
     ClearDisplay();
@@ -289,7 +293,8 @@ ghc::filesystem::path MainMenu::GetGreetingsSound() {
 }
 
 void MainMenu::RenderButtons(MenuButton start, MenuButton end) {
-  if (start >= end) return;
+  if (start >= end)
+    return;
 
   int glareTicks = (int)(GetTime() * 10.0);
   int glareCounter = (glareTicks / 14) % 4;

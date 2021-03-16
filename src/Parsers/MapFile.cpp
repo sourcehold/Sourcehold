@@ -24,11 +24,15 @@ struct MapFile::MapSec {
   uint32_t num;
 };
 
-MapFile::MapFile() {}
+MapFile::MapFile() {
+}
 
-MapFile::MapFile(ghc::filesystem::path path) { LoadFromDisk(path); }
+MapFile::MapFile(ghc::filesystem::path path) {
+  LoadFromDisk(path);
+}
 
-MapFile::~MapFile() {}
+MapFile::~MapFile() {
+}
 
 bool MapFile::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {

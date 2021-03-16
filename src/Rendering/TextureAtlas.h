@@ -36,8 +36,12 @@ class TextureAtlas : public Texture {
   void Unlock();
   Uint32* GetData();
 
-  inline uint32_t GetNumTextures() { return num; }
-  inline Surface& GetSurface() { return surf; }
+  inline uint32_t GetNumTextures() {
+    return num;
+  }
+  inline Surface& GetSurface() {
+    return surf;
+  }
 
  protected:
   const uint32_t MAX_X_RESOLUTION = 2048;

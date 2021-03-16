@@ -4,7 +4,8 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-TexFile::TexFile() : Parser() {}
+TexFile::TexFile() : Parser() {
+}
 
 bool TexFile::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {
@@ -36,7 +37,8 @@ bool TexFile::LoadFromDisk(ghc::filesystem::path path) {
 }
 
 std::wstring &TexFile::GetString(TextSection sec, uint16_t index) {
-  if (index < strings.at(sec).size()) return strings.at(sec)[index];
+  if (index < strings.at(sec).size())
+    return strings.at(sec)[index];
 
   return dummy_text;
 }

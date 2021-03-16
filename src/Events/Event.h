@@ -34,10 +34,16 @@ class Event {
   Event(const Event& event) = delete;
   ~Event() = default;
 
-  inline void SetHandled(bool h) { handled = h; }
-  inline bool IsHandled() { return handled; }
+  inline void SetHandled(bool h) {
+    handled = h;
+  }
+  inline bool IsHandled() {
+    return handled;
+  }
 
-  inline EventType GetType() { return type; }
+  inline EventType GetType() {
+    return type;
+  }
 
   virtual void eventCallback(SDL_Event& event) = 0;
   EventType ConvertTypes(Uint32 sdlcode) {
@@ -82,7 +88,9 @@ class EventConsumer {
   int id = 0;
 
  public:
-  ~EventConsumer() { RemoveEventListener(id); };
+  ~EventConsumer() {
+    RemoveEventListener(id);
+  };
   EventConsumer(const EventConsumer&) = delete;
   EventConsumer() : event() {
     std::function<void(SDL_Event&)> fn(
@@ -95,7 +103,8 @@ class EventConsumer {
     /* Forward event to implementation */
     event.eventCallback(ev);
     /* If not handled already, hand to consumer */
-    if (!event.IsHandled()) onEventReceive(event);
+    if (!event.IsHandled())
+      onEventReceive(event);
   }
   virtual void onEventReceive(T& event) = 0;
 };

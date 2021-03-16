@@ -34,7 +34,9 @@ struct Scroll {
   bool setByKeyboard = false;
   bool setByMouse = false;
 
-  explicit operator bool() { return shouldScroll; }
+  explicit operator bool() {
+    return shouldScroll;
+  }
 };
 
 struct ScrollInformation {

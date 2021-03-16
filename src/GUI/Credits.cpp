@@ -8,9 +8,11 @@ using namespace Sourcehold::Rendering;
 
 Credits::Credits()
     : EventConsumer<Mouse>(),
-      layout(GetHlpSection(L"credits.hlp"), {0.5, 0.0, 0.5, 1.0}) {}
+      layout(GetHlpSection(L"credits.hlp"), {0.5, 0.0, 0.5, 1.0}) {
+}
 
-Credits::~Credits() {}
+Credits::~Credits() {
+}
 
 bool Credits::Play(bool endgame, bool fadein, bool loop) {
   playing = true;

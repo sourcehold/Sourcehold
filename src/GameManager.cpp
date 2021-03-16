@@ -82,7 +82,8 @@ void DetectUsername() {
   std::vector<std::wstring> words;
   // boost::algorithm::split(words, _cfg.username, boost::is_any_of("\t "),
   // boost::token_compress_on);
-  if (words.empty()) return;
+  if (words.empty())
+    return;
 
   int gender = 0;
 
@@ -120,7 +121,8 @@ void DetectUsername() {
 }
 
 void UpdateGame() {
-  if (!IsDisplayOpen() || !FetchEvents()) _running = false;
+  if (!IsDisplayOpen() || !FetchEvents())
+    _running = false;
 
   UpdateRenderer();
 }
@@ -210,9 +212,13 @@ bool Game::Running() {
   return _running;
 }
 
-void Game::SetDataDirectory(ghc::filesystem::path dir) { _dataFolder = dir; }
+void Game::SetDataDirectory(ghc::filesystem::path dir) {
+  _dataFolder = dir;
+}
 
-void Game::SetSaveDirectory(ghc::filesystem::path dir) { _saveFolder = dir; }
+void Game::SetSaveDirectory(ghc::filesystem::path dir) {
+  _saveFolder = dir;
+}
 
 bool Game::LoadGameData() {
   /* Detect game directories */
@@ -312,26 +318,32 @@ void Game::DeleteCacheEntry(ghc::filesystem::path filename) {
   switch (t) {
     case TGX: {
       auto iter = _tgxFiles.find(filename.string());
-      if (iter != _tgxFiles.end()) _tgxFiles.erase(iter);
+      if (iter != _tgxFiles.end())
+        _tgxFiles.erase(iter);
     } break;
     case GM1: {
       auto iter = _gm1Files.find(filename.string());
-      if (iter != _gm1Files.end()) _gm1Files.erase(iter);
+      if (iter != _gm1Files.end())
+        _gm1Files.erase(iter);
     } break;
     case ANI: {
       auto iter = _aniFiles.find(filename.string());
-      if (iter != _aniFiles.end()) _aniFiles.erase(iter);
+      if (iter != _aniFiles.end())
+        _aniFiles.erase(iter);
     } break;
     case BIK: {
       auto iter = _bikFiles.find(filename.string());
-      if (iter != _bikFiles.end()) _bikFiles.erase(iter);
+      if (iter != _bikFiles.end())
+        _bikFiles.erase(iter);
     } break;
     default:
       break;
   }
 }
 
-void Game::SaveConfig() { _cfg.WriteToDisk(_cfgPath); }
+void Game::SaveConfig() {
+  _cfg.WriteToDisk(_cfgPath);
+}
 
 void Game::ExitGame() {
   DestroyManager();
@@ -348,17 +360,29 @@ std::wstring Game::GetString(TextSection sec, uint16_t index) {
   return str;
 }
 
-double Game::GetTime() { return SDL_GetTicks() / 1000.0f; }
+double Game::GetTime() {
+  return SDL_GetTicks() / 1000.0f;
+}
 
-ghc::filesystem::path Game::GetDirectory() { return _dataFolder; }
+ghc::filesystem::path Game::GetDirectory() {
+  return _dataFolder;
+}
 
-StrongholdEdition Game::GetEdition() { return _edition; }
+StrongholdEdition Game::GetEdition() {
+  return _edition;
+}
 
-Resolution Game::GetResolution() { return _resolution; }
+Resolution Game::GetResolution() {
+  return _resolution;
+}
 
-int Game::GetUsernameIndex() { return _usernameIndex; }
+int Game::GetUsernameIndex() {
+  return _usernameIndex;
+}
 
-CfgFile &Game::GetCfg() { return _cfg; }
+CfgFile &Game::GetCfg() {
+  return _cfg;
+}
 
 std::shared_ptr<TgxFile> Game::GetTgx(ghc::filesystem::path filename) {
   auto sp = _tgxFiles[filename.string()].lock();

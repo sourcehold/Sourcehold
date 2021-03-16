@@ -2,9 +2,11 @@
 
 using namespace Sourcehold::Events;
 
-Mouse::Mouse() {}
+Mouse::Mouse() {
+}
 
-Mouse::~Mouse() {}
+Mouse::~Mouse() {
+}
 
 bool Mouse::LmbDown() {
   if (event.button.state == SDL_PRESSED &&
@@ -48,11 +50,17 @@ bool Mouse::RmbUp() {
   return false;
 }
 
-uint32_t Mouse::GetPosX() { return event.motion.x; }
+uint32_t Mouse::GetPosX() {
+  return event.motion.x;
+}
 
-uint32_t Mouse::GetPosY() { return event.motion.y; }
+uint32_t Mouse::GetPosY() {
+  return event.motion.y;
+}
 
-EventType Mouse::GetType() { return type; }
+EventType Mouse::GetType() {
+  return type;
+}
 
 void Mouse::eventCallback(SDL_Event &event) {
   this->event = event;

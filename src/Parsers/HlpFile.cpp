@@ -165,7 +165,9 @@ bool Parsers::LoadStrongholdHlp() {
   return true;
 }
 
-void Parsers::UnloadStrongholdHlp() { _sections.clear(); }
+void Parsers::UnloadStrongholdHlp() {
+  _sections.clear();
+}
 
 HlpSection *Parsers::GetHlpSection(std::wstring name) {
   // TODO: speed up

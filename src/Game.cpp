@@ -130,7 +130,8 @@ int StartGame(GameOptions &opt) {
   Logger::SetColorOutput(false);
 #endif
 
-  if (opt.color >= 0) Logger::SetColorOutput(opt.color == 1);
+  if (opt.color >= 0)
+    Logger::SetColorOutput(opt.color == 1);
 
   Resolution res;
   // Convert resolution //
@@ -175,7 +176,8 @@ int StartGame(GameOptions &opt) {
   Startup *start = new Startup();
 
   int ret = EnterLoadingScreen();
-  if (ret != EXIT_SUCCESS) return ret;
+  if (ret != EXIT_SUCCESS)
+    return ret;
 
   UIState state = MAIN_MENU;
   if (!opt.skip) {

@@ -49,7 +49,9 @@ class Layout {
   void AddPic(std::shared_ptr<TgxFile> pic, PicPosition pos);
   void NewParagraph();
 
-  inline void SetBounds(Rect<double> bounds) { this->bounds = bounds; }
+  inline void SetBounds(Rect<double> bounds) {
+    this->bounds = bounds;
+  }
 
  protected:
   Rect<double> bounds;

@@ -36,17 +36,24 @@ void Audio::DestroyOpenAL() {
   alcCloseDevice(_device);
 }
 
-void Audio::MuteOpenAL() { _muted = true; }
+void Audio::MuteOpenAL() {
+  _muted = true;
+}
 
-void Audio::UnmuteOpenAL() { _muted = false; }
+void Audio::UnmuteOpenAL() {
+  _muted = false;
+}
 
-bool Audio::IsOpenALMuted() { return _muted; }
+bool Audio::IsOpenALMuted() {
+  return _muted;
+}
 
 void Audio::PrintError() {
   ALCenum err = alGetError();
   std::string str;
 
-  if (err == AL_NO_ERROR) return;
+  if (err == AL_NO_ERROR)
+    return;
   switch (err) {
     case ALC_NO_ERROR:
       str = "ALC_NO_ERROR";

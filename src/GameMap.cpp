@@ -24,7 +24,8 @@ GameMap::GameMap(ghc::filesystem::path path) {
   dim = 160;
 }
 
-GameMap::~GameMap() {}
+GameMap::~GameMap() {
+}
 
 void GameMap::LoadFromDisk(ghc::filesystem::path path) {
   MapFile::LoadFromDisk(path);

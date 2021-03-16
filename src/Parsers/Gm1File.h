@@ -38,7 +38,9 @@ class Gm1File : private Parser {
   bool LoadFromDisk(ghc::filesystem::path path, bool cache = false);
   void Free();
 
-  inline std::shared_ptr<Tileset> GetTileset() { return tileset; }
+  inline std::shared_ptr<Tileset> GetTileset() {
+    return tileset;
+  }
   inline std::shared_ptr<TextureAtlas> GetTextureAtlas() {
     return textureAtlas;
   }

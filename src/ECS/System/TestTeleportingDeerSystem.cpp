@@ -6,7 +6,8 @@ namespace System {
 void TestTeleportingDeerSystem::tickEntity(entt::registry &registry,
                                            EachEntityType &entity) {
   auto [entityRef, typeComponent, positionComponent] = entity;
-  if (typeComponent.type != EntityType::DEER) return;
+  if (typeComponent.type != EntityType::DEER)
+    return;
 
   // just a test, remove or optimize in future
   std::random_device dev;

@@ -36,7 +36,9 @@ class Button : public EventConsumer<Mouse>, public Widget {
 
   void Update(Rect<int> constraints) override;
 
-  inline void SetOnClick(std::function<void(Mouse& ev)> fn) { handler = fn; }
+  inline void SetOnClick(std::function<void(Mouse& ev)> fn) {
+    handler = fn;
+  }
 
  protected:
   void onEventReceive(Mouse& event) override;

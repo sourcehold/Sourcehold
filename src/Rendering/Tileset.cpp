@@ -7,9 +7,11 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Tileset::Tileset() {}
+Tileset::Tileset() {
+}
 
-Tileset::~Tileset() {}
+Tileset::~Tileset() {
+}
 
 void Tileset::Allocate(uint32_t num) {
   this->num = num;
@@ -45,13 +47,21 @@ SDL_Rect Tileset::GetTile(uint32_t index) {
   return rect;
 }
 
-void Tileset::Clear() { Texture::Destroy(); }
+void Tileset::Clear() {
+  Texture::Destroy();
+}
 
-Uint32 *Tileset::GetData() { return surf.GetData(); }
+Uint32 *Tileset::GetData() {
+  return surf.GetData();
+}
 
-void Tileset::Lock() { surf.LockSurface(); }
+void Tileset::Lock() {
+  surf.LockSurface();
+}
 
-void Tileset::Unlock() { surf.UnlockSurface(); }
+void Tileset::Unlock() {
+  surf.UnlockSurface();
+}
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {
   return {30 * (index % numRows), 16 * (index / numRows)};

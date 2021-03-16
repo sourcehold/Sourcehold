@@ -5,7 +5,8 @@ using namespace Sourcehold::Game;
 using namespace Sourcehold::Rendering;
 
 Building::Building(uint32_t mw, uint32_t mh)
-    : px(0), py(0), mapW(mw), mapH(mh) {}
+    : px(0), py(0), mapW(mw), mapH(mh) {
+}
 
 Building::Building(std::weak_ptr<Gm1File> file, uint32_t x, uint32_t y,
                    uint32_t mw, uint32_t mh)
@@ -13,9 +14,11 @@ Building::Building(std::weak_ptr<Gm1File> file, uint32_t x, uint32_t y,
   PlaceAt(x, y);
 }
 
-Building::~Building() {}
+Building::~Building() {
+}
 
-void Building::Preview(uint32_t x, uint32_t y) {}
+void Building::Preview(uint32_t x, uint32_t y) {
+}
 
 void Building::PlaceAt(uint32_t x, uint32_t y) {
   px = x;
@@ -33,7 +36,8 @@ void Building::Unload() {
   loaded = false;
 }
 
-void Building::Render() {}
+void Building::Render() {
+}
 
 bool Building::CanWalkOn(uint32_t x, uint32_t y) {
   uint32_t const index = CoordToLocalIndex(x, y);
@@ -42,6 +46,10 @@ bool Building::CanWalkOn(uint32_t x, uint32_t y) {
          end(walkableTiles);
 }
 
-uint32_t Building::CoordToGlobalIndex(uint32_t x, uint32_t y) { return 0; }
+uint32_t Building::CoordToGlobalIndex(uint32_t x, uint32_t y) {
+  return 0;
+}
 
-uint32_t Building::CoordToLocalIndex(uint32_t x, uint32_t y) { return 0; }
+uint32_t Building::CoordToLocalIndex(uint32_t x, uint32_t y) {
+  return 0;
+}

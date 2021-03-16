@@ -11,9 +11,11 @@ using namespace Sourcehold::Rendering;
 using namespace Sourcehold::Game;
 
 Button::Button(DialogButton style, const std::wstring& text)
-    : Widget(), style{style}, text{text}, selected{false} {}
+    : Widget(), style{style}, text{text}, selected{false} {
+}
 
-Button::~Button() {}
+Button::~Button() {
+}
 
 void Button::Update(Rect<int> constraints) {
   const static int button_indices[] = {

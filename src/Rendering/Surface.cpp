@@ -4,15 +4,20 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Surface::Surface() : surface(nullptr) {}
+Surface::Surface() : surface(nullptr) {
+}
 
 Surface::Surface(const Surface& other)
-    : surface(other.surface), locked(other.locked), pixels(other.pixels) {}
+    : surface(other.surface), locked(other.locked), pixels(other.pixels) {
+}
 
-Surface::~Surface() { Destroy(); }
+Surface::~Surface() {
+  Destroy();
+}
 
 bool Surface::AllocNew(int width, int height) {
-  if (surface) return false;
+  if (surface)
+    return false;
 
   surface = SDL_CreateRGBSurface(0, width, height, 32,
                                  Uint32(0xFF000000),  // r
@@ -31,29 +36,34 @@ bool Surface::AllocNew(int width, int height) {
 }
 
 void Surface::Destroy() {
-  if (surface) SDL_FreeSurface(surface);
+  if (surface)
+    SDL_FreeSurface(surface);
   surface = nullptr;
 }
 
 void Surface::LockSurface() {
-  if (locked) return;
+  if (locked)
+    return;
   SDL_LockSurface(surface);
   locked = true;
 }
 
 void Surface::UnlockSurface() {
-  if (!locked) return;
+  if (!locked)
+    return;
   SDL_UnlockSurface(surface);
 }
 
 void Surface::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b,
                        uint8_t a) {
-  if (!locked) return;
+  if (!locked)
+    return;
   ((Uint32*)surface->pixels)[(y * surface->w) + x] = ToPixel(r, g, b, a);
 }
 
 void Surface::Blit(Surface& other, uint32_t x, uint32_t y, SDL_Rect* rect) {
-  if (!locked || !other.IsLocked()) return;
+  if (!locked || !other.IsLocked())
+    return;
 
   SDL_Rect dest = {(int)x, (int)y, (int)other.GetWidth(),
                    (int)other.GetHeight()};
@@ -71,7 +81,8 @@ void Surface::Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 }
 
 Uint32* Surface::GetData() {
-  if (!locked) return nullptr;
+  if (!locked)
+    return nullptr;
   return pixels;
 }
 

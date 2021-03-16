@@ -87,16 +87,20 @@ NarrScreen::NarrScreen(uint8_t mission)
   }
 }
 
-NarrScreen::~NarrScreen() {}
+NarrScreen::~NarrScreen() {
+}
 
 bool NarrScreen::Begin() {
   song.Play();
   switch (mission) {
     // TODO: add all campaign missions
     case 1:
-      if (!BeginAct(T_START_ACT_ONE)) break;
-      if (!BeginNarration()) break;
-      if (!BeginStoryScreen(NarrBackground::GOODGUYS)) break;
+      if (!BeginAct(T_START_ACT_ONE))
+        break;
+      if (!BeginNarration())
+        break;
+      if (!BeginStoryScreen(NarrBackground::GOODGUYS))
+        break;
       break;
     default:
       break;
@@ -235,7 +239,9 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
   return Running();
 }
 
-bool NarrScreen::BeginNpcIntro(NPC npc) { return Running(); }
+bool NarrScreen::BeginNpcIntro(NPC npc) {
+  return Running();
+}
 
 void NarrScreen::RenderFlameAnim(int px, int py, int index, Uint8 a) {
   auto color = tgx_flame[0][index];

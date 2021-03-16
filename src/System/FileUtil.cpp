@@ -34,7 +34,8 @@ std::string System::GetFilename(ghc::filesystem::path path) {
 
 bool System::IsFileHidden(ghc::filesystem::path path) {
   std::string name = path.filename().string();
-  if (name[0] == '.') return true;
+  if (name[0] == '.')
+    return true;
   return false;
 }
 

@@ -3,9 +3,11 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-VolumeTxt::VolumeTxt() : Parser() {}
+VolumeTxt::VolumeTxt() : Parser() {
+}
 
-VolumeTxt::~VolumeTxt() {}
+VolumeTxt::~VolumeTxt() {
+}
 
 bool VolumeTxt::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
@@ -23,7 +25,9 @@ bool VolumeTxt::LoadFromDisk(ghc::filesystem::path path) {
   return true;
 }
 
-void VolumeTxt::Clear() { volumes.clear(); }
+void VolumeTxt::Clear() {
+  volumes.clear();
+}
 
 uint8_t VolumeTxt::GetVolumeOf(std::string key) {
   auto iter = volumes.find(key);

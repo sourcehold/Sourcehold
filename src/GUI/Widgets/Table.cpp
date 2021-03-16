@@ -17,10 +17,13 @@ void Table::Create(uint32_t rows, uint32_t columns) {
   SetNumRows(rows);
 }
 
-void Table::Destroy() { cols.clear(); }
+void Table::Destroy() {
+  cols.clear();
+}
 
 void Table::Update(Rect<int> constraints) {
-  if (cols.empty()) return;
+  if (cols.empty())
+    return;
 
   Column &col = cols[0];
 
@@ -87,10 +90,13 @@ void Table::SetNumRows(uint32_t n) {
   numRows = n;
 }
 
-void Table::SetNumCols(uint32_t n) { cols.resize(n); }
+void Table::SetNumCols(uint32_t n) {
+  cols.resize(n);
+}
 
 void Table::SetColName(uint32_t n, const std::wstring &name) {
-  if (n >= cols.size()) return;
+  if (n >= cols.size())
+    return;
   cols[n].name = name;
 }
 
@@ -104,7 +110,8 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring &text) {
 }
 
 void Table::onEventReceive(Mouse &mouse) {
-  if (cols.empty() || highlight > numRows || cols[0].rows.empty()) return;
+  if (cols.empty() || highlight > numRows || cols[0].rows.empty())
+    return;
   if (mouse.type == BUTTONDOWN) {
     selected = highlight;
   }

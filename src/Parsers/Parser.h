@@ -46,7 +46,9 @@ class Parser {
   void WriteWord(uint16_t word);
   void WriteDWord(uint32_t dword);
 
-  inline uint32_t GetLength() { return length; }
+  inline uint32_t GetLength() {
+    return length;
+  }
 };
 }  // namespace Parsers
 }  // namespace Sourcehold

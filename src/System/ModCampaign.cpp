@@ -62,7 +62,8 @@ class JSONConfig {
   }
 
   ~JSONConfig() {
-    if (ctx) duk_destroy_heap(ctx);
+    if (ctx)
+      duk_destroy_heap(ctx);
   }
 
  protected:
@@ -124,12 +125,20 @@ void System::LoadModCampaigns(const ghc::filesystem::path &base) {
   }
 }
 
-std::vector<ModCampaign> *System::GetMilitaryCampaigns() { return &military; }
+std::vector<ModCampaign> *System::GetMilitaryCampaigns() {
+  return &military;
+}
 
-std::vector<ModCampaign> *System::GetEcoCampaigns() { return &eco; }
+std::vector<ModCampaign> *System::GetEcoCampaigns() {
+  return &eco;
+}
 
-bool System::HasMilitaryModCampaigns() { return military.size() > 0; }
+bool System::HasMilitaryModCampaigns() {
+  return military.size() > 0;
+}
 
-bool System::HasEcoModCampaigns() { return eco.size() > 0; }
+bool System::HasEcoModCampaigns() {
+  return eco.size() > 0;
+}
 
 #endif

@@ -17,6 +17,9 @@ bool Game::InitAvcodec() {
   return true;
 }
 
-void Game::DestroyAvcodec() {}
+void Game::DestroyAvcodec() {
+}
 
-AVInputFormat *Game::GetAVInputFormat() { return bink_input; }
+AVInputFormat *Game::GetAVInputFormat() {
+  return bink_input;
+}

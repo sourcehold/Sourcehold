@@ -23,7 +23,9 @@ class MapFile : private Parser {
 
   bool LoadFromDisk(ghc::filesystem::path path);
 
-  inline Texture& GetPreview() { return preview; }
+  inline Texture& GetPreview() {
+    return preview;
+  }
 
  protected:
   struct MapSec;

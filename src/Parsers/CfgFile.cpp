@@ -3,7 +3,8 @@
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
-CfgFile::CfgFile() : Parser() {}
+CfgFile::CfgFile() : Parser() {
+}
 
 void CfgFile::SetDefaultValues() {
   username = L"Lord Julian";

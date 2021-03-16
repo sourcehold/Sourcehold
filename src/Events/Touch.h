@@ -15,11 +15,19 @@ class Touch : public Event {
   Touch() = default;
   Touch(const Touch &) = delete;
 
-  float GetDx() { return event.tfinger.dx; }
-  float GetDy() { return event.tfinger.dy; }
+  float GetDx() {
+    return event.tfinger.dx;
+  }
+  float GetDy() {
+    return event.tfinger.dy;
+  }
 
-  float GetX() { return event.tfinger.x; }
-  float GetY() { return event.tfinger.y; }
+  float GetX() {
+    return event.tfinger.x;
+  }
+  float GetY() {
+    return event.tfinger.y;
+  }
 
   void eventCallback(SDL_Event &event) override {
     this->event = event;

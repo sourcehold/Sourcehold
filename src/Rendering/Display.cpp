@@ -49,7 +49,8 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height,
 
   // Select display //
   int displays = SDL_GetNumVideoDisplays();
-  if (index >= displays) index = 0;
+  if (index >= displays)
+    index = 0;
 
   auto displayBounds = std::vector<SDL_Rect>(displays);
   for (int i = 0; i < displays; i++) {
@@ -120,7 +121,9 @@ void Rendering::ReleaseMouse() {
   }
 }
 
-bool Rendering::IsDisplayOpen() { return true; }
+bool Rendering::IsDisplayOpen() {
+  return true;
+}
 
 void Rendering::ErrorMessageBox(const std::string &title,
                                 const std::string &msg) {
@@ -128,9 +131,13 @@ void Rendering::ErrorMessageBox(const std::string &title,
                            _window);
 }
 
-int Rendering::GetWidth() { return _width; }
+int Rendering::GetWidth() {
+  return _width;
+}
 
-int Rendering::GetHeight() { return _height; }
+int Rendering::GetHeight() {
+  return _height;
+}
 
 int Rendering::GetMouseX() {
   int p;
@@ -144,8 +151,14 @@ int Rendering::GetMouseY() {
   return p;
 }
 
-void Rendering::MouseOn() { SDL_ShowCursor(SDL_ENABLE); }
+void Rendering::MouseOn() {
+  SDL_ShowCursor(SDL_ENABLE);
+}
 
-void Rendering::MouseOff() { SDL_ShowCursor(SDL_DISABLE); }
+void Rendering::MouseOff() {
+  SDL_ShowCursor(SDL_DISABLE);
+}
 
-SDL_Window *Rendering::GetWindow() { return _window; }
+SDL_Window *Rendering::GetWindow() {
+  return _window;
+}

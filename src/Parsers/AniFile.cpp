@@ -17,15 +17,18 @@ struct AniFile::RiffChunk {
   uint32_t size;
 };
 
-AniFile::AniFile() : Parser() {}
+AniFile::AniFile() : Parser() {
+}
 
-AniFile::AniFile(const AniFile &other) {}
+AniFile::AniFile(const AniFile &other) {
+}
 
 AniFile::AniFile(ghc::filesystem::path path) : Parser() {
   this->LoadFromDisk(path);
 }
 
-AniFile::~AniFile() {}
+AniFile::~AniFile() {
+}
 
 bool AniFile::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ios::binary | std::ifstream::in)) {

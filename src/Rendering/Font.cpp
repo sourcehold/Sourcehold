@@ -38,7 +38,8 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
 
   SDL_Rect glyph = {};
   for (wchar_t c : text) {
-    if (c < 0x20) continue;
+    if (c < 0x20)
+      continue;
     /* Space */
     if (c == 0x20) {
       x += _table_width_height[type].first * scaleFactor;
@@ -112,7 +113,8 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(
 
   SDL_Rect glyph = {};
   for (wchar_t c : text) {
-    if (c < 0x20) continue;
+    if (c < 0x20)
+      continue;
     /* Space */
     if (c == 0x20) {
       dim.first += _table_width_height[type].first;

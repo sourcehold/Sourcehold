@@ -37,8 +37,12 @@ class LineEdit : protected EventConsumer<Keyboard>, public Widget {
     this->line = line;
     cp = static_cast<int>(line.size());
   }
-  inline void SetPos(uint16_t cp) { this->cp = cp; }
-  inline std::wstring &GetLine() { return line; }
+  inline void SetPos(uint16_t cp) {
+    this->cp = cp;
+  }
+  inline std::wstring &GetLine() {
+    return line;
+  }
 
  protected:
   void onEventReceive(Keyboard &event) override;

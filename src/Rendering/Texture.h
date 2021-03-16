@@ -67,8 +67,12 @@ class Texture {
 
   Uint32 *GetData();
 
-  inline bool IsValid() { return texture; }
-  inline SDL_Texture *GetTexture() { return texture; }
+  inline bool IsValid() {
+    return texture;
+  }
+  inline SDL_Texture *GetTexture() {
+    return texture;
+  }
 
  protected:
   Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);

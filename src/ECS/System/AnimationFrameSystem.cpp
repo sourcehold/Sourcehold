@@ -37,7 +37,8 @@ inline void calculateEvenFrame(int &frame, int frameCount, int frameOffset,
 void AnimationFrameSystem::tickEntity(entt::registry &registry,
                                       EachEntityType &entity) {
   auto [entityRef, typeComponent, animationComponent] = entity;
-  if (!animationComponent.animate) return;
+  if (!animationComponent.animate)
+    return;
   long frameDependingOnTime = long(now * 15.0f);
   int frame = frameDependingOnTime % 1000;
 
@@ -73,7 +74,9 @@ void AnimationFrameSystem::tickEntity(entt::registry &registry,
   registry.emplace_or_replace<Component::Animation>(entityRef, true, frame);
 }
 
-void AnimationFrameSystem::prepareTick() { now = Game::GetTime(); }
+void AnimationFrameSystem::prepareTick() {
+  now = Game::GetTime();
+}
 }  // namespace System
 }  // namespace ECS
 }  // namespace Sourcehold

@@ -2,7 +2,8 @@
 
 using namespace Sourcehold::GUI;
 
-Container::Container(WidgetLayout l) : layout{l} {}
+Container::Container(WidgetLayout l) : layout{l} {
+}
 
 void Container::Update(Rect<int> constraints) {
   /**

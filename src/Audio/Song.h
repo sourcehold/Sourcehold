@@ -43,10 +43,18 @@ class Song {
 
   bool IsPlaying();
 
-  inline bool IsValid() { return valid; }
-  inline bool IsFading() { return fading; }
-  inline void SetGain(double g) { gain = g; }
-  inline bool IsRepeating() { return repeat; }
+  inline bool IsValid() {
+    return valid;
+  }
+  inline bool IsFading() {
+    return fading;
+  }
+  inline void SetGain(double g) {
+    gain = g;
+  }
+  inline bool IsRepeating() {
+    return repeat;
+  }
 };
 }  // namespace Audio
 }  // namespace Sourcehold

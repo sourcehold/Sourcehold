@@ -32,8 +32,12 @@ class Tileset : public Texture {
   void Lock();
   void Unlock();
 
-  inline uint32_t GetNumTiles() { return num; }
-  inline Surface &GetSurface() { return surf; }
+  inline uint32_t GetNumTiles() {
+    return num;
+  }
+  inline Surface &GetSurface() {
+    return surf;
+  }
   SDL_Rect GetTile(uint32_t index);
 
  protected:

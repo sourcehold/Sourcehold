@@ -8,9 +8,12 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 
 Texture::Texture(const Texture &tex)
-    : texture(tex.texture), pixels(tex.pixels) {}
+    : texture(tex.texture), pixels(tex.pixels) {
+}
 
-Texture::~Texture() { Destroy(); }
+Texture::~Texture() {
+  Destroy();
+}
 
 bool Texture::AllocNewStreaming(int width, int height, int format) {
   texture = SDL_CreateTexture(GetRenderer(), format,
@@ -53,10 +56,12 @@ bool Texture::AllocNewTarget(int width, int height, int format) {
   return true;
 }
 
-void Texture::UpdateTexture() {}
+void Texture::UpdateTexture() {
+}
 
 void Texture::Destroy() {
-  if (!texture) return;
+  if (!texture)
+    return;
   SDL_DestroyTexture(texture);
   texture = nullptr;
 }
@@ -65,7 +70,8 @@ void Texture::LockTexture() {
   int access;
   SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
 
-  if (!texture || access != SDL_TEXTUREACCESS_STREAMING) return;
+  if (!texture || access != SDL_TEXTUREACCESS_STREAMING)
+    return;
   int pitch;
   if (SDL_LockTexture(texture, nullptr, (void **)&pixels, &pitch)) {
     Logger::error(RENDERING)
@@ -77,7 +83,8 @@ void Texture::UnlockTexture() {
   int access;
   SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
 
-  if (access != SDL_TEXTUREACCESS_STREAMING) return;
+  if (access != SDL_TEXTUREACCESS_STREAMING)
+    return;
   SDL_UnlockTexture(texture);
 }
 
@@ -123,7 +130,8 @@ void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect) {
       Uint8 r, g, b, a;
       FromPixel(other.GetData()[index1], &r, &g, &b, &a);
 
-      if (a != 0) pixels[index2] = ToPixel(r, g, b, a);
+      if (a != 0)
+        pixels[index2] = ToPixel(r, g, b, a);
     }
   }
 }
@@ -148,7 +156,9 @@ void Texture::GetDim(int *w, int *h) {
   SDL_QueryTexture(texture, NULL, NULL, w, h);
 }
 
-Uint32 *Texture::GetData() { return pixels; }
+Uint32 *Texture::GetData() {
+  return pixels;
+}
 
 Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
   return r << 24 | g << 16 | b << 8 | a;

@@ -29,7 +29,8 @@ void GUI::InitMenuUtils() {
 }
 
 void GUI::RenderMenuText(const std::wstring &text) {
-  if (text.empty()) return;
+  if (text.empty())
+    return;
 
   auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 

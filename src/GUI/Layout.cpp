@@ -14,14 +14,17 @@ using namespace Sourcehold::Game;
 #undef min  // ...
 #undef max
 
-Layout::Layout() {}
+Layout::Layout() {
+}
 
 Layout::Layout(HlpSection *hlp, Rect<double> bounds) {
   SetBounds(bounds);
   CreateFromHlp(hlp);
 }
 
-Layout::~Layout() { Destroy(); }
+Layout::~Layout() {
+  Destroy();
+}
 
 void Layout::CreateFromHlp(HlpSection *hlp) {
   /*
@@ -74,15 +77,19 @@ void Layout::CreateFromHlp(HlpSection *hlp) {
   }*/
 }
 
-void Layout::Destroy() { elems.clear(); }
+void Layout::Destroy() {
+  elems.clear();
+}
 
-void Layout::Render(double x, double y) {}
+void Layout::Render(double x, double y) {
+}
 
 void Layout::Render(int x, int y) {
   int winH = GetHeight();
 
   for (auto &elem : elems) {
-    if (y + elem.y > winH) return;
+    if (y + elem.y > winH)
+      return;
 
     if (elem.type == LayoutElement::LINE) {
       RenderText(elem.text, elem.x + x, elem.y + y, elem.font);
@@ -94,7 +101,9 @@ void Layout::Render(int x, int y) {
   }
 }
 
-void Layout::SetFont(Font index) { currentFont = index; }
+void Layout::SetFont(Font index) {
+  currentFont = index;
+}
 
 void Layout::AddText(const std::wstring &str) {
   auto dim = GetStringPixelDim(str, currentFont);

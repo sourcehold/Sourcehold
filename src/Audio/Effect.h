@@ -42,7 +42,9 @@ class Effect {
   void Stop();
   void Update();
 
-  inline bool IsPlaying() { return playing; }
+  inline bool IsPlaying() {
+    return playing;
+  }
 
  protected:
 };

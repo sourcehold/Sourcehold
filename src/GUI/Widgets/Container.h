@@ -18,7 +18,8 @@ class Container : public Widget {
 
  public:
   Container(WidgetLayout l);
-  ~Container() {}
+  ~Container() {
+  }
 
   void Update(Rect<int> constraints) override;
 

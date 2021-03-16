@@ -8,9 +8,11 @@ using namespace Sourcehold::Game;
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
 
-Startup::Startup() : EventConsumer<Mouse>() {}
+Startup::Startup() : EventConsumer<Mouse>() {
+}
 
-Startup::~Startup() {}
+Startup::~Startup() {
+}
 
 void Startup::PlayMusic() {
   aud_startup.Load(GetDirectory() / "fx/music/stainedglass1.raw");

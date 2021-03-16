@@ -11,7 +11,8 @@ StaticElement::StaticElement(Rect<int> tp, Texture* t, SDL_Rect& inactive,
       inactive{inactive},
       active{active},
       id{id},
-      visible{true} {}
+      visible{true} {
+}
 
 StaticElement::StaticElement(const StaticElement& e)
     : EventConsumer<Mouse>(),
@@ -20,10 +21,12 @@ StaticElement::StaticElement(const StaticElement& e)
       inactive{e.inactive},
       active{e.active},
       id{e.id},
-      visible{e.visible} {}
+      visible{e.visible} {
+}
 
 void StaticElement::Render() {
-  if (!visible || !tex) return;
+  if (!visible || !tex)
+    return;
 
   int mouseX = GetMouseX();
   int mouseY = GetMouseY();

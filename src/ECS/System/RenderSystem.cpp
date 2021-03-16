@@ -3,7 +3,8 @@
 namespace Sourcehold {
 namespace ECS {
 namespace System {
-RenderSystem::RenderSystem() {}
+RenderSystem::RenderSystem() {
+}
 
 void RenderSystem::tickEntity(entt::registry& registry,
                               EachEntityType& entity) {

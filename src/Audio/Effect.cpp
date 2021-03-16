@@ -17,7 +17,9 @@ Effect::Effect() {
   }
 }
 
-Effect::~Effect() { Destroy(); }
+Effect::~Effect() {
+  Destroy();
+}
 
 bool Effect::Load(ghc::filesystem::path path, bool looping) {
   this->looping = looping;
@@ -68,12 +70,17 @@ void Effect::Destroy() {
   }
 }
 
-void Effect::Play() { playing = true; }
+void Effect::Play() {
+  playing = true;
+}
 
-void Effect::Stop() { playing = false; }
+void Effect::Stop() {
+  playing = false;
+}
 
 void Effect::Update() {
-  if (!playing || !valid) return;
+  if (!playing || !valid)
+    return;
 
   av_init_packet(&audioPacket);
 

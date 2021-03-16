@@ -25,9 +25,12 @@ Song::Song(ghc::filesystem::path path, bool repeat)
 }
 
 Song::Song(uint8_t *ptr, size_t size, bool repeat)
-    : ptr(ptr), size(size), repeat(repeat) {}
+    : ptr(ptr), size(size), repeat(repeat) {
+}
 
-Song::~Song() { Destroy(); }
+Song::~Song() {
+  Destroy();
+}
 
 bool Song::Load(ghc::filesystem::path path, bool repeat) {
   /* Parameters */
@@ -98,7 +101,8 @@ void Song::Rewind() {
 }
 
 void Song::SetFadeOut(double amount) {
-  if (fading) return;
+  if (fading)
+    return;
   fadeAmount = amount;
   fading = true;
   fadeBase = (double)SDL_GetTicks() / 1000.0;
@@ -106,7 +110,8 @@ void Song::SetFadeOut(double amount) {
 }
 
 void Song::SetFadeIn(double amount) {
-  if (fading) return;
+  if (fading)
+    return;
   fadeAmount = amount;
   fading = true;
   fadeBase = (double)SDL_GetTicks() / 1000.0;
@@ -114,7 +119,8 @@ void Song::SetFadeIn(double amount) {
 }
 
 void Song::UpdateFade() {
-  if (!fading) return;
+  if (!fading)
+    return;
 
   if (fadeIn) {
     double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;

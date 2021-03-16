@@ -32,7 +32,8 @@ IngameGUI::IngameGUI() : EventConsumer<Keyboard>(), EventConsumer<Mouse>() {
   ui_revert.SetTexture(atlas.get());
 }
 
-IngameGUI::~IngameGUI() {}
+IngameGUI::~IngameGUI() {
+}
 
 bool IngameGUI::Render() {
   if (rmbHolding) {
@@ -46,7 +47,9 @@ bool IngameGUI::Render() {
   return true;
 }
 
-int IngameGUI::GetMenubarHeight() { return menubarShown ? 200 : 0; }
+int IngameGUI::GetMenubarHeight() {
+  return menubarShown ? 200 : 0;
+}
 
 static const char* _res_to_edge[][2] = {
     {"edge1024", "edge_military_1024"}, {"edge1280", "edge_military_1280"},

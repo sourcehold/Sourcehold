@@ -7,7 +7,8 @@ using namespace GUI;
 using namespace Game;
 using namespace Rendering;
 
-Dialog::~Dialog() {}
+Dialog::~Dialog() {
+}
 Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text,
                bool textbox, Deco deco, int textboxW, bool border)
     : Container(l),
@@ -17,7 +18,8 @@ Dialog::Dialog(WidgetLayout l, int nx, int ny, const std::wstring& text,
       text{text},
       textbox{textbox},
       border{border},
-      deco{deco} {}
+      deco{deco} {
+}
 
 void Dialog::Update(Dialog::Position pos, int offX, int offY) {
   int w = nx * MENU_TILE_DIM;
@@ -28,8 +30,10 @@ void Dialog::Update(Dialog::Position pos, int offX, int offY) {
 
   icons = GetGm1("gm/interface_icons3.gm1");
 
-  if (border) RenderBorder(x, y, nx, ny);
-  if (textbox) RenderTextBox(x, y, tw * 24, 64, text, deco);
+  if (border)
+    RenderBorder(x, y, nx, ny);
+  if (textbox)
+    RenderTextBox(x, y, tw * 24, 64, text, deco);
 
   // Render the member widgets in the available area of the dialog //
   w += MENU_TILE_DIM;  // TODO
@@ -112,7 +116,8 @@ void Dialog::RenderBorder(int x, int y, int nx, int ny) {
 }
 
 void Dialog::RenderDeco(Deco type, int x, int y) {
-  if (type == Deco::NONE) return;
+  if (type == Deco::NONE)
+    return;
 
   auto atlas = icons->GetTextureAtlas();
 

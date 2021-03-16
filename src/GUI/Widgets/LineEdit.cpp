@@ -6,15 +6,23 @@ using namespace Sourcehold::GUI;
 using namespace Sourcehold::Game;
 
 LineEdit::LineEdit(int nx, const std::wstring& line)
-    : EventConsumer<Keyboard>(), line{line}, nx{nx}, cp{0} {}
+    : EventConsumer<Keyboard>(), line{line}, nx{nx}, cp{0} {
+}
 
-LineEdit::~LineEdit() {}
+LineEdit::~LineEdit() {
+}
 
-void LineEdit::Init() { cp = static_cast<int>(line.size()); }
+void LineEdit::Init() {
+  cp = static_cast<int>(line.size());
+}
 
-void LineEdit::BeginInput() { SDL_StartTextInput(); }
+void LineEdit::BeginInput() {
+  SDL_StartTextInput();
+}
 
-void LineEdit::EndInput() { SDL_StopTextInput(); }
+void LineEdit::EndInput() {
+  SDL_StopTextInput();
+}
 
 void LineEdit::Update(Rect<int> constraints) {
   std::shared_ptr<TextureAtlas> atlas =
@@ -60,9 +68,11 @@ void LineEdit::onEventReceive(Keyboard& event) {
         line.erase(line.begin() + cp);
       }
     } else if (event.Key().sym == SDLK_LEFT) {
-      if (cp) cp--;
+      if (cp)
+        cp--;
     } else if (event.Key().sym == SDLK_RIGHT) {
-      if (cp < line.size()) cp++;
+      if (cp < line.size())
+        cp++;
     }
   } else if (event.type == TEXTINPUT && cp <= line.size()) {
     char c = event.Get().text.text[0];

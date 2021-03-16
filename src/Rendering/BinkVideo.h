@@ -57,7 +57,9 @@ class BinkVideo : public Texture {
   void Close();
   void Update();
 
-  inline bool IsRunning() { return running; }
+  inline bool IsRunning() {
+    return running;
+  }
 
  protected:
   void test();

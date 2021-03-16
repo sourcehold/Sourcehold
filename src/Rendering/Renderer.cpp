@@ -33,17 +33,21 @@ bool Rendering::InitRenderer() {
 }
 
 void Rendering::DestroyRenderer() {
-  if (_renderer) SDL_DestroyRenderer(_renderer);
+  if (_renderer)
+    SDL_DestroyRenderer(_renderer);
 }
 
-void Rendering::UpdateRenderer() {}
+void Rendering::UpdateRenderer() {
+}
 
 void Rendering::ClearDisplay() {
   SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(_renderer);
 }
 
-void Rendering::FlushDisplay() { SDL_RenderPresent(_renderer); }
+void Rendering::FlushDisplay() {
+  SDL_RenderPresent(_renderer);
+}
 
 void Rendering::SetTarget(Texture *target, Rect<int> rect) {
   _tr = rect;
@@ -130,6 +134,10 @@ SDL_BlendMode Rendering::GetAlphaKeyBlendMode() {
 #endif
 }
 
-Rect<int> Rendering::GetTarget() { return _tr; }
+Rect<int> Rendering::GetTarget() {
+  return _tr;
+}
 
-SDL_Renderer *Rendering::GetRenderer() { return _renderer; }
+SDL_Renderer *Rendering::GetRenderer() {
+  return _renderer;
+}

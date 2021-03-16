@@ -9,11 +9,16 @@ struct TgxFile::TgxHeader {
   uint32_t height;
 };
 
-TgxFile::TgxFile() {}
+TgxFile::TgxFile() {
+}
 
-TgxFile::TgxFile(ghc::filesystem::path path) { this->LoadFromDisk(path); }
+TgxFile::TgxFile(ghc::filesystem::path path) {
+  this->LoadFromDisk(path);
+}
 
-TgxFile::~TgxFile() { Unload(); }
+TgxFile::~TgxFile() {
+  Unload();
+}
 
 bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
   if (!Parser::Open(path.string(), std::ifstream::in | std::ios::binary)) {
@@ -49,7 +54,8 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
   return true;
 }
 
-void TgxFile::Unload() {}
+void TgxFile::Unload() {
+}
 
 void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX,
                       uint16_t offY, uint16_t *pal, uint8_t color) {
