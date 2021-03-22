@@ -1,4 +1,3 @@
 #include "Manager.h"
 
-namespace ECS {
-}
+namespace ECS {}
