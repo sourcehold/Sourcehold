@@ -43,12 +43,13 @@ bool Rendering::InitDisplay(const std::string &title, int width, int height,
     param |= SDL_WINDOW_BORDERLESS;
   }
 
-// Prohibit resizing on iOS to force landscape interface orientation for all device orientations
+// Prohibit resizing on iOS to force landscape interface orientation for all
+// device orientations
 #ifndef SOURCEHOLD_IOS
   if (resize) {
     param |= SDL_WINDOW_RESIZABLE;
   }
-#endif // SOURCEHOLD_IOS
+#endif  // SOURCEHOLD_IOS
 
   // Select display //
   int displays = SDL_GetNumVideoDisplays();

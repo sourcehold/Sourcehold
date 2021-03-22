@@ -9,13 +9,13 @@
 #if defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
   #include <windows.h>
   #include <shlobj.h>
-#endif // defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
+#endif  // defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
 
 #include "System/filesystem.h"
 
 #if defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
   #include "Common/SHPathUtils.h"
-#endif // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
+#endif  // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
 
 using namespace Sourcehold;
 using namespace System;
@@ -104,7 +104,7 @@ ghc::filesystem::path System::GetDocumentsPath() {
   LPITEMIDLIST pidl;
   SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
   SHGetPathFromIDList(pidl, path);
-#endif // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
+#endif  // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
 
   return ghc::filesystem::path(path);
 }
