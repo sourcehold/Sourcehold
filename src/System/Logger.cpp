@@ -3,7 +3,7 @@
 using namespace Sourcehold::System;
 
 #ifdef SOURCEHOLD_ANDROID
-#include <android/log.h>
+  #include <android/log.h>
 
 // https://stackoverflow.com/questions/8870174/is-stdcout-usable-in-android-ndk/8870278#8870278
 static class AndroidBuf : public std::streambuf {
@@ -67,7 +67,8 @@ std::ostream& Logger::log(LogType type, const std::string& subsystem) {
       default:
         break;
     }
-  } else {
+  }
+  else {
     msg = "[ " + subsystem + " ] -> ";
   }
 #ifdef SOURCEHOLD_ANDROID

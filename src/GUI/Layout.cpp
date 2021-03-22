@@ -93,10 +93,13 @@ void Layout::Render(int x, int y) {
 
     if (elem.type == LayoutElement::LINE) {
       RenderText(elem.text, elem.x + x, elem.y + y, elem.font);
-    } else if (elem.type == LayoutElement::PIC) {
+    }
+    else if (elem.type == LayoutElement::PIC) {
       ::Render(*elem.pic, elem.x + x, elem.y + y);
-    } else if (elem.type == LayoutElement::PARAGRAPH) {
-    } else if (elem.type == LayoutElement::LINEBREAK) {
+    }
+    else if (elem.type == LayoutElement::PARAGRAPH) {
+    }
+    else if (elem.type == LayoutElement::LINEBREAK) {
     }
   }
 }
@@ -128,9 +131,11 @@ void Layout::AddPic(std::shared_ptr<TgxFile> pic, PicPosition pos) {
   elem.y = height;
   if (pos == PicPosition::LEFT) {
     elem.x = 0;
-  } else if (pos == PicPosition::RIGHT) {
+  }
+  else if (pos == PicPosition::RIGHT) {
     elem.x = width - pic->GetWidth();
-  } else if (pos == PicPosition::CENTRE) {
+  }
+  else if (pos == PicPosition::CENTRE) {
     elem.x = (width - pic->GetWidth()) / 2;
   }
   elems.push_back(elem);

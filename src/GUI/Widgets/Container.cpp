@@ -22,7 +22,8 @@ void Container::Update(Rect<int> constraints) {
       dim.y = constraints.y;
       dim.w = partX;
       dim.h = constraints.h;
-    } else {
+    }
+    else {
       int partY = constraints.h / widgets.size();
       dim.x = constraints.x;
       dim.y = constraints.y + partY * i;

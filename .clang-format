@@ -24,6 +24,7 @@ AlwaysBreakBeforeMultilineStrings: true
 AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: true
 BinPackParameters: true
+BreakBeforeBraces: Custom
 BraceWrapping:
   AfterCaseLabel:  false
   AfterClass:      false
@@ -42,7 +43,6 @@ BraceWrapping:
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 BreakBeforeBinaryOperators: None
-BreakBeforeBraces: Attach
 BreakBeforeInheritanceComma: false
 BreakInheritanceList: BeforeColon
 BreakBeforeTernaryOperators: true
@@ -84,7 +84,7 @@ IncludeIsMainRegex: '([-_](test|unittest))?$'
 IncludeIsMainSourceRegex: ''
 IndentCaseLabels: true
 IndentGotoLabels: true
-IndentPPDirectives: None
+IndentPPDirectives: BeforeHash
 IndentWidth:     2
 IndentWrappedFunctionNames: false
 JavaScriptQuotes: Leave

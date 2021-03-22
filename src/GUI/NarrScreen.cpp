@@ -141,9 +141,11 @@ bool NarrScreen::BeginAct(TextSection text) {
     }
     if (now < startTime + 1.0) {
       alpha = Uint8(((now - startTime) * 255.0) / 1.0);
-    } else if (now < startTime + 4.0) {
+    }
+    else if (now < startTime + 4.0) {
       alpha = 255;
-    } else if (now < startTime + 5.0) {
+    }
+    else if (now < startTime + 5.0) {
       alpha = 255 - Uint8(((now - (startTime + 4.0)) * 255.0) / 1.0);
     }
 
@@ -208,7 +210,8 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
   std::shared_ptr<TgxFile> castle;
   if (bg == NarrBackground::BADGUYS) {
     castle = GetTgx("gfx/storyscreen_castle.tgx");
-  } else {
+  }
+  else {
     bik.LoadFromDisk(GetDirectory() / "binks/fireplace_01.bik", true);
   }
 
@@ -225,7 +228,8 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
 
     if (bg == NarrBackground::BADGUYS) {
       Render(*castle, px, py);
-    } else {
+    }
+    else {
       // after deletion it tries to operate on memory
       // which causes crash (tested on windows, not sure about other platforms)
       // result of commenting is that, the movie is not rendering

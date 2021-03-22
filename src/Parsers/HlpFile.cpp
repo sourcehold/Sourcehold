@@ -20,9 +20,11 @@ static std::vector<HlpSection> _sections;
 int HlpSection::GetIntArg(size_t index) {
   try {
     return std::stoi(args.at(index));
-  } catch (const std::invalid_argument &) {
+  }
+  catch (const std::invalid_argument &) {
     return -1;
-  } catch (const std::out_of_range &) {
+  }
+  catch (const std::out_of_range &) {
     return -1;
   }
 }
@@ -30,7 +32,8 @@ int HlpSection::GetIntArg(size_t index) {
 std::wstring HlpSection::GetStrArg(size_t index) {
   try {
     return args.at(index);
-  } catch (const std::out_of_range &) {
+  }
+  catch (const std::out_of_range &) {
     return std::wstring();
   }
 }

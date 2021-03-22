@@ -128,17 +128,20 @@ void Song::UpdateFade() {
       Pause();
       fading = false;
       gain = 1.0;
-    } else {
+    }
+    else {
       alSourcef(source, AL_GAIN,
                 IsOpenALMuted() ? 0.0f : gain * (t / fadeAmount));
     }
-  } else {
+  }
+  else {
     double t = ((double)SDL_GetTicks() / 1000.0) - fadeBase;
     if (t > fadeAmount) {
       Pause();
       fading = false;
       gain = 1.0;
-    } else {
+    }
+    else {
       alSourcef(source, AL_GAIN,
                 IsOpenALMuted() ? 0.0f : gain * (1.0 - t / fadeAmount));
     }

@@ -78,7 +78,8 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX,
             uint8_t index = *(uint8_t *)buf;
             buf++;
             pixelColor = pal[256 * color + index];
-          } else {
+          }
+          else {
             pixelColor = *reinterpret_cast<uint16_t *>(buf);
             buf += 2;
           }
@@ -99,7 +100,8 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX,
           uint8_t index = *(uint8_t *)buf;
           buf++;
           pixelColor = pal[256 * color + index];
-        } else {
+        }
+        else {
           pixelColor = *reinterpret_cast<uint16_t *>(buf);
           buf += 2;
         }

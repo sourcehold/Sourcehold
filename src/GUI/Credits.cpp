@@ -24,7 +24,8 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
   if (endgame) {
     music.Load(GetDirectory() / "fx/music/Glory_06.raw", true);
     tgx_credits = GetTgx("gfx/end_credit.tgx");
-  } else {
+  }
+  else {
     music.Load(GetDirectory() / "fx/music/castlejam.raw", true);
     tgx_1 = GetTgx("gfx/credits_1.tgx");
     tgx_2 = GetTgx("gfx/credits_2.tgx");
@@ -57,11 +58,14 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
     if (now < fadeBase + 2.0) {
       alpha = Uint8(((now - fadeBase) * 255.0) / 2.0);
-    } else if (now < fadeBase + 16.0) {
+    }
+    else if (now < fadeBase + 16.0) {
       alpha = 255;
-    } else if (now < fadeBase + 18.0) {
+    }
+    else if (now < fadeBase + 18.0) {
       alpha = 255 - Uint8(((now - (fadeBase + 16.0)) * 255.0) / 2.0);
-    } else if (now > fadeBase + 18.0) {
+    }
+    else if (now > fadeBase + 18.0) {
       alpha = 0;
       currentImage = (currentImage + 1) % 4;
       fadeBase = now;
@@ -71,11 +75,13 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
       if (res == RESOLUTION_800x600) {
         /* Scale down */
         Render(*tgx_credits);
-      } else {
+      }
+      else {
         /* Place in the middle */
         Render(*tgx_credits, px, py);
       }
-    } else {
+    }
+    else {
       switch (currentImage) {
         case 0: {
           tgx_1->SetAlphaMod(alpha);

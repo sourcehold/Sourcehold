@@ -63,18 +63,22 @@ void LineEdit::onEventReceive(Keyboard& event) {
         line.erase(line.begin() + cp - 1);
         cp--;
       }
-    } else if (event.Key().sym == SDLK_DELETE) {
+    }
+    else if (event.Key().sym == SDLK_DELETE) {
       if (cp < line.size()) {
         line.erase(line.begin() + cp);
       }
-    } else if (event.Key().sym == SDLK_LEFT) {
+    }
+    else if (event.Key().sym == SDLK_LEFT) {
       if (cp)
         cp--;
-    } else if (event.Key().sym == SDLK_RIGHT) {
+    }
+    else if (event.Key().sym == SDLK_RIGHT) {
       if (cp < line.size())
         cp++;
     }
-  } else if (event.type == TEXTINPUT && cp <= line.size()) {
+  }
+  else if (event.type == TEXTINPUT && cp <= line.size()) {
     char c = event.Get().text.text[0];
     line.insert(line.begin() + cp, c);
     cp++;

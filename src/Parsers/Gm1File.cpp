@@ -220,7 +220,8 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
     tileset->Create();
     textureAtlas->Unlock();
     textureAtlas->Create();
-  } else {
+  }
+  else {
     /* Allocate images */
     std::vector<std::pair<uint32_t, uint32_t>> entryDims(header.num);
     for (n = 0; n < header.num; n++) {

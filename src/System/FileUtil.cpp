@@ -7,14 +7,14 @@
 #include <cstring>
 
 #if SOURCEHOLD_WINDOWS || SOURCEHOLD_MINGW
-#include <windows.h>
-#include <shlobj.h>
+  #include <windows.h>
+  #include <shlobj.h>
 #endif
 
 #include "System/filesystem.h"
 
 #if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
-#include "Common/SHPathUtils.h"
+  #include "Common/SHPathUtils.h"
 #endif  // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
 
 using namespace Sourcehold;
@@ -96,7 +96,8 @@ ghc::filesystem::path System::GetDocumentsPath() {
       }
     }
     infile.close();
-  } else {
+  }
+  else {
     *path = '\0';
   }
 #elif SOURCEHOLD_WINDOWS || SOURCEHOLD_MINGW
@@ -123,7 +124,8 @@ std::vector<ghc::filesystem::path> System::GetDirectoryRecursive(
         }
         ++it;
       }
-    } else {
+    }
+    else {
       ghc::filesystem::directory_iterator it(path);
       ghc::filesystem::directory_iterator endit;
       while (it != endit) {

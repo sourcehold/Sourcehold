@@ -108,7 +108,8 @@ void Rendering::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
 
   if (solid) {
     SDL_RenderFillRect(_renderer, &rc);
-  } else {
+  }
+  else {
     SDL_RenderDrawRect(_renderer, &rc);
   }
 }

@@ -22,7 +22,7 @@
 #include "GUI/MainMenu.h"
 
 #if SOURCEHOLD_IOS
-#include "Common/SHPathUtils.h"
+  #include "Common/SHPathUtils.h"
 #endif
 
 using namespace Sourcehold;
@@ -192,7 +192,7 @@ int StartGame(GameOptions &opt) {
 // Do not #undef main on iOS, because in other case it will be not possible to
 // build project
 #ifndef SOURCEHOLD_IOS
-#undef main
+  #undef main
 #endif  // SOURCEHOLD_IOS
 
 /* Common entry point across all platforms */
@@ -265,7 +265,8 @@ int main(int argc, char **argv) {
     if (std::regex_search(str.begin(), str.end(), match, regex)) {
       opt.width = std::stoi(match[1]);
       opt.height = std::stoi(match[2]);
-    } else {
+    }
+    else {
       // Fallback to 800x600 if the resolution is ill-formed
       opt.width = 800;
       opt.height = 600;
@@ -273,7 +274,8 @@ int main(int argc, char **argv) {
 #endif  // defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
 
     return StartGame(opt);
-  } catch (po::OptionException &e) {
+  }
+  catch (po::OptionException &e) {
     std::cerr << e.what() << std::endl;
     return EXIT_FAILURE;
   }
@@ -281,9 +283,9 @@ int main(int argc, char **argv) {
 
 #if SOURCEHOLD_MINGW == 1 && 0
 
-#include <windows.h>
-#include <string>
-#include <vector>
+  #include <windows.h>
+  #include <string>
+  #include <vector>
 
 /* Windows specific entry point */
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevIns, LPSTR lpszArgument,

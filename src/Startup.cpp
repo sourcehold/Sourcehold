@@ -57,15 +57,19 @@ UIState Startup::Begin() {
         }
         if (now < fadeBase + 1.0) {
           alpha = Uint8(((now - fadeBase) * 255.0) / 1.0);
-        } else if (now < fadeBase + 4.0) {
+        }
+        else if (now < fadeBase + 4.0) {
           alpha = 255;
-        } else if (now < fadeBase + 5.0) {
+        }
+        else if (now < fadeBase + 5.0) {
           alpha = 255 - Uint8(((now - (fadeBase + 4.0)) * 255.0) / 1.0);
-        } else if (now > fadeBase + 5.0) {
+        }
+        else if (now > fadeBase + 5.0) {
           alpha = 0;
           fadeBase = now;
         }
-      } else
+      }
+      else
         alpha = 255;
 
       /**
@@ -87,7 +91,8 @@ UIState Startup::Begin() {
           tgx_firefly->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
             Render(*tgx_firefly);
-          } else {
+          }
+          else {
             Render(*tgx_firefly, px, py);
           }
           break;
@@ -95,7 +100,8 @@ UIState Startup::Begin() {
           tgx_taketwo->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
             Render(*tgx_taketwo);
-          } else {
+          }
+          else {
             Render(*tgx_taketwo, px, py);
           }
           break;
@@ -103,7 +109,8 @@ UIState Startup::Begin() {
           tgx_present->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
             Render(*tgx_present);
-          } else {
+          }
+          else {
             Render(*tgx_present, px, py);
           }
           break;
@@ -111,7 +118,8 @@ UIState Startup::Begin() {
           tgx_logo->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
             Render(*tgx_logo);
-          } else {
+          }
+          else {
             Render(*tgx_logo, px, py);
           }
           break;

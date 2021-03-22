@@ -149,7 +149,8 @@ void BinkVideo::Update() {
       if (av_read_frame(ic, &packet) < 0) {
         return;
       }
-    } else {
+    }
+    else {
       running = false;
       return;
     }
@@ -187,8 +188,8 @@ void BinkVideo::Update() {
                 codecCtx->width * codecCtx->height * sizeof(uint32_t));
 
     Texture::UnlockTexture();
-  } else if (packet.stream_index == audioStream && !IsOpenALMuted() &&
-             hasAudio) {
+  }
+  else if (packet.stream_index == audioStream && !IsOpenALMuted() && hasAudio) {
     av_frame_unref(audioFrame);
 
     /* Receive new packet on start or if the last one was processed */
@@ -221,12 +222,14 @@ void BinkVideo::Update() {
                          ? AL_FORMAT_MONO8
                          : AL_FORMAT_MONO16;
           alNumChannels = 1;
-        } else if (audioFrame->channel_layout == AV_CH_LAYOUT_STEREO) {
+        }
+        else if (audioFrame->channel_layout == AV_CH_LAYOUT_STEREO) {
           alFormat = (audioFrame->format == AV_SAMPLE_FMT_U8)
                          ? AL_FORMAT_STEREO8
                          : AL_FORMAT_STEREO16;
           alNumChannels = 2;
-        } else {
+        }
+        else {
           Logger::error(RENDERING)
               << "Bink audio channel layout is wrong!" << std::endl;
           return;

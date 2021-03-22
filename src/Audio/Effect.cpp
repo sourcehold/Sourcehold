@@ -91,7 +91,8 @@ void Effect::Update() {
       if (av_read_frame(ic, &audioPacket) < 0) {
         return;
       }
-    } else {
+    }
+    else {
       playing = false;
       return;
     }

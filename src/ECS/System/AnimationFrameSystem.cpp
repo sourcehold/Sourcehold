@@ -15,7 +15,8 @@ inline void calculateFrame(int &frame, int frameCount, int frameOffset,
              abs(frame % (2 * _frameCount) -
                  _frameCount));  // TODO - remove first and last doubled frame
     frame += frameOffset;
-  } else {
+  }
+  else {
     frame %= frameCount;
     frame += frameOffset;
   }
@@ -47,14 +48,16 @@ void AnimationFrameSystem::tickEntity(entt::registry &registry,
     FrameDataGroup frameDataGroup =
         EntityTypeToFrameDataGroupMapping.at(typeComponent.type);
     frameData = FrameDataGroupToFrameDataMapping.at(frameDataGroup);
-  } catch (std::exception &e) {
+  }
+  catch (std::exception &e) {
     // no config - don't use this frame system
     return;
   }
 
   if (frameData.frameMeta.dontAnimate) {
     frame = frameData.frameOffset + animationComponent.subanimationState;
-  } else {
+  }
+  else {
     switch (frameData.frameFilter) {
       case FrameFilter::NONE:
         calculateFrame(frame, frameData.frameCount, frameData.frameOffset,

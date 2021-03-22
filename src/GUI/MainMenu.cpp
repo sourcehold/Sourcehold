@@ -149,7 +149,8 @@ MainMenu::MainMenu() {
         if (selected != BUTTON_END) {
           try {
             currentState = actions.at(selected);
-          } catch (std::out_of_range& ex) {
+          }
+          catch (std::out_of_range& ex) {
             currentState = MAIN_MENU;
           }
         }
@@ -285,7 +286,8 @@ ghc::filesystem::path MainMenu::GetGreetingsSound() {
   int index = GetUsernameIndex();
   if (index == -1) {
     snd /= "General_Startgame.wav";
-  } else {
+  }
+  else {
     snd /= "name" + std::to_string(index + 1) + ".wav";
   }
 
@@ -307,7 +309,8 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end) {
     SDL_Rect inactive = tex->Get(inf.index);
     if (inf.hasGlare && inf.glareOrder == glareCounter) {
       ui_elems[i].SetInactiveRect(tex->Get(inf.glareIndex + (glareTicks % 14)));
-    } else {
+    }
+    else {
       ui_elems[i].SetInactiveRect(inactive);
     }
 

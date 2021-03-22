@@ -62,16 +62,20 @@ bool AniFile::ParseChunks() {
     if (id == "anih") {
       /* TODO */
       Parser::SeekG(Parser::Tell() + bytes);
-    } else if (id == "rate") {
+    }
+    else if (id == "rate") {
       /* TODO */
       Parser::SeekG(Parser::Tell() + bytes);
-    } else if (id == "seq ") {
+    }
+    else if (id == "seq ") {
       /* TODO */
       Parser::SeekG(Parser::Tell() + bytes);
-    } else if (id == "LIST") {
+    }
+    else if (id == "LIST") {
       /* TODO */
       Parser::SeekG(Parser::Tell() + bytes);
-    } else {
+    }
+    else {
       Parser::SeekG(Parser::Tell() + bytes);
     }
   }

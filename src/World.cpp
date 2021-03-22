@@ -165,7 +165,8 @@ void World::onEventReceive(Keyboard& keyEvent) {
       default:
         break;
     }
-  } else if (keyEvent.GetType() == KEYUP) {
+  }
+  else if (keyEvent.GetType() == KEYUP) {
     switch (keyEvent.Key().sym) {
       case SDLK_LEFT:
         scroll.left.shouldScroll = false;
@@ -205,7 +206,8 @@ void World::onEventReceive(Mouse& mouseEvent) {
     if (x < scrollThreshold) {
       scroll.left.shouldScroll = true;
       scroll.left.setByMouse = true;
-    } else if (scroll.left.setByMouse) {
+    }
+    else if (scroll.left.setByMouse) {
       scroll.left.shouldScroll = false;
       scroll.left.setByMouse = false;
       shouldReset = true;
@@ -214,7 +216,8 @@ void World::onEventReceive(Mouse& mouseEvent) {
     if (x > GetWidth() - scrollThreshold) {
       scroll.right.shouldScroll = true;
       scroll.right.setByMouse = true;
-    } else if (scroll.right.setByMouse) {
+    }
+    else if (scroll.right.setByMouse) {
       scroll.right.shouldScroll = false;
       scroll.right.setByMouse = false;
       shouldReset = true;
@@ -223,7 +226,8 @@ void World::onEventReceive(Mouse& mouseEvent) {
     if (y < scrollThreshold) {
       scroll.up.shouldScroll = true;
       scroll.up.setByMouse = true;
-    } else if (scroll.up.setByMouse) {
+    }
+    else if (scroll.up.setByMouse) {
       scroll.up.shouldScroll = false;
       scroll.up.setByMouse = false;
       shouldReset = true;
@@ -232,7 +236,8 @@ void World::onEventReceive(Mouse& mouseEvent) {
     if (y > GetHeight() - scrollThreshold) {
       scroll.down.shouldScroll = true;
       scroll.down.setByMouse = true;
-    } else if (scroll.down.setByMouse) {
+    }
+    else if (scroll.down.setByMouse) {
       scroll.down.shouldScroll = false;
       scroll.down.setByMouse = false;
       shouldReset = true;
@@ -241,7 +246,8 @@ void World::onEventReceive(Mouse& mouseEvent) {
     if (shouldReset) {
       cam.Stop();
     }
-  } else if (mouseEvent.GetType() == BUTTONDOWN) {
+  }
+  else if (mouseEvent.GetType() == BUTTONDOWN) {
     int x = (cam.positionX + mouseEvent.GetPosX()) / 30;
     int y = (cam.positionY + mouseEvent.GetPosY()) / 15;
 
@@ -271,7 +277,8 @@ void World::onEventReceive(Touch& touchEvent) {
     cam.accY += sdy;
     cam.accY = std::max<float>(-CAMERA_ACC_MINMAX, cam.accY);
     cam.accY = std::min<float>(CAMERA_ACC_MINMAX, cam.accY);
-  } else if (touchEvent.GetType() == FINGERDOWN) {
+  }
+  else if (touchEvent.GetType() == FINGERDOWN) {
     float x = touchEvent.GetY();
     float y = touchEvent.GetX();
 

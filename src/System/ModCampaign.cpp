@@ -1,12 +1,12 @@
 #ifdef SCRIPT_SUPPORT
 
-#include "System/ModCampaign.h"
-#include "System/FileUtil.h"
-#include "System/Logger.h"
+  #include "System/ModCampaign.h"
+  #include "System/FileUtil.h"
+  #include "System/Logger.h"
 
-#include <duktape.h>
-#include <cassert>
-#include <istream>
+  #include <duktape.h>
+  #include <cassert>
+  #include <istream>
 
 using namespace Sourcehold;
 using namespace System;
@@ -112,13 +112,16 @@ void System::LoadModCampaigns(const ghc::filesystem::path &base) {
 
       if (info.type == 0) {
         military.push_back(info);
-      } else if (info.type == 1) {
+      }
+      else if (info.type == 1) {
         eco.push_back(info);
-      } else {
+      }
+      else {
         Logger::warning(GAME) << "Campaign '" << info.title
                               << " has an invalid type!" << std::endl;
       }
-    } catch (std::exception &ex) {
+    }
+    catch (std::exception &ex) {
       Logger::warning(GAME) << "Failed to read campaign manifest: '" << folder
                             << "'!" << std::endl;
     }

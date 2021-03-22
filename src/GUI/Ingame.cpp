@@ -65,7 +65,8 @@ void IngameGUI::LoadMenuAssets() {
 
     tgx_right = GetTgx(std::string("gfx/" + base + "r.tgx"));
     tgx_left = GetTgx(std::string("gfx/" + base + "l.tgx"));
-  } else if (res == RESOLUTION_DYNAMIC) {
+  }
+  else if (res == RESOLUTION_DYNAMIC) {
     // TODO
     tgx_right = GetTgx("gfx/edge1280r.tgx");
     tgx_left = GetTgx("gfx/edge1280l.tgx");
@@ -124,7 +125,8 @@ void IngameGUI::RenderMenubar() {
   if (res == RESOLUTION_800x600) {
     menuOffsetX = 0;
     width = 800;
-  } else {
+  }
+  else {
     menuOffsetX = tgx_left->GetWidth();
     width = tgx_left->GetWidth() + 800 + tgx_right->GetWidth();
   }
@@ -225,7 +227,8 @@ void IngameGUI::onEventReceive(Mouse& mouseEvent) {
     if (mouseEvent.LmbDown()) {
       GrabMouse();
     }
-  } else if (mouseEvent.GetType() == BUTTONUP) {
+  }
+  else if (mouseEvent.GetType() == BUTTONUP) {
     if (mouseEvent.RmbUp()) {
       rmbHolding = false;
     }

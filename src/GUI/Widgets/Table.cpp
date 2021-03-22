@@ -42,7 +42,8 @@ void Table::Update(Rect<int> constraints) {
 
   if (mx > rx && mx < rx + width && my > ry && my < ry + 20 * numRows) {
     highlight = (my - ry) / 20;
-  } else
+  }
+  else
     highlight = -1;
 
   if (renderNames) {
@@ -59,14 +60,16 @@ void Table::Update(Rect<int> constraints) {
       RenderRect(Rect<int>(x, y + 20 * i, width, 20), 144, 160, 136, 152, true);
       RenderRect(Rect<int>(x, y + 20 * i, width, 20), 239, 239, 189, 255,
                  false);
-    } else {
+    }
+    else {
       Uint8 r, g, b;
       // Slightly lighter color for even rows //
       if (i % 2 == 0) {
         r = 104;
         g = 120;
         b = 88;
-      } else {
+      }
+      else {
         r = 24;
         g = 80;
         b = 24;
@@ -104,7 +107,8 @@ void Table::SetText(uint32_t row, uint32_t col, const std::wstring &text) {
   try {
     Column &c = cols.at(col);
     c.rows.at(row) = text;
-  } catch (std::out_of_range &ex) {
+  }
+  catch (std::out_of_range &ex) {
     return;
   }
 }

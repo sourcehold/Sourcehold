@@ -27,7 +27,7 @@
 #include "GUI/MenuUtils.h"
 
 #ifdef SOURCEHOLD_ANDROID
-#include <jni.h>
+  #include <jni.h>
 #endif
 
 using namespace Sourcehold;
@@ -68,7 +68,8 @@ void DetectEdition() {
   if (DoesFileExist(_dataFolder / "gfx/SH1_Back.tgx")) {
     _edition = STRONGHOLD_HD;
     Logger::message(GAME) << "Detected edition: Stronghold HD" << std::endl;
-  } else {
+  }
+  else {
     _edition = STRONGHOLD_CLASSIC;
     Logger::message(GAME) << "Detected edition: Stronghold (2001)" << std::endl;
   }
@@ -132,25 +133,35 @@ AssetType ExtToType(const std::string &ext) {
 
   if (ext == ".bik") {
     type = BIK;
-  } else if (ext == ".wav") {
+  }
+  else if (ext == ".wav") {
     type = WAV;
-  } else if (ext == ".raw") {
+  }
+  else if (ext == ".raw") {
     type = RAW;
-  } else if (ext == ".tgx") {
+  }
+  else if (ext == ".tgx") {
     type = TGX;
-  } else if (ext == ".gm1") {
+  }
+  else if (ext == ".gm1") {
     type = GM1;
-  } else if (ext == ".ani") {
+  }
+  else if (ext == ".ani") {
     type = ANI;
-  } else if (ext == ".map") {
+  }
+  else if (ext == ".map") {
     type = MAP;
-  } else if (ext == ".mlb") {
+  }
+  else if (ext == ".mlb") {
     type = MLB;
-  } else if (ext == ".act") {
+  }
+  else if (ext == ".act") {
     type = ACT;
-  } else if (ext == ".bmp") {
+  }
+  else if (ext == ".bmp") {
     type = BMP;
-  } else if (ext == ".txt") {
+  }
+  else if (ext == ".txt") {
     type = TXT;
   }
 
@@ -230,12 +241,14 @@ bool Game::LoadGameData() {
     ghc::filesystem::path np = "../saves/";
     if (DoesFileExist(np)) {
       _saveFolder = np;
-    } else {
+    }
+    else {
       Logger::error(GAME) << "Location for save files could not be determined!"
                           << std::endl;
       return false;
     }
-  } else
+  }
+  else
     _saveFolder /= "Stronghold/Saves/";
 
   /* Create asset folders. Does nothing if it already exists. */

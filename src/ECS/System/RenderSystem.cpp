@@ -15,7 +15,8 @@ void RenderSystem::tickEntity(entt::registry& registry,
     EntityAsset entityAsset =
         EntityTypeToEntityAssetMapping.at(typeComponent.type);
     assetFile = EntityAssetToGMMapping.at(entityAsset);
-  } catch (std::exception& e) {
+  }
+  catch (std::exception& e) {
     // no file or mapping - don't render
     return;
   }

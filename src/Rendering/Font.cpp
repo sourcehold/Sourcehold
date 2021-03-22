@@ -43,7 +43,8 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
     /* Space */
     if (c == 0x20) {
       x += _table_width_height[type].first * scaleFactor;
-    } else {
+    }
+    else {
       /* Calculate lowercase offset */
       int8_t lowercaseOffset = 0;
       switch (c) {
@@ -91,9 +92,11 @@ void Rendering::RenderText(const std::wstring& text, Rect<int> bounds, Align al,
   int x = 0, y = 0;
   if (al == Align::CENTER) {
     x = bounds.x + bounds.w / 2 - dim.first / 2;
-  } else if (al == Align::LEFT) {
+  }
+  else if (al == Align::LEFT) {
     x = bounds.x + 4;
-  } else if (al == Align::RIGHT) {
+  }
+  else if (al == Align::RIGHT) {
     x = bounds.x + bounds.w - dim.first - 4;
   }
 
@@ -118,7 +121,8 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(
     /* Space */
     if (c == 0x20) {
       dim.first += _table_width_height[type].first;
-    } else {
+    }
+    else {
       /* Calculate lowercase offset */
       int8_t lowercaseOffset = 0;
       switch (c) {
