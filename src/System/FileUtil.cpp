@@ -6,16 +6,16 @@
 #include <cstdlib>
 #include <cstring>
 
-#if SOURCEHOLD_WINDOWS || SOURCEHOLD_MINGW
+#if defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
   #include <windows.h>
   #include <shlobj.h>
-#endif
+#endif  // defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
 
 #include "System/filesystem.h"
 
-#if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+#if defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
   #include "Common/SHPathUtils.h"
-#endif  // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+#endif  // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
 
 using namespace Sourcehold;
 using namespace System;
@@ -59,9 +59,9 @@ ghc::filesystem::path System::GetDocumentsPath() {
    * TODO: better way to do this
    * Why the f*** isn't this part of boost?
    */
-#if SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+#if defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
   SHQueryUserDocumentsDirectoryPath(path, maxPathLength);
-#elif SOURCEHOLD_UNIX
+#elif defined(SOURCEHOLD_UNIX)
   /* Requires ~/.config/user-dirs.dirs from the FreeDesktop xdg standard */
   const char *home = getenv("HOME");
   strcpy(path, home);
@@ -100,11 +100,11 @@ ghc::filesystem::path System::GetDocumentsPath() {
   else {
     *path = '\0';
   }
-#elif SOURCEHOLD_WINDOWS || SOURCEHOLD_MINGW
+#elif defiend(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
   LPITEMIDLIST pidl;
   SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
   SHGetPathFromIDList(pidl, path);
-#endif  // SOURCEHOLD_MAC_OS || SOURCEHOLD_IOS
+#endif  // defined(SOURCEHOLD_MAC_OS) || defined(SOURCEHOLD_IOS)
 
   return ghc::filesystem::path(path);
 }
