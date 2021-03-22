@@ -122,27 +122,22 @@ jobs:
       shell: bash
       env:
         CMAKE_CONFIGURE_OPTIONS: ${{ matrix.cmake-configure-options }}
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
       run: cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_CONFIGURE_OPTIONS
 
     - name: Build
-      working-directory: ${{ github.workspace }}/build
       shell: bash
       env:
         CMAKE_BUILD_OPTIONS: ${{ matrix.cmake-build-options }}
       # Execute the build. You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE $CMAKE_BUILD_OPTIONS
+      run: cmake --build build --config $BUILD_TYPE $CMAKE_BUILD_OPTIONS
 
     - name: Make artifacts
       shell: bash
       run: |
+        cd "$BUILD_ARTIFACT_PARENT_DIR_PATH"
         if [[ ${{ matrix.os }} == 'windows-latest' ]]; then
-          cd "$BUILD_ARTIFACT_PARENT_DIR_PATH"
           7z a "${{ github.workspace }}\${{ matrix.uploaded-artifact-name }}.zip" -tzip "$BUILD_ARTIFACT_NAME"
         else
-          cd "$BUILD_ARTIFACT_PARENT_DIR_PATH"
           zip -r ${{ github.workspace }}/${{ matrix.uploaded-artifact-name }}.zip "$BUILD_ARTIFACT_NAME"
         fi
 
