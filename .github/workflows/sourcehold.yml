@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
         target-platform: ["host"]
         include:
           - os: ubuntu-latest
@@ -43,6 +43,12 @@ jobs:
             cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_OSX_ARCHITECTURES="x86_64"'
             cmake-build-options: "-- -sdk iphonesimulator"
             uploaded-artifact-name: "sourcehold-ios"
+          - os: windows-latest
+            install-dependencies: "sh ./windows/install-dependencies.sh"
+            # this assumes cmake is run from the project root
+            cmake-configure-options: "-DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake"
+            cmake-build-options: ""
+            uploaded-artifact-name: "sourcehold-windows64"
     
     name: ${{ matrix.os }} - ${{ matrix.target-platform }}
     
@@ -51,10 +57,15 @@ jobs:
       # Unfortunately workflow level env variables can not be accessed at job level
       # (see https://github.community/t/how-to-set-and-access-a-workflow-variable/17335)
       # in our case this is BUILD_TYPE. Thus we have to define it here in such weird way.
+      shell: bash
       run: |
           if [[ ${{ matrix.target-platform }} == 'ios-simulator' ]]; then
             echo "BUILD_ARTIFACT_PARENT_DIR_PATH=${{ github.workspace }}/build/${{ env.BUILD_TYPE }}-iphonesimulator" >> $GITHUB_ENV
             echo "BUILD_ARTIFACT_NAME=Stronghold.app" >> $GITHUB_ENV
+          elif [[ ${{ matrix.os }} == 'windows-latest' ]]; then
+            echo "BUILD_ARTIFACT_PARENT_DIR_PATH=${{ github.workspace }}\build" >> $GITHUB_ENV
+            echo "BUILD_ARTIFACT_NAME=Stronghold.exe" >> $GITHUB_ENV
+            echo "VCPKG_BINARY_SOURCES=clear;nuget,GitHub,readwrite" >> $GITHUB_ENV
           else
             echo "BUILD_ARTIFACT_PARENT_DIR_PATH=${{ github.workspace }}/build" >> $GITHUB_ENV
             echo "BUILD_ARTIFACT_NAME=Stronghold" >> $GITHUB_ENV
@@ -73,8 +84,28 @@ jobs:
       with:
         path: ${{ github.workspace }}/thirdparty/ios
         key: ${{ env.cache-name }}
+    
+    - name: Setup vcpkg for Windows
+      if: ${{ matrix.os == 'windows-latest' }}
+      shell: bash
+      run: |
+        git clone https://github.com/microsoft/vcpkg
+        rm -rf "$VCPKG_INSTALLATION_ROOT"
+        ./vcpkg/bootstrap-vcpkg.sh
+    
+    - name: Setup NuGet Credentials
+      if: ${{ matrix.os == 'windows-latest' }}
+      shell: bash
+      run: |
+        `./vcpkg/vcpkg fetch nuget | tail -n 1` \
+        sources Add -Source "https://nuget.pkg.github.com/${{ github.actor }}/index.json" \
+        -StorePasswordInClearText \
+        -Name "GitHub" \
+        -UserName "${{ github.actor }}" \
+        -Password "${{ secrets.GITHUB_TOKEN }}"
       
     - name: Install dependencies
+      shell: bash
       env:
         INSTALL_DEPENDENCIES: ${{ matrix.install-dependencies }}
       # Install all the required dependencies to build Sourcehold
@@ -89,27 +120,26 @@ jobs:
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
       shell: bash
-      working-directory: ${{github.workspace}}/build
       env:
         CMAKE_CONFIGURE_OPTIONS: ${{ matrix.cmake-configure-options }}
-      # Note the current convention is to use the -S and -B options here to specify source 
-      # and build directories, but this is only available with CMake 3.13 and higher.  
-      # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_CONFIGURE_OPTIONS
+      run: cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_TYPE $CMAKE_CONFIGURE_OPTIONS
 
     - name: Build
-      working-directory: ${{ github.workspace }}/build
       shell: bash
       env:
         CMAKE_BUILD_OPTIONS: ${{ matrix.cmake-build-options }}
       # Execute the build. You can specify a specific target with "--target <NAME>"
-      run: cmake --build . --config $BUILD_TYPE $CMAKE_BUILD_OPTIONS
+      run: cmake --build build --config $BUILD_TYPE $CMAKE_BUILD_OPTIONS
 
     - name: Make artifacts
       shell: bash
       run: |
         cd "$BUILD_ARTIFACT_PARENT_DIR_PATH"
-        zip -r ${{ github.workspace }}/${{ matrix.uploaded-artifact-name }}.zip "$BUILD_ARTIFACT_NAME"
+        if [[ ${{ matrix.os }} == 'windows-latest' ]]; then
+          7z a "${{ github.workspace }}\${{ matrix.uploaded-artifact-name }}.zip" -tzip "$BUILD_ARTIFACT_NAME"
+        else
+          zip -r ${{ github.workspace }}/${{ matrix.uploaded-artifact-name }}.zip "$BUILD_ARTIFACT_NAME"
+        fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
