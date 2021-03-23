@@ -38,9 +38,11 @@ void Dialog::Update(Dialog::Position pos, int offX, int offY) {
   // Render the member widgets in the available area of the dialog //
   w += MENU_TILE_DIM;  // TODO
   h += MENU_TILE_DIM;
-  Container::Update(Rect<int>(x + MARGIN_X, y + MARGIN_Y + (textbox ? 64 : 0),
-                              w - MARGIN_X * 2,
-                              h - MARGIN_Y * 2 - (textbox ? 64 : 0)));
+  auto screen_space = Rect<int>{x + MARGIN_X,                       //
+                                y + MARGIN_Y + (textbox ? 64 : 0),  //
+                                w - MARGIN_X * 2,                   //
+                                h - MARGIN_Y * 2 - (textbox ? 64 : 0)};
+  Container::Update(screen_space);
 }
 
 void Dialog::RenderBorder(int x, int y, int nx, int ny) {

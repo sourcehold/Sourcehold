@@ -134,8 +134,7 @@ MainMenu::MainMenu() {
     auto inactive = atlas->Get(inf.index + 0);
     auto active = atlas->Get(inf.index + 1);
 
-    ui_elems[i].Transform(
-        Rect<int>(mx + inf.x, my + inf.y, active.w, active.h));
+    ui_elems[i].Transform({mx + inf.x, my + inf.y, active.w, active.h});
     ui_elems[i].SetTexture(atlas.get());
     ui_elems[i].SetActiveRect(active);
     ui_elems[i].SetInactiveRect(inactive);
@@ -320,8 +319,7 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end) {
 
     ui_elems[i].visible = true;
 
-    ui_elems[i].Transform(
-        Rect<int>(mx + inf.x, my + inf.y, inactive.w, inactive.h));
+    ui_elems[i].Transform({mx + inf.x, my + inf.y, inactive.w, inactive.h});
     ui_elems[i].Render();
   }
 }

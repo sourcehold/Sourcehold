@@ -53,7 +53,8 @@ void LineEdit::Update(Rect<int> constraints) {
   RenderText(line, x + 4, y + 6, FONT_SMALL);
 
   // Cursor
-  RenderRect(Rect<int>(x + dim.first, y, 2, 34), 24, 80, 24, 255, true);
+  RenderRect({x + static_cast<int>(dim.first), y, 2, 34},  //
+             24, 80, 24, 255, true);
 }
 
 void LineEdit::onEventReceive(Keyboard& event) {

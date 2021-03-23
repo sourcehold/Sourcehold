@@ -1,4 +1,5 @@
 #include "GUI/Ingame.h"
+#include <bits/stdint-uintn.h>
 #include "System/Config.h"
 
 using namespace Sourcehold;
@@ -7,28 +8,38 @@ using namespace GUI;
 IngameGUI::IngameGUI() : EventConsumer<Keyboard>(), EventConsumer<Mouse>() {
   LoadMenuAssets();
 
-  /* Init the buttons */
+  // Set Button Textures
   auto atlas = gm1_floats->GetTextureAtlas();
   ui_compass.SetTexture(atlas.get());
   ui_hide.SetTexture(atlas.get());
   ui_magnify.SetTexture(atlas.get());
   ui_lower.SetTexture(atlas.get());
 
+  // Set Icon Textures and Sizes
   atlas = gm1_icons->GetTextureAtlas();
-  SDL_Rect rect = atlas->Get(25);
-  ui_disk.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
+
+  enum class IconIndex : uint32_t {
+    Disk = 25,
+    Info = 27,
+    Delete = 29,
+    Revert = 68,
+  };
+
+  auto get_rect = [&atlas](IconIndex index) -> Rect<int> {
+    SDL_Rect atlas_rect = atlas->Get(static_cast<uint32_t>(index));
+    return {atlas_rect.x, atlas_rect.y, atlas_rect.w, atlas_rect.h};
+  };
+
+  ui_disk.Transform(get_rect(IconIndex::Disk));
   ui_disk.SetTexture(atlas.get());
 
-  rect = atlas->Get(27);
-  ui_info.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
+  ui_info.Transform(get_rect(IconIndex::Info));
   ui_info.SetTexture(atlas.get());
 
-  rect = atlas->Get(29);
-  ui_delete.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
+  ui_delete.Transform(get_rect(IconIndex::Delete));
   ui_delete.SetTexture(atlas.get());
 
-  rect = atlas->Get(68);
-  ui_revert.Transform(Rect<int>(rect.x, rect.y, rect.w, rect.h));
+  ui_revert.Transform(get_rect(IconIndex::Revert));
   ui_revert.SetTexture(atlas.get());
 }
 
@@ -82,21 +93,47 @@ void IngameGUI::RenderQuickMenu() {
   auto atlas = gm1_floats->GetTextureAtlas();
   int mouseX = GetMouseX(), mouseY = GetMouseY();
 
-  SDL_Rect rect = atlas->Get(37);
-  ui_compass.Transform(Rect<int>(int(mouseX - (rect.w / 2)),
-                                 int(mouseY - rect.h - 25), rect.w, rect.h));
+  enum class ButtonIndex : uint32_t {
+    Compass = 37,
+    Hide = 124,
+    Magnify = 45,
+    Lower = 35
+  };
 
-  rect = atlas->Get(124);
-  ui_hide.Transform(Rect<int>(int(mouseX - rect.w - 45),
-                              int(mouseY - (rect.h / 2)), rect.w, rect.h));
+  auto get_rect = [&atlas, &mouseX, &mouseY](ButtonIndex index) -> Rect<int> {
+    SDL_Rect atlas_rect = atlas->Get(static_cast<uint32_t>(index));
+    switch (index) {
+      case ButtonIndex::Compass: {
+        return {mouseX - (atlas_rect.w / 2),  //
+                mouseY - atlas_rect.h - 25,   //
+                atlas_rect.w,                 //
+                atlas_rect.h};
+      }
+      case ButtonIndex::Hide: {
+        return {mouseX - atlas_rect.w - 45,   //
+                mouseY - (atlas_rect.h / 2),  //
+                atlas_rect.w,                 //
+                atlas_rect.h};
+      }
+      case ButtonIndex::Magnify: {
+        return {mouseX + 45,                  //
+                mouseY - (atlas_rect.h / 2),  //
+                atlas_rect.w,                 //
+                atlas_rect.h};
+      }
+      case ButtonIndex::Lower: {
+        return {mouseX - (atlas_rect.w / 2),  //
+                mouseY + 25,                  //
+                atlas_rect.w,                 //
+                atlas_rect.h};
+      }
+    }
+  };
 
-  rect = atlas->Get(45);
-  ui_magnify.Transform(
-      Rect<int>(int(mouseX + 45), int(mouseY - (rect.h / 2)), rect.w, rect.h));
-
-  rect = atlas->Get(35);
-  ui_lower.Transform(
-      Rect<int>(int(mouseX - (rect.w / 2)), int(mouseY + 25), rect.w, rect.h));
+  ui_compass.Transform(get_rect(ButtonIndex::Compass));
+  ui_hide.Transform(get_rect(ButtonIndex::Hide));
+  ui_magnify.Transform(get_rect(ButtonIndex::Magnify));
+  ui_lower.Transform(get_rect(ButtonIndex::Lower));
 
   ui_compass.Render();
   ui_hide.Render();
@@ -186,8 +223,8 @@ void IngameGUI::RenderMenubar() {
               currentTab = static_cast<MenuPage>(i);
           }
           else {
-              if (ui_tabs[i].IsMouseOver())return atlas->Get(lut_ui_tabs[i][1]);
-              else return atlas->Get(lut_ui_tabs[i][0]);
+              if (ui_tabs[i].IsMouseOver())return
+  atlas->Get(lut_ui_tabs[i][1]); else return atlas->Get(lut_ui_tabs[i][0]);
           }
           // Highlight the selected tab //
           if (currentTab == i) return atlas->Get(lut_ui_tabs[i][2]);
@@ -195,12 +232,11 @@ void IngameGUI::RenderMenubar() {
       });
   }
 
-  // Render the current pages content, TODO: may change when different building
-  selected, etc. // switch (currentTab) { case MENU_CASTLE: { } break; case
-  MENU_INDUSTRY: { } break; case MENU_FARM: { } break; case MENU_TOWN: { }
-  break; case MENU_WEAPONS: { } break; case MENU_FOOD_PROCESSING: { } break;
-  default:
-      break;
+  // Render the current pages content, TODO: may change when different
+  building selected, etc. // switch (currentTab) { case MENU_CASTLE: { }
+  break; case MENU_INDUSTRY: { } break; case MENU_FARM: { } break; case
+  MENU_TOWN: { } break; case MENU_WEAPONS: { } break; case
+  MENU_FOOD_PROCESSING: { } break; default: break;
   }*/
 }
 
