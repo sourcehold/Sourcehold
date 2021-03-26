@@ -47,10 +47,8 @@ void Table::Update(Rect<int> constraints) {
     highlight = -1;
 
   if (renderNames) {
-    Renderer::Instance().RenderRect({x, y, width, 20}, {104, 120, 88, 152},
-                                    true);
-    Renderer::Instance().RenderRect({x, y, width, 20}, {239, 239, 189, 255},
-                                    false);
+    Renderer::Instance().Render({x, y, width, 20}, {104, 120, 88, 152}, true);
+    Renderer::Instance().Render({x, y, width, 20}, {239, 239, 189, 255}, false);
     RenderText(col.name, x + 10, y + 2, FONT_SMALL);
     y += 20;
   }
@@ -59,10 +57,10 @@ void Table::Update(Rect<int> constraints) {
     std::wstring &row = col.rows[i];
 
     if (i == highlight || i == selected) {
-      Renderer::Instance().RenderRect({x, y + 20 * i, width, 20},
-                                      {144, 160, 136, 152}, true);
-      Renderer::Instance().RenderRect({x, y + 20 * i, width, 20},
-                                      {239, 239, 189, 255}, false);
+      Renderer::Instance().Render({x, y + 20 * i, width, 20},
+                                  {144, 160, 136, 152}, true);
+      Renderer::Instance().Render({x, y + 20 * i, width, 20},
+                                  {239, 239, 189, 255}, false);
     }
     else {
       Color color;
@@ -73,7 +71,7 @@ void Table::Update(Rect<int> constraints) {
       else {
         color = {24, 80, 24, 152};
       }
-      Renderer::Instance().RenderRect({x, y + 20 * i, width, 20}, color, true);
+      Renderer::Instance().Render({x, y + 20 * i, width, 20}, color, true);
     }
 
     // Render row contents //
@@ -82,8 +80,8 @@ void Table::Update(Rect<int> constraints) {
   }
 
   // Render border around table //
-  Renderer::Instance().RenderRect({x, y, width, 20 * static_cast<int>(numRows)},
-                                  {239, 239, 189, 255}, false);
+  Renderer::Instance().Render({x, y, width, 20 * static_cast<int>(numRows)},
+                              {239, 239, 189, 255}, false);
 }
 
 void Table::SetNumRows(uint32_t n) {

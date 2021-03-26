@@ -31,14 +31,11 @@ class Renderer {
   // Render a texture
   void Render(Texture &texture, Vector2<int> pos, SDL_Rect *clip = nullptr);
   void Render(Texture &texture, Rect<int> space, SDL_Rect *clip = nullptr);
-
-  // Render a texture to the whole screen
-
   void Render(Texture &texture, SDL_Rect *clip = nullptr);
-  void Fill(Color color = {0, 0, 0});
+  void Render(Rect<int> rect, Color color = {0, 0, 0}, bool fill = false);
+  void Render(Line<int> line, Color color = {255, 255, 255});
 
-  void RenderRect(Rect<int> rect, Color color = {0, 0, 0}, bool solid = false);
-  void RenderLine(Line<int> line, Color color = {255, 255, 255});
+  void Fill(Color color = {0, 0, 0});
 
   // Get custom blend mode for keying out
   // certain pixels based on src

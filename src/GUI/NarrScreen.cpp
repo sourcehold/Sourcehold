@@ -191,8 +191,8 @@ bool NarrScreen::BeginNarration() {
 
     if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
       RenderMenuBorder();
-      Renderer::Instance().RenderRect(Rect<int>{px, py, 1024, 768},
-                                      {0, 0, 0, 255}, true);
+      Renderer::Instance().Render(Rect<int>{px, py, 1024, 768}, {0, 0, 0, 255},
+                                  true);
     }
 
     int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));

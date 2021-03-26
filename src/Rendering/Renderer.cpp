@@ -99,12 +99,12 @@ void Renderer::Fill(Color color) {
   SDL_RenderFillRect(sdl_renderer_, nullptr);
 }
 
-void Renderer::RenderRect(Rect<int> rect, Color color, bool solid) {
+void Renderer::Render(Rect<int> rect, Color color, bool fill) {
   SDL_SetRenderDrawColor(sdl_renderer_, color.r, color.g, color.b, color.a);
 
   SDL_Rect rc = {rect.x, rect.y, rect.w, rect.h};
 
-  if (solid) {
+  if (fill) {
     SDL_RenderFillRect(sdl_renderer_, &rc);
   }
   else {
@@ -112,7 +112,7 @@ void Renderer::RenderRect(Rect<int> rect, Color color, bool solid) {
   }
 }
 
-void Renderer::RenderLine(Line<int> line, Color color) {
+void Renderer::Render(Line<int> line, Color color) {
   SDL_SetRenderDrawColor(sdl_renderer_, color.r, color.b, color.g,
                          SDL_ALPHA_OPAQUE);
   SDL_RenderDrawLine(sdl_renderer_,        //

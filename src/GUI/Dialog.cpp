@@ -51,7 +51,7 @@ void Dialog::RenderBorder(int x, int y, int nx, int ny) {
   auto& renderer = Renderer::Instance();
 
   // background
-  renderer.RenderRect(
+  renderer.Render(
       Rect<int>{x + 8, y + 8, 8 + nx * MENU_TILE_DIM, 8 + ny * MENU_TILE_DIM},
       {0, 0, 0, 128}, true);
 
@@ -145,10 +145,10 @@ void Dialog::RenderTextBox(int x, int y, int w, int h, const std::wstring& text,
                            Deco deco) {
   auto& renderer = Renderer::Instance();
 
-  renderer.RenderRect(Rect<int>{x + 8, y + 8, w + 8, h + 8}, {24, 80, 24, 200},
-                      true);
-  renderer.RenderRect(Rect<int>{x + 8, y + 8, w + 8, h + 8},
-                      {247, 235, 198, 255}, false);
+  renderer.Render(Rect<int>{x + 8, y + 8, w + 8, h + 8}, {24, 80, 24, 200},
+                  true);
+  renderer.Render(Rect<int>{x + 8, y + 8, w + 8, h + 8}, {247, 235, 198, 255},
+                  false);
 
   auto dim = GetStringPixelDim(text, FONT_LARGE);
   RenderText(text, x + 20 + (w / 2) - (dim.first / 2), y + 25, FONT_LARGE);

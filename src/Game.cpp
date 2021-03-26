@@ -99,13 +99,13 @@ int EnterLoadingScreen() {
     Rect<int> rect = {pos.x + (1024 / 2) - (450 / 2),
                       pos.y + static_cast<int>(768.0 / 1.3), 450, 35};
     // background
-    Renderer::Instance().RenderRect(rect, {0, 0, 0, 128}, true);
+    Renderer::Instance().Render(rect, {0, 0, 0, 128}, true);
     // edges
-    Renderer::Instance().RenderRect(rect, {0, 0, 0, 255}, false);
+    Renderer::Instance().Render(rect, {0, 0, 0, 255}, false);
     // bar
     rect.w = static_cast<int>(440.0 * progress);
     rect.h = 25;
-    Renderer::Instance().RenderRect(rect, {0, 0, 0, 255}, true);
+    Renderer::Instance().Render(rect, {0, 0, 0, 255}, true);
 
     Renderer::Instance().Flush();
 

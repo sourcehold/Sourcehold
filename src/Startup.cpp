@@ -84,8 +84,8 @@ UIState Startup::Begin() {
 #if RENDER_LOADING_BORDER == 1
       if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
         RenderMenuBorder();
-        renderer.RenderRect(Rect<int>{pos.x, pos.y, 1024, 768},  //
-                            {0, 0, 0, 255}, true);
+        renderer.Render(Rect<int>{pos.x, pos.y, 1024, 768},  //
+                        {0, 0, 0, 255}, true);
       }
 #endif
 
