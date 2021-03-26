@@ -32,7 +32,7 @@ void StaticElement::Render() {
   int mouseY = GetMouseY();
 
   Renderer::Instance().Render(
-      *tex, tp.x, tp.y, tp.w, tp.h,
+      *tex, {tp.x, tp.y, tp.w, tp.h},
       DetectMouseOver(mouseX, mouseY) ? &active : &inactive);
 }
 

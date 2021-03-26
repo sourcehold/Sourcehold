@@ -33,9 +33,8 @@ class Renderer {
   /**
    * Render a texture
    */
-  void Render(Texture &texture, int x, int y, SDL_Rect *clip = nullptr);
-  void Render(Texture &texture, int x, int y, int w, int h,
-              SDL_Rect *clip = nullptr);
+  void Render(Texture &texture, Vector2<int> pos, SDL_Rect *clip = nullptr);
+  void Render(Texture &texture, Rect<int> space, SDL_Rect *clip = nullptr);
 
   /**
    * Render a texture to the whole screen

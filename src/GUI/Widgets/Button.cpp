@@ -48,12 +48,12 @@ void Button::Update(Rect<int> constraints) {
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
     rect = atlas->Get(button_indices[style] + 1);
-    renderer.Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
+    renderer.Render(*atlas.get(), Vector2<int>{x - 5, y - 5}, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
     rect = atlas->Get(button_indices[style] + 2);
-    renderer.Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
+    renderer.Render(*atlas.get(), Vector2<int>{x - 5, y - 5}, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
     selected = true;
@@ -63,7 +63,7 @@ void Button::Update(Rect<int> constraints) {
 
   // button
   atlas->SetAlphaMod(140);
-  renderer.Render(*atlas.get(), int(x), int(y), &rect);
+  renderer.Render(*atlas.get(), Vector2<int>{x, y}, &rect);
   atlas->SetAlphaMod(255);
 
   // text

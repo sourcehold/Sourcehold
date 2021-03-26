@@ -197,7 +197,7 @@ bool NarrScreen::BeginNarration() {
 
     int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));
 
-    Renderer::Instance().Render(*tgx_bg1, px, py);
+    Renderer::Instance().Render(*tgx_bg1, Vector2<int>{px, py});
     RenderFlameAnim(px, py, index, alpha);
 
     Renderer::Instance().Flush();
@@ -216,8 +216,8 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
     bik.LoadFromDisk(GetDirectory() / "binks/fireplace_01.bik", true);
   }
 
-  int px = (GetWidth() / 2) - (280 / 2);
-  int py = (GetHeight() / 2) - (200 / 2);
+  Vector2<int> pos = {(GetWidth() / 2) - (280 / 2),
+                      (GetHeight() / 2) - (200 / 2)};
 
   while (Running()) {
     if (skipped) {
@@ -228,7 +228,7 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
     Renderer::Instance().Clear();
 
     if (bg == NarrBackground::BADGUYS) {
-      Renderer::Instance().Render(*castle, px, py);
+      Renderer::Instance().Render(*castle, pos);
     }
     else {
       // after deletion it tries to operate on memory
@@ -236,7 +236,7 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
       // result of commenting is that, the movie is not rendering
       // TODO - make issue to track this
       // bik.Update();
-      Renderer::Instance().Render(bik, px, py);
+      Renderer::Instance().Render(bik, pos);
     }
 
     Renderer::Instance().Flush();
@@ -258,12 +258,12 @@ void NarrScreen::RenderFlameAnim(int px, int py, int index, Uint8 a) {
   alpha->SetAlphaMod(a);
 
   alpha->SetBlendMode(SDL_BLENDMODE_ADD);
-  Renderer::Instance().Render(*alpha, px + 160, py + 235);
+  Renderer::Instance().Render(*alpha, Vector2<int>{px + 160, py + 235});
 
   color->SetBlendMode(SDL_BLENDMODE_ADD);
-  Renderer::Instance().Render(*color, px + 160, py + 235);
+  Renderer::Instance().Render(*color, Vector2<int>{px + 160, py + 235});
 
-  Renderer::Instance().Render(*candle, px, py + 393);
+  Renderer::Instance().Render(*candle, Vector2<int>{px, py + 393});
 }
 
 void NarrScreen::NarrationText(TextSection text) {

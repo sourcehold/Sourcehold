@@ -169,18 +169,18 @@ void IngameGUI::RenderMenubar() {
   }
 
   // Empty menu face //
-  renderer.Render(*atlas, menuOffsetX, menuOffsetY, &rect);
+  renderer.Render(*atlas, Vector2<int>{menuOffsetX, menuOffsetY}, &rect);
 
   // Scribe face //
   atlas = gm1_scribe->GetTextureAtlas();
   rect = atlas->Get(0);
-  renderer.Render(*atlas, menuOffsetX + 704, height - 200, &rect);
+  renderer.Render(*atlas, Vector2<int>{menuOffsetX + 704, height - 200}, &rect);
 
   // Left and right images (only 1240x768 and up) //
   if (res != RESOLUTION_800x600) {
-    renderer.Render(*tgx_right, tgx_left->GetWidth() + 800,
-                    height - tgx_right->GetHeight());
-    renderer.Render(*tgx_left, 0, height - tgx_left->GetHeight());
+    renderer.Render(*tgx_right, Vector2<int>{tgx_left->GetWidth() + 800,
+                                             height - tgx_right->GetHeight()});
+    renderer.Render(*tgx_left, Vector2<int>{0, height - tgx_left->GetHeight()});
   }
 
   // Calculate button positions //

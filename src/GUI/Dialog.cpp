@@ -60,29 +60,30 @@ void Dialog::RenderBorder(int x, int y, int nx, int ny) {
 
   // corners
   rect = atlas->Get(3);
-  renderer.Render(*atlas, x, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y}, &rect);
   rect = atlas->Get(15);
-  renderer.Render(*atlas, x, y + ny * MENU_TILE_DIM, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y + ny * MENU_TILE_DIM}, &rect);
   rect = atlas->Get(5);
-  renderer.Render(*atlas, x + nx * MENU_TILE_DIM, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x + nx * MENU_TILE_DIM, y}, &rect);
   rect = atlas->Get(17);
-  renderer.Render(*atlas, x + nx * MENU_TILE_DIM, y + ny * MENU_TILE_DIM,
+  renderer.Render(*atlas,
+                  Vector2<int>{x + nx * MENU_TILE_DIM, y + ny * MENU_TILE_DIM},
                   &rect);
 
   // edges
   for (int ix = x + MENU_TILE_DIM; ix < x + nx * MENU_TILE_DIM;
        ix += MENU_TILE_DIM) {
     rect = atlas->Get(4);
-    renderer.Render(*atlas, ix, y, &rect);
+    renderer.Render(*atlas, Vector2<int>{ix, y}, &rect);
     rect = atlas->Get(16);
-    renderer.Render(*atlas, ix, y + ny * MENU_TILE_DIM, &rect);
+    renderer.Render(*atlas, Vector2<int>{ix, y + ny * MENU_TILE_DIM}, &rect);
   }
   for (int iy = y + MENU_TILE_DIM; iy < y + ny * MENU_TILE_DIM;
        iy += MENU_TILE_DIM) {
     rect = atlas->Get(9);
-    renderer.Render(*atlas, x, iy, &rect);
+    renderer.Render(*atlas, Vector2<int>{x, iy}, &rect);
     rect = atlas->Get(11);
-    renderer.Render(*atlas, x + nx * MENU_TILE_DIM, iy, &rect);
+    renderer.Render(*atlas, Vector2<int>{x + nx * MENU_TILE_DIM, iy}, &rect);
   }
 
   /* Render color */
@@ -90,29 +91,30 @@ void Dialog::RenderBorder(int x, int y, int nx, int ny) {
 
   // corners
   rect = atlas->Get(0);
-  renderer.Render(*atlas, x, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y}, &rect);
   rect = atlas->Get(12);
-  renderer.Render(*atlas, x, y + ny * MENU_TILE_DIM, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y + ny * MENU_TILE_DIM}, &rect);
   rect = atlas->Get(2);
-  renderer.Render(*atlas, x + nx * MENU_TILE_DIM, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x + nx * MENU_TILE_DIM, y}, &rect);
   rect = atlas->Get(14);
-  renderer.Render(*atlas, x + nx * MENU_TILE_DIM, y + ny * MENU_TILE_DIM,
+  renderer.Render(*atlas,
+                  Vector2<int>{x + nx * MENU_TILE_DIM, y + ny * MENU_TILE_DIM},
                   &rect);
 
   // edges
   for (int ix = x + MENU_TILE_DIM; ix < x + nx * MENU_TILE_DIM;
        ix += MENU_TILE_DIM) {
     rect = atlas->Get(1);
-    renderer.Render(*atlas, ix, y, &rect);
+    renderer.Render(*atlas, Vector2<int>{ix, y}, &rect);
     rect = atlas->Get(13);
-    renderer.Render(*atlas, ix, y + ny * MENU_TILE_DIM, &rect);
+    renderer.Render(*atlas, Vector2<int>{ix, y + ny * MENU_TILE_DIM}, &rect);
   }
   for (int iy = y + MENU_TILE_DIM; iy < y + ny * MENU_TILE_DIM;
        iy += MENU_TILE_DIM) {
     rect = atlas->Get(6);
-    renderer.Render(*atlas, x, iy, &rect);
+    renderer.Render(*atlas, Vector2<int>{x, iy}, &rect);
     rect = atlas->Get(8);
-    renderer.Render(*atlas, x + nx * MENU_TILE_DIM, iy, &rect);
+    renderer.Render(*atlas, Vector2<int>{x + nx * MENU_TILE_DIM, iy}, &rect);
   }
 
   atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
@@ -129,12 +131,12 @@ void Dialog::RenderDeco(Deco type, int x, int y) {
   atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
   SDL_Rect rect = atlas->Get(91);
-  renderer.Render(*atlas, x, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y}, &rect);
 
   atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
   rect = atlas->Get(90);
-  renderer.Render(*atlas, x, y, &rect);
+  renderer.Render(*atlas, Vector2<int>{x, y}, &rect);
 
   atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
 }

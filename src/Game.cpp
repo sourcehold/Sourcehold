@@ -67,8 +67,8 @@ int EnterLoadingScreen() {
   uint32_t index = 0;
 
   /* Calculate the position */
-  int px = (GetWidth() / 2) - (1024 / 2);
-  int py = (GetHeight() / 2) - (768 / 2);
+  Vector2<int> pos = {(GetWidth() / 2) - (1024 / 2),
+                      (GetHeight() / 2) - (768 / 2)};
 
   Renderer::Instance().ResetTarget();
 
@@ -93,19 +93,19 @@ int EnterLoadingScreen() {
     double progress = (double)index / (double)files.size();
 
     /* Render the background */
-    Renderer::Instance().Render(*tgx_loading, px, py);
+    Renderer::Instance().Render(*tgx_loading, pos);
 
     /* Render the loading bar */
-    Renderer::Instance().RenderRect(
-        Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
-        {0, 0, 0, 128}, true);
-    Renderer::Instance().RenderRect(
-        Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
-        {0, 0, 0, 255}, false);
-    Renderer::Instance().RenderRect(
-        Rect<int>{px + 5 + (1024 / 2) - (450 / 2), py + 5 + int(768.0 / 1.3),
-                  int(440.0 * progress), 25},
-        {0, 0, 0, 255}, true);
+    Rect<int> rect = {pos.x + (1024 / 2) - (450 / 2),
+                      pos.y + static_cast<int>(768.0 / 1.3), 450, 35};
+    // background
+    Renderer::Instance().RenderRect(rect, {0, 0, 0, 128}, true);
+    // edges
+    Renderer::Instance().RenderRect(rect, {0, 0, 0, 255}, false);
+    // bar
+    rect.w = static_cast<int>(440.0 * progress);
+    rect.h = 25;
+    Renderer::Instance().RenderRect(rect, {0, 0, 0, 255}, true);
 
     Renderer::Instance().Flush();
 

@@ -41,12 +41,12 @@ void LineEdit::Update(Rect<int> constraints) {
 
   atlas->SetAlphaMod(127);
 
-  renderer.Render(*atlas, x, y, &parts[0]);
-  renderer.Render(*atlas, x + LINE_SEGMENT_W * nx, y, &parts[2]);
+  renderer.Render(*atlas, Vector2<int>{x, y}, &parts[0]);
+  renderer.Render(*atlas, Vector2<int>{x + LINE_SEGMENT_W * nx, y}, &parts[2]);
 
   for (int px = LINE_SEGMENT_W; px < nx * LINE_SEGMENT_W;
        px += LINE_SEGMENT_W) {
-    renderer.Render(*atlas, x + px, y, &parts[1]);
+    renderer.Render(*atlas, Vector2<int>{x + px, y}, &parts[1]);
   }
 
   atlas->SetAlphaMod(255);

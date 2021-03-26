@@ -68,8 +68,8 @@ void Renderer::ResetTarget() {
   SDL_SetRenderTarget(sdl_renderer_, nullptr);
 }
 
-void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
-  SDL_Rect rect = {x, y, texture.GetWidth(), texture.GetHeight()};
+void Renderer::Render(Texture &texture, Vector2<int> pos, SDL_Rect *clip) {
+  SDL_Rect rect = {pos.x, pos.y, texture.GetWidth(), texture.GetHeight()};
 
   if (clip) {
     rect.w = clip->w;
@@ -80,13 +80,12 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
                    nullptr, SDL_FLIP_NONE);
 }
 
-void Renderer::Render(Texture &texture, int x, int y, int w, int h,
-                      SDL_Rect *clip) {
+void Renderer::Render(Texture &texture, Rect<int> space, SDL_Rect *clip) {
   /**
    * Source texture, specified by SDL_Rect, will
    * be stretched to fit the destination rect
    */
-  SDL_Rect rect = {x, y, w, h};
+  SDL_Rect rect = {space.x, space.y, space.w, space.h};
 
   SDL_RenderCopyEx(sdl_renderer_, texture.GetTexture(), clip, &rect, 0.0,
                    nullptr, SDL_FLIP_NONE);

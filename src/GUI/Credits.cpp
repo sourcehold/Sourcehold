@@ -42,8 +42,8 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
   double fadeBase = startTime;
 
   int iw = endgame ? 1024 : 800, ih = endgame ? 768 : 600;
-  int px = (GetWidth() / 2) - (iw / 2);
-  int py = (GetHeight() / 2) - (ih / 2);
+  Vector2<int> pos = {(GetWidth() / 2) - (iw / 2),
+                      (GetHeight() / 2) - (ih / 2)};
 
   int sx = (GetWidth() / 2) + (200 / 2);
   int scrollOffset = 0;
@@ -78,26 +78,26 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
       }
       else {
         /* Place in the middle */
-        Renderer::Instance().Render(*tgx_credits, px, py);
+        Renderer::Instance().Render(*tgx_credits, pos);
       }
     }
     else {
       switch (currentImage) {
         case 0: {
           tgx_1->SetAlphaMod(alpha);
-          Renderer::Instance().Render(*tgx_1, px, py);
+          Renderer::Instance().Render(*tgx_1, pos);
         } break;
         case 1: {
           tgx_2->SetAlphaMod(alpha);
-          Renderer::Instance().Render(*tgx_2, px, py);
+          Renderer::Instance().Render(*tgx_2, pos);
         } break;
         case 2: {
           tgx_3->SetAlphaMod(alpha);
-          Renderer::Instance().Render(*tgx_3, px, py);
+          Renderer::Instance().Render(*tgx_3, pos);
         } break;
         case 3: {
           tgx_4->SetAlphaMod(alpha);
-          Renderer::Instance().Render(*tgx_4, px, py);
+          Renderer::Instance().Render(*tgx_4, pos);
         } break;
         default:
           break;

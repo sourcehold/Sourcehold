@@ -70,11 +70,15 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
           break;
       }
       glyph = font->GetTextureAtlas()->Get(c - 0x21);
-      Renderer::Instance().Render(
-          *font->GetTextureAtlas(), illumination ? (x + (13 - glyph.w) / 2) : x,
-          y + int(_table_width_height[type].second * scaleFactor) -
-              int(glyph.h * scaleFactor) + int(lowercaseOffset * scaleFactor),
-          int(glyph.w * scaleFactor), int(glyph.h * scaleFactor), &glyph);
+      Rect<int> rect = {
+          illumination ? (x + (13 - glyph.w) / 2) : x,
+          y + static_cast<int>(_table_width_height[type].second * scaleFactor) -
+              static_cast<int>(glyph.h * scaleFactor) +
+              static_cast<int>(lowercaseOffset * scaleFactor),
+          static_cast<int>(glyph.w * scaleFactor),
+          static_cast<int>(glyph.h * scaleFactor)};
+
+      Renderer::Instance().Render(*font->GetTextureAtlas(), rect, &glyph);
       x += glyph.w * scaleFactor + 1;
     }
   }

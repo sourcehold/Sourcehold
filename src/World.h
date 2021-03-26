@@ -62,11 +62,10 @@ class Unit {
   void Render() {
     Camera& cam = Camera::instance();
 
-    int px = x * 30 - cam.positionX;
-    int py = y * 15 - cam.positionY;
+    Vector2<int> pos = {x * 30 - cam.positionX, y * 15 - cam.positionY};
 
     SDL_Rect r = file->GetTextureAtlas()->Get(index);
-    Renderer::Instance().Render(*file->GetTextureAtlas(), px, py, &r);
+    Renderer::Instance().Render(*file->GetTextureAtlas(), pos, &r);
   }
 
   int x, y;

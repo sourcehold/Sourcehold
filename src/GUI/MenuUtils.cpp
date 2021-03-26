@@ -35,7 +35,7 @@ void GUI::RenderMenuText(const std::wstring &text) {
   auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
   auto rect = interface_icons->Get(18);
-  Renderer::Instance().Render(*interface_icons, 312, 400, &rect);
+  Renderer::Instance().Render(*interface_icons, Vector2<int>{312, 400}, &rect);
   RenderText(text.substr(0, 1), 317, 406, FONT_SMALL, true);
   RenderText(text.substr(1, text.size()), 338, 406, FONT_SMALL);
 }
@@ -55,8 +55,9 @@ void GUI::RenderMenuBorder() {
         border_rect.h = GetHeight();
 #endif
 
-    Renderer::Instance().Render(*tgx_border, (GetWidth() - 1920) / 2,
-                                (GetHeight() - 1200) / 2 /*, &border_rect*/);
+    Renderer::Instance().Render(
+        *tgx_border, Vector2<int>{(GetWidth() - 1920) / 2,
+                                  (GetHeight() - 1200) / 2} /*, &border_rect*/);
   }
 }
 

@@ -177,8 +177,7 @@ UIState MainMenu::EnterMenu() {
   while (Running()) {
     renderer.Clear();
 
-    int mx = (GetWidth() - 1024) / 2;
-    int my = (GetHeight() - 768) / 2;
+    Vector2<int> pos = {(GetWidth() - 1024) / 2, (GetHeight() - 768) / 2};
 
     RenderMenuBorder();
 
@@ -187,15 +186,15 @@ UIState MainMenu::EnterMenu() {
     switch (currentState) {
       default:
       case MAIN_MENU: {
-        renderer.Render(*bg_main[0], mx, my);
+        renderer.Render(*bg_main[0], pos);
         RenderButtons(MAIN_EXIT, MAIN_SETTINGS);
       } break;
       case COMBAT_MENU: {
-        renderer.Render(*bg_combat[0], mx, my);
+        renderer.Render(*bg_combat[0], pos);
         RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);
       } break;
       case MILITARY_CAMPAIGN_MENU: {
-        renderer.Render(*bg_combat[1], mx, my);
+        renderer.Render(*bg_combat[1], pos);
         RenderButtons(COMBAT_CAMPAIGN_BACK, COMBAT_CAMPAIGN_NEXT);
 
         combatMenuDlg->Update(Dialog::CENTRE, 0, -60);
@@ -220,35 +219,35 @@ UIState MainMenu::EnterMenu() {
         aud_chantloop.Resume();
       } break;
       case SIEGE_MENU: {
-        renderer.Render(*bg_combat[1], mx, my);
+        renderer.Render(*bg_combat[1], pos);
       } break;
       case ECONOMICS_MENU: {
-        renderer.Render(*bg_eco[0], mx, my);
+        renderer.Render(*bg_eco[0], pos);
         RenderButtons(ECO_CAMPAIGN, ECO_BACK_TO_MAIN);
       } break;
       case ECONOMICS_CAMPAIGN_MENU: {
-        renderer.Render(*bg_eco[1], mx, my);
+        renderer.Render(*bg_eco[1], pos);
         RenderButtons(ECO_CAMPAIGN_BACK, ECO_CAMPAIGN_NEXT);
       } break;
       case BUILDER_MENU: {
-        renderer.Render(*bg_builder[0], mx, my);
+        renderer.Render(*bg_builder[0], pos);
         RenderButtons(BUILDER_WORKING_MAP, BUILDER_BACK_TO_MAIN);
       } break;
       case LOAD_SAVED_MENU: {
-        renderer.Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], pos);
         loadDlg->Update(Dialog::CENTRE, 0, 0);
       } break;
       case EXIT_GAME: {
-        renderer.Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], pos);
         quitDlg->Update(Dialog::CENTRE, 0, 0);
       } break;
       case SETTINGS_MENU: {
-        renderer.Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], pos);
       } break;
     }
 
-    RenderText(L"V." SOURCEHOLD_VERSION_STRING, mx + 6, my + 4, FONT_LARGE,
-               false, 0.5);
+    RenderText(L"V." SOURCEHOLD_VERSION_STRING, pos.x + 6, pos.y + 4,
+               FONT_LARGE, false, 0.5);
 
     /*if (GetResolution() == RESOLUTION_800x600 // always scale for 800x600
 #if SCALE_MAIN_MENU == 1

@@ -78,13 +78,14 @@ UIState Startup::Begin() {
        * Images get scaled down on 800x600 and
        * centered but not scaled on every other res
        */
-      int px = (GetWidth() / 2) - (1024 / 2);
-      int py = (GetHeight() / 2) - (768 / 2);
+      Vector2<int> pos = {(GetWidth() / 2) - (1024 / 2),
+                          (GetHeight() / 2) - (768 / 2)};
 
 #if RENDER_LOADING_BORDER == 1
       if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
         RenderMenuBorder();
-        renderer.RenderRect(Rect<int>{px, py, 1024, 768}, {0, 0, 0, 255}, true);
+        renderer.RenderRect(Rect<int>{pos.x, pos.y, 1024, 768},  //
+                            {0, 0, 0, 255}, true);
       }
 #endif
 
@@ -95,7 +96,7 @@ UIState Startup::Begin() {
             renderer.Render(*tgx_firefly);
           }
           else {
-            renderer.Render(*tgx_firefly, px, py);
+            renderer.Render(*tgx_firefly, pos);
           }
           break;
         case STARTUP_TAKETWO_LOGO:
@@ -104,7 +105,7 @@ UIState Startup::Begin() {
             renderer.Render(*tgx_taketwo);
           }
           else {
-            renderer.Render(*tgx_taketwo, px, py);
+            renderer.Render(*tgx_taketwo, pos);
           }
           break;
         case STARTUP_PRESENT:
@@ -113,7 +114,7 @@ UIState Startup::Begin() {
             renderer.Render(*tgx_present);
           }
           else {
-            renderer.Render(*tgx_present, px, py);
+            renderer.Render(*tgx_present, pos);
           }
           break;
         case STARTUP_STRONGHOLD_LOGO:
@@ -122,7 +123,7 @@ UIState Startup::Begin() {
             renderer.Render(*tgx_logo);
           }
           else {
-            renderer.Render(*tgx_logo, px, py);
+            renderer.Render(*tgx_logo, pos);
           }
           break;
         case STARTUP_MULTIPLAYER_INFO:
@@ -140,10 +141,10 @@ UIState Startup::Begin() {
           aud_startup.UpdateFade();
           intro->Update();
 
-          px = (GetWidth() / 2) - (640 / 2);
-          py = (GetHeight() / 2) - (230 / 2);
+          pos.x = (GetWidth() / 2) - (640 / 2);
+          pos.y = (GetHeight() / 2) - (230 / 2);
 
-          renderer.Render(*intro, px, py);
+          renderer.Render(*intro, pos);
           if (!intro->IsRunning()) {
             currentUIState = MAIN_MENU;
           }

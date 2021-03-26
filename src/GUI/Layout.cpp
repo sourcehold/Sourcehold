@@ -95,7 +95,8 @@ void Layout::Render(int x, int y) {
       RenderText(elem.text, elem.x + x, elem.y + y, elem.font);
     }
     else if (elem.type == LayoutElement::PIC) {
-      Renderer::Instance().Render(*elem.pic, elem.x + x, elem.y + y);
+      Renderer::Instance().Render(*elem.pic,
+                                  Vector2<int>{elem.x + x, elem.y + y});
     }
     else if (elem.type == LayoutElement::PARAGRAPH) {
     }

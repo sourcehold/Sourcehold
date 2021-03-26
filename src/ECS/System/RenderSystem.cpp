@@ -29,13 +29,12 @@ void RenderSystem::renderUnit(Component::Position position,
   Camera& cam = Camera::instance();
   auto [x, y] = position;
 
-  int px = x * 30 - cam.positionX;
-  int py = y * 15 - cam.positionY;
+  Vector2<int> pos = {x * 30 - cam.positionX, y * 15 - cam.positionY};
 
   SDL_Rect r = assetFile->GetTextureAtlas()->Get(
       animationComponent.animate ? animationComponent.frameIndex
                                  : 0);  // TODO: index
-  Rendering::Renderer::Instance().Render(*assetFile->GetTextureAtlas(), px, py,
+  Rendering::Renderer::Instance().Render(*assetFile->GetTextureAtlas(), pos,
                                          &r);
 }
 }  // namespace System
