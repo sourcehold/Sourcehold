@@ -149,12 +149,12 @@ bool NarrScreen::BeginAct(TextSection text) {
       alpha = 255 - Uint8(((now - (startTime + 4.0)) * 255.0) / 1.0);
     }
 
-    Renderer::Instance().ClearDisplay();
+    Renderer::Instance().Clear();
 
     font->SetAlphaMod(alpha);
     RenderText(str, px, py, FONT_LARGE, false);
 
-    Renderer::Instance().FlushDisplay();
+    Renderer::Instance().Flush();
   }
 
   font->SetAlphaMod(255);
@@ -187,7 +187,7 @@ bool NarrScreen::BeginNarration() {
 
     tgx_bg1->SetAlphaMod(alpha);
 
-    Renderer::Instance().ClearDisplay();
+    Renderer::Instance().Clear();
 
     if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
       RenderMenuBorder();
@@ -200,7 +200,7 @@ bool NarrScreen::BeginNarration() {
     Renderer::Instance().Render(*tgx_bg1, px, py);
     RenderFlameAnim(px, py, index, alpha);
 
-    Renderer::Instance().FlushDisplay();
+    Renderer::Instance().Flush();
   }
 
   return Running();
@@ -225,7 +225,7 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
       return true;
     }
 
-    Renderer::Instance().ClearDisplay();
+    Renderer::Instance().Clear();
 
     if (bg == NarrBackground::BADGUYS) {
       Renderer::Instance().Render(*castle, px, py);
@@ -239,7 +239,7 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
       Renderer::Instance().Render(bik, px, py);
     }
 
-    Renderer::Instance().FlushDisplay();
+    Renderer::Instance().Flush();
   }
   return Running();
 }

@@ -37,7 +37,7 @@ void Button::Update(Rect<int> constraints) {
   int y = constraints.y + ((constraints.h - rect.h) / 2);
 
   // highlight
-  auto target = renderer.GetTarget();
+  auto target = renderer.bounds_;
   int rw = rect.w;
   int rh = rect.h;
   int rx = target.x + x;

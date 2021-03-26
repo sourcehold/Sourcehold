@@ -16,7 +16,7 @@ Texture::~Texture() {
 }
 
 bool Texture::AllocNewStreaming(int width, int height, int format) {
-  texture = SDL_CreateTexture(Renderer::Instance().GetRenderer(), format,
+  texture = SDL_CreateTexture(Renderer::Instance().sdl_renderer_, format,
                               SDL_TEXTUREACCESS_STREAMING, width, height);
   if (!texture) {
     Logger::error(RENDERING)
@@ -31,7 +31,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
 }
 
 bool Texture::AllocFromSurface(Surface &surface) {
-  texture = SDL_CreateTextureFromSurface(Renderer::Instance().GetRenderer(),
+  texture = SDL_CreateTextureFromSurface(Renderer::Instance().sdl_renderer_,
                                          surface.GetSurface());
   if (!texture) {
     Logger::error(RENDERING)
@@ -45,7 +45,7 @@ bool Texture::AllocFromSurface(Surface &surface) {
 }
 
 bool Texture::AllocNewTarget(int width, int height, int format) {
-  texture = SDL_CreateTexture(Renderer::Instance().GetRenderer(), format,
+  texture = SDL_CreateTexture(Renderer::Instance().sdl_renderer_, format,
                               SDL_TEXTUREACCESS_TARGET, width, height);
   if (!texture) {
     Logger::error(RENDERING)

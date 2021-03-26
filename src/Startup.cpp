@@ -43,7 +43,7 @@ UIState Startup::Begin() {
   StrongholdEdition ed = GetEdition();
 
   while (Running()) {
-    renderer.ClearDisplay();
+    renderer.Clear();
 
     if (currentUIState == INTRO_SEQUENCE) {
       /* Logo switching */
@@ -154,7 +154,7 @@ UIState Startup::Begin() {
       }
     }
 
-    renderer.FlushDisplay();
+    renderer.Flush();
     SDL_Delay(1);
   }
   return EXIT_GAME;

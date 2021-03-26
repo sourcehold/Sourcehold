@@ -43,7 +43,7 @@ void StaticElement::onEventReceive(Mouse& event) {
 }
 
 bool StaticElement::DetectMouseOver(int mx, int my) {
-  auto target = Renderer::Instance().GetTarget();
+  auto target = Renderer::Instance().bounds_;
 
   int rx = target.x + tp.x;
   int ry = target.y + tp.y;

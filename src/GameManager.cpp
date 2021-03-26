@@ -125,7 +125,7 @@ void UpdateGame() {
   if (!IsDisplayOpen() || !FetchEvents())
     _running = false;
 
-  Renderer::Instance().UpdateRenderer();
+  Renderer::Instance().Update();
 }
 
 AssetType ExtToType(const std::string &ext) {

@@ -76,7 +76,7 @@ int EnterLoadingScreen() {
   StrongholdEdition ed = GetEdition();
 
   while (Running() && index < files.size() - 1) {
-    Renderer::Instance().ClearDisplay();
+    Renderer::Instance().Clear();
 
 #if RENDER_LOADING_BORDER == 1
     if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
@@ -107,7 +107,7 @@ int EnterLoadingScreen() {
                   int(440.0 * progress), 25},
         0, 0, 0, 255, true);
 
-    Renderer::Instance().FlushDisplay();
+    Renderer::Instance().Flush();
 
     SDL_Delay(1);
   }

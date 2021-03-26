@@ -36,7 +36,7 @@ void Table::Update(Rect<int> constraints) {
   int x = constraints.x + ((constraints.w - width) / 2);
   int y = constraints.y + ((constraints.h - height) / 2);
 
-  auto target = Renderer::Instance().GetTarget();
+  auto target = Renderer::Instance().bounds_;
   int rx = target.x + x;
   int ry = target.y + y + (renderNames ? 20 : 0);
 

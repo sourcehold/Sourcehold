@@ -175,7 +175,7 @@ UIState MainMenu::EnterMenu() {
   };
 
   while (Running()) {
-    renderer.ClearDisplay();
+    renderer.Clear();
 
     int mx = (GetWidth() - 1024) / 2;
     int my = (GetHeight() - 768) / 2;
@@ -272,7 +272,7 @@ UIState MainMenu::EnterMenu() {
       currentState = MAIN_MENU;
     }
 
-    renderer.FlushDisplay();
+    renderer.Flush();
     SDL_Delay(1);
   }
 

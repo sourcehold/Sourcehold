@@ -19,9 +19,9 @@ class Renderer {
     return renderer_;
   }
 
-  void UpdateRenderer();
-  void ClearDisplay();
-  void FlushDisplay();
+  void Update();
+  void Clear();
+  void Flush();
 
   /**
    * Redirect all rendering operations to the target
@@ -52,8 +52,9 @@ class Renderer {
    */
   SDL_BlendMode GetAlphaKeyBlendMode();
 
-  Rect<int> GetTarget();
-  SDL_Renderer *GetRenderer();
+  SDL_Renderer *sdl_renderer_;
+  Texture *target_ = nullptr;
+  Rect<int> bounds_;
 
  private:
   Renderer();
@@ -61,10 +62,7 @@ class Renderer {
   bool InitRenderer();
   void DestroyRenderer();
 
-  SDL_Renderer *_renderer;
-  SDL_Window *_window;
-  Texture *_target = nullptr;
-  Rect<int> _tr;
+  SDL_Window *sdl_window_;
 };
 }  // namespace Rendering
 }  // namespace Sourcehold

@@ -14,16 +14,16 @@ Renderer::~Renderer() {
 }
 
 bool Renderer::InitRenderer() {
-  _window = GetWindow();
-  _renderer = SDL_CreateRenderer(
-      _window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
-  if (!_renderer) {
+  sdl_window_ = GetWindow();
+  sdl_renderer_ = SDL_CreateRenderer(
+      sdl_window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+  if (!sdl_renderer_) {
     Logger::error(RENDERING)
         << "Unable to create SDL2 renderer: " << SDL_GetError() << std::endl;
     return false;
   }
 
-  SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawBlendMode(sdl_renderer_, SDL_BLENDMODE_BLEND);
 
   const char *hint = "SDL_HINT_RENDER_SCALE_QUALITY";
   if (SDL_SetHintWithPriority(hint, "1", SDL_HINT_OVERRIDE) == SDL_FALSE) {
@@ -35,37 +35,37 @@ bool Renderer::InitRenderer() {
 }
 
 void Renderer::DestroyRenderer() {
-  if (_renderer)
-    SDL_DestroyRenderer(_renderer);
+  if (sdl_renderer_)
+    SDL_DestroyRenderer(sdl_renderer_);
 }
 
-void Renderer::UpdateRenderer() {
+void Renderer::Update() {
 }
 
-void Renderer::ClearDisplay() {
-  SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-  SDL_RenderClear(_renderer);
+void Renderer::Clear() {
+  SDL_SetRenderDrawColor(sdl_renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
+  SDL_RenderClear(sdl_renderer_);
 }
 
-void Renderer::FlushDisplay() {
-  SDL_RenderPresent(_renderer);
+void Renderer::Flush() {
+  SDL_RenderPresent(sdl_renderer_);
 }
 
 void Renderer::SetTarget(Texture *target, Rect<int> rect) {
-  _tr = rect;
-  _target = target;
-  if (SDL_SetRenderTarget(_renderer, target ? target->GetTexture() : nullptr) <
-      0) {
-#if 0
-        Logger::error(RENDERING) << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
-#endif
+  bounds_ = rect;
+  target_ = target;
+  auto result = SDL_SetRenderTarget(sdl_renderer_,
+                                    target_ ? target_->GetTexture() : nullptr);
+  if (result < 0) {
+    Logger::error(RENDERING) << "SDL_SetRenderTarget() failed: "  //
+                             << SDL_GetError() << std::endl;
   }
 }
 
 void Renderer::ResetTarget() {
-  _target = nullptr;
-  _tr = {0, 0, GetWidth(), GetHeight()};
-  SDL_SetRenderTarget(_renderer, nullptr);
+  target_ = nullptr;
+  bounds_ = {0, 0, GetWidth(), GetHeight()};
+  SDL_SetRenderTarget(sdl_renderer_, nullptr);
 }
 
 void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
@@ -76,8 +76,8 @@ void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
     rect.h = clip->h;
   }
 
-  SDL_RenderCopyEx(_renderer, texture.GetTexture(), clip, &rect, 0.0, nullptr,
-                   SDL_FLIP_NONE);
+  SDL_RenderCopyEx(sdl_renderer_, texture.GetTexture(), clip, &rect, 0.0,
+                   nullptr, SDL_FLIP_NONE);
 }
 
 void Renderer::Render(Texture &texture, int x, int y, int w, int h,
@@ -88,38 +88,41 @@ void Renderer::Render(Texture &texture, int x, int y, int w, int h,
    */
   SDL_Rect rect = {x, y, w, h};
 
-  SDL_RenderCopyEx(_renderer, texture.GetTexture(), clip, &rect, 0.0, nullptr,
-                   SDL_FLIP_NONE);
+  SDL_RenderCopyEx(sdl_renderer_, texture.GetTexture(), clip, &rect, 0.0,
+                   nullptr, SDL_FLIP_NONE);
 }
 
 void Renderer::Render(Texture &texture, SDL_Rect *clip) {
-  SDL_RenderCopyEx(_renderer, texture.GetTexture(), clip, nullptr, 0.0, nullptr,
-                   SDL_FLIP_NONE);
+  SDL_RenderCopyEx(sdl_renderer_, texture.GetTexture(), clip, nullptr, 0.0,
+                   nullptr, SDL_FLIP_NONE);
 }
 
 void Renderer::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-  SDL_SetRenderDrawColor(_renderer, r, g, b, a);
-  SDL_RenderFillRect(_renderer, nullptr);
+  SDL_SetRenderDrawColor(sdl_renderer_, r, g, b, a);
+  SDL_RenderFillRect(sdl_renderer_, nullptr);
 }
 
 void Renderer::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
                           bool solid) {
-  SDL_SetRenderDrawColor(_renderer, r, g, b, a);
+  SDL_SetRenderDrawColor(sdl_renderer_, r, g, b, a);
 
   SDL_Rect rc = {rect.x, rect.y, rect.w, rect.h};
 
   if (solid) {
-    SDL_RenderFillRect(_renderer, &rc);
+    SDL_RenderFillRect(sdl_renderer_, &rc);
   }
   else {
-    SDL_RenderDrawRect(_renderer, &rc);
+    SDL_RenderDrawRect(sdl_renderer_, &rc);
   }
 }
 
 void Renderer::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
-  SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
-  SDL_RenderDrawLine(_renderer, _tr.x + line.x1, _tr.y + line.y1,
-                     _tr.x + line.x2, _tr.y + line.y2);
+  SDL_SetRenderDrawColor(sdl_renderer_, r, b, g, SDL_ALPHA_OPAQUE);
+  SDL_RenderDrawLine(sdl_renderer_,        //
+                     bounds_.x + line.x1,  //
+                     bounds_.y + line.y1,  //
+                     bounds_.x + line.x2,  //
+                     bounds_.y + line.y2);
 }
 
 SDL_BlendMode Renderer::GetAlphaKeyBlendMode() {
@@ -135,12 +138,4 @@ SDL_BlendMode Renderer::GetAlphaKeyBlendMode() {
 #else
   return SDL_BLENDMODE_BLEND;
 #endif
-}
-
-Rect<int> Renderer::GetTarget() {
-  return _tr;
-}
-
-SDL_Renderer *Renderer::GetRenderer() {
-  return _renderer;
 }

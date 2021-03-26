@@ -52,7 +52,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
   Resolution res = GetResolution();
   while (Running() && playing) {
-    Renderer::Instance().ClearDisplay();
+    Renderer::Instance().Clear();
 
     double now = GetTime();
 
@@ -112,7 +112,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
     // TODO: Rest of credits, colored titles
 
-    Renderer::Instance().FlushDisplay();
+    Renderer::Instance().Flush();
   }
 
   MouseOn();
