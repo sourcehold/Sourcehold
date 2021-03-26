@@ -81,10 +81,8 @@ void Renderer::Render(Texture &texture, Vector2<int> pos, SDL_Rect *clip) {
 }
 
 void Renderer::Render(Texture &texture, Rect<int> space, SDL_Rect *clip) {
-  /**
-   * Source texture, specified by SDL_Rect, will
-   * be stretched to fit the destination rect
-   */
+  // Source texture, specified by SDL_Rect, will
+  // be stretched to fit the destination rect
   SDL_Rect rect = {space.x, space.y, space.w, space.h};
 
   SDL_RenderCopyEx(sdl_renderer_, texture.GetTexture(), clip, &rect, 0.0,

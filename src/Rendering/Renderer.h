@@ -24,31 +24,24 @@ class Renderer {
   void Clear();
   void Flush();
 
-  /**
-   * Redirect all rendering operations to the target
-   */
+  // Redirect all rendering operations to the target
   void SetTarget(Texture *target, Rect<int> rect);
   void ResetTarget();
 
-  /**
-   * Render a texture
-   */
+  // Render a texture
   void Render(Texture &texture, Vector2<int> pos, SDL_Rect *clip = nullptr);
   void Render(Texture &texture, Rect<int> space, SDL_Rect *clip = nullptr);
 
-  /**
-   * Render a texture to the whole screen
-   */
+  // Render a texture to the whole screen
+
   void Render(Texture &texture, SDL_Rect *clip = nullptr);
   void Fill(Color color = {0, 0, 0});
 
   void RenderRect(Rect<int> rect, Color color = {0, 0, 0}, bool solid = false);
   void RenderLine(Line<int> line, Color color = {255, 255, 255});
 
-  /**
-   * Get custom blend mode for keying out
-   * certain pixels based on src
-   */
+  // Get custom blend mode for keying out
+  // certain pixels based on src
   SDL_BlendMode GetAlphaKeyBlendMode();
 
   SDL_Renderer *sdl_renderer_;
