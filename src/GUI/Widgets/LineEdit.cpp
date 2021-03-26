@@ -56,7 +56,7 @@ void LineEdit::Update(Rect<int> constraints) {
 
   // Cursor
   renderer.RenderRect({x + static_cast<int>(dim.first), y, 2, 34},  //
-                      24, 80, 24, 255, true);
+                      {24, 80, 24, 255}, true);
 }
 
 void LineEdit::onEventReceive(Keyboard& event) {

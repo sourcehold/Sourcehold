@@ -7,6 +7,7 @@
 #include "Rendering/Texture.h"
 #include "Rendering/Shapes.h"
 #include "Rendering/Resolution.h"
+#include "Rendering/Color.h"
 
 #include "System/Config.h"
 
@@ -40,11 +41,10 @@ class Renderer {
    * Render a texture to the whole screen
    */
   void Render(Texture &texture, SDL_Rect *clip = nullptr);
-  void Fill(Uint8 r = 0, Uint8 g = 0, Uint8 b = 0, Uint8 a = 255);
+  void Fill(Color color = {0, 0, 0});
 
-  void RenderRect(Rect<int> rect, Uint8 r = 0, Uint8 g = 0, Uint8 b = 0,
-                  Uint8 a = 255, bool solid = false);
-  void RenderLine(Line<int> line, Uint8 r = 255, Uint8 g = 255, Uint8 b = 255);
+  void RenderRect(Rect<int> rect, Color color = {0, 0, 0}, bool solid = false);
+  void RenderLine(Line<int> line, Color color = {255, 255, 255});
 
   /**
    * Get custom blend mode for keying out

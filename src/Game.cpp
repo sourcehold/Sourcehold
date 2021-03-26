@@ -98,14 +98,14 @@ int EnterLoadingScreen() {
     /* Render the loading bar */
     Renderer::Instance().RenderRect(
         Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
-        0, 0, 0, 128, true);
+        {0, 0, 0, 128}, true);
     Renderer::Instance().RenderRect(
         Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
-        0, 0, 0, 255, false);
+        {0, 0, 0, 255}, false);
     Renderer::Instance().RenderRect(
         Rect<int>{px + 5 + (1024 / 2) - (450 / 2), py + 5 + int(768.0 / 1.3),
                   int(440.0 * progress), 25},
-        0, 0, 0, 255, true);
+        {0, 0, 0, 255}, true);
 
     Renderer::Instance().Flush();
 

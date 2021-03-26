@@ -97,14 +97,13 @@ void Renderer::Render(Texture &texture, SDL_Rect *clip) {
                    nullptr, SDL_FLIP_NONE);
 }
 
-void Renderer::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-  SDL_SetRenderDrawColor(sdl_renderer_, r, g, b, a);
+void Renderer::Fill(Color color) {
+  SDL_SetRenderDrawColor(sdl_renderer_, color.r, color.g, color.b, color.a);
   SDL_RenderFillRect(sdl_renderer_, nullptr);
 }
 
-void Renderer::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
-                          bool solid) {
-  SDL_SetRenderDrawColor(sdl_renderer_, r, g, b, a);
+void Renderer::RenderRect(Rect<int> rect, Color color, bool solid) {
+  SDL_SetRenderDrawColor(sdl_renderer_, color.r, color.g, color.b, color.a);
 
   SDL_Rect rc = {rect.x, rect.y, rect.w, rect.h};
 
@@ -116,8 +115,9 @@ void Renderer::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
   }
 }
 
-void Renderer::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
-  SDL_SetRenderDrawColor(sdl_renderer_, r, b, g, SDL_ALPHA_OPAQUE);
+void Renderer::RenderLine(Line<int> line, Color color) {
+  SDL_SetRenderDrawColor(sdl_renderer_, color.r, color.b, color.g,
+                         SDL_ALPHA_OPAQUE);
   SDL_RenderDrawLine(sdl_renderer_,        //
                      bounds_.x + line.x1,  //
                      bounds_.y + line.y1,  //
