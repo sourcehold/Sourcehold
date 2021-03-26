@@ -96,7 +96,7 @@ UIState World::Play() {
       frame -= delta;
     }
 
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
     GameMap::Render();
 
@@ -109,7 +109,7 @@ UIState World::Play() {
     RenderText(L"Sourcehold version " SOURCEHOLD_VERSION_STRING, 1, 1,
                FONT_SMALL);
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
   }
 
   for (Unit* unit : units) {

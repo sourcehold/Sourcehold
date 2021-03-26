@@ -32,6 +32,8 @@ void LineEdit::Update(Rect<int> constraints) {
   parts[1] = atlas->Get(115);
   parts[2] = atlas->Get(116);
 
+  auto& renderer = Renderer::Instance();
+
   auto dim = GetStringPixelDim(line.substr(0, cp), FONT_SMALL);
 
   int x = constraints.x + ((constraints.w - LINE_SEGMENT_W * nx) / 2);
@@ -39,12 +41,12 @@ void LineEdit::Update(Rect<int> constraints) {
 
   atlas->SetAlphaMod(127);
 
-  ::Render(*atlas, x, y, &parts[0]);
-  ::Render(*atlas, x + LINE_SEGMENT_W * nx, y, &parts[2]);
+  renderer.Render(*atlas, x, y, &parts[0]);
+  renderer.Render(*atlas, x + LINE_SEGMENT_W * nx, y, &parts[2]);
 
   for (int px = LINE_SEGMENT_W; px < nx * LINE_SEGMENT_W;
        px += LINE_SEGMENT_W) {
-    ::Render(*atlas, x + px, y, &parts[1]);
+    renderer.Render(*atlas, x + px, y, &parts[1]);
   }
 
   atlas->SetAlphaMod(255);
@@ -53,8 +55,8 @@ void LineEdit::Update(Rect<int> constraints) {
   RenderText(line, x + 4, y + 6, FONT_SMALL);
 
   // Cursor
-  RenderRect({x + static_cast<int>(dim.first), y, 2, 34},  //
-             24, 80, 24, 255, true);
+  renderer.RenderRect({x + static_cast<int>(dim.first), y, 2, 34},  //
+                      24, 80, 24, 255, true);
 }
 
 void LineEdit::onEventReceive(Keyboard& event) {

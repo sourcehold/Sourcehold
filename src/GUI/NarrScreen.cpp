@@ -149,12 +149,12 @@ bool NarrScreen::BeginAct(TextSection text) {
       alpha = 255 - Uint8(((now - (startTime + 4.0)) * 255.0) / 1.0);
     }
 
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
     font->SetAlphaMod(alpha);
     RenderText(str, px, py, FONT_LARGE, false);
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
   }
 
   font->SetAlphaMod(255);
@@ -187,19 +187,20 @@ bool NarrScreen::BeginNarration() {
 
     tgx_bg1->SetAlphaMod(alpha);
 
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
     if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
       RenderMenuBorder();
-      RenderRect(Rect<int>{px, py, 1024, 768}, 0, 0, 0, 255, true);
+      Renderer::Instance().RenderRect(Rect<int>{px, py, 1024, 768}, 0, 0, 0,
+                                      255, true);
     }
 
     int index = 1 + (11 - abs(int(GetTime() * 15.0) % (2 * 11) - 11));
 
-    Render(*tgx_bg1, px, py);
+    Renderer::Instance().Render(*tgx_bg1, px, py);
     RenderFlameAnim(px, py, index, alpha);
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
   }
 
   return Running();
@@ -224,10 +225,10 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
       return true;
     }
 
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
     if (bg == NarrBackground::BADGUYS) {
-      Render(*castle, px, py);
+      Renderer::Instance().Render(*castle, px, py);
     }
     else {
       // after deletion it tries to operate on memory
@@ -235,10 +236,10 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
       // result of commenting is that, the movie is not rendering
       // TODO - make issue to track this
       // bik.Update();
-      Render(bik, px, py);
+      Renderer::Instance().Render(bik, px, py);
     }
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
   }
   return Running();
 }
@@ -257,12 +258,12 @@ void NarrScreen::RenderFlameAnim(int px, int py, int index, Uint8 a) {
   alpha->SetAlphaMod(a);
 
   alpha->SetBlendMode(SDL_BLENDMODE_ADD);
-  Render(*alpha, px + 160, py + 235);
+  Renderer::Instance().Render(*alpha, px + 160, py + 235);
 
   color->SetBlendMode(SDL_BLENDMODE_ADD);
-  Render(*color, px + 160, py + 235);
+  Renderer::Instance().Render(*color, px + 160, py + 235);
 
-  Render(*candle, px, py + 393);
+  Renderer::Instance().Render(*candle, px, py + 393);
 }
 
 void NarrScreen::NarrationText(TextSection text) {

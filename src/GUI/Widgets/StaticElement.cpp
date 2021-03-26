@@ -31,8 +31,9 @@ void StaticElement::Render() {
   int mouseX = GetMouseX();
   int mouseY = GetMouseY();
 
-  Rendering::Render(*tex, tp.x, tp.y, tp.w, tp.h,
-                    DetectMouseOver(mouseX, mouseY) ? &active : &inactive);
+  Renderer::Instance().Render(
+      *tex, tp.x, tp.y, tp.w, tp.h,
+      DetectMouseOver(mouseX, mouseY) ? &active : &inactive);
 }
 
 void StaticElement::onEventReceive(Mouse& event) {
@@ -42,7 +43,7 @@ void StaticElement::onEventReceive(Mouse& event) {
 }
 
 bool StaticElement::DetectMouseOver(int mx, int my) {
-  auto target = GetTarget();
+  auto target = Renderer::Instance().GetTarget();
 
   int rx = target.x + tp.x;
   int ry = target.y + tp.y;

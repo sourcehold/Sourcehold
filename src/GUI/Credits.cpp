@@ -52,7 +52,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
   Resolution res = GetResolution();
   while (Running() && playing) {
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
     double now = GetTime();
 
@@ -74,30 +74,30 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
     if (endgame) {
       if (res == RESOLUTION_800x600) {
         /* Scale down */
-        Render(*tgx_credits);
+        Renderer::Instance().Render(*tgx_credits);
       }
       else {
         /* Place in the middle */
-        Render(*tgx_credits, px, py);
+        Renderer::Instance().Render(*tgx_credits, px, py);
       }
     }
     else {
       switch (currentImage) {
         case 0: {
           tgx_1->SetAlphaMod(alpha);
-          Render(*tgx_1, px, py);
+          Renderer::Instance().Render(*tgx_1, px, py);
         } break;
         case 1: {
           tgx_2->SetAlphaMod(alpha);
-          Render(*tgx_2, px, py);
+          Renderer::Instance().Render(*tgx_2, px, py);
         } break;
         case 2: {
           tgx_3->SetAlphaMod(alpha);
-          Render(*tgx_3, px, py);
+          Renderer::Instance().Render(*tgx_3, px, py);
         } break;
         case 3: {
           tgx_4->SetAlphaMod(alpha);
-          Render(*tgx_4, px, py);
+          Renderer::Instance().Render(*tgx_4, px, py);
         } break;
         default:
           break;
@@ -112,7 +112,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
 
     // TODO: Rest of credits, colored titles
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
   }
 
   MouseOn();

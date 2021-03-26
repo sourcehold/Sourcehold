@@ -70,7 +70,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
           break;
       }
       glyph = font->GetTextureAtlas()->Get(c - 0x21);
-      Render(
+      Renderer::Instance().Render(
           *font->GetTextureAtlas(), illumination ? (x + (13 - glyph.w) / 2) : x,
           y + int(_table_width_height[type].second * scaleFactor) -
               int(glyph.h * scaleFactor) + int(lowercaseOffset * scaleFactor),

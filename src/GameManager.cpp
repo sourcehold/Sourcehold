@@ -125,7 +125,7 @@ void UpdateGame() {
   if (!IsDisplayOpen() || !FetchEvents())
     _running = false;
 
-  UpdateRenderer();
+  Renderer::Instance().UpdateRenderer();
 }
 
 AssetType ExtToType(const std::string &ext) {
@@ -201,7 +201,6 @@ bool Game::InitManager(GameOptions &opt, Resolution res) {
               opt.width, opt.height, _opt.ndisp, _opt.fullscreen, _opt.noborder,
               _opt.nograb, res == RESOLUTION_DYNAMIC);
 
-  InitRenderer();
   InitOpenAL();
 
   if (_opt.nosound) {
@@ -215,7 +214,6 @@ bool Game::InitManager(GameOptions &opt, Resolution res) {
 void Game::DestroyManager() {
   DestroyOpenAL();
   DestroyDisplay();
-  DestroyRenderer();
 }
 
 bool Game::Running() {

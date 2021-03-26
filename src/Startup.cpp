@@ -20,6 +20,8 @@ void Startup::PlayMusic() {
 }
 
 UIState Startup::Begin() {
+  auto &renderer = Renderer::Instance();
+
   tgx_firefly = GetTgx("gfx/logo1.tgx");
   tgx_taketwo = GetTgx("gfx/logo2.tgx");
   tgx_present = GetTgx("gfx/logo3.tgx");
@@ -41,7 +43,7 @@ UIState Startup::Begin() {
   StrongholdEdition ed = GetEdition();
 
   while (Running()) {
-    ClearDisplay();
+    renderer.ClearDisplay();
 
     if (currentUIState == INTRO_SEQUENCE) {
       /* Logo switching */
@@ -82,7 +84,7 @@ UIState Startup::Begin() {
 #if RENDER_LOADING_BORDER == 1
       if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
         RenderMenuBorder();
-        RenderRect(Rect<int>{px, py, 1024, 768}, 0, 0, 0, 255, true);
+        renderer.RenderRect(Rect<int>{px, py, 1024, 768}, 0, 0, 0, 255, true);
       }
 #endif
 
@@ -90,37 +92,37 @@ UIState Startup::Begin() {
         case STARTUP_FIREFLY_LOGO:
           tgx_firefly->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
-            Render(*tgx_firefly);
+            renderer.Render(*tgx_firefly);
           }
           else {
-            Render(*tgx_firefly, px, py);
+            renderer.Render(*tgx_firefly, px, py);
           }
           break;
         case STARTUP_TAKETWO_LOGO:
           tgx_taketwo->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
-            Render(*tgx_taketwo);
+            renderer.Render(*tgx_taketwo);
           }
           else {
-            Render(*tgx_taketwo, px, py);
+            renderer.Render(*tgx_taketwo, px, py);
           }
           break;
         case STARTUP_PRESENT:
           tgx_present->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
-            Render(*tgx_present);
+            renderer.Render(*tgx_present);
           }
           else {
-            Render(*tgx_present, px, py);
+            renderer.Render(*tgx_present, px, py);
           }
           break;
         case STARTUP_STRONGHOLD_LOGO:
           tgx_logo->SetAlphaMod(alpha);
           if (res == RESOLUTION_800x600) {
-            Render(*tgx_logo);
+            renderer.Render(*tgx_logo);
           }
           else {
-            Render(*tgx_logo, px, py);
+            renderer.Render(*tgx_logo, px, py);
           }
           break;
         case STARTUP_MULTIPLAYER_INFO:
@@ -141,7 +143,7 @@ UIState Startup::Begin() {
           px = (GetWidth() / 2) - (640 / 2);
           py = (GetHeight() / 2) - (230 / 2);
 
-          Render(*intro, px, py);
+          renderer.Render(*intro, px, py);
           if (!intro->IsRunning()) {
             currentUIState = MAIN_MENU;
           }
@@ -152,7 +154,7 @@ UIState Startup::Begin() {
       }
     }
 
-    FlushDisplay();
+    renderer.FlushDisplay();
     SDL_Delay(1);
   }
   return EXIT_GAME;

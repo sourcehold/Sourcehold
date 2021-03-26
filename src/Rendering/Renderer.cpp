@@ -6,12 +6,14 @@ using namespace Sourcehold;
 using namespace Rendering;
 using namespace System;
 
-static SDL_Renderer *_renderer;
-static SDL_Window *_window;
-static Texture *_target = nullptr;
-static Rect<int> _tr;
+Renderer::Renderer() {
+  InitRenderer();
+}
+Renderer::~Renderer() {
+  DestroyRenderer();
+}
 
-bool Rendering::InitRenderer() {
+bool Renderer::InitRenderer() {
   _window = GetWindow();
   _renderer = SDL_CreateRenderer(
       _window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
@@ -32,24 +34,24 @@ bool Rendering::InitRenderer() {
   return true;
 }
 
-void Rendering::DestroyRenderer() {
+void Renderer::DestroyRenderer() {
   if (_renderer)
     SDL_DestroyRenderer(_renderer);
 }
 
-void Rendering::UpdateRenderer() {
+void Renderer::UpdateRenderer() {
 }
 
-void Rendering::ClearDisplay() {
+void Renderer::ClearDisplay() {
   SDL_SetRenderDrawColor(_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(_renderer);
 }
 
-void Rendering::FlushDisplay() {
+void Renderer::FlushDisplay() {
   SDL_RenderPresent(_renderer);
 }
 
-void Rendering::SetTarget(Texture *target, Rect<int> rect) {
+void Renderer::SetTarget(Texture *target, Rect<int> rect) {
   _tr = rect;
   _target = target;
   if (SDL_SetRenderTarget(_renderer, target ? target->GetTexture() : nullptr) <
@@ -60,13 +62,13 @@ void Rendering::SetTarget(Texture *target, Rect<int> rect) {
   }
 }
 
-void Rendering::ResetTarget() {
+void Renderer::ResetTarget() {
   _target = nullptr;
   _tr = {0, 0, GetWidth(), GetHeight()};
   SDL_SetRenderTarget(_renderer, nullptr);
 }
 
-void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
+void Renderer::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
   SDL_Rect rect = {x, y, texture.GetWidth(), texture.GetHeight()};
 
   if (clip) {
@@ -78,8 +80,8 @@ void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
                    SDL_FLIP_NONE);
 }
 
-void Rendering::Render(Texture &texture, int x, int y, int w, int h,
-                       SDL_Rect *clip) {
+void Renderer::Render(Texture &texture, int x, int y, int w, int h,
+                      SDL_Rect *clip) {
   /**
    * Source texture, specified by SDL_Rect, will
    * be stretched to fit the destination rect
@@ -90,18 +92,18 @@ void Rendering::Render(Texture &texture, int x, int y, int w, int h,
                    SDL_FLIP_NONE);
 }
 
-void Rendering::Render(Texture &texture, SDL_Rect *clip) {
+void Renderer::Render(Texture &texture, SDL_Rect *clip) {
   SDL_RenderCopyEx(_renderer, texture.GetTexture(), clip, nullptr, 0.0, nullptr,
                    SDL_FLIP_NONE);
 }
 
-void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+void Renderer::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
   SDL_SetRenderDrawColor(_renderer, r, g, b, a);
   SDL_RenderFillRect(_renderer, nullptr);
 }
 
-void Rendering::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
-                           bool solid) {
+void Renderer::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
+                          bool solid) {
   SDL_SetRenderDrawColor(_renderer, r, g, b, a);
 
   SDL_Rect rc = {rect.x, rect.y, rect.w, rect.h};
@@ -114,13 +116,13 @@ void Rendering::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
   }
 }
 
-void Rendering::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
+void Renderer::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
   SDL_SetRenderDrawColor(_renderer, r, b, g, SDL_ALPHA_OPAQUE);
   SDL_RenderDrawLine(_renderer, _tr.x + line.x1, _tr.y + line.y1,
                      _tr.x + line.x2, _tr.y + line.y2);
 }
 
-SDL_BlendMode Rendering::GetAlphaKeyBlendMode() {
+SDL_BlendMode Renderer::GetAlphaKeyBlendMode() {
 #if 0
     return SDL_ComposeCustomBlendMode(
                SDL_BLENDFACTOR_ONE,
@@ -135,10 +137,10 @@ SDL_BlendMode Rendering::GetAlphaKeyBlendMode() {
 #endif
 }
 
-Rect<int> Rendering::GetTarget() {
+Rect<int> Renderer::GetTarget() {
   return _tr;
 }
 
-SDL_Renderer *Rendering::GetRenderer() {
+SDL_Renderer *Renderer::GetRenderer() {
   return _renderer;
 }

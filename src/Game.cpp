@@ -70,13 +70,13 @@ int EnterLoadingScreen() {
   int px = (GetWidth() / 2) - (1024 / 2);
   int py = (GetHeight() / 2) - (768 / 2);
 
-  ResetTarget();
+  Renderer::Instance().ResetTarget();
 
   Resolution res = GetResolution();
   StrongholdEdition ed = GetEdition();
 
   while (Running() && index < files.size() - 1) {
-    ClearDisplay();
+    Renderer::Instance().ClearDisplay();
 
 #if RENDER_LOADING_BORDER == 1
     if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
@@ -93,20 +93,21 @@ int EnterLoadingScreen() {
     double progress = (double)index / (double)files.size();
 
     /* Render the background */
-    Render(*tgx_loading, px, py);
+    Renderer::Instance().Render(*tgx_loading, px, py);
 
     /* Render the loading bar */
-    RenderRect(
+    Renderer::Instance().RenderRect(
         Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
         0, 0, 0, 128, true);
-    RenderRect(
+    Renderer::Instance().RenderRect(
         Rect<int>{px + (1024 / 2) - (450 / 2), py + int(768.0 / 1.3), 450, 35},
         0, 0, 0, 255, false);
-    RenderRect(Rect<int>{px + 5 + (1024 / 2) - (450 / 2),
-                         py + 5 + int(768.0 / 1.3), int(440.0 * progress), 25},
-               0, 0, 0, 255, true);
+    Renderer::Instance().RenderRect(
+        Rect<int>{px + 5 + (1024 / 2) - (450 / 2), py + 5 + int(768.0 / 1.3),
+                  int(440.0 * progress), 25},
+        0, 0, 0, 255, true);
 
-    FlushDisplay();
+    Renderer::Instance().FlushDisplay();
 
     SDL_Delay(1);
   }

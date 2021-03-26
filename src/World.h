@@ -66,7 +66,7 @@ class Unit {
     int py = y * 15 - cam.positionY;
 
     SDL_Rect r = file->GetTextureAtlas()->Get(index);
-    Rendering::Render(*file->GetTextureAtlas(), px, py, &r);
+    Renderer::Instance().Render(*file->GetTextureAtlas(), px, py, &r);
   }
 
   int x, y;

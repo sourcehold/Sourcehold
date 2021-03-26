@@ -59,8 +59,8 @@ void GameMap::Render() {
     int y = (8 * iy);
     int x = (30 * ix) + (iy % 2 == 0 ? 15 : 0);
 
-    Rendering::Render(*tileset, int(mult * x - cam.positionX),
-                      int(mult * y - cam.positionY), 30 * mult, 16 * mult,
-                      &clip);
+    Renderer::Instance().Render(*tileset, int(mult * x - cam.positionX),
+                                int(mult * y - cam.positionY), 30 * mult,
+                                16 * mult, &clip);
   }
 }

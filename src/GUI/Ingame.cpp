@@ -153,6 +153,7 @@ static uint16_t lut_ui_tabs[6][5] = {
 };
 
 void IngameGUI::RenderMenubar() {
+  auto& renderer = Renderer::Instance();
   auto atlas = gm1_face->GetTextureAtlas();
   SDL_Rect rect = atlas->Get(0);
   int width, height = GetHeight(), menuOffsetX, menuOffsetY = height - rect.h;
@@ -168,18 +169,18 @@ void IngameGUI::RenderMenubar() {
   }
 
   // Empty menu face //
-  Rendering::Render(*atlas, menuOffsetX, menuOffsetY, &rect);
+  renderer.Render(*atlas, menuOffsetX, menuOffsetY, &rect);
 
   // Scribe face //
   atlas = gm1_scribe->GetTextureAtlas();
   rect = atlas->Get(0);
-  Rendering::Render(*atlas, menuOffsetX + 704, height - 200, &rect);
+  renderer.Render(*atlas, menuOffsetX + 704, height - 200, &rect);
 
   // Left and right images (only 1240x768 and up) //
   if (res != RESOLUTION_800x600) {
-    Rendering::Render(*tgx_right, tgx_left->GetWidth() + 800,
-                      height - tgx_right->GetHeight());
-    Rendering::Render(*tgx_left, 0, height - tgx_left->GetHeight());
+    renderer.Render(*tgx_right, tgx_left->GetWidth() + 800,
+                    height - tgx_right->GetHeight());
+    renderer.Render(*tgx_left, 0, height - tgx_left->GetHeight());
   }
 
   // Calculate button positions //

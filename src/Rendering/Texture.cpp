@@ -16,7 +16,7 @@ Texture::~Texture() {
 }
 
 bool Texture::AllocNewStreaming(int width, int height, int format) {
-  texture = SDL_CreateTexture(GetRenderer(), format,
+  texture = SDL_CreateTexture(Renderer::Instance().GetRenderer(), format,
                               SDL_TEXTUREACCESS_STREAMING, width, height);
   if (!texture) {
     Logger::error(RENDERING)
@@ -31,7 +31,8 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
 }
 
 bool Texture::AllocFromSurface(Surface &surface) {
-  texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
+  texture = SDL_CreateTextureFromSurface(Renderer::Instance().GetRenderer(),
+                                         surface.GetSurface());
   if (!texture) {
     Logger::error(RENDERING)
         << "Unable to create texture from surface: " << SDL_GetError()
@@ -44,8 +45,8 @@ bool Texture::AllocFromSurface(Surface &surface) {
 }
 
 bool Texture::AllocNewTarget(int width, int height, int format) {
-  texture = SDL_CreateTexture(GetRenderer(), format, SDL_TEXTUREACCESS_TARGET,
-                              width, height);
+  texture = SDL_CreateTexture(Renderer::Instance().GetRenderer(), format,
+                              SDL_TEXTUREACCESS_TARGET, width, height);
   if (!texture) {
     Logger::error(RENDERING)
         << "Unable to create target texture: " << SDL_GetError() << std::endl;

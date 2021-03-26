@@ -162,6 +162,7 @@ MainMenu::~MainMenu() {
 }
 
 UIState MainMenu::EnterMenu() {
+  auto& renderer = Renderer::Instance();
   currentState = MAIN_MENU;
 
   aud_chantloop.Play();
@@ -174,7 +175,7 @@ UIState MainMenu::EnterMenu() {
   };
 
   while (Running()) {
-    ClearDisplay();
+    renderer.ClearDisplay();
 
     int mx = (GetWidth() - 1024) / 2;
     int my = (GetHeight() - 768) / 2;
@@ -186,15 +187,15 @@ UIState MainMenu::EnterMenu() {
     switch (currentState) {
       default:
       case MAIN_MENU: {
-        Render(*bg_main[0], mx, my);
+        renderer.Render(*bg_main[0], mx, my);
         RenderButtons(MAIN_EXIT, MAIN_SETTINGS);
       } break;
       case COMBAT_MENU: {
-        Render(*bg_combat[0], mx, my);
+        renderer.Render(*bg_combat[0], mx, my);
         RenderButtons(COMBAT_CAMPAIGN, COMBAT_BACK_TO_MAIN);
       } break;
       case MILITARY_CAMPAIGN_MENU: {
-        Render(*bg_combat[1], mx, my);
+        renderer.Render(*bg_combat[1], mx, my);
         RenderButtons(COMBAT_CAMPAIGN_BACK, COMBAT_CAMPAIGN_NEXT);
 
         combatMenuDlg->Update(Dialog::CENTRE, 0, -60);
@@ -219,30 +220,30 @@ UIState MainMenu::EnterMenu() {
         aud_chantloop.Resume();
       } break;
       case SIEGE_MENU: {
-        Render(*bg_combat[1], mx, my);
+        renderer.Render(*bg_combat[1], mx, my);
       } break;
       case ECONOMICS_MENU: {
-        Render(*bg_eco[0], mx, my);
+        renderer.Render(*bg_eco[0], mx, my);
         RenderButtons(ECO_CAMPAIGN, ECO_BACK_TO_MAIN);
       } break;
       case ECONOMICS_CAMPAIGN_MENU: {
-        Render(*bg_eco[1], mx, my);
+        renderer.Render(*bg_eco[1], mx, my);
         RenderButtons(ECO_CAMPAIGN_BACK, ECO_CAMPAIGN_NEXT);
       } break;
       case BUILDER_MENU: {
-        Render(*bg_builder[0], mx, my);
+        renderer.Render(*bg_builder[0], mx, my);
         RenderButtons(BUILDER_WORKING_MAP, BUILDER_BACK_TO_MAIN);
       } break;
       case LOAD_SAVED_MENU: {
-        Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], mx, my);
         loadDlg->Update(Dialog::CENTRE, 0, 0);
       } break;
       case EXIT_GAME: {
-        Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], mx, my);
         quitDlg->Update(Dialog::CENTRE, 0, 0);
       } break;
       case SETTINGS_MENU: {
-        Render(*bg_main[1], mx, my);
+        renderer.Render(*bg_main[1], mx, my);
       } break;
     }
 
@@ -271,7 +272,7 @@ UIState MainMenu::EnterMenu() {
       currentState = MAIN_MENU;
     }
 
-    FlushDisplay();
+    renderer.FlushDisplay();
     SDL_Delay(1);
   }
 

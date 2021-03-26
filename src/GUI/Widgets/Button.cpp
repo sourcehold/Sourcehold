@@ -22,6 +22,8 @@ void Button::Update(Rect<int> constraints) {
       20, 23, 29, 32, 35, 38, 41, 44, 96,
   };
 
+  auto& renderer = Renderer::Instance();
+
   auto dim = GetStringPixelDim(text, FONT_SMALL);
   auto interface_icons = GetGm1("gm/interface_icons3.gm1")->GetTextureAtlas();
 
@@ -35,7 +37,7 @@ void Button::Update(Rect<int> constraints) {
   int y = constraints.y + ((constraints.h - rect.h) / 2);
 
   // highlight
-  auto target = GetTarget();
+  auto target = renderer.GetTarget();
   int rw = rect.w;
   int rh = rect.h;
   int rx = target.x + x;
@@ -46,12 +48,12 @@ void Button::Update(Rect<int> constraints) {
     atlas->SetBlendMode(SDL_BLENDMODE_ADD);
 
     rect = atlas->Get(button_indices[style] + 1);
-    Rendering::Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
+    renderer.Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_MOD);
 
     rect = atlas->Get(button_indices[style] + 2);
-    Rendering::Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
+    renderer.Render(*atlas.get(), int(x) - 5, int(y) - 5, &rect);
 
     atlas->SetBlendMode(SDL_BLENDMODE_BLEND);
     selected = true;
@@ -61,12 +63,12 @@ void Button::Update(Rect<int> constraints) {
 
   // button
   atlas->SetAlphaMod(140);
-  Rendering::Render(*atlas.get(), int(x), int(y), &rect);
+  renderer.Render(*atlas.get(), int(x), int(y), &rect);
   atlas->SetAlphaMod(255);
 
   // text
-  Rendering::RenderText(text, {x + 4, y + 4, rect.w - 4, rect.h - 4},
-                        Align::CENTER, FONT_LARGE, false);
+  RenderText(text, {x + 4, y + 4, rect.w - 4, rect.h - 4}, Align::CENTER,
+             FONT_LARGE, false);
 }
 
 void Button::onEventReceive(Mouse& event) {

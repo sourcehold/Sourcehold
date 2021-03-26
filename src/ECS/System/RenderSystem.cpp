@@ -35,7 +35,8 @@ void RenderSystem::renderUnit(Component::Position position,
   SDL_Rect r = assetFile->GetTextureAtlas()->Get(
       animationComponent.animate ? animationComponent.frameIndex
                                  : 0);  // TODO: index
-  Rendering::Render(*assetFile->GetTextureAtlas(), px, py, &r);
+  Rendering::Renderer::Instance().Render(*assetFile->GetTextureAtlas(), px, py,
+                                         &r);
 }
 }  // namespace System
 }  // namespace ECS
