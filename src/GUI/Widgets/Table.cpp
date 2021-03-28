@@ -47,8 +47,8 @@ void Table::Update(Rect<int> constraints) {
     highlight = -1;
 
   if (renderNames) {
-    RenderRect(Rect<int>(x, y, width, 20), 104, 120, 88, 152, true);
-    RenderRect(Rect<int>(x, y, width, 20), 239, 239, 189, 255, false);
+    RenderRect({x, y, width, 20}, 104, 120, 88, 152, true);
+    RenderRect({x, y, width, 20}, 239, 239, 189, 255, false);
     RenderText(col.name, x + 10, y + 2, FONT_SMALL);
     y += 20;
   }
@@ -57,9 +57,8 @@ void Table::Update(Rect<int> constraints) {
     std::wstring &row = col.rows[i];
 
     if (i == highlight || i == selected) {
-      RenderRect(Rect<int>(x, y + 20 * i, width, 20), 144, 160, 136, 152, true);
-      RenderRect(Rect<int>(x, y + 20 * i, width, 20), 239, 239, 189, 255,
-                 false);
+      RenderRect({x, y + 20 * i, width, 20}, 144, 160, 136, 152, true);
+      RenderRect({x, y + 20 * i, width, 20}, 239, 239, 189, 255, false);
     }
     else {
       Uint8 r, g, b;
@@ -74,16 +73,17 @@ void Table::Update(Rect<int> constraints) {
         g = 80;
         b = 24;
       }
-      RenderRect(Rect<int>(x, y + 20 * i, width, 20), r, g, b, 152, true);
+      RenderRect({x, y + 20 * i, width, 20}, r, g, b, 152, true);
     }
 
     // Render row contents //
-    RenderText(row, Rect<int>(x + 10, 2 + y + 20 * i, width, 20), Align::LEFT,
+    RenderText(row, {x + 10, 2 + y + 20 * i, width, 20}, Align::LEFT,
                FONT_LARGE, false);
   }
 
   // Render border around table //
-  RenderRect(Rect<int>(x, y, width, 20 * numRows), 239, 239, 189, 255, false);
+  RenderRect({x, y, width, 20 * static_cast<int>(numRows)}, 239, 239, 189, 255,
+             false);
 }
 
 void Table::SetNumRows(uint32_t n) {

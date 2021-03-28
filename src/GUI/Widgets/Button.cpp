@@ -65,7 +65,7 @@ void Button::Update(Rect<int> constraints) {
   atlas->SetAlphaMod(255);
 
   // text
-  Rendering::RenderText(text, Rect<int>(x + 4, y + 4, rect.w - 4, rect.h - 4),
+  Rendering::RenderText(text, {x + 4, y + 4, rect.w - 4, rect.h - 4},
                         Align::CENTER, FONT_LARGE, false);
 }
 
