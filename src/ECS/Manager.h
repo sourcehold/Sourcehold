@@ -3,6 +3,7 @@
 
 #include "ECS/System/RenderSystem.h"
 #include "ECS/System/AnimationFrameSystem.h"
+#include "ECS/System/MoveSystem.h"
 #include "ECS/System/TestTeleportingDeerSystem.h"
 
 namespace Sourcehold {
@@ -21,6 +22,7 @@ namespace Sourcehold {
 
             static void Update(entt::registry &registry) {
                 GetInstance()._AnimationFrameSystem.tick(registry);
+                GetInstance()._MoveSystem.tick(registry);
                 GetInstance()._TestTeleportingDeerSystem.tick(registry);
             }
 
@@ -33,6 +35,7 @@ namespace Sourcehold {
             
             ECS::System::RenderSystem _RenderSystem = ECS::System::RenderSystem();
             ECS::System::AnimationFrameSystem _AnimationFrameSystem = ECS::System::AnimationFrameSystem();
+            ECS::System::MoveSystem _MoveSystem = ECS::System::MoveSystem();
             ECS::System::TestTeleportingDeerSystem _TestTeleportingDeerSystem = ECS::System::TestTeleportingDeerSystem();
         };
     }

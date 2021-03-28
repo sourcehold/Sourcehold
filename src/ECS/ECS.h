@@ -6,6 +6,7 @@ namespace Sourcehold {
     namespace ECS {
         enum class EntityType {
             LORD,
+            WOODCUTTER,
             DEER,
 
             TREE_APPLE_BUD,
@@ -50,6 +51,7 @@ namespace Sourcehold {
 
         enum class EntityAsset {
             LORD,
+            WOODCUTTER,
             DEER,
             TREE_APPLE,
             TREE_BIRCH,

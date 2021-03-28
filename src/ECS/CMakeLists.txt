@@ -4,6 +4,7 @@ add_library(ECS
   System/BasicSystem.cpp
   System/RenderSystem.cpp
   System/AnimationFrameSystem.cpp
+  System/MoveSystem.cpp
   System/TestTeleportingDeerSystem.cpp
 )
 

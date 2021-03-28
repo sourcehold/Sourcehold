@@ -49,6 +49,7 @@ UIState World::Play()
 
     placeDebug(registry, EntityType::DEER);
     placeDebug(registry, EntityType::LORD);
+    placeDebug(registry, EntityType::WOODCUTTER);
     
     placeDebug(registry, EntityType::TREE_CHESTNUT_XL);
     placeDebug(registry, EntityType::TREE_CHESTNUT_XL_FALLING);

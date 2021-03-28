@@ -38,6 +38,7 @@ namespace Sourcehold {
                 const std::unordered_map<EntityAsset, GM1FileSP> EntityAssetToGMMapping {
                     { EntityAsset::DEER, GetGm1(dataRoot / "gm/body_deer.gm1") },
                     { EntityAsset::LORD, GetGm1(dataRoot / "gm/body_lord.gm1") },
+                    { EntityAsset::WOODCUTTER, GetGm1(dataRoot / "gm/body_woodcutter.gm1") },
                     { EntityAsset::TREE_APPLE, GetGm1(dataRoot / "gm/tree_apple.gm1") },
                     { EntityAsset::TREE_BIRCH, GetGm1(dataRoot / "gm/tree_birch.gm1") },
                     { EntityAsset::TREE_CHESTNUT, GetGm1(dataRoot / "gm/Tree_Chestnut.gm1") },
@@ -52,6 +53,11 @@ namespace Sourcehold {
                     {
                         EntityAsset::LORD, {
                             EntityType::LORD
+                        }
+                    },
+                    {
+                        EntityAsset::WOODCUTTER, {
+                            EntityType::WOODCUTTER
                         }
                     },
                     {

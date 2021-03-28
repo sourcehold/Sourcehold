@@ -2,19 +2,36 @@
 
 #include "ECS/ECS.h"
 
-namespace Sourcehold {
-    namespace ECS {
-        namespace Component {
-            struct Position {
+namespace Sourcehold
+{
+    namespace ECS
+    {
+        namespace Component
+        {
+            struct PeasantAIState
+            {
+                int state;
+            };
+
+            struct Position
+            {
                 int x;
                 int y;
             };
-        
-            struct EntityType {
+
+            struct MoveTarget
+            {
+                bool finished;
+                Position target;
+            };
+
+            struct EntityType
+            {
                 ECS::EntityType type;
             };
 
-            struct Animation {
+            struct Animation
+            {
                 bool animate;
                 // frameIndex - Replaced by AnimationFrameSystem to be passed to RenderSystem
                 int frameIndex;
