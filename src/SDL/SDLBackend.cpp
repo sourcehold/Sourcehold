@@ -16,10 +16,18 @@ SDLBackend::SDLBackend() {
                          SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,  //
                          0, 0,                                              //
                          0);
+  if (!window_) {
+    throw std::runtime_error("Failed to create SDL_Window");
+  }
+
   renderer_ =
       MakeRendererUQ(window_.get(),  //
                      -1,             //
                      SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+
+  if (!renderer_) {
+    throw std::runtime_error("Failed to create SDL_Renderer");
+  }
 
   SDL_SetRenderDrawBlendMode(renderer_.get(), SDL_BLENDMODE_BLEND);
 

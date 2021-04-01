@@ -8,14 +8,11 @@ namespace SDL {
 // SDLBackend
 // Singleton -- SDLBackend::Instance()
 // ----------------------------------------------------------------------------
-//
-// Synopsis
-//
 // ----------------------------------------------------------------------------
-// Initializes the SDL and common SDL objects:
+// Initializes the SDL and following SDL objects:
 // - SDL_Renderer
 // - SDL_Window
-// Throws an exception if any fails to construct.
+// Throws an exception if any fail to construct.
 // ----------------------------------------------------------------------------
 // Use SDL library functions in conjunction with member SDL objects.
 // Use factories to create managed SDL objects.
