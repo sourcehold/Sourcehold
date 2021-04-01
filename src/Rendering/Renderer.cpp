@@ -94,4 +94,3 @@ void Rendering::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
 Rect<int> Rendering::GetTarget() {
   return _tr;
 }
-
