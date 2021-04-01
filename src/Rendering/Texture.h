@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include <SDL.h>
+#include "SDL/SDLBackend.h"
 
 namespace Sourcehold {
 namespace Rendering {

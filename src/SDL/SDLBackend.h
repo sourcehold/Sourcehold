@@ -25,6 +25,13 @@ class SDLBackend {
     return backend_;
   }
 
+  static SDL_Renderer* Renderer() {
+    return Instance().renderer_.get();
+  }
+  static SDL_Window* Window() {
+    return Instance().window_.get();
+  }
+
   SDL_Window_UQ window_;
   SDL_Renderer_UQ renderer_;
 

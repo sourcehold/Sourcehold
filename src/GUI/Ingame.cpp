@@ -90,7 +90,8 @@ void IngameGUI::LoadMenuAssets() {
 
 void IngameGUI::RenderQuickMenu() {
   auto atlas = gm1_floats->GetTextureAtlas();
-  int mouseX = GetMouseX(), mouseY = GetMouseY();
+  auto mouse_pos = Display::MousePosition();
+  int &mouseX = mouse_pos.x, mouseY = mouse_pos.y;
 
   enum class ButtonIndex : uint32_t {
     Compass = 37,
@@ -155,7 +156,8 @@ static uint16_t lut_ui_tabs[6][5] = {
 void IngameGUI::RenderMenubar() {
   auto atlas = gm1_face->GetTextureAtlas();
   SDL_Rect rect = atlas->Get(0);
-  int width, height = GetHeight(), menuOffsetX, menuOffsetY = height - rect.h;
+  int width, height = Display::Size().y, menuOffsetX,
+             menuOffsetY = height - rect.h;
 
   Resolution res = GetResolution();
   if (res == RESOLUTION_800x600) {
@@ -260,7 +262,7 @@ void IngameGUI::onEventReceive(Mouse& mouseEvent) {
     }
 
     if (mouseEvent.LmbDown()) {
-      GrabMouse();
+      Display::WindowGrab(true);
     }
   }
   else if (mouseEvent.GetType() == BUTTONUP) {

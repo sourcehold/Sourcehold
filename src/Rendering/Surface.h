@@ -2,9 +2,7 @@
 
 #include <memory>
 #include <cstring>
-#include <SDL.h>
-
-#include "Rendering/Renderer.h"
+#include "SDL/SDLBackend.h"
 
 namespace Sourcehold {
 namespace Rendering {

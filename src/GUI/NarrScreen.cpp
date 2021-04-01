@@ -122,8 +122,9 @@ bool NarrScreen::BeginAct(TextSection text) {
   auto font = GetGm1("gm/font_stronghold_aa.gm1")->GetTextureAtlas();
   auto dim = GetStringPixelDim(str, FONT_LARGE);
 
-  int px = (GetWidth() / 2) - (dim.first / 2);
-  int py = (GetHeight() / 2) - (dim.second / 2);
+  auto display_size = Display::Size();
+  int px = (display_size.x / 2) - (dim.first / 2);
+  int py = (display_size.y / 2) - (dim.second / 2);
 
   double startTime = GetTime();
   while (Running()) {
@@ -165,8 +166,9 @@ bool NarrScreen::BeginNarration() {
   Resolution res = GetResolution();
   StrongholdEdition ed = GetEdition();
 
-  int px = (GetWidth() / 2) - (1024 / 2);
-  int py = (GetHeight() / 2) - (768 / 2);
+  auto display_size = Display::Size();
+  int px = (display_size.x / 2) - (1024 / 2);
+  int py = (display_size.y / 2) - (768 / 2);
 
   Uint8 alpha = 0;
   double fadeBase = GetTime();
@@ -215,8 +217,9 @@ bool NarrScreen::BeginStoryScreen(NarrBackground bg) {
     bik.LoadFromDisk(GetDirectory() / "binks/fireplace_01.bik", true);
   }
 
-  int px = (GetWidth() / 2) - (280 / 2);
-  int py = (GetHeight() / 2) - (200 / 2);
+  auto display_size = Display::Size();
+  int px = (display_size.x / 2) - (280 / 2);
+  int py = (display_size.y / 2) - (200 / 2);
 
   while (Running()) {
     if (skipped) {

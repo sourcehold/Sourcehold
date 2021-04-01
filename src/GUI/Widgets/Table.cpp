@@ -27,8 +27,9 @@ void Table::Update(Rect<int> constraints) {
 
   Column &col = cols[0];
 
-  int mx = GetMouseX();
-  int my = GetMouseY();
+  auto mouse_pos = Display::MousePosition();
+  int &mx = mouse_pos.x;
+  int &my = mouse_pos.y;
 
   int width = constraints.w;
   int height = 20 * numRows;

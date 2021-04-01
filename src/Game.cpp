@@ -67,8 +67,9 @@ int EnterLoadingScreen() {
   uint32_t index = 0;
 
   /* Calculate the position */
-  int px = (GetWidth() / 2) - (1024 / 2);
-  int py = (GetHeight() / 2) - (768 / 2);
+  auto display_size = Display::Size();
+  int px = (display_size.x / 2) - (1024 / 2);
+  int py = (display_size.y / 2) - (768 / 2);
 
   ResetTarget();
 
@@ -164,10 +165,11 @@ int StartGame(GameOptions &opt) {
                         << std::endl;
 
   if (!InitManager(opt, res) || !LoadGameData()) {
-    ErrorMessageBox("Something went wrong...",
-                    std::string("Please make sure the data directory contains "
-                                "all necessary files.\n") +
-                        +"Current path: " + GetDirectory().string());
+    Display::ErrorMessageBox(
+        "Something went wrong...",
+        std::string("Please make sure the data directory contains "
+                    "all necessary files.\n") +
+            +"Current path: " + GetDirectory().string());
     return EXIT_FAILURE;
   }
 

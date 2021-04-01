@@ -15,5 +15,5 @@ source_group("Source Files" FILES ${EVENTS_SOURCE_FILES})
 target_include_directories(Events PRIVATE ../)
 target_link_libraries(Events
   PRIVATE ProjectOptions
-  PRIVATE SDL2::SDL2
+  PRIVATE SDLBackend
 )

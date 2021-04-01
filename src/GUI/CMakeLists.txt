@@ -40,7 +40,7 @@ target_include_directories(GUI PRIVATE ../)
 target_link_libraries(GUI
   PRIVATE ProjectOptions
   PRIVATE System
-  PRIVATE SDL2::SDL2
+  PRIVATE Rendering
   # GUI includes World.h .. fix this !
   # GUI doesnt use EnTT!
   PRIVATE EnTT::EnTT

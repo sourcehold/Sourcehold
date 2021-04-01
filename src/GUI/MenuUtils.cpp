@@ -55,8 +55,9 @@ void GUI::RenderMenuBorder() {
         border_rect.h = GetHeight();
 #endif
 
-    Render(*tgx_border, (GetWidth() - 1920) / 2,
-           (GetHeight() - 1200) / 2 /*, &border_rect*/);
+    auto display_size = Display::Size();
+    Render(*tgx_border, (display_size.x - 1920) / 2,
+           (display_size.y - 1200) / 2 /*, &border_rect*/);
   }
 }
 

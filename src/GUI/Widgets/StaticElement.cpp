@@ -28,11 +28,11 @@ void StaticElement::Render() {
   if (!visible || !tex)
     return;
 
-  int mouseX = GetMouseX();
-  int mouseY = GetMouseY();
+  auto mouse_pos = Display::MousePosition();
 
-  Rendering::Render(*tex, tp.x, tp.y, tp.w, tp.h,
-                    DetectMouseOver(mouseX, mouseY) ? &active : &inactive);
+  Rendering::Render(
+      *tex, tp.x, tp.y, tp.w, tp.h,
+      DetectMouseOver(mouse_pos.x, mouse_pos.y) ? &active : &inactive);
 }
 
 void StaticElement::onEventReceive(Mouse& event) {

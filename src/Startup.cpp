@@ -76,8 +76,9 @@ UIState Startup::Begin() {
        * Images get scaled down on 800x600 and
        * centered but not scaled on every other res
        */
-      int px = (GetWidth() / 2) - (1024 / 2);
-      int py = (GetHeight() / 2) - (768 / 2);
+      auto display_size = Display::Size();
+      int px = (display_size.x / 2) - (1024 / 2);
+      int py = (display_size.y / 2) - (768 / 2);
 
 #if RENDER_LOADING_BORDER == 1
       if (ed == STRONGHOLD_HD && res != RESOLUTION_800x600) {
@@ -126,9 +127,9 @@ UIState Startup::Begin() {
         case STARTUP_MULTIPLAYER_INFO:
           if (ed != STRONGHOLD_CLASSIC) {
             font->SetAlphaMod(alpha);
-            RenderText(startupStr, (GetWidth() / 2) - (dim.first / 2),
-                       (GetHeight() / 2) - (dim.second / 2), FONT_LARGE, false,
-                       0.7);
+            RenderText(startupStr, (display_size.x / 2) - (dim.first / 2),
+                       (display_size.y / 2) - (dim.second / 2), FONT_LARGE,
+                       false, 0.7);
           }
           break;
         case STARTUP_INTRO:
@@ -138,8 +139,8 @@ UIState Startup::Begin() {
           aud_startup.UpdateFade();
           intro->Update();
 
-          px = (GetWidth() / 2) - (640 / 2);
-          py = (GetHeight() / 2) - (230 / 2);
+          px = (display_size.x / 2) - (640 / 2);
+          py = (display_size.y / 2) - (230 / 2);
 
           Render(*intro, px, py);
           if (!intro->IsRunning()) {

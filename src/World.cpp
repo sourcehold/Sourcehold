@@ -198,12 +198,12 @@ void World::onEventReceive(Mouse& mouseEvent) {
   if (mouseEvent.GetType() == MOTION) {
     const int scrollThreshold = 2;
 
-    int x = mouseEvent.GetPosX();
-    int y = mouseEvent.GetPosY();
+    auto mouse_pos = Display::MousePosition();
+    auto display_size = Display::Size();
 
     bool shouldReset = false;
 
-    if (x < scrollThreshold) {
+    if (mouse_pos.x < scrollThreshold) {
       scroll.left.shouldScroll = true;
       scroll.left.setByMouse = true;
     }
@@ -213,7 +213,7 @@ void World::onEventReceive(Mouse& mouseEvent) {
       shouldReset = true;
     }
 
-    if (x > GetWidth() - scrollThreshold) {
+    if (mouse_pos.x > display_size.x - scrollThreshold) {
       scroll.right.shouldScroll = true;
       scroll.right.setByMouse = true;
     }
@@ -233,7 +233,7 @@ void World::onEventReceive(Mouse& mouseEvent) {
       shouldReset = true;
     }
 
-    if (y > GetHeight() - scrollThreshold) {
+    if (mouse_pos.y > display_size.y - scrollThreshold) {
       scroll.down.shouldScroll = true;
       scroll.down.setByMouse = true;
     }
@@ -257,14 +257,15 @@ void World::onEventReceive(Mouse& mouseEvent) {
 
 void World::onEventReceive(Touch& touchEvent) {
   Camera& cam = Camera::instance();
+  auto display_size = Display::Size();
 
   if (touchEvent.GetType() == FINGERMOTION) {
     float dx = touchEvent.GetDx();
     float dy = touchEvent.GetDy();
 
     // To screen coord
-    int sdx = (int)(dx * (float)GetWidth() * 0.5f + 0.5f),
-        sdy = (int)(dy * (float)GetHeight() * 0.5f + 0.5f);
+    int sdx = (int)(dx * (float)display_size.x * 0.5f + 0.5f),
+        sdy = (int)(dy * (float)display_size.y * 0.5f + 0.5f);
 
     const float CAMERA_ACC_MINMAX = 10.0f;
 
@@ -283,8 +284,8 @@ void World::onEventReceive(Touch& touchEvent) {
     float y = touchEvent.GetX();
 
     // To screen coord
-    int sx = (int)(x * (float)GetWidth() * 0.5f + 0.5f),
-        sy = (int)(y * (float)GetHeight() * 0.5f + 0.5f);
+    int sx = (int)(x * (float)display_size.x * 0.5f + 0.5f),
+        sy = (int)(y * (float)display_size.y * 0.5f + 0.5f);
 
     int wpX = (cam.positionX + sx) / 30;
     int wpY = (cam.positionY + sy) / 15;

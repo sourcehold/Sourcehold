@@ -47,8 +47,9 @@ void Camera::Update(double dt) {
   positionX = std::max(bounds.x, positionX);
   positionY = std::max(bounds.y, positionY);
 
-  positionX = std::min(bounds.x + bounds.w - GetWidth(), positionX);
-  positionY = std::min(bounds.x + bounds.h - GetHeight(), positionY);
+  auto display_size = Display::Size();
+  positionX = std::min(bounds.x + bounds.w - display_size.x, positionX);
+  positionY = std::min(bounds.x + bounds.h - display_size.y, positionY);
 }
 
 void Camera::ZoomOut() {

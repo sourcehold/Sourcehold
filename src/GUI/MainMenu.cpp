@@ -89,8 +89,9 @@ const static std::map<MenuButton, UIState> actions{
     {BUILDER_BACK_TO_MAIN, MAIN_MENU}};
 
 MainMenu::MainMenu() {
-  int mx = (GetWidth() - 1024) / 2;
-  int my = (GetHeight() - 768) / 2;
+  auto display_size = Display::Size();
+  int mx = (display_size.x - 1024) / 2;
+  int my = (display_size.y - 768) / 2;
 
   bool success = true;
   success &=
@@ -175,9 +176,10 @@ UIState MainMenu::EnterMenu() {
 
   while (Running()) {
     ClearDisplay();
+    auto display_size = Display::Size();
 
-    int mx = (GetWidth() - 1024) / 2;
-    int my = (GetHeight() - 768) / 2;
+    int mx = (display_size.x - 1024) / 2;
+    int my = (display_size.y - 768) / 2;
 
     RenderMenuBorder();
 
@@ -314,8 +316,9 @@ void MainMenu::RenderButtons(MenuButton start, MenuButton end) {
     }
 
     // Update position //
-    int mx = (GetWidth() - 1024) / 2;
-    int my = (GetHeight() - 768) / 2;
+    auto display_size = Display::Size();
+    int mx = (display_size.x - 1024) / 2;
+    int my = (display_size.y - 768) / 2;
 
     ui_elems[i].visible = true;
 

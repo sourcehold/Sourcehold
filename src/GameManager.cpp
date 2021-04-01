@@ -122,10 +122,8 @@ void DetectUsername() {
 }
 
 void UpdateGame() {
-  if (!IsDisplayOpen() || !FetchEvents())
+  if (!FetchEvents())
     _running = false;
-
-  UpdateRenderer();
 }
 
 AssetType ExtToType(const std::string &ext) {
@@ -196,12 +194,11 @@ bool Game::InitManager(GameOptions &opt, Resolution res) {
   _opt = opt;
   _resolution = res;
 
-  InitDisplay("Sourcehold version " SOURCEHOLD_VERSION_STRING
-              " - " SOURCEHOLD_BUILD,
-              opt.width, opt.height, _opt.ndisp, _opt.fullscreen, _opt.noborder,
-              _opt.nograb, res == RESOLUTION_DYNAMIC);
+  Display::Set("Sourcehold version " SOURCEHOLD_VERSION_STRING
+               " - " SOURCEHOLD_BUILD,
+               {opt.width, opt.height}, _opt.ndisp, _opt.fullscreen,
+               _opt.noborder, _opt.nograb, res == RESOLUTION_DYNAMIC);
 
-  InitRenderer();
   InitOpenAL();
 
   if (_opt.nosound) {
@@ -214,8 +211,6 @@ bool Game::InitManager(GameOptions &opt, Resolution res) {
 
 void Game::DestroyManager() {
   DestroyOpenAL();
-  DestroyDisplay();
-  DestroyRenderer();
 }
 
 bool Game::Running() {

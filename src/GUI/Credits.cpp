@@ -1,7 +1,6 @@
 #include "GUI/Credits.h"
 
 #include "Rendering/Font.h"
-#include "Rendering/Renderer.h"
 
 using namespace Sourcehold::GUI;
 using namespace Sourcehold::Rendering;
@@ -41,14 +40,16 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
   double startTime = GetTime();
   double fadeBase = startTime;
 
-  int iw = endgame ? 1024 : 800, ih = endgame ? 768 : 600;
-  int px = (GetWidth() / 2) - (iw / 2);
-  int py = (GetHeight() / 2) - (ih / 2);
+  auto display_size = Display::Size();
 
-  int sx = (GetWidth() / 2) + (200 / 2);
+  int iw = endgame ? 1024 : 800, ih = endgame ? 768 : 600;
+  int px = (display_size.x / 2) - (iw / 2);
+  int py = (display_size.y / 2) - (ih / 2);
+
+  int sx = (display_size.x / 2) + (200 / 2);
   int scrollOffset = 0;
 
-  MouseOff();
+  Display::Mouse(false);
 
   Resolution res = GetResolution();
   while (Running() && playing) {
@@ -105,7 +106,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
     }
 
     /* Render the scroller */
-    int sy = GetHeight() - scrollOffset;
+    int sy = display_size.y - scrollOffset;
     scrollOffset = int((now - startTime) * 60.0);
 
     layout.Render(sx, sy);
@@ -115,7 +116,7 @@ bool Credits::Play(bool endgame, bool fadein, bool loop) {
     FlushDisplay();
   }
 
-  MouseOn();
+  Display::Mouse(true);
   music.Stop();
 
   return true;

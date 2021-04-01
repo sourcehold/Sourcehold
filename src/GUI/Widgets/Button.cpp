@@ -28,8 +28,9 @@ void Button::Update(Rect<int> constraints) {
   auto atlas = interface_icons;
   SDL_Rect rect = atlas->Get(button_indices[style]);
 
-  int mx = GetMouseX();
-  int my = GetMouseY();
+  auto mouse_pos = Display::MousePosition();
+  int& mx = mouse_pos.x;
+  int& my = mouse_pos.y;
 
   int x = constraints.x + ((constraints.w - rect.w) / 2);
   int y = constraints.y + ((constraints.h - rect.h) / 2);

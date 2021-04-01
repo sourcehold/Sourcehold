@@ -85,7 +85,7 @@ void Layout::Render(double x, double y) {
 }
 
 void Layout::Render(int x, int y) {
-  int winH = GetHeight();
+  int winH = Display::Size().y;
 
   for (auto &elem : elems) {
     if (y + elem.y > winH)

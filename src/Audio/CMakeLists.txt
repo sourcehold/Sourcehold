@@ -23,5 +23,5 @@ target_link_libraries(Audio
   PUBLIC FFmpegUtil
   PUBLIC OpenAL::OpenAL
   PRIVATE SWRESAMPLE::SWRESAMPLE
-  PRIVATE SDL2::SDL2
+  PRIVATE SDLBackend
 )

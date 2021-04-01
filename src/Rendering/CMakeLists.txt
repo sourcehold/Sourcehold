@@ -32,6 +32,6 @@ target_link_libraries(Rendering
   PRIVATE ProjectOptions
   PRIVATE System
   PRIVATE FFmpegUtil
-  PUBLIC SDL2::SDL2
+  PUBLIC SDLBackend
   PRIVATE OpenAL::OpenAL
 )

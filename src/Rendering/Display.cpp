@@ -1,168 +1,151 @@
 #include <vector>
+#include <cassert>
 #include "Rendering/Display.h"
-#include "System/Logger.h"
 #include "System/Config.h"
+#include "SDL/SDLBackend.h"
 
-using namespace Sourcehold;
-using namespace System;
+#include "System/Logger.h"
+namespace Sourcehold {
+using namespace SDL;
+namespace Rendering {
 
-SDL_Window *_window;
-bool _fullscreen, _nograb;
-int _width, _height;
-
-static int ResizeEventWatcher(void *data, SDL_Event *event) {
-  if (event->type == SDL_WINDOWEVENT &&
-      event->window.event == SDL_WINDOWEVENT_RESIZED) {
-    SDL_Window *win = SDL_GetWindowFromID(event->window.windowID);
-    if (win == _window) {
-      SDL_GetWindowSize(win, &_width, &_height);
-    }
-  }
-
-  return 0;
+bool Display::Fullscreen() {
+  return SDL_GetWindowFlags(SDLBackend::Window()) & SDL_WINDOW_FULLSCREEN;
 }
 
-bool Rendering::InitDisplay(const std::string &title, int width, int height,
-                            int index, bool fullscreen, bool noborder,
-                            bool nograb, bool resize) {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    Logger::error(RENDERING) << SDL_GetError() << std::endl;
-    return false;
-  }
-
-  int param = SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS;
-
-  _fullscreen = fullscreen;
-  _nograb = nograb;
-
-  if (fullscreen) {
-    param |= SDL_WINDOW_FULLSCREEN;
-  }
-
-  if (noborder) {
-    param |= SDL_WINDOW_BORDERLESS;
-  }
-
-// Prohibit resizing on iOS to force landscape interface orientation for all
-// device orientations
-#ifndef SOURCEHOLD_IOS
-  if (resize) {
-    param |= SDL_WINDOW_RESIZABLE;
-  }
-#endif  // SOURCEHOLD_IOS
-
-  // Select display //
-  int displays = SDL_GetNumVideoDisplays();
-  if (index >= displays)
-    index = 0;
-
-  auto displayBounds = std::vector<SDL_Rect>(displays);
-  for (int i = 0; i < displays; i++) {
-    displayBounds[i] = {0, 0, 0, 0};
-    SDL_GetDisplayBounds(i, &displayBounds[i]);
-  }
-
-#if defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
-  // On Android and iOS, only use the native resolution //
-  if (width < 0 || height < 0) {
-    SDL_DisplayMode mode;
-    SDL_GetCurrentDisplayMode(index, &mode);
-
-    width = mode.w;
-    height = mode.h;
-    // Flip width and height to force landscape orientation //
-    if (height > width) {
-      std::swap(width, height);
-    }
-  }
-#endif  // defined(SOURCEHOLD_ANDROID) || defined(SOURCEHOLD_IOS)
-
-  _window = SDL_CreateWindow(
-      title.c_str(),
-      displayBounds[index].x + (displayBounds[index].w / 2) - width / 2,
-      displayBounds[index].y + (displayBounds[index].h / 2) - height / 2, width,
-      height, param);
-  if (!_window) {
-    Logger::error(RENDERING)
-        << "Unable to create SDL2 window: " << SDL_GetError() << std::endl;
-  }
-
-  if (!nograb) {
-    SDL_SetWindowGrab(_window, SDL_TRUE);
-  }
-
-  _width = width;
-  _height = height;
-  SDL_AddEventWatch(ResizeEventWatcher, nullptr);
-
-  return true;
+void Display::Fullscreen(bool val) {
+  auto param = val ? SDL_WINDOW_FULLSCREEN : 0u;
+  SDL_SetWindowFullscreen(SDLBackend::Window(), param);
 }
 
-void Rendering::DestroyDisplay() {
-  SDL_DestroyWindow(_window);
-  SDL_Quit();
+void Display::ToggleFullscreen() {
+  Fullscreen(!Fullscreen());
 }
 
-void Rendering::ToggleFullscreen() {
-  int err =
-      SDL_SetWindowFullscreen(_window, _fullscreen ? 0 : SDL_WINDOW_FULLSCREEN);
-  if (err < 0) {
-    Logger::error(RENDERING)
-        << "Unable to switch to fullscreen: " << SDL_GetError() << std::endl;
+bool Display::WindowGrab() {
+  return SDL_GetWindowGrab(SDLBackend::Window());
+}
+
+void Display::WindowGrab(bool val) {
+  auto param = val ? SDL_TRUE : SDL_FALSE;
+  SDL_SetWindowGrab(SDLBackend::Window(), param);
+}
+
+void Display::ToggleWindowGrab() {
+  WindowGrab(!WindowGrab());
+}
+
+bool Display::Borderless() {
+  return SDL_GetWindowFlags(SDLBackend::Window()) & SDL_WINDOW_BORDERLESS;
+}
+
+void Display::Borderless(bool val) {
+  auto param = val ? SDL_FALSE : SDL_TRUE;
+  SDL_SetWindowBordered(SDLBackend::Window(), param);
+}
+
+void Display::ToggleBorderless() {
+  Borderless(!Borderless());
+}
+
+bool Display::Resizable() {
+#if defined(SOURCEHOLD_IOS) || defined(SOURCEHOLD_ANDROID)
+  return false;
+#else   // !SOURCEHOLD_IOS || !SOURCEHOLD_ANDROID
+  return SDL_GetWindowFlags(SDLBackend::Window()) & SDL_WINDOW_RESIZABLE;
+#endif  // SOURCEHOLD_IOS || SOURCEHOLD_ANDROID
+}
+
+void Display::Resizable(bool val) {
+#if defined(SOURCEHOLD_IOS) || defined(SOURCEHOLD_ANDROID)
+  SDL_SetWindowResizable(SDLBackend::Window(), SDL_FALSE);
+#else   // !SOURCEHOLD_IOS || !SOURCEHOLD_ANDROID
+  auto param = val ? SDL_TRUE : SDL_FALSE;
+  SDL_SetWindowResizable(SDLBackend::Window(), param);
+#endif  // SOURCEHOLD_IOS || SOURCEHOLD_ANDROID
+}
+
+void Display::ToggleResizable() {
+  Resizable(!Resizable());
+}
+
+Vector2<int> Display::Size() {
+  int width;
+  int height;
+
+  SDL_GetWindowSize(SDLBackend::Window(), &width, &height);
+  auto result = Vector2<int>{width, height};
+
+#if defined(SOURCEHOLD_IOS) || defined(SOURCEHOLD_ANDROID)
+  if (result.y > result.x) {
+    std::swap(result.y, result.x);
   }
-  _fullscreen = !_fullscreen;
+#endif  // SOURCEHOLD_IOS || SOURCEHOLD_ANDROID
+  return result;
 }
 
-void Rendering::GrabMouse() {
-  if (!_nograb && SDL_GetWindowGrab(_window) == SDL_FALSE) {
-    SDL_SetWindowGrab(_window, SDL_TRUE);
-  }
+void Display::Size(Vector2<int> size) {
+#if !defined(SOURCEHOLD_IOS) || !defined(SOURCEHOLD_ANDROID)
+  SDL_SetWindowSize(SDLBackend::Window(), size.x, size.y);
+#endif  // !SOURCEHOLD_IOS || !SOURCEHOLD_ANDROID
 }
 
-void Rendering::ReleaseMouse() {
-  if (SDL_GetWindowGrab(_window) == SDL_TRUE) {
-    SDL_SetWindowGrab(_window, SDL_FALSE);
-  }
+void Display::Title(const std::string &title) {
+  SDL_SetWindowTitle(SDLBackend::Window(), title.c_str());
 }
 
-bool Rendering::IsDisplayOpen() {
-  return true;
+int Display::DisplayIndex() {
+  return SDL_GetWindowDisplayIndex(SDLBackend::Window());
 }
 
-void Rendering::ErrorMessageBox(const std::string &title,
-                                const std::string &msg) {
+void Display::DisplayIndex(int index) {
+  index = SDL_GetNumVideoDisplays() <= index ? 0 : index;
+  SDL_SetWindowPosition(SDLBackend::Window(),
+                        SDL_WINDOWPOS_CENTERED_DISPLAY(index),
+                        SDL_WINDOWPOS_CENTERED_DISPLAY(index));
+}
+
+Vector2<int> Display::MousePosition() {
+  int x;
+  int y;
+
+  SDL_GetMouseState(&x, &y);
+  return {x, y};
+}
+
+bool Display::Mouse() {
+  return SDL_ShowCursor(SDL_QUERY);
+}
+
+void Display::Mouse(bool val) {
+  auto param = val ? SDL_ENABLE : SDL_DISABLE;
+  SDL_ShowCursor(param);
+}
+
+void Display::ToggleMouse() {
+  Mouse(!Mouse());
+}
+
+void Display::Set(const std::string &title, Vector2<int> size,
+                  int display_index, bool fullscreen, bool borderless,
+                  bool window_grab, bool resizeable) {
+  Title(title);
+  Size(size);
+  DisplayIndex(display_index);
+  Fullscreen(fullscreen);
+  Borderless(borderless);
+  WindowGrab(window_grab);
+  Resizable(resizeable);
+
+  SDL_SetWindowInputFocus(SDLBackend::Window());
+  SDL_ShowWindow(SDLBackend::Window());
+}
+
+void Display::ErrorMessageBox(const std::string &title,
+                              const std::string &msg) {
   SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title.c_str(), msg.c_str(),
-                           _window);
+                           SDLBackend::Window());
 }
 
-int Rendering::GetWidth() {
-  return _width;
-}
-
-int Rendering::GetHeight() {
-  return _height;
-}
-
-int Rendering::GetMouseX() {
-  int p;
-  SDL_GetMouseState(&p, NULL);
-  return p;
-}
-
-int Rendering::GetMouseY() {
-  int p;
-  SDL_GetMouseState(NULL, &p);
-  return p;
-}
-
-void Rendering::MouseOn() {
-  SDL_ShowCursor(SDL_ENABLE);
-}
-
-void Rendering::MouseOff() {
-  SDL_ShowCursor(SDL_DISABLE);
-}
-
-SDL_Window *Rendering::GetWindow() {
-  return _window;
-}
+}  // namespace Rendering
+}  // namespace Sourcehold
