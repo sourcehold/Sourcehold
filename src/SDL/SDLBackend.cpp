@@ -29,7 +29,7 @@ SDLBackend::SDLBackend() {
     throw std::runtime_error("Failed to create SDL_Renderer");
   }
 
-  SDL_SetRenderDrawBlendMode(renderer_.get(), SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawBlendMode(renderer_.get(), BlendMode);
 
   const char* hint = "SDL_HINT_RENDER_SCALE_QUALITY";
   if (SDL_SetHintWithPriority(hint, "1", SDL_HINT_OVERRIDE) == SDL_FALSE) {
