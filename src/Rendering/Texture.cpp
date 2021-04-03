@@ -7,167 +7,84 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::SDL;
 
-Texture::Texture(const Texture &tex)
-    : texture(tex.texture), pixels(tex.pixels) {
-}
-
-Texture::~Texture() {
-  Destroy();
-}
-
-bool Texture::AllocNewStreaming(int width, int height, int format) {
-  texture = SDL_CreateTexture(SDLBackend::Renderer(), format,
-                              SDL_TEXTUREACCESS_STREAMING, width, height);
-  if (!texture) {
-    Logger::error(RENDERING)
-        << "Unable to create streaming texture: " << SDL_GetError()
-        << std::endl;
-    return false;
+template <SDL_TextureAccess A>
+Texture<A>::Texture(Surface &surface) {
+  texture_ = MakeTextureUQ(SDLBackend::Renderer(), surface.Ptr());
+  if (!texture_) {
+    auto err = "Unable to create texture from surface: " +  //
+               std::string(SDL_GetError());
+    throw std::runtime_error(err);
   }
 
-  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
-  return true;
+  SDL_SetTextureBlendMode(texture_.get(), BlendMode);
 }
 
-bool Texture::AllocFromSurface(Surface &surface) {
-  texture = SDL_CreateTextureFromSurface(SDLBackend::Renderer(),
-                                         surface.GetSurface());
-  if (!texture) {
-    Logger::error(RENDERING)
-        << "Unable to create texture from surface: " << SDL_GetError()
-        << std::endl;
-    return false;
+template <SDL_TextureAccess A>
+Texture<A>::Texture(Vector2<int> size) {
+  texture_ = MakeTextureUQ(SDLBackend::Renderer(), PixelFormat, A,  //
+                           size.x, size.y);
+  if (!texture_) {
+    auto err = "Unable to create texture from surface: " +  //
+               std::string(SDL_GetError());
+    throw std::runtime_error(err);
   }
 
-  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-  return true;
+  SDL_SetTextureBlendMode(texture_.get(), BlendMode);
 }
 
-bool Texture::AllocNewTarget(int width, int height, int format) {
-  texture = SDL_CreateTexture(SDLBackend::Renderer(), format,
-                              SDL_TEXTUREACCESS_TARGET, width, height);
-  if (!texture) {
-    Logger::error(RENDERING)
-        << "Unable to create target texture: " << SDL_GetError() << std::endl;
-    return false;
+template <SDL_TextureAccess A>
+void Texture<A>::Set(Vector2<int> pos, Color color) {
+  static_assert(true, "don't call");
+  auto write = TextureAccessor(texture_.get());
+  write.data[At(pos, write.size.x)] = AsPixel(color);
+}
+
+template <SDL_TextureAccess A>
+void Texture<A>::SetAlphaMod(Uint8 alpha) {
+  SDL_SetTextureAlphaMod(texture_.get(), alpha);
+}
+
+template <SDL_TextureAccess A>
+void Texture<A>::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
+  SDL_SetTextureColorMod(texture_.get(), r, g, b);
+}
+
+template <SDL_TextureAccess A>
+IFSTREAMING<void, A> Texture<A>::Copy(Texture &other, Vector2<int> pos,
+                                      std::optional<Rect<int>> clip) {
+  auto write = TextureAccessor(texture_.get());
+  auto read = TextureAccessor(other.Ptr());
+  Vector2<int> offset{0, 0};
+  if (clip.has_value()) {
+    offset.x = clip->x;
+    offset.y = clip->y;
+    read.size.x = clip->w;
+    read.size.y = clip->h;
   }
 
-  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-  return true;
-}
-
-void Texture::UpdateTexture() {
-}
-
-void Texture::Destroy() {
-  if (!texture)
-    return;
-  SDL_DestroyTexture(texture);
-  texture = nullptr;
-}
-
-void Texture::LockTexture() {
-  int access;
-  SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
-
-  if (!texture || access != SDL_TEXTUREACCESS_STREAMING)
-    return;
-  int pitch;
-  if (SDL_LockTexture(texture, nullptr, (void **)&pixels, &pitch)) {
-    Logger::error(RENDERING)
-        << "Unable to lock texture: " << SDL_GetError() << std::endl;
-  }
-}
-
-void Texture::UnlockTexture() {
-  int access;
-  SDL_QueryTexture(texture, NULL, &access, NULL, NULL);
-
-  if (access != SDL_TEXTUREACCESS_STREAMING)
-    return;
-  SDL_UnlockTexture(texture);
-}
-
-void Texture::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b,
-                       uint8_t a) {
-  int width = GetWidth();
-  uint32_t index = x + y * width;
-  pixels[index] = ToPixel(r, g, b, a);
-}
-
-void Texture::SetAlphaMod(Uint8 alpha) {
-  SDL_SetTextureAlphaMod(texture, alpha);
-}
-
-void Texture::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
-  SDL_SetTextureColorMod(texture, r, g, b);
-}
-
-void Texture::Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect) {
-  uint32_t offX = 0, offY = 0, ow = other.GetWidth(), oh = other.GetHeight();
-  if (rect) {
-    offX = rect->x;
-    offY = rect->y;
-    ow = rect->w;
-    oh = rect->h;
-  }
-
-  int width, height;
-  GetDim(&width, &height);
-
-  if (int(x + ow) > width || int(y + oh) > height) {
+  if (read.size.x + pos.x > write.size.x ||
+      read.size.y + pos.y > write.size.y) {
+    // TODO: assert here
     Logger::error(RENDERING) << "Attempted to copy a texture which is too "
                                 "large for the target (or goes out of bounds)!"
                              << std::endl;
     return;
   }
 
-  for (uint32_t ix = 0; ix < ow; ix++) {
-    for (uint32_t iy = 0; iy < oh; iy++) {
-      uint32_t index1 = (ix + offX) + (iy + offY) * other.GetWidth();
-      uint32_t index2 = (x + ix) + (y + iy) * width;
+  {
+    Vector2<int> iter;
+    for (iter.x = 0; iter.x < read.size.x; ++iter.x) {
+      for (iter.y = 0; iter.y < read.size.y; ++iter.y) {
+        auto read_index = At(iter + offset, read.size.y);
+        auto write_index = At(iter + pos, write.size.y);
 
-      Uint8 r, g, b, a;
-      FromPixel(other.GetData()[index1], &r, &g, &b, &a);
-
-      if (a != 0)
-        pixels[index2] = ToPixel(r, g, b, a);
+        write.data[write_index] = read.data[read_index];
+      }
     }
   }
 }
 
-void Texture::SetBlendMode(SDL_BlendMode mode) {
-  SDL_SetTextureBlendMode(texture, mode);
-}
-
-int Texture::GetWidth() {
-  int w;
-  SDL_QueryTexture(texture, NULL, NULL, &w, NULL);
-  return w;
-}
-
-int Texture::GetHeight() {
-  int h;
-  SDL_QueryTexture(texture, NULL, NULL, NULL, &h);
-  return h;
-}
-
-void Texture::GetDim(int *w, int *h) {
-  SDL_QueryTexture(texture, NULL, NULL, w, h);
-}
-
-Uint32 *Texture::GetData() {
-  return pixels;
-}
-
-Uint32 Texture::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-  return r << 24 | g << 16 | b << 8 | a;
-}
-
-void Texture::FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a) {
-  *r = value >> 24;
-  *g = (value >> 16) & (uint8_t)0xFF;
-  *b = (value >> 8) & (uint16_t)0xFF;
-  *a = value & (uint32_t)0xFF;
+template <SDL_TextureAccess A>
+void Texture<A>::SetBlendMode(SDL_BlendMode mode) {
+  SDL_SetTextureBlendMode(texture_.get(), mode);
 }

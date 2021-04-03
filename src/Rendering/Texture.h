@@ -1,82 +1,68 @@
 #pragma once
-
-#include <cinttypes>
-#include <vector>
-#include <memory>
-
 #include "SDL/SDLBackend.h"
+#include "Surface.h"
 
 namespace Sourcehold {
 namespace Rendering {
-/**
- * Texture wrapper class, able to create and modify
- * textures, external modification is possible
- * by locking/unlocking the texture stream and obtaining
- * a pointer to the raw pixel data
- */
-class Renderer;
-class Surface;
+template <typename T, SDL_TextureAccess A>
+using IFSTREAMING = std::enable_if<A == SDL_TEXTUREACCESS_STREAMING, T>;
+template <typename T, SDL_TextureAccess A>
+using IFSTATIC = std::enable_if<A == SDL_TEXTUREACCESS_STATIC, T>;
+template <typename T, SDL_TextureAccess A>
+using IFTARGET = std::enable_if<A == SDL_TEXTUREACCESS_TARGET, T>;
+
+namespace {
+//-----------------------------------------------------------------------------
+// TextureAccessor
+//-----------------------------------------------------------------------------
+// RAII wrapper for SDL_Texture data access.
+//-----------------------------------------------------------------------------
+struct TextureAccessor {
+  int pitch;
+  uint32_t *data;
+  Vector2<int> size;
+  SDL_Texture *texture;
+
+  TextureAccessor() = delete;
+  TextureAccessor(SDL_Texture *texture_to_lock) : texture(texture_to_lock) {
+    SDL_LockTexture(texture, nullptr, reinterpret_cast<void **>(&data), &pitch);
+    SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
+  }
+
+  ~TextureAccessor() {
+    SDL_UnlockTexture(texture);
+  }
+
+ private:
+};
+}  // namespace
+
+//-----------------------------------------------------------------------------
+// Texture -- Prototype
+// ----------------------------------------------------------------------------
+template <SDL_TextureAccess A>
 class Texture {
-  SDL_Texture *texture = nullptr;
-  Uint32 *pixels = nullptr;
-
  public:
-  Texture() = default;
-  Texture(const Texture &tex);
-  ~Texture();
+  constexpr static auto AccessType = A;
 
-  /**
-   * Allocate a new texture. This will turn the class into
-   * a streaming texture.
-   * Use LockTexture / UnlockTexture to access the pixel data
-   */
-  bool AllocNewStreaming(int width, int height,
-                         int format = SDL_PIXELFORMAT_RGBA4444);
+  Texture() = delete;
+  Texture(Surface &surface);
+  Texture(Vector2<int> size);
+  ~Texture() = default;
 
-  /**
-   * Allocate a new texture using an existing surface. The texture
-   * is static and has no read/write support
-   */
-  bool AllocFromSurface(Surface &surface);
-
-  /**
-   * Allocate a new texture in target mode. The pixel
-   * data is manipulated via SDL functions, after calling
-   * SetTarget. Reset the render target by calling ResetTarget
-   * afterwards.
-   */
-  bool AllocNewTarget(int width, int height,
-                      int format = SDL_PIXELFORMAT_RGBA4444);
-
-  void UpdateTexture();
-  void Destroy();
-
-  /* Texture manipulation */
-  void LockTexture();
-  void UnlockTexture();
-  void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void Rotate(double angle);
+  void Set(Vector2<int> pos, Color color);
   void SetAlphaMod(Uint8 alpha);
   void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
-  void Copy(Texture &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
+  IFSTREAMING<void, A> Copy(Texture &other, Vector2<int> pos,
+                            std::optional<Rect<int>> clip);
   void SetBlendMode(SDL_BlendMode mode);
 
-  int GetWidth();
-  int GetHeight();
-  void GetDim(int *w, int *h);
-
-  Uint32 *GetData();
-
-  inline bool IsValid() {
-    return texture;
-  }
-  inline SDL_Texture *GetTexture() {
-    return texture;
+  [[nodiscard]] SDL_Texture *Ptr() const noexcept {
+    return texture_.get();
   }
 
- protected:
-  Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
-  void FromPixel(Uint32 value, Uint8 *r, Uint8 *g, Uint8 *b, Uint8 *a);
+ private:
+  SDL::SDL_Texture_UQ texture_;
 };
 }  // namespace Rendering
 }  // namespace Sourcehold

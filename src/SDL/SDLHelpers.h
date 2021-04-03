@@ -53,6 +53,10 @@ template <typename T>
   return ptr[pos.y * surf->w + pos.x];
 }
 
+[[nodiscard]] inline int At(Rendering::Vector2<int> pos, int w) {
+  return pos.x + pos.y * w;
+}
+
 [[nodiscard]] inline SDL_Rect* ToSDLRectPtr(Rendering::Rect<int>& rect) {
   using namespace Rendering;
   static_assert(std::is_same_v<decltype(Rect<int>::x), decltype(SDL_Rect::x)>);
