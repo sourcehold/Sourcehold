@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <functional>
+#include <type_traits>
 
 namespace Sourcehold {
 namespace Rendering {
@@ -61,6 +62,9 @@ struct Vector2 {
 
   template <typename OT>
   operator Vector2<OT>() {
+    // only allow conversions between arithmetic types
+    static_assert(std::is_arithmetic_v<T>);
+    static_assert(std::is_arithmetic_v<OT>);
     return Vector2<OT>{static_cast<OT>(x), static_cast<OT>(y)};
   }
 };
@@ -84,39 +88,39 @@ Vector2<T>& calc(Vector2<T>& l, const T& r, F f) {
 
 template <typename F>
 Vector2<F>& operator+=(Vector2<F>& l, const Vector2<F>& r) {
-  return Details::calc(l, r, std::plus());
+  return Details::calc(l, r, std::plus<F>());
 }
 template <typename F>
 Vector2<F>& operator-=(Vector2<F>& l, const Vector2<F>& r) {
-  return Details::calc(l, r, std::minus());
+  return Details::calc(l, r, std::minus<F>());
 }
 
 template <typename F>
 Vector2<F>& operator*=(Vector2<F>& l, const Vector2<F>& r) {
-  return Details::calc(l, r, std::multiplies());
+  return Details::calc(l, r, std::multiplies<F>());
 }
 
 template <typename F>
 Vector2<F>& operator/=(Vector2<F>& l, const Vector2<F>& r) {
-  return Details::calc(l, r, std::divides());
+  return Details::calc(l, r, std::divides<F>());
 }
 template <typename F>
 Vector2<F>& operator+=(Vector2<F>& l, const F& r) {
-  return Details::calc(l, r, std::plus());
+  return Details::calc(l, r, std::plus<F>());
 }
 template <typename F>
 Vector2<F>& operator-=(Vector2<F>& l, const F& r) {
-  return Details::calc(l, r, std::minus());
+  return Details::calc(l, r, std::minus<F>());
 }
 
 template <typename F>
 Vector2<F>& operator*=(Vector2<F>& l, const F& r) {
-  return Details::calc(l, r, std::multiplies());
+  return Details::calc(l, r, std::multiplies<F>());
 }
 
 template <typename F>
-Vector2<F>& operator/(Vector2<F>& l, const F& r) {
-  return Details::calc(l, r, std::divides());
+Vector2<F>& operator/=(Vector2<F>& l, const F& r) {
+  return Details::calc(l, r, std::divides<F>());
 }
 
 template <typename F>

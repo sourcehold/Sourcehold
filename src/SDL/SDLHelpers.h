@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <cassert>
 #include <memory>
 #include "Rendering/Shapes.h"
 
@@ -46,15 +47,25 @@ constexpr auto BlendMode = SDL_BLENDMODE_BLEND;
 
 constexpr auto PixelFormat = SDL_PIXELFORMAT_RGBA4444;
 
+[[nodiscard]] inline int At(Rendering::Vector2<int> pos, int w) {
+  return pos.x + pos.y * w;
+}
+
 template <typename T>
 [[nodiscard]] T& At(SDL_Surface* surf, Rendering::Vector2<int> pos) {
   static_assert(std::is_arithmetic_v<T>);
   T* ptr = static_cast<T*>(surf->pixels);
-  return ptr[pos.y * surf->w + pos.x];
+  return ptr[At(pos, surf->w)];
 }
 
-[[nodiscard]] inline int At(Rendering::Vector2<int> pos, int w) {
-  return pos.x + pos.y * w;
+template <typename T>
+[[nodiscard]] T& AtSafe(SDL_Surface* surf, Rendering::Vector2<int> pos) {
+  static_assert(std::is_arithmetic_v<T>);
+
+  assert(surf->w > pos.x);
+  assert(surf->h > pos.y);
+
+  return At<T>(surf, pos);
 }
 
 [[nodiscard]] inline SDL_Rect* ToSDLRectPtr(Rendering::Rect<int>& rect) {

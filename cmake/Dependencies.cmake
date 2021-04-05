@@ -98,3 +98,10 @@ AddImportedTarget(SWRESAMPLE::SWRESAMPLE
 )
 
 endif() # TARGET_OS_IOS
+
+# GTest
+if(SOURCEHOLD_BUILD_TESTS MATCHES ON)
+  find_package(GTest REQUIRED)
+endif()
+
+

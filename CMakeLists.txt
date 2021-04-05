@@ -9,6 +9,10 @@ include(cmake/Preamble.cmake)
 add_subdirectory(apple)
 add_subdirectory(src)
 
+if(SOURCEHOLD_BUILD_TESTS MATCHES ON)
+  add_subdirectory(test)
+endif()
+
 # TODO(seidl):
 # still some modules hidden here..
 set(SOURCE_FILES 
