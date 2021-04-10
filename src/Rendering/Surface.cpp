@@ -15,7 +15,7 @@ Surface::Surface(Vector2<int> size) {
     throw std::runtime_error(err);
   }
 
-  SDL_SetSurfaceBlendMode(surface_.get(), SDL_BLENDMODE_BLEND);
+  SDL_SetSurfaceBlendMode(surface_.get(), SDL::BlendMode);
 }
 
 void Surface::Lock() const noexcept {
@@ -43,7 +43,20 @@ void Surface::Blit(const Surface& other, Vector2<int> pos,
 }
 
 void Surface::Fill(Color color) const noexcept {
-  SDL_FillRect(surface_.get(), nullptr,
-               SDL_MapRGBA(surface_->format,  //
-                           color.r, color.g, color.b, color.a));
+  SDL_FillRect(surface_.get(), nullptr, AsPixel(color));
+}
+
+Pixel* Surface::begin() const noexcept {
+  return &SDL::At<Pixel>(surface_.get(), {0, 0});
+}
+Pixel* Surface::end() const noexcept {
+  // end points at the cell after the pixel array
+  return &SDL::At<Pixel>(surface_.get(), {surface_->w - 1, surface_->h - 1}) +
+         1;
+}
+const Pixel* Surface::cbegin() const noexcept {
+  return begin();
+}
+const Pixel* Surface::cend() const noexcept {
+  return end();
 }

@@ -20,12 +20,17 @@ class Surface {
   void Unlock() const noexcept;
   void Set(Vector2<int> pos, Color color) const noexcept;
   void Blit(const Surface& other, Vector2<int> pos,
-            std::optional<Rect<int>> clip) const noexcept;
+            std::optional<Rect<int>> clip = {}) const noexcept;
   void Fill(Color color) const noexcept;
 
   [[nodiscard]] SDL_Surface* Ptr() const noexcept {
     return surface_.get();
   }
+
+  [[nodiscard]] Pixel* begin() const noexcept;
+  [[nodiscard]] Pixel* end() const noexcept;
+  [[nodiscard]] const Pixel* cbegin() const noexcept;
+  [[nodiscard]] const Pixel* cend() const noexcept;
 
  private:
   SDL::SDL_Surface_UQ surface_;
