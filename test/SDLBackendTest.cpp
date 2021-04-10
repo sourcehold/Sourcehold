@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <numeric>
 #include "SDL/SDLBackend.h"
 using namespace Sourcehold::SDL;
 using namespace Sourcehold::Rendering;
@@ -13,13 +14,14 @@ TEST(SDLBackend, Init) {
 }
 
 TEST(SDLHelpers, At) {
-  Vector2<int> pos = {4, 6};
-  auto width = 3;
+  std::array<int, 100> groundtruth;
+  std::iota(std::begin(groundtruth), std::end(groundtruth), 0);
 
-  // 6 * 3 + 4 = 22
-  auto groundtruth = 22;
-
-  ASSERT_EQ(At(pos, width), groundtruth);
+  for (auto y = 0; y < 10; ++y) {
+    for (auto x = 0; x < 10; ++x) {
+      ASSERT_EQ(At({x, y}, 10), groundtruth[At({x, y}, 10)]);
+    }
+  }
 }
 
 TEST(SDLHelpers, AtSafe) {
