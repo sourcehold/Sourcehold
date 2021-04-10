@@ -19,6 +19,7 @@ target_link_libraries(SDLBackendTest PRIVATE SDLBackend)
 
 add_test(RenderingTest 
   ShapesTest.cpp
+  ColorTest.cpp
   SurfaceTest.cpp
   TextureAtlasTest.cpp
 ) 
