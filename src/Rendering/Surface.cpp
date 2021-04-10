@@ -47,12 +47,10 @@ void Surface::Fill(Color color) const noexcept {
 }
 
 Pixel* Surface::begin() const noexcept {
-  return &SDL::At<Pixel>(surface_.get(), {0, 0});
+  return static_cast<Pixel*>(surface_->pixels);
 }
 Pixel* Surface::end() const noexcept {
-  // end points at the cell after the pixel array
-  return &SDL::At<Pixel>(surface_.get(), {surface_->w - 1, surface_->h - 1}) +
-         1;
+  return &static_cast<Pixel*>(surface_->pixels)[surface_->w * surface_->h];
 }
 const Pixel* Surface::cbegin() const noexcept {
   return begin();

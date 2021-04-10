@@ -10,10 +10,8 @@ set(RENDERING_SOURCE_FILES
   #Renderer.h
   #Renderer.cpp
   #Shapes.h
-  Surface.h
   Surface.cpp
-  #Texture.h
-  #Texture.cpp
+  Texture.cpp
   #TextureAtlas.h
   #TextureAtlas.cpp
   #Tileset.h

@@ -1,6 +1,7 @@
 set(SDL_BACKEND_SOURCE_FILES
   SDLBackend.cpp
   SDLFactories.cpp
+  TextureAccessor.cpp
 )
 
 add_library(SDLBackend ${SDL_BACKEND_SOURCE_FILES})

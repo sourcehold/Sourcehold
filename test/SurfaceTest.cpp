@@ -24,12 +24,9 @@ TEST(Surface, StdAlgorithm) {
   std::iota(std::begin(surface), std::end(surface), 0);
   std::iota(std::begin(groundtruth), std::end(groundtruth), 0);
 
-  for (auto y = 0; y < size_k.y; ++y) {
-    for (auto x = 0; x < size_k.x; ++x) {
-      ASSERT_EQ(At<Pixel>(surface.Ptr(), {x, y}),
-                groundtruth[At({x, y}, size_k.x)]);
-    }
-  }
+  auto result = std::equal(std::begin(surface), std::end(surface),
+                           std::begin(groundtruth));
+  ASSERT_TRUE(result);
 }
 
 TEST(Surface, Fill) {
@@ -59,12 +56,9 @@ TEST(Surface, Blit) {
 
   surface2.Blit(surface1, {0, 0});
 
-  for (auto y = 0; y < size_k.y; ++y) {
-    for (auto x = 0; x < size_k.x; ++x) {
-      ASSERT_EQ(At<Pixel>(surface2.Ptr(), {x, y}),
-                groundtruth[At({x, y}, size_k.x)]);
-    }
-  }
+  auto result = std::equal(std::begin(surface2), std::end(surface2),
+                           std::begin(groundtruth));
+  ASSERT_TRUE(result);
 }
 TEST(Surface, BlitClipped) {
   Surface surface1({5, 5});
@@ -87,10 +81,7 @@ TEST(Surface, BlitClipped) {
 
   surface2.Blit(surface1, pos, clip);
 
-  for (auto y = 0; y < size_k.y; ++y) {
-    for (auto x = 0; x < size_k.x; ++x) {
-      ASSERT_EQ(At<Pixel>(surface2.Ptr(), {x, y}),
-                groundtruth[At({x, y}, size_k.x)]);
-    }
-  }
+  auto result = std::equal(std::begin(surface2), std::end(surface2),
+                           std::begin(groundtruth));
+  ASSERT_TRUE(result);
 }

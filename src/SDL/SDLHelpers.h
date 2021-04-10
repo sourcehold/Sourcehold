@@ -45,7 +45,7 @@ constexpr Details::ColorMask SurfaceMask{0xFF000000,  //
                                          0x000000FF};
 constexpr auto BlendMode = SDL_BLENDMODE_BLEND;
 
-constexpr auto PixelFormat = SDL_PIXELFORMAT_RGBA4444;
+constexpr auto PixelFormat = SDL_PIXELFORMAT_RGBA8888;
 
 [[nodiscard]] inline int At(Rendering::Vector2<int> pos, int w) {
   return pos.x + pos.y * w;

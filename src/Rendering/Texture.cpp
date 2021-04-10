@@ -1,5 +1,6 @@
 #include "Rendering/Texture.h"
 #include "Rendering/Surface.h"
+#include "SDL/TextureAccessor.h"
 
 #include "System/Logger.h"
 
@@ -7,8 +8,8 @@ using namespace Sourcehold::System;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::SDL;
 
-template <SDL_TextureAccess A>
-Texture<A>::Texture(Surface &surface) {
+template <>
+TextureStatic::Texture(Surface &surface) {
   texture_ = MakeTextureUQ(SDLBackend::Renderer(), surface.Ptr());
   if (!texture_) {
     auto err = "Unable to create texture from surface: " +  //
@@ -33,13 +34,6 @@ Texture<A>::Texture(Vector2<int> size) {
 }
 
 template <SDL_TextureAccess A>
-void Texture<A>::Set(Vector2<int> pos, Color color) {
-  static_assert(true, "don't call");
-  auto write = TextureAccessor(texture_.get());
-  write.data[At(pos, write.size.x)] = AsPixel(color);
-}
-
-template <SDL_TextureAccess A>
 void Texture<A>::SetAlphaMod(Uint8 alpha) {
   SDL_SetTextureAlphaMod(texture_.get(), alpha);
 }
@@ -50,14 +44,27 @@ void Texture<A>::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
 }
 
 template <SDL_TextureAccess A>
-IFSTREAMING<void, A> Texture<A>::Copy(Texture &other, Vector2<int> pos,
-                                      std::optional<Rect<int>> clip) {
+void Texture<A>::SetBlendMode(SDL_BlendMode mode) {
+  SDL_SetTextureBlendMode(texture_.get(), mode);
+}
+
+template <SDL_TextureAccess A>
+void Texture<A>::Set(Vector2<int> pos, Color color) {
+  static_assert(true, "don't call");
+  assert(A == SDL_TEXTUREACCESS_STREAMING);
+  auto write = TextureAccessor(texture_.get());
+  write.data[At(pos, write.size.x)] = AsPixel(color);
+}
+
+template <>
+void TextureStreaming::Copy(Texture &other, Vector2<int> pos,
+                            std::optional<Rect<int>> clip) {
   auto write = TextureAccessor(texture_.get());
   auto read = TextureAccessor(other.Ptr());
-  Vector2<int> offset{0, 0};
+  Vector2<int> read_offset{0, 0};
   if (clip.has_value()) {
-    offset.x = clip->x;
-    offset.y = clip->y;
+    read_offset.x = clip->x;
+    read_offset.y = clip->y;
     read.size.x = clip->w;
     read.size.y = clip->h;
   }
@@ -71,20 +78,15 @@ IFSTREAMING<void, A> Texture<A>::Copy(Texture &other, Vector2<int> pos,
     return;
   }
 
-  {
-    Vector2<int> iter;
-    for (iter.x = 0; iter.x < read.size.x; ++iter.x) {
-      for (iter.y = 0; iter.y < read.size.y; ++iter.y) {
-        auto read_index = At(iter + offset, read.size.y);
-        auto write_index = At(iter + pos, write.size.y);
-
-        write.data[write_index] = read.data[read_index];
-      }
+  for (auto y = 0; y < read.size.y; ++y) {
+    for (auto x = 0; x < read.size.x; ++x) {
+      auto write_pos = At(pos + Vector2<int>{x, y}, write.size.x);
+      auto read_pos = At(read_offset + Vector2<int>{x, y}, read.size.x);
+      write.data[write_pos] = read.data[read_pos];
     }
   }
 }
-
-template <SDL_TextureAccess A>
-void Texture<A>::SetBlendMode(SDL_BlendMode mode) {
-  SDL_SetTextureBlendMode(texture_.get(), mode);
+template <>
+TextureAccessor TextureStreaming::Accessor() {
+  return TextureAccessor(texture_.get());
 }

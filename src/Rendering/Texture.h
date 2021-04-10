@@ -1,42 +1,10 @@
 #pragma once
 #include "SDL/SDLBackend.h"
+#include "SDL/TextureAccessor.h"
 #include "Surface.h"
 
 namespace Sourcehold {
 namespace Rendering {
-template <typename T, SDL_TextureAccess A>
-using IFSTREAMING = std::enable_if<A == SDL_TEXTUREACCESS_STREAMING, T>;
-template <typename T, SDL_TextureAccess A>
-using IFSTATIC = std::enable_if<A == SDL_TEXTUREACCESS_STATIC, T>;
-template <typename T, SDL_TextureAccess A>
-using IFTARGET = std::enable_if<A == SDL_TEXTUREACCESS_TARGET, T>;
-
-namespace {
-//-----------------------------------------------------------------------------
-// TextureAccessor
-//-----------------------------------------------------------------------------
-// RAII wrapper for SDL_Texture data access.
-//-----------------------------------------------------------------------------
-struct TextureAccessor {
-  int pitch;
-  uint32_t *data;
-  Vector2<int> size;
-  SDL_Texture *texture;
-
-  TextureAccessor() = delete;
-  TextureAccessor(SDL_Texture *texture_to_lock) : texture(texture_to_lock) {
-    SDL_LockTexture(texture, nullptr, reinterpret_cast<void **>(&data), &pitch);
-    SDL_QueryTexture(texture, nullptr, nullptr, &size.x, &size.y);
-  }
-
-  ~TextureAccessor() {
-    SDL_UnlockTexture(texture);
-  }
-
- private:
-};
-}  // namespace
-
 //-----------------------------------------------------------------------------
 // Texture -- Prototype
 // ----------------------------------------------------------------------------
@@ -46,16 +14,21 @@ class Texture {
   constexpr static auto AccessType = A;
 
   Texture() = delete;
+  // Returns TextureStatic
   Texture(Surface &surface);
   Texture(Vector2<int> size);
   ~Texture() = default;
 
-  void Set(Vector2<int> pos, Color color);
   void SetAlphaMod(Uint8 alpha);
   void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
-  IFSTREAMING<void, A> Copy(Texture &other, Vector2<int> pos,
-                            std::optional<Rect<int>> clip);
   void SetBlendMode(SDL_BlendMode mode);
+
+  void Set(Vector2<int> pos, Color color);
+  // Only available to TextureStreaming
+  void Copy(Texture &other, Vector2<int> pos,
+            std::optional<Rect<int>> clip = {});
+  // Only available to TextureStreaming
+  SDL::TextureAccessor Accessor();
 
   [[nodiscard]] SDL_Texture *Ptr() const noexcept {
     return texture_.get();
@@ -64,5 +37,13 @@ class Texture {
  private:
   SDL::SDL_Texture_UQ texture_;
 };
+
+template class Texture<SDL_TEXTUREACCESS_STATIC>;
+template class Texture<SDL_TEXTUREACCESS_STREAMING>;
+template class Texture<SDL_TEXTUREACCESS_TARGET>;
+
+using TextureStatic = Texture<SDL_TEXTUREACCESS_STATIC>;
+using TextureStreaming = Texture<SDL_TEXTUREACCESS_STREAMING>;
+using TextureTarget = Texture<SDL_TEXTUREACCESS_TARGET>;
 }  // namespace Rendering
 }  // namespace Sourcehold

@@ -7,20 +7,24 @@ function(add_test NAME)
   target_compile_features(${NAME} PRIVATE cxx_std_17)
 
   foreach(f ${ARGN})
-    target_sources(${NAME} PUBLIC ${f})
+    target_sources(${NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/${f})
   endforeach()
 
   gtest_discover_tests(${NAME})
 endfunction()
 
-add_test(SDLBackendTest SDLBackendTest.cpp)
-target_link_libraries(SDLBackendTest PRIVATE SDLBackend)
+add_test(SDLTest 
+  SDLBackendTest.cpp
+  TextureAccessorTest.cpp
+)
+target_link_libraries(SDLTest PRIVATE SDLBackend)
 
 
 add_test(RenderingTest 
   ShapesTest.cpp
   ColorTest.cpp
   SurfaceTest.cpp
+  TextureTest.cpp
   TextureAtlasTest.cpp
 ) 
 
