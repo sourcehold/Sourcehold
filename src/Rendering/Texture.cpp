@@ -90,3 +90,8 @@ template <>
 TextureAccessor TextureStreaming::Accessor() {
   return TextureAccessor(texture_.get());
 }
+
+template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_STATIC>;
+template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_STREAMING>;
+template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_TARGET>;
+

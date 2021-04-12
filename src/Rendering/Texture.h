@@ -13,7 +13,6 @@ class Texture {
  public:
   constexpr static auto AccessType = A;
 
-  Texture() = delete;
   // Returns TextureStatic
   Texture(Surface &surface);
   Texture(Vector2<int> size);
@@ -34,13 +33,12 @@ class Texture {
     return texture_.get();
   }
 
+ protected:
+  Texture() = default;
+
  private:
   SDL::SDL_Texture_UQ texture_;
 };
-
-template class Texture<SDL_TEXTUREACCESS_STATIC>;
-template class Texture<SDL_TEXTUREACCESS_STREAMING>;
-template class Texture<SDL_TEXTUREACCESS_TARGET>;
 
 using TextureStatic = Texture<SDL_TEXTUREACCESS_STATIC>;
 using TextureStreaming = Texture<SDL_TEXTUREACCESS_STREAMING>;
