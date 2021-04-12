@@ -35,6 +35,8 @@ class SDLBackend {
   SDL_Window_UQ window_;
   SDL_Renderer_UQ renderer_;
 
+  SDL_RendererInfo renderer_info_;
+
  private:
   SDLBackend();
   ~SDLBackend();

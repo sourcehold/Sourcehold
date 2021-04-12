@@ -31,6 +31,8 @@ SDLBackend::SDLBackend() {
 
   SDL_SetRenderDrawBlendMode(renderer_.get(), BlendMode);
 
+  SDL_GetRendererInfo(renderer_.get(), &renderer_info_);
+
   const char* hint = "SDL_HINT_RENDER_SCALE_QUALITY";
   if (SDL_SetHintWithPriority(hint, "1", SDL_HINT_OVERRIDE) == SDL_FALSE) {
     System::Logger::warning(System::RENDERING)
