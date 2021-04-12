@@ -33,6 +33,8 @@ class Texture {
     return texture_.get();
   }
 
+  Vector2<int> size_;
+
  protected:
   Texture() = default;
 

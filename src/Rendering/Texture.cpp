@@ -18,10 +18,12 @@ TextureStatic::Texture(Surface &surface) {
   }
 
   SDL_SetTextureBlendMode(texture_.get(), BlendMode);
+
+  size_ = {surface.Ptr()->w, surface.Ptr()->h};
 }
 
 template <SDL_TextureAccess A>
-Texture<A>::Texture(Vector2<int> size) {
+Texture<A>::Texture(Vector2<int> size) : size_(size) {
   texture_ = MakeTextureUQ(SDLBackend::Renderer(), PixelFormat, A,  //
                            size.x, size.y);
   if (!texture_) {
