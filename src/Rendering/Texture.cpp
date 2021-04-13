@@ -9,7 +9,7 @@ using namespace Sourcehold::Rendering;
 using namespace Sourcehold::SDL;
 
 template <>
-TextureStatic::Texture(Surface &surface) {
+TextureStatic::Texture(const Surface &surface) {
   texture_ = MakeTextureUQ(SDLBackend::Renderer(), surface.Ptr());
   if (!texture_) {
     auto err = "Unable to create texture from surface: " +  //
@@ -22,9 +22,10 @@ TextureStatic::Texture(Surface &surface) {
   size_ = {surface.Ptr()->w, surface.Ptr()->h};
 }
 
-template <SDL_TextureAccess A>
-Texture<A>::Texture(Vector2<int> size) : size_(size) {
-  texture_ = MakeTextureUQ(SDLBackend::Renderer(), PixelFormat, A,  //
+template <class TextureInfo>
+Texture<TextureInfo>::Texture(Vector2<int> size) : size_(size) {
+  texture_ = MakeTextureUQ(SDLBackend::Renderer(), TextureInfo::PixelFormat,
+                           TextureInfo::AccessType,  //
                            size.x, size.y);
   if (!texture_) {
     auto err = "Unable to create texture from surface: " +  //
@@ -35,27 +36,31 @@ Texture<A>::Texture(Vector2<int> size) : size_(size) {
   SDL_SetTextureBlendMode(texture_.get(), BlendMode);
 }
 
-template <SDL_TextureAccess A>
-void Texture<A>::SetAlphaMod(Uint8 alpha) {
+template <class TextureInfo>
+Texture<TextureInfo>::Texture(Texture &&other)
+    : size_(other.size_), texture_(std::move(other.texture_)) {
+}
+
+template <class TextureInfo>
+Texture<TextureInfo> &Texture<TextureInfo>::operator=(Texture &&other) {
+  size_ = other.size_;
+  texture_ = std::move(other.texture_);
+  return *this;
+}
+
+template <class TextureInfo>
+void Texture<TextureInfo>::SetAlphaMod(Uint8 alpha) {
   SDL_SetTextureAlphaMod(texture_.get(), alpha);
 }
 
-template <SDL_TextureAccess A>
-void Texture<A>::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
+template <class TextureInfo>
+void Texture<TextureInfo>::SetColorMod(Uint8 r, Uint8 g, Uint8 b) {
   SDL_SetTextureColorMod(texture_.get(), r, g, b);
 }
 
-template <SDL_TextureAccess A>
-void Texture<A>::SetBlendMode(SDL_BlendMode mode) {
+template <class TextureInfo>
+void Texture<TextureInfo>::SetBlendMode(SDL_BlendMode mode) {
   SDL_SetTextureBlendMode(texture_.get(), mode);
-}
-
-template <SDL_TextureAccess A>
-void Texture<A>::Set(Vector2<int> pos, Color color) {
-  static_assert(true, "don't call");
-  assert(A == SDL_TEXTUREACCESS_STREAMING);
-  auto write = TextureAccessor(texture_.get());
-  write.data[At(pos, write.size.x)] = AsPixel(color);
 }
 
 template <>
@@ -93,7 +98,17 @@ TextureAccessor TextureStreaming::Accessor() {
   return TextureAccessor(texture_.get());
 }
 
-template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_STATIC>;
-template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_STREAMING>;
-template class Sourcehold::Rendering::Texture<SDL_TEXTUREACCESS_TARGET>;
+template <>
+TextureStreaming::Texture(const Surface &surface) {
+  texture_ = MakeTextureUQ(SDLBackend::Renderer(), TextureInfo::PixelFormat,
+                           TextureInfo::AccessType, surface.Ptr()->w,
+                           surface.Ptr()->h);
+  auto accessor = Accessor();
+  std::copy(std::begin(surface), std::end(surface), std::begin(accessor));
+}
+
+template class Sourcehold::Rendering::Texture<TextureInfoStatic>;
+template class Sourcehold::Rendering::Texture<TextureInfoStreaming>;
+template class Sourcehold::Rendering::Texture<TextureInfoTarget>;
+template class Sourcehold::Rendering::Texture<TextureInfoVideo>;
 

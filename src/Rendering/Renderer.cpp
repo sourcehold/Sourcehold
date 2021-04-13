@@ -1,96 +1,76 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/Display.h"
 #include "SDL/SDLBackend.h"
-#include "System/Logger.h"
 
-using namespace Sourcehold;
-using namespace Rendering;
-using namespace System;
-using namespace SDL;
+using namespace Sourcehold::Rendering;
+using namespace Sourcehold::SDL;
 
-static Texture *_target = nullptr;
-static Rect<int> _tr;
-
-void Rendering::ClearDisplay() {
+void Renderer::Clear() noexcept {
   SDL_SetRenderDrawColor(SDLBackend::Renderer(), 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(SDLBackend::Renderer());
 }
 
-void Rendering::FlushDisplay() {
+void Renderer::Flush() noexcept {
   SDL_RenderPresent(SDLBackend::Renderer());
 }
 
-void Rendering::SetTarget(Texture *target, Rect<int> rect) {
-  _tr = rect;
-  _target = target;
-  if (SDL_SetRenderTarget(SDLBackend::Renderer(),
-                          target ? target->GetTexture() : nullptr) < 0) {
-#if 0
-        Logger::error(RENDERING) << "SDL_SetRenderTarget() failed: " << SDL_GetError() << std::endl;
-#endif
-  }
+template <class TextureInfo>
+void Renderer::Draw(const Texture<TextureInfo> &texture, Vector2<int> dest,
+                    std::optional<Rect<int>> clip) noexcept {
+  Draw(texture, {dest.x, dest.y, texture.size_.x, texture.size_.y}, clip);
 }
-void Rendering::ResetTarget() {
-  auto display_size = Display::Size();
-  _target = nullptr;
-  _tr = {0, 0, display_size.x, display_size.y};
-  SDL_SetRenderTarget(SDL::SDLBackend::Instance().renderer_.get(), nullptr);
+template <class TextureInfo>
+void Renderer::Draw(const Texture<TextureInfo> &texture, Rect<int> dest,
+                    std::optional<Rect<int>> clip) noexcept {
+  SDL_RenderCopy(SDLBackend::Renderer(), texture.Ptr(),                    //
+                 clip.has_value() ? ToSDLRectPtr(clip.value()) : nullptr,  //
+                 ToSDLRectPtr(dest));
 }
-
-void Rendering::Render(Texture &texture, int x, int y, SDL_Rect *clip) {
-  SDL_Rect rect = {x, y, texture.GetWidth(), texture.GetHeight()};
-
-  if (clip) {
-    rect.w = clip->w;
-    rect.h = clip->h;
-  }
-
-  SDL_RenderCopyEx(SDLBackend::Renderer(), texture.GetTexture(), clip, &rect,
-                   0.0, nullptr, SDL_FLIP_NONE);
+template <class TextureInfo>
+void Renderer::Draw(const Texture<TextureInfo> &texture,
+                    std::optional<Rect<int>> clip) noexcept {
+  SDL_RenderCopy(SDLBackend::Renderer(), texture.Ptr(),  //
+                 clip.has_value() ? ToSDLRectPtr(clip.value()) : nullptr,
+                 nullptr);
 }
-
-void Rendering::Render(Texture &texture, int x, int y, int w, int h,
-                       SDL_Rect *clip) {
-  /**
-   * Source texture, specified by SDL_Rect, will
-   * be stretched to fit the destination rect
-   */
-  SDL_Rect rect = {x, y, w, h};
-
-  SDL_RenderCopyEx(SDLBackend::Renderer(), texture.GetTexture(), clip, &rect,
-                   0.0, nullptr, SDL_FLIP_NONE);
+void Renderer::Draw(Rect<int> rect, Color color, bool fill) noexcept {
+  SetDrawColor(color);
+  fill ? SDL_RenderFillRect(SDLBackend::Renderer(), ToSDLRectPtr(rect))
+       : SDL_RenderDrawRect(SDLBackend::Renderer(), ToSDLRectPtr(rect));
+}
+void Renderer::Draw(Line<int> line, Color color) noexcept {
+  SetDrawColor(color);
+  SDL_RenderDrawLine(SDLBackend::Renderer(), line.x1, line.y1, line.x2,
+                     line.y2);
 }
 
-void Rendering::Render(Texture &texture, SDL_Rect *clip) {
-  SDL_RenderCopyEx(SDLBackend::Renderer(), texture.GetTexture(), clip, nullptr,
-                   0.0, nullptr, SDL_FLIP_NONE);
-}
-
-void Rendering::Fill(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-  SDL_SetRenderDrawColor(SDLBackend::Renderer(), r, g, b, a);
+void Renderer::Fill(Color color) noexcept {
+  SetDrawColor(color);
   SDL_RenderFillRect(SDLBackend::Renderer(), nullptr);
 }
-
-void Rendering::RenderRect(Rect<int> rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a,
-                           bool solid) {
-  SDL_SetRenderDrawColor(SDLBackend::Renderer(), r, g, b, a);
-
-  SDL_Rect rc = {rect.x, rect.y, rect.w, rect.h};
-
-  if (solid) {
-    SDL_RenderFillRect(SDLBackend::Renderer(), &rc);
-  }
-  else {
-    SDL_RenderDrawRect(SDLBackend::Renderer(), &rc);
-  }
+void Renderer::SetDrawColor(Color color) noexcept {
+  SDL_SetRenderDrawColor(SDLBackend::Renderer(),  //
+                         color.r, color.g, color.b, color.a);
 }
 
-void Rendering::RenderLine(Line<int> line, Uint8 r, Uint8 g, Uint8 b) {
-  SDL_SetRenderDrawColor(SDLBackend::Renderer(), r, b, g, SDL_ALPHA_OPAQUE);
-  SDL_RenderDrawLine(SDLBackend::Renderer(), _tr.x + line.x1, _tr.y + line.y1,
-                     _tr.x + line.x2, _tr.y + line.y2);
-}
+template void Renderer::Draw(const TextureStatic &texture, Vector2<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureStreaming &texture, Vector2<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureVideo &texture, Vector2<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
 
-Rect<int> Rendering::GetTarget() {
-  return _tr;
-}
+template void Renderer::Draw(const TextureStatic &texture, Rect<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureStreaming &texture, Rect<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureVideo &texture, Rect<int> dest,
+                             std::optional<Rect<int>> clip) noexcept;
+
+template void Renderer::Draw(const TextureStatic &texture,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureStreaming &texture,
+                             std::optional<Rect<int>> clip) noexcept;
+template void Renderer::Draw(const TextureVideo &texture,
+                             std::optional<Rect<int>> clip) noexcept;
+
