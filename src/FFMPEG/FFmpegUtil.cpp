@@ -5,7 +5,7 @@ using namespace Sourcehold;
 using namespace System;
 
 static AVInputFormat *bink_input;
-bool Game::InitAvcodec() {
+bool FFMPEG::InitAvcodec() {
   av_log_set_level(AV_LOG_ERROR);
   bink_input = av_find_input_format("bink");
   if (!bink_input) {
@@ -17,9 +17,9 @@ bool Game::InitAvcodec() {
   return true;
 }
 
-void Game::DestroyAvcodec() {
+void FFMPEG::DestroyAvcodec() {
 }
 
-AVInputFormat *Game::GetAVInputFormat() {
+AVInputFormat *FFMPEG::GetAVInputFormat() {
   return bink_input;
 }

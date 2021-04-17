@@ -12,36 +12,30 @@
 namespace Sourcehold {
 namespace Rendering {
 using namespace Rendering;
-
+struct TilesetCreateInfo {
+  Surface surface;
+  size_t num_of_tiles;
+  size_t num_of_rows;
+};
 /*
  * Constructs a tileset from a GM1 container
  */
-class Tileset : public Texture {
-  uint32_t numRows, num;
-  Surface surf;
-
+class Tileset : public TextureStreaming {
  public:
-  Tileset();
-  ~Tileset();
+  Tileset(const TilesetCreateInfo &create_info);
 
-  void Allocate(uint32_t num);
-  void Create();
-  void SetTile(Texture &image, uint32_t index);
-  void Clear();
-  Uint32 *GetData();
-  void Lock();
-  void Unlock();
+  static TilesetCreateInfo CreateInfo(size_t num_of_tiles);
 
-  inline uint32_t GetNumTiles() {
-    return num;
-  }
-  inline Surface &GetSurface() {
-    return surf;
-  }
-  SDL_Rect GetTile(uint32_t index);
+  void SetTile(TextureStreaming &image, size_t index);
+  Rect<int> GetTile(size_t index);
 
- protected:
-  std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
+  size_t num_of_tiles_;
+
+ private:
+  Vector2<int> IndexToCoords(size_t index);
+
+  size_t num_of_rows;
+  constexpr static auto tile_size = Vector2<int>{30, 16};
 };
 }  // namespace Rendering
 }  // namespace Sourcehold

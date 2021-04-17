@@ -1,21 +1,13 @@
 set(RENDERING_SOURCE_FILES
-  #BinkVideo.h
-  #BinkVideo.cpp
-  #Camera.h
-  #Camera.cpp
-  #Display.h
-  #Display.cpp
-  #Font.h
-  #Font.cpp
-  #Renderer.h
-  #Renderer.cpp
-  #Shapes.h
+  BinkVideo.cpp
+  Camera.cpp
+  Display.cpp
+  Font.cpp
+  Renderer.cpp
   Surface.cpp
   Texture.cpp
-  #TextureAtlas.h
-  #TextureAtlas.cpp
-  #Tileset.h
-  #Tileset.cpp
+  TextureAtlas.cpp
+  Tileset.cpp
 )
 
 add_library(Rendering ${RENDERING_SOURCE_FILES})
@@ -28,8 +20,7 @@ target_include_directories(Rendering
 
 target_link_libraries(Rendering 
   PRIVATE ProjectOptions
-  PRIVATE System
-  PRIVATE FFmpegUtil
+  PUBLIC System
+  PUBLIC FFmpegUtil 
   PUBLIC SDLBackend
-  PRIVATE OpenAL::OpenAL
 )

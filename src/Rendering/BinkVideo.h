@@ -1,68 +1,32 @@
 #pragma once
 
-extern "C" {
-#include <libavutil/opt.h>
-#include <libswscale/swscale.h>
-#include <libavcodec/avcodec.h>
-#include <libavformat/avformat.h>
-}
-
-#include <al.h>
-#include <alc.h>
-
-#include <memory>
-
-#include "System/Logger.h"
+#include "FFMPEG/BinkStream.h"
 
 #include "Rendering/Renderer.h"
 #include "Rendering/Texture.h"
-
-#include "System/filesystem.h"
 
 namespace Sourcehold {
 namespace Rendering {
 /*
  * A single bink video file, exposes a texture as a frame buffer
  */
-class BinkVideo : public Texture {
-  AVFormatContext *ic;
-  AVCodec *decoder, *audioDecoder;
-  AVPacket packet;
-  AVFrame *frame, *audioFrame;
-  AVCodecContext *codecCtx, *audioCtx;
-  SwsContext *sws;
-  const static uint32_t NUM_AUDIO_BUFFERS = 4;
-  ALuint alSource;
-  ALuint alFreeBuffers[NUM_AUDIO_BUFFERS];
-  ALuint alBuffers[NUM_AUDIO_BUFFERS];
-  ALuint alNumFreeBuffers = NUM_AUDIO_BUFFERS;
-  ALuint alNumChannels;
-  ALuint alFormat;
-  ALuint alSampleRate;
-  char *audioBuffer;
-  int videoStream, audioStream, size;
-  float fps;
-  uint32_t *framebuf;
-  int delayTimer;
-  bool packetFinished;
-  bool hasAudio = false, audioInit = false, looping, running = false,
-       valid = false;
-
+class BinkVideo : public TextureVideo {
  public:
-  BinkVideo();
-  BinkVideo(ghc::filesystem::path path, bool looping = false);
-  ~BinkVideo();
+  BinkVideo() = delete;
+  BinkVideo(std::unique_ptr<FFMPEG::BinkStream> bink_stream);
+  ~BinkVideo() = default;
 
-  bool LoadFromDisk(ghc::filesystem::path path, bool looping = false);
-  void Close();
   void Update();
 
-  inline bool IsRunning() {
-    return running;
+  bool IsRunning() {
+    return bink_stream_->running_;
   }
 
  protected:
   void test();
+
+ private:
+  std::unique_ptr<FFMPEG::BinkStream> bink_stream_;
 };
 }  // namespace Rendering
 }  // namespace Sourcehold

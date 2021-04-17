@@ -1,6 +1,4 @@
 set(AUDIO_SOURCE_FILES 
-  Audio.h
-  Audio.cpp
   Effect.h
   Effect.cpp
   Song.h
@@ -21,7 +19,7 @@ target_link_libraries(Audio
   PRIVATE ProjectOptions
   PRIVATE System
   PUBLIC FFmpegUtil
-  PUBLIC OpenAL::OpenAL
+  PUBLIC OpenAL
   PRIVATE SWRESAMPLE::SWRESAMPLE
   PRIVATE SDLBackend
 )

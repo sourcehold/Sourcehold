@@ -36,7 +36,7 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
 
   font->GetTextureAtlas()->SetColorMod(248, 240, 184);
 
-  SDL_Rect glyph = {};
+  Rect<int> glyph = {};
   for (wchar_t c : text) {
     if (c < 0x20)
       continue;
@@ -70,11 +70,14 @@ void Rendering::RenderText(const std::wstring& text, int32_t x, int32_t y,
           break;
       }
       glyph = font->GetTextureAtlas()->Get(c - 0x21);
-      Render(
-          *font->GetTextureAtlas(), illumination ? (x + (13 - glyph.w) / 2) : x,
-          y + int(_table_width_height[type].second * scaleFactor) -
-              int(glyph.h * scaleFactor) + int(lowercaseOffset * scaleFactor),
-          int(glyph.w * scaleFactor), int(glyph.h * scaleFactor), &glyph);
+      Renderer::Draw(
+          *font->GetTextureAtlas(),
+          Rect<int>{illumination ? (x + (13 - glyph.w) / 2) : x,
+                    y + int(_table_width_height[type].second * scaleFactor) -
+                        int(glyph.h * scaleFactor) +
+                        int(lowercaseOffset * scaleFactor),
+                    int(glyph.w * scaleFactor), int(glyph.h * scaleFactor)},
+          glyph);
       x += glyph.w * scaleFactor + 1;
     }
   }
@@ -114,7 +117,7 @@ std::pair<uint32_t, uint32_t> Rendering::GetStringPixelDim(
 
   auto font = _fonts[type];
 
-  SDL_Rect glyph = {};
+  Rect<int> glyph = {};
   for (wchar_t c : text) {
     if (c < 0x20)
       continue;

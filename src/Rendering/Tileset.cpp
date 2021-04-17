@@ -7,62 +7,30 @@
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Tileset::Tileset() {
+Tileset::Tileset(const TilesetCreateInfo &create_info)
+    : TextureStreaming(create_info.surface),
+      num_of_tiles_(create_info.num_of_tiles) {
+}
+TilesetCreateInfo Tileset::CreateInfo(size_t num_of_tiles) {
+  auto num_rows =
+      static_cast<int>(std::sqrt(static_cast<float>(num_of_tiles)) + 0.5f);
+  return {Surface(Vector2<int>{num_rows, num_rows} * tile_size),  //
+          num_of_tiles, static_cast<size_t>(num_rows)};
 }
 
-Tileset::~Tileset() {
-}
-
-void Tileset::Allocate(uint32_t num) {
-  this->num = num;
-
-  numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-  surf.AllocNew(30 * numRows, 16 * numRows);
-}
-
-void Tileset::Create() {
-  Texture::AllocFromSurface(surf);
-  surf.Destroy();
-}
-
-void Tileset::SetTile(Texture &image, uint32_t index) {
+void Tileset::SetTile(TextureStreaming &image, size_t index) {
   auto coords = IndexToCoords(index);
 
-  image.LockTexture();
-  Texture::LockTexture();
-  Texture::Copy(image, coords.first, coords.second);
-  image.UnlockTexture();
-  Texture::UnlockTexture();
+  Texture::Copy(image, coords);
 }
 
-SDL_Rect Tileset::GetTile(uint32_t index) {
+Rect<int> Tileset::GetTile(size_t index) {
   auto coords = IndexToCoords(index);
 
-  SDL_Rect rect;
-  rect.x = coords.first;
-  rect.y = coords.second;
-  rect.w = 30;
-  rect.h = 16;
-
-  return rect;
+  return {coords.x, coords.y, tile_size.x, tile_size.y};
 }
 
-void Tileset::Clear() {
-  Texture::Destroy();
-}
-
-Uint32 *Tileset::GetData() {
-  return surf.GetData();
-}
-
-void Tileset::Lock() {
-  surf.LockSurface();
-}
-
-void Tileset::Unlock() {
-  surf.UnlockSurface();
-}
-
-std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {
-  return {30 * (index % numRows), 16 * (index / numRows)};
+Vector2<int> Tileset::IndexToCoords(size_t index) {
+  return {tile_size.x * static_cast<int>(index % num_of_rows),
+          tile_size.y * static_cast<int>(index / num_of_rows)};
 }

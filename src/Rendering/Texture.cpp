@@ -93,8 +93,45 @@ void TextureStreaming::Copy(Texture &other, Vector2<int> pos,
     }
   }
 }
+
+template <>
+void TextureVideo::Copy(Texture &other, Vector2<int> pos,
+                        std::optional<Rect<int>> clip) {
+  auto write = TextureAccessor(texture_.get());
+  auto read = TextureAccessor(other.Ptr());
+  Vector2<int> read_offset{0, 0};
+  if (clip.has_value()) {
+    read_offset.x = clip->x;
+    read_offset.y = clip->y;
+    read.size.x = clip->w;
+    read.size.y = clip->h;
+  }
+
+  if (read.size.x + pos.x > write.size.x ||
+      read.size.y + pos.y > write.size.y) {
+    // TODO: assert here
+    Logger::error(RENDERING) << "Attempted to copy a texture which is too "
+                                "large for the target (or goes out of bounds)!"
+                             << std::endl;
+    return;
+  }
+
+  for (auto y = 0; y < read.size.y; ++y) {
+    for (auto x = 0; x < read.size.x; ++x) {
+      auto write_pos = At(pos + Vector2<int>{x, y}, write.size.x);
+      auto read_pos = At(read_offset + Vector2<int>{x, y}, read.size.x);
+      write.data[write_pos] = read.data[read_pos];
+    }
+  }
+}
+
 template <>
 TextureAccessor TextureStreaming::Accessor() {
+  return TextureAccessor(texture_.get());
+}
+
+template <>
+TextureAccessor TextureVideo::Accessor() {
   return TextureAccessor(texture_.get());
 }
 

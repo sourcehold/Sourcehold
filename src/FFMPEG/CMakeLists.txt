@@ -1,6 +1,9 @@
 set(FFMPEG_UTIL_SOURCE_FILES
   FFmpegUtil.h
   FFmpegUtil.cpp
+  Decoder.cpp
+  BinkStream.h
+  BinkStream.cpp
 )
 
 add_library(FFmpegUtil ${FFMPEG_UTIL_SOURCE_FILES})
@@ -15,5 +18,6 @@ target_link_libraries(FFmpegUtil
   PUBLIC FFMPEG::AVFORMAT
   PUBLIC FFMPEG::AVUTIL
   PUBLIC FFMPEG::SWSCALE 
+  PUBLIC OpenAL 
 )
 

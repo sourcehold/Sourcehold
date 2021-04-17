@@ -26,6 +26,7 @@ add_test(RenderingTest
   SurfaceTest.cpp
   TextureTest.cpp
   TextureAtlasTest.cpp
+  BinkVideoTest.cpp
 ) 
 
 target_link_libraries(RenderingTest PRIVATE Rendering)

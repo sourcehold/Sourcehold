@@ -1,5 +1,6 @@
 add_subdirectory(System)
 add_subdirectory(SDL)
+add_subdirectory(OpenAL)
 add_subdirectory(FFMPEG)
 add_subdirectory(Audio)
 add_subdirectory(Events)

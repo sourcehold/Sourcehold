@@ -32,11 +32,11 @@ class Texture : private TextureInfo {
   void SetColorMod(Uint8 r, Uint8 g, Uint8 b);
   void SetBlendMode(SDL_BlendMode mode);
 
-  // Only available to TextureStreaming
+  // Only available to TextureStreaming and TextureVideo
   // this will result in a linking error
   void Copy(Texture& other, Vector2<int> pos,
             std::optional<Rect<int>> clip = {});
-  // Only available to TextureStreaming
+  // Only available to TextureStreaming and TextureVideo
   // this will result in a linking error
   SDL::TextureAccessor Accessor();
 

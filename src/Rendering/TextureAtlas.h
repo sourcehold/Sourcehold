@@ -12,40 +12,30 @@
 
 namespace Sourcehold {
 namespace Rendering {
+struct TextureAtlasCreateInfo {
+  Surface surface;
+  std::vector<Rect<int>> entries;
+};
 /**
  * Merge multiple textures. First, give it a list of image dimensions
  * to handle, then use the offsets returned by Get() to write to the
  * intermediate surface. When done, call Create() to convert the surface
  * to a static texture.
  */
-class TextureAtlas : public Texture {
-  uint32_t num;
-  Surface surf;
-  std::vector<SDL_Rect> entries;
-
+class TextureAtlas : public TextureStatic {
  public:
-  TextureAtlas() = default;
-  TextureAtlas(const TextureAtlas& atlas);
-  ~TextureAtlas();
+  TextureAtlas() = delete;
+  TextureAtlas(const TextureAtlasCreateInfo& atlas);
+  ~TextureAtlas() = default;
 
-  void Allocate(std::vector<std::pair<uint32_t, uint32_t>>& entries);
-  void Create();
-  SDL_Rect Get(uint32_t index);
-  void Clear();
-  void Lock();
-  void Unlock();
-  Uint32* GetData();
+  static TextureAtlasCreateInfo CreateInfo(
+      std::vector<Vector2<int>>& dimensions);
 
-  inline uint32_t GetNumTextures() {
-    return num;
-  }
-  inline Surface& GetSurface() {
-    return surf;
-  }
+  Rect<int> Get(size_t index);
+  std::vector<Rect<int>> entries_;
 
  protected:
-  const uint32_t MAX_X_RESOLUTION = 2048;
-  std::pair<uint32_t, uint32_t> IndexToCoords(uint32_t index);
+  constexpr static auto MAX_X_RESOLUTION = 2048;
 };
 }  // namespace Rendering
 }  // namespace Sourcehold
