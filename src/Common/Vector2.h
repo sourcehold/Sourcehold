@@ -1,25 +1,4 @@
 #pragma once
-#include <array>
-#include <functional>
-#include <type_traits>
-
-namespace Sourcehold {
-namespace Rendering {
-template <typename T>
-struct Rect {
-  T x;
-  T y;
-  T w;
-  T h;
-};
-
-template <typename T>
-struct Line {
-  T x1;
-  T y1;
-  T x2;
-  T y2;
-};
 
 template <typename T>
 struct Vector2 {
@@ -168,6 +147,3 @@ Vector2<F> operator/(const Vector2<F>& l, const F& r) {
   auto result = l;
   return result /= r;
 }
-
-}  // namespace Rendering
-}  // namespace Sourcehold

@@ -1,4 +1,5 @@
 #include "TextureAccessor.h"
+#include <string>
 #include <SDL_error.h>
 #include <stdexcept>
 using namespace Sourcehold::SDL;

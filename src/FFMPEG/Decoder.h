@@ -1,5 +1,6 @@
 #pragma once
 #include "FFmpegUtil.h"
+#include <string>
 
 namespace Sourcehold {
 namespace FFMPEG {
@@ -13,7 +14,13 @@ class Decoder {
   ~Decoder() = default;
 
   std::string GetAvError(int state);
-
+  void AudioInfo();
+  int GetAudioFrameSize();
+  
+  // Decodes all of the remaining source data
+  // @return: video data
+  void DecodeVideo();
+  
   AVFormatContextUQ av_context_;
   AVCodec *video_decoder_, *audio_decoder_;
 

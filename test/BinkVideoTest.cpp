@@ -17,7 +17,7 @@ TEST(BinkVideo, PlayIntro) {
 
   Display::Set("Test BinkVideo", {800, 600}, 0, false, false, false, false);
   auto bik = std::make_unique<BinkStream>(
-      "/home/fseidl/projects/Sourcehold/data/binks/intro.bik");
+      "/Users/fseidl/Projects/Sourcehold/data/binks/intro.bik");
   auto intro = BinkVideo{std::move(bik)};
 
   Renderer::Clear();

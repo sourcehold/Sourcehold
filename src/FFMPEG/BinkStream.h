@@ -2,7 +2,7 @@
 #include <functional>
 
 #include "FFMPEG/Decoder.h"
-#include "Rendering/Shapes.h"
+#include "Common/Shapes.h"
 
 #include "OpenAL/AudioSource.h"
 
@@ -17,7 +17,7 @@ class BinkStream {
   bool Finished();
 
   std::vector<uint32_t> frame_buffer_;
-  Rendering::Vector2<int> buffer_dim;
+  Vector2<int> buffer_dim;
   bool running_;
 
   std::function<void()> OnUpdateVideo_;
@@ -26,13 +26,10 @@ class BinkStream {
   void UpdateVideo();
   void UpdateAudio();
 
-  void AudioInfo();
-  int GetAudioFrameSize();
-
   bool VideoFinished();
   void ProcessVideoFrame();
 
-  int AudioState();
+  bool AudioState();
   std::vector<float> GetAudioData();
 
   std::unique_ptr<DecoderAll> decoder_;
@@ -40,7 +37,7 @@ class BinkStream {
   AVPacket packet_;
   bool packet_finished_;
 
-  std::unique_ptr<OpenAL::AudioSource<4>> audio_source_;
+  std::unique_ptr<OpenAL::AudioSource<17,float>> audio_source_;
   SWSContextUQ sws_context_;
 
   bool looping_;

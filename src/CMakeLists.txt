@@ -1,3 +1,4 @@
+add_subdirectory(Common)
 add_subdirectory(System)
 add_subdirectory(SDL)
 add_subdirectory(OpenAL)

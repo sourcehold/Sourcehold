@@ -18,7 +18,7 @@ struct FFmpegDeleters {
   }
 
   void operator()(AVCodecContext* context) {
-    avcodec_free_context(&context);
+    av_free(context);
   }
 
   void operator()(AVFrame* frame) {

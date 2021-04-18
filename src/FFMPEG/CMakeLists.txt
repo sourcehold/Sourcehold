@@ -1,6 +1,7 @@
 set(FFMPEG_UTIL_SOURCE_FILES
   FFmpegUtil.h
   FFmpegUtil.cpp
+  Decoder.h
   Decoder.cpp
   BinkStream.h
   BinkStream.cpp
@@ -14,6 +15,7 @@ target_include_directories(FFmpegUtil PRIVATE ../)
 target_link_libraries(FFmpegUtil
   PRIVATE ProjectOptions
   PRIVATE System
+  PRIVATE Common
   PUBLIC FFMPEG::AVCODEC
   PUBLIC FFMPEG::AVFORMAT
   PUBLIC FFMPEG::AVUTIL

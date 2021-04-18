@@ -1,6 +1,9 @@
 set(SDL_BACKEND_SOURCE_FILES
+  SDLBackend.h
   SDLBackend.cpp
+  SDLFactories.h
   SDLFactories.cpp
+  TextureAccessor.h
   TextureAccessor.cpp
 )
 

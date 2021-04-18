@@ -27,6 +27,15 @@ add_test(RenderingTest
   TextureTest.cpp
   TextureAtlasTest.cpp
   BinkVideoTest.cpp
-) 
+)
 
 target_link_libraries(RenderingTest PRIVATE Rendering)
+
+add_test(AudioTest
+  AudioTest.cpp
+)
+
+target_link_libraries(AudioTest
+  PRIVATE OpenAL
+  PRIVATE FFmpegUtil
+)

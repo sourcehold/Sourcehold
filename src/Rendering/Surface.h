@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 #include "SDL/SDLBackend.h"
 #include "Shapes.h"
 #include "Color.h"
