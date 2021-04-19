@@ -1,3 +1,3 @@
 #!/bin/sh
 sudo apt update
-sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev clang-tidy googletest
+sudo apt install libsdl2-dev libopenal-dev libavcodec-dev libavformat-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev clang-tidy libgtest-dev
