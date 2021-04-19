@@ -6,7 +6,7 @@
 #include <string>
 
 #include "Rendering/Font.h"
-#include "Rendering/Shapes.h"
+#include "Shapes.h"
 
 #include "Parsers/HlpFile.h"
 #include "Parsers/TgxFile.h"

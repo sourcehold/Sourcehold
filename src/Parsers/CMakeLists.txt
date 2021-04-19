@@ -31,4 +31,5 @@ target_link_libraries(Parsers
   PRIVATE blast
   PRIVATE System
   PRIVATE Rendering
+  PUBLIC Common
 )

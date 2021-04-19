@@ -22,6 +22,7 @@ target_link_libraries(ECS
   PRIVATE ProjectOptions
   PRIVATE System
   PUBLIC EnTT::EnTT
+  PUBLIC Common
   PRIVATE SDL2::SDL2
 )
 

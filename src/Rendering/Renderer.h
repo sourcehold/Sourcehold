@@ -5,7 +5,7 @@
 #include <SDL.h>
 
 #include "Rendering/Texture.h"
-#include "Rendering/Shapes.h"
+#include "Shapes.h"
 
 #include "System/Config.h"
 

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "Rendering/Shapes.h"
+#include "Shapes.h"
 
 namespace Sourcehold {
 namespace GUI {
-using namespace Rendering;
 struct Widget {
   Widget(const Widget&) = delete;
   Widget& operator=(const Widget&) = delete;
