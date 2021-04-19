@@ -15,7 +15,7 @@ endfunction()
 
 
 add_test(CommonTest 
-  ShapesTest.cpp
+  VectorTest.cpp
 )
 
 target_link_libraries(CommonTest PRIVATE Common)
