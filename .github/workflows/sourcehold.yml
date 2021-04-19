@@ -145,9 +145,11 @@ jobs:
     - name: Run tests
       shell: bash
       run: |
-        pushd build/test
-        ctest
-        popd
+        if [[ ${{ matrix.target-platform }} != 'ios-simulator' ]]; then
+          pushd build/test
+          ctest
+          popd
+        fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
