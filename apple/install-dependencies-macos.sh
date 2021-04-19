@@ -26,3 +26,10 @@ if ! is_brew_formula_installed sdl2 ; then
 else
     echo "SDL2 for macOS is already installed..."
 fi
+
+if ! is_brew_formula_installed googletest ; then
+    echo "Installing Google Test for macOS..."
+    brew install googletest
+else
+    echo "Google Test for macOS is already installed..."
+fi
