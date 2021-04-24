@@ -17,6 +17,8 @@ set(RENDERING_SOURCE_FILES
   TextureAtlas.cpp
   Tileset.h
   Tileset.cpp
+  Color.h
+  Color.cpp
 )
 
 add_library(Rendering ${RENDERING_SOURCE_FILES})
