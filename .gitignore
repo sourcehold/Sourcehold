@@ -12,3 +12,5 @@ stronghold.cfg
 # Mac OS file that stores custom attributes of its containing folder
 .DS_Store
 
+compile_commands.json
+
