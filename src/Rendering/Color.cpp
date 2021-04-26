@@ -47,4 +47,3 @@ constexpr Color::Color(Pixel&& pixel) noexcept
   *this = AsColor(pixel);
   return *this;
 }
-
