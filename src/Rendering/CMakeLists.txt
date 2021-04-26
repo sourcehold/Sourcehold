@@ -9,7 +9,6 @@ set(RENDERING_SOURCE_FILES
   Font.cpp
   Renderer.h
   Renderer.cpp
-  Shapes.h
   Surface.h
   Surface.cpp
   Texture.h
@@ -32,6 +31,7 @@ target_link_libraries(Rendering
   PRIVATE ProjectOptions
   PRIVATE System
   PRIVATE FFmpegUtil
+  PUBLIC Common
   PUBLIC SDL2::SDL2
   PRIVATE OpenAL::OpenAL
 )

@@ -121,12 +121,15 @@ void BinkVideo::Close() {
   if (valid) {
     avformat_close_input(&ic);
     av_frame_free(&frame);
-    decoder->close(codecCtx);
+    // TODO (seidl):
+    // uncommenting this line, will crash the app on MacOS
+    // leaving this here, in case this crashes other platforms now
+    // decoder->close(codecCtx);
     av_free(codecCtx);
     delete framebuf;
 
     if (hasAudio) {
-      decoder->close(audioCtx);
+      // decoder->close(audioCtx);
       av_free(audioCtx);
       av_frame_free(&audioFrame);
       alSourceStop(alSource);

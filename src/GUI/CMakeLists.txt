@@ -45,5 +45,6 @@ target_link_libraries(GUI
   # GUI doesnt use EnTT!
   PRIVATE EnTT::EnTT
   PRIVATE Audio
+  PUBLIC Common
 )
 

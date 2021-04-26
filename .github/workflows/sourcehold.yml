@@ -40,7 +40,8 @@ jobs:
           - target-platform: "ios-simulator"
             os: macos-latest
             install-dependencies: "sh ./apple/install-dependencies-ios.sh -s -d 11.0 ./thirdparty/ios"
-            cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_OSX_ARCHITECTURES="x86_64"'
+            #TODO: add gtest install script for ios
+            cmake-configure-options: '-GXcode -DCMAKE_SYSTEM_NAME=iOS -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 -DCMAKE_OSX_ARCHITECTURES="x86_64" -DSOURCEHOLD_BUILD_TESTS=OFF'
             cmake-build-options: "-- -sdk iphonesimulator"
             uploaded-artifact-name: "sourcehold-ios"
           - os: windows-latest
@@ -139,6 +140,15 @@ jobs:
           7z a "${{ github.workspace }}\${{ matrix.uploaded-artifact-name }}.zip" -tzip "$BUILD_ARTIFACT_NAME"
         else
           zip -r ${{ github.workspace }}/${{ matrix.uploaded-artifact-name }}.zip "$BUILD_ARTIFACT_NAME"
+        fi
+
+    - name: Run tests
+      shell: bash
+      run: |
+        if [[ ${{ matrix.target-platform }} != 'ios-simulator' ]]; then
+          pushd build/test
+          ctest
+          popd
         fi
 
     - name: Upload artifacts
