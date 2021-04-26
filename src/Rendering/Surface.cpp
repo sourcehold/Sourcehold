@@ -65,7 +65,7 @@ void Surface::Set(Vector2<int> pos, Color color) const noexcept {
 void Surface::Blit(const Surface& other, Vector2<int> pos,
                    std::optional<Rect<int>> clip) const noexcept {
   SDL_Rect dest = {pos.x, pos.y, other.surface_->w, other.surface_->h};
-  SDL_Rect* clip_ = clip.has_value() ? SDL::ToSDLRectPtr(clip.value())  //
+  SDL_Rect* clip_ = clip.has_value() ? SDL::ToSDLRectPtr(*clip)  //
                                      : nullptr;
 
   int err = SDL_BlitSurface(other, clip_, surface_.get(), &dest);
