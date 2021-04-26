@@ -16,15 +16,19 @@ struct Color {
 
   constexpr Color(uint8_t r_, uint8_t g_, uint8_t b_, uint8_t a_ = 255) noexcept
       : r(r_), g(g_), b(b_), a(a_){};
-  constexpr Color(Pixel) noexcept;
+  constexpr Color(const Pixel&) noexcept;
   constexpr Color(Pixel&&) noexcept;
 
-  [[nodiscard]] constexpr Color& operator=(Pixel) noexcept;
+  [[nodiscard]] constexpr Color& operator=(const Pixel&) noexcept;
   [[nodiscard]] constexpr Color& operator=(Pixel&&) noexcept;
 
-  [[nodiscard]] constexpr operator Pixel() noexcept;
+  operator Pixel() const;
 
   ~Color() = default;
+};
+
+struct ColorMask {
+  Pixel r, g, b, a;
 };
 
 namespace Colors {
@@ -37,5 +41,9 @@ constexpr auto Yellow = Color{255, 255, 0};
 constexpr auto Cyan = Color{0, 255, 255};
 constexpr auto Magenta = Color{255, 0, 255};
 }  // namespace Colors
+
+namespace ColorMasks {
+constexpr auto RGBA8888 = ColorMask{0xFF000000, 0xFF0000, 0xFF00, 0xFF};
+}
 }  // namespace Rendering
 }  // namespace Sourcehold
