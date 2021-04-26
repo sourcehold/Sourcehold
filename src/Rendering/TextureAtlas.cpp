@@ -62,12 +62,12 @@ void TextureAtlas::Allocate(
     this->entries[e.index] = rect;
   }
 
-  surf.AllocNew(width, height);
+  surf = Surface({static_cast<int>(width), static_cast<int>(height)});
 }
 
 void TextureAtlas::Create() {
   Texture::AllocFromSurface(surf);
-  surf.Destroy();
+  // surf.Destroy();
 }
 
 SDL_Rect TextureAtlas::Get(uint32_t index) {
@@ -81,16 +81,8 @@ void TextureAtlas::Clear() {
   Texture::Destroy();
 }
 
-void TextureAtlas::Lock() {
-  surf.LockSurface();
-}
-
-void TextureAtlas::Unlock() {
-  surf.UnlockSurface();
-}
-
 Uint32* TextureAtlas::GetData() {
-  return surf.GetData();
+  return surf.begin();
 }
 
 std::pair<uint32_t, uint32_t> TextureAtlas::IndexToCoords(uint32_t index) {

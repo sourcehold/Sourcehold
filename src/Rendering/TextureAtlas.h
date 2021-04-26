@@ -32,8 +32,6 @@ class TextureAtlas : public Texture {
   void Create();
   SDL_Rect Get(uint32_t index);
   void Clear();
-  void Lock();
-  void Unlock();
   Uint32* GetData();
 
   inline uint32_t GetNumTextures() {

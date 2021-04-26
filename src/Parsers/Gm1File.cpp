@@ -8,6 +8,8 @@
 #include "System/Logger.h"
 #include "System/Config.h"
 
+#include "SDL/SurfaceLock.h"
+
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
@@ -210,15 +212,15 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
     }
     /* One collection -> one texture */
     textureAtlas->Allocate(entryDims);
-    textureAtlas->Lock();
+    auto atlas_surf_lock = SDL::SurfaceScopedLock(textureAtlas->GetSurface());
+
     tileset->Allocate(header.num);
-    tileset->Lock();
+    auto tileset_surf_lock = SDL::SurfaceScopedLock(tileset->GetSurface());
+
     for (n = 0; n < entries.size(); n++) {
       GetImage(n, entries, imgdata, &header);
     }
-    tileset->Unlock();
     tileset->Create();
-    textureAtlas->Unlock();
     textureAtlas->Create();
   }
   else {
@@ -231,12 +233,13 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
       entryDims[n] = dim;
     }
     textureAtlas->Allocate(entryDims);
-    textureAtlas->Lock();
+
+    auto atlas_surf_lock = SDL::SurfaceScopedLock(textureAtlas->GetSurface());
+
     /* One entry -> one texture */
     for (n = 0; n < entries.size(); n++) {
       GetImage(n, entries, imgdata, &header);
     }
-    textureAtlas->Unlock();
     textureAtlas->Create();
   }
 
@@ -293,8 +296,9 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries,
           TgxFile::ReadPixel(pixel, r, g, b, a);
 
           /* Add to tileset texture */
-          tileset->GetSurface().SetPixel(tile.x + (15 - lines[l] / 2 + i),
-                                         tile.y + l, r, g, b, 0xFF);
+          tileset->GetSurface().Set(
+              {tile.x + (15 - lines[l] / 2 + i), tile.y + l},  //
+              {r, g, b, 0xFF});
           /*
             textureAtlas->GetSurface().SetPixel(
             part.x + entries[index].tileX + (15 - lines[l] / 2 + i),
@@ -321,8 +325,9 @@ bool Gm1File::GetImage(uint32_t index, std::vector<Gm1Entry> &entries,
           TgxFile::ReadPixel(pixel, r, g, b, a);
 
           /* Add to texture */
-          textureAtlas->GetSurface().SetPixel(x + part.x, y + part.y, r, g, b,
-                                              a);
+          textureAtlas->GetSurface().Set(
+              {static_cast<int>(x + part.x), static_cast<int>(y + part.y)},
+              {r, g, b, a});
         }
       }
     } break;

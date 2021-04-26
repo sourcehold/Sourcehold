@@ -1,5 +1,6 @@
 #include "Parsers/TgxFile.h"
 #include "System/Config.h"
+#include "SDL/SurfaceLock.h"
 
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
@@ -32,8 +33,8 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
   header.height = GetDWord();
 
   /* Allocate image */
-  Surface surf;
-  surf.AllocNew(header.width, header.height);
+  Surface surf({static_cast<int>(header.width),  //
+                static_cast<int>(header.height)});
 
   /* Calculate size */
   size_t size = Parser::GetLength() - Parser::Tell();
@@ -43,9 +44,8 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
   Parser::Close();
 
   /* Read image data */
-  surf.LockSurface();
+  auto surf_lock = SDL::SurfaceScopedLock(surf);
   ReadTgx(surf, buf, size, 0, 0, nullptr);
-  surf.UnlockSurface();
 
   /* Convert to texture */
   Texture::AllocFromSurface(surf);
@@ -85,7 +85,7 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX,
           }
           uint8_t r, g, b, a;
           ReadPixel(pixelColor, r, g, b, a);
-          tex.SetPixel(x + offX, y + offY, r, g, b, a);
+          tex.Set({x + offX, y + offY}, {r, g, b, a});
         }
       } break;
       case 0x04: {
@@ -109,13 +109,13 @@ void TgxFile::ReadTgx(Surface &tex, char *buf, size_t size, uint16_t offX,
 
         ReadPixel(pixelColor, r, g, b, a);
         for (uint8_t i = 0; i < len; ++i, ++x) {
-          tex.SetPixel(x + offX, y + offY, r, g, b, 0xFF);
+          tex.Set({x + offX, y + offY}, {r, g, b, 0xFF});
         }
       } break;
       case 0x01: {
         // transparent pixels
         for (uint8_t i = 0; i < len; i++, x++) {
-          tex.SetPixel(x + offX, y + offY, 0, 0, 0, 0);
+          tex.Set({x + offX, y + offY}, {0, 0, 0, 0});
         }
       } break;
       default: {
