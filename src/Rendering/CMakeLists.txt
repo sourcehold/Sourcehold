@@ -18,7 +18,6 @@ set(RENDERING_SOURCE_FILES
   Tileset.h
   Tileset.cpp
   Color.h
-  Color.cpp
 )
 
 add_library(Rendering ${RENDERING_SOURCE_FILES})
