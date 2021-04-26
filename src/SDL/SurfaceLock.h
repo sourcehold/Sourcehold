@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL2/SDL_surface.h>
+#include "SDL.h"
 namespace Sourcehold {
 namespace SDL {
 struct SurfaceScopedLock {
