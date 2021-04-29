@@ -31,7 +31,7 @@ bool Texture::AllocNewStreaming(int width, int height, int format) {
 }
 
 bool Texture::AllocFromSurface(Surface &surface) {
-  texture = SDL_CreateTextureFromSurface(GetRenderer(), surface.GetSurface());
+  texture = SDL_CreateTextureFromSurface(GetRenderer(), surface);
   if (!texture) {
     Logger::error(RENDERING)
         << "Unable to create texture from surface: " << SDL_GetError()

@@ -17,12 +17,14 @@ void Tileset::Allocate(uint32_t num) {
   this->num = num;
 
   numRows = (uint32_t)(std::sqrt((float)num) + 0.5f);
-  surf.AllocNew(30 * numRows, 16 * numRows);
+  surf =
+      Surface({static_cast<int>(30 * numRows), static_cast<int>(16 * numRows)});
 }
 
 void Tileset::Create() {
   Texture::AllocFromSurface(surf);
-  surf.Destroy();
+  // TODO: candidate to remove, but may use std::unique_ptr() instead
+  // surf.Destroy();
 }
 
 void Tileset::SetTile(Texture &image, uint32_t index) {
@@ -52,15 +54,7 @@ void Tileset::Clear() {
 }
 
 Uint32 *Tileset::GetData() {
-  return surf.GetData();
-}
-
-void Tileset::Lock() {
-  surf.LockSurface();
-}
-
-void Tileset::Unlock() {
-  surf.UnlockSurface();
+  return surf.begin();
 }
 
 std::pair<uint32_t, uint32_t> Tileset::IndexToCoords(uint32_t index) {

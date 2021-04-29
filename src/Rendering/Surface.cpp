@@ -1,91 +1,93 @@
 #include "Rendering/Surface.h"
 #include "System/Logger.h"
+#include "SDL/SDLFactories.h"
+#include "SDL/SurfaceLock.h"
 
 using namespace Sourcehold::Rendering;
 using namespace Sourcehold::System;
 
-Surface::Surface() : surface(nullptr) {
+Surface::Surface(const Surface& other) {
+  if (other.surface_) {
+    auto lock = SDL::SurfaceScopedLock(other);
+
+    surface_ = SDL::MakeSurfaceUQ(0, other.surface_->w, other.surface_->h,
+                                  Depth, Mask.r, Mask.g, Mask.b, Mask.a);
+
+    std::copy(std::begin(other), std::end(other), this->begin());
+  }
+  else {
+    surface_ = nullptr;
+  }
 }
 
-Surface::Surface(const Surface& other)
-    : surface(other.surface), locked(other.locked), pixels(other.pixels) {
+Surface::Surface(Surface&& other) {
+  surface_ = std::move(other.surface_);
 }
 
-Surface::~Surface() {
-  Destroy();
-}
+Surface& Surface::operator=(const Surface& other) {
+  if (other.surface_) {
+    auto lock = SDL::SurfaceScopedLock(other);
 
-bool Surface::AllocNew(int width, int height) {
-  if (surface)
-    return false;
+    surface_ = SDL::MakeSurfaceUQ(0, other.surface_->w, other.surface_->h,
+                                  Depth, Mask.r, Mask.g, Mask.b, Mask.a);
 
-  surface = SDL_CreateRGBSurface(0, width, height, 32,
-                                 Uint32(0xFF000000),  // r
-                                 Uint32(0x00FF0000),  // g
-                                 Uint32(0x0000FF00),  // b
-                                 Uint32(0x000000FF)   // a
-  );
-  if (!surface) {
-    Logger::error(RENDERING)
-        << "Unable to create surface: " << SDL_GetError() << std::endl;
-    return false;
+    std::copy(std::begin(other), std::end(other), this->begin());
+  }
+  else {
+    surface_ = nullptr;
   }
 
-  SDL_SetSurfaceBlendMode(surface, SDL_BLENDMODE_BLEND);
-  return true;
+  return *this;
 }
 
-void Surface::Destroy() {
-  if (surface)
-    SDL_FreeSurface(surface);
-  surface = nullptr;
+Surface& Surface::operator=(Surface&& other) {
+  surface_ = std::move(other.surface_);
+  return *this;
 }
 
-void Surface::LockSurface() {
-  if (locked)
-    return;
-  SDL_LockSurface(surface);
-  locked = true;
+Surface::Surface(Vector2<int> size) {
+  surface_ = SDL::MakeSurfaceUQ(0, size.x, size.y, Depth,  //
+                                Mask.r,                    //
+                                Mask.g,                    //
+                                Mask.b,                    //
+                                Mask.a);
+  if (!surface_) {
+    auto err = "Unable to create surface: " + std::string(SDL_GetError());
+    throw std::runtime_error(err);
+  }
+
+  SDL_SetSurfaceBlendMode(surface_.get(), BlendMode);
 }
 
-void Surface::UnlockSurface() {
-  if (!locked)
-    return;
-  SDL_UnlockSurface(surface);
+void Surface::Set(Vector2<int> pos, Color color) const noexcept {
+  SDL::At<Pixel>(surface_.get(), pos) = static_cast<Pixel>(color);
 }
+void Surface::Blit(const Surface& other, Vector2<int> pos,
+                   std::optional<Rect<int>> clip) const noexcept {
+  SDL_Rect dest = {pos.x, pos.y, other.surface_->w, other.surface_->h};
+  SDL_Rect* clip_ = clip.has_value() ? SDL::ToSDLRectPtr(*clip)  //
+                                     : nullptr;
 
-void Surface::SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b,
-                       uint8_t a) {
-  if (!locked)
-    return;
-  ((Uint32*)surface->pixels)[(y * surface->w) + x] = ToPixel(r, g, b, a);
-}
-
-void Surface::Blit(Surface& other, uint32_t x, uint32_t y, SDL_Rect* rect) {
-  if (!locked || !other.IsLocked())
-    return;
-
-  SDL_Rect dest = {(int)x, (int)y, (int)other.GetWidth(),
-                   (int)other.GetHeight()};
-
-  int err = SDL_BlitSurface(other.GetSurface(), rect, surface, &dest);
+  int err = SDL_BlitSurface(other, clip_, surface_.get(), &dest);
   if (err < 0) {
     Logger::error(RENDERING)
         << "Unable to blit surface: " << SDL_GetError() << std::endl;
-    return;
   }
 }
 
-void Surface::Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-  SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, r, g, b, a));
+void Surface::Fill(Color color) const noexcept {
+  SDL_FillRect(surface_.get(), nullptr, color);
 }
 
-Uint32* Surface::GetData() {
-  if (!locked)
-    return nullptr;
-  return pixels;
+Pixel* Surface::begin() const noexcept {
+  return static_cast<Pixel*>(surface_->pixels);
 }
-
-Uint32 Surface::ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
-  return r << 24 | g << 16 | b << 8 | a;
+Pixel* Surface::end() const noexcept {
+  return &static_cast<Pixel*>(surface_->pixels)[surface_->w * surface_->h];
+}
+const Pixel* Surface::cbegin() const noexcept {
+  return begin();
+}
+const Pixel* Surface::cend() const noexcept {
+  return end();
 }

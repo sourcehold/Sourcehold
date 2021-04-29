@@ -29,8 +29,6 @@ class Tileset : public Texture {
   void SetTile(Texture &image, uint32_t index);
   void Clear();
   Uint32 *GetData();
-  void Lock();
-  void Unlock();
 
   inline uint32_t GetNumTiles() {
     return num;

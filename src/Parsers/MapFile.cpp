@@ -10,6 +10,8 @@ extern "C" {
 #include <blast.h>
 }
 
+#include "SDL/SDLHelpers.h"
+
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
@@ -172,9 +174,8 @@ void MapFile::ParsePreview() {
   uint32_t dim = std::sqrt(prev.num - PALSIZE);
 
   // copy pixels into temporary surface
-  Surface surf;
-  surf.AllocNew(dim, dim);
-  surf.LockSurface();
+  Surface surf({static_cast<int>(dim), static_cast<int>(dim)});
+  auto surf_lock = SDL::SurfaceScopedLock(surf);
 
   Uint8 r, g, b, a;
   for (int y = 0; y < dim; y++) {
@@ -182,11 +183,10 @@ void MapFile::ParsePreview() {
       uint8_t index = prev.data[PALSIZE + x + y * dim];
       TgxFile::ReadPixel(reinterpret_cast<uint16_t*>(prev.data)[index], r, g, b,
                          a);
-      surf.SetPixel(x, y, r, g, b, a);
+      surf.Set({x, y}, {r, g, b, a});
     }
   }
 
-  surf.UnlockSurface();
   preview.AllocFromSurface(surf);
   delete[] prev.data;
 }

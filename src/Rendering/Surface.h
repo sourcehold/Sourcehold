@@ -1,54 +1,47 @@
 #pragma once
 
-#include <memory>
-#include <cstring>
-#include <SDL.h>
+#include <optional>
 
-#include "Rendering/Renderer.h"
+#include "SDL/SDLHelpers.h"
+#include "Common/Shapes.h"
+#include "Color.h"
 
 namespace Sourcehold {
 namespace Rendering {
-/**
- * An SDL_Surface wrapper class. This is primarily used
- * to create static textures.
- */
+
+// ----------------------------------------------------------------------------
+// Surface  -- Prototype
+// ----------------------------------------------------------------------------
 class Surface {
-  SDL_Surface *surface;
-  bool locked = false;
-  Uint32 *pixels = nullptr;
-
  public:
-  Surface();
-  Surface(const Surface &);
-  ~Surface();
+  constexpr static auto Mask = ColorMasks::RGBA8888;
+  constexpr static auto Depth = 32;
+  constexpr static auto BlendMode = SDL_BLENDMODE_BLEND;
 
-  bool AllocNew(int width, int height);
-  void Destroy();
-  void LockSurface();
-  void UnlockSurface();
-  void SetPixel(int x, int y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-  void Blit(Surface &other, uint32_t x, uint32_t y, SDL_Rect *rect = nullptr);
-  void Fill(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+  Surface() : surface_{nullptr} {};
+  Surface(const Surface& other);
+  Surface(Surface&& other);
+  Surface(Vector2<int> size);
+  Surface& operator=(const Surface& other);
+  Surface& operator=(Surface&& other);
+  ~Surface() = default;
 
-  Uint32 *GetData();
-  inline bool IsValid() {
-    return surface;
-  }
-  inline bool IsLocked() {
-    return locked;
-  }
-  inline SDL_Surface *GetSurface() {
-    return surface;
-  }
-  inline int GetWidth() {
-    return surface->w;
-  }
-  inline int GetHeight() {
-    return surface->h;
+  void Set(Vector2<int> pos, Color color) const noexcept;
+  void Blit(const Surface& other, Vector2<int> pos,
+            std::optional<Rect<int>> clip = {}) const noexcept;
+  void Fill(Color color) const noexcept;
+
+  [[nodiscard]] operator SDL_Surface*() const noexcept {
+    return surface_.get();
   }
 
- protected:
-  Uint32 ToPixel(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
+  [[nodiscard]] Pixel* begin() const noexcept;
+  [[nodiscard]] Pixel* end() const noexcept;
+  [[nodiscard]] const Pixel* cbegin() const noexcept;
+  [[nodiscard]] const Pixel* cend() const noexcept;
+
+ private:
+  SDL::SDL_Surface_UQ surface_;
 };
 }  // namespace Rendering
 }  // namespace Sourcehold
