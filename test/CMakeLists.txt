@@ -20,9 +20,16 @@ add_test(CommonTest
 
 target_link_libraries(CommonTest PRIVATE Common)
 
+add_test(SDLTest
+  SDLTest.cpp
+)
+
+target_link_libraries(SDLTest PRIVATE Sourcehold::SDL)
+
 add_test(RenderingTest
   ColorTest.cpp
 )
 
 target_link_libraries(RenderingTest PRIVATE Rendering)
+
 
