@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <numeric>
+#include <array>
 #include "SDL/SDLBackend.h"
 using namespace Sourcehold::SDL;
 
