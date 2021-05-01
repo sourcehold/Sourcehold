@@ -17,7 +17,7 @@ target_link_libraries(SourceholdSDL
   PRIVATE ProjectOptions
   PRIVATE System
   PUBLIC SDL2::SDL2
-  PRIVATE Common
+  PUBLIC Common
 )
 
 add_library(Sourcehold::SDL ALIAS SourceholdSDL)
