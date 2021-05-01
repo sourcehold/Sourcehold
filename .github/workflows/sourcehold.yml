@@ -147,7 +147,7 @@ jobs:
       run: |
         if [[ ${{ matrix.target-platform }} != 'ios-simulator' ]]; then
           pushd build/test
-          ctest
+          ctest --output-on-failure
           popd
         fi
 
