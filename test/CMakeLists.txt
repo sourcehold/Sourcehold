@@ -22,6 +22,7 @@ target_link_libraries(CommonTest PRIVATE Common)
 
 add_test(RenderingTest
   ColorTest.cpp
+  SurfaceTest.cpp
 )
 
 target_link_libraries(RenderingTest PRIVATE Rendering)

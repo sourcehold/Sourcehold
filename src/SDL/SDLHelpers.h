@@ -56,7 +56,7 @@ template <typename T>
   return At<T>(surf, pos);
 }
 
-[[nodiscard]] inline SDL_Rect* ToSDLRectPtr(Rect<int> rect) {
+[[nodiscard]] inline SDL_Rect* ToSDLRectPtr(Rect<int>& rect) {
   static_assert(std::is_same_v<decltype(Rect<int>::x), decltype(SDL_Rect::x)>);
   static_assert(std::is_same_v<decltype(Rect<int>::y), decltype(SDL_Rect::y)>);
   static_assert(std::is_same_v<decltype(Rect<int>::w), decltype(SDL_Rect::w)>);
