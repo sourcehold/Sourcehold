@@ -15,6 +15,80 @@ TEST(Surface, DefaultIsNull) {
   ASSERT_EQ(static_cast<SDL_Surface*>(surface), nullptr);
 }
 
+TEST(Surface, CopyConstructFromDefaultIsNull) {
+  Surface surface;
+  auto surface2(surface);
+  ASSERT_EQ(static_cast<SDL_Surface*>(surface2), nullptr);
+}
+
+TEST(Surface, CopyAssignFromDefaultIsNull) {
+  Surface surface;
+  auto surface2 = surface;
+  ASSERT_EQ(static_cast<SDL_Surface*>(surface2), nullptr);
+}
+
+TEST(Surface, CopyConstructible) {
+  Surface surface({10, 10});
+  SDL_Surface* surface_ptr = surface;
+
+  for (int i = 0; i < 100; ++i) {
+    (static_cast<int*>(surface_ptr->pixels))[i] = i;
+  }
+
+  auto surface2(surface);
+  SDL_Surface* surface_ptr2 = surface2;
+
+  for (int i = 0; i < 100; ++i) {
+    ASSERT_EQ(static_cast<int*>(surface_ptr->pixels)[i],
+              static_cast<int*>(surface_ptr2->pixels)[i]);
+  }
+}
+
+TEST(Surface, CopyAssignmentConstructible) {
+  Surface surface({10, 10});
+  SDL_Surface* surface_ptr = surface;
+
+  for (int i = 0; i < 100; ++i) {
+    (static_cast<int*>(surface_ptr->pixels))[i] = i;
+  }
+
+  auto surface2 = surface;
+  SDL_Surface* surface_ptr2 = surface2;
+
+  for (int i = 0; i < 100; ++i) {
+    ASSERT_EQ(static_cast<int*>(surface_ptr->pixels)[i],
+              static_cast<int*>(surface_ptr2->pixels)[i]);
+  }
+}
+
+TEST(Surface, MoveConstructSourceIsNull) {
+  Surface surface({10, 10});
+  Surface surface2(std::move(surface));
+
+  ASSERT_EQ(surface, nullptr);
+}
+
+TEST(Surface, MoveAssignSourceIsNull) {
+  Surface surface({10, 10});
+  Surface surface2 = std::move(surface);
+
+  ASSERT_EQ(surface, nullptr);
+}
+
+TEST(Surface, MoveConstructDestinationIsValid) {
+  Surface surface({10, 10});
+  Surface surface2(std::move(surface));
+
+  ASSERT_NE(surface2, nullptr);
+}
+
+TEST(Surface, MoveAssignDestinationIsValid) {
+  Surface surface({10, 10});
+  Surface surface2 = std::move(surface);
+
+  ASSERT_NE(surface2, nullptr);
+}
+
 TEST(Surface, Set) {
   Surface surface(size_k);
   surface.Set({0, 0}, color);
