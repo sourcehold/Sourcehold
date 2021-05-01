@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <array>
 #include <numeric>
 #include "Rendering/Surface.h"
 #include "SDL/SDLHelpers.h"
