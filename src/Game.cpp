@@ -37,9 +37,7 @@ using namespace GUI;
 int MainLoop(UIState state) {
   switch (state) {
     case MAIN_MENU: {
-      MainMenu *menu = new MainMenu();
-      state = menu->EnterMenu();
-      delete menu;
+      state = std::make_unique<MainMenu>()->EnterMenu();
 
       MainLoop(state);
     } break;
