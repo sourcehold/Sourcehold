@@ -148,8 +148,8 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
 
   /* Read compressed images into buffer */
   uint32_t buflen = Parser::GetLength() - offData;
-  char *imgdata = new char[buflen];
-  Parser::GetData(imgdata, buflen);
+  auto imgdata = std::vector<char>(buflen);
+  Parser::GetData(imgdata.data(), buflen);
 
   /* Close file */
   Parser::Close();
@@ -218,7 +218,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
     auto tileset_surf_lock = SDL::SurfaceScopedLock(tileset->GetSurface());
 
     for (n = 0; n < entries.size(); n++) {
-      GetImage(n, entries, imgdata, &header);
+      GetImage(n, entries, imgdata.data(), &header);
     }
     tileset->Create();
     textureAtlas->Create();
@@ -238,12 +238,11 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
 
     /* One entry -> one texture */
     for (n = 0; n < entries.size(); n++) {
-      GetImage(n, entries, imgdata, &header);
+      GetImage(n, entries, imgdata.data(), &header);
     }
     textureAtlas->Create();
   }
 
-  delete[] imgdata;
   return true;
 }
 
