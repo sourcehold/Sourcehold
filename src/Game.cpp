@@ -173,7 +173,7 @@ int StartGame(GameOptions &opt) {
 
   Logger::message(GAME) << "Done" << std::endl;
 
-  Startup *start = new Startup();
+  auto start = std::unique_ptr<Startup>(new Startup());
 
   int ret = EnterLoadingScreen();
   if (ret != EXIT_SUCCESS)
@@ -185,7 +185,6 @@ int StartGame(GameOptions &opt) {
     state = start->Begin();
   }
 
-  delete start;
   return MainLoop(state);
 }
 
