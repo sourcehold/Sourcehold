@@ -173,7 +173,7 @@ int StartGame(GameOptions &opt) {
 
   Logger::message(GAME) << "Done" << std::endl;
 
-  auto start = std::unique_ptr<Startup>(new Startup());
+  auto start = std::make_unique<Startup>();
 
   int ret = EnterLoadingScreen();
   if (ret != EXIT_SUCCESS)
