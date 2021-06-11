@@ -1,4 +1,5 @@
 #include <random>
+#include <algorithm>
 
 #include "GameMap.h"
 #include "GameManager.h"
@@ -39,10 +40,11 @@ void GameMap::LoadFromDisk(ghc::filesystem::path path) {
   std::mt19937 rng(dev());
   std::uniform_int_distribution<std::mt19937::result_type> dist(0, 8);
 
-  for (uint32_t i = 0; i < tiles.size(); i++) {
-    int tile = dist(rng);
-    tiles[i] = tileset->GetTile(tile);
-  }
+  auto get_tile = [&]() {
+    return tileset->GetTile(dist(rng));
+  };
+
+  std::generate(begin(tiles), end(tiles), get_tile);
 }
 
 void GameMap::Render() {
