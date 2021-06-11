@@ -40,9 +40,7 @@ void TextureAtlas::Allocate(
 
   uint32_t width = 0, height = 0;
   uint32_t px = 0, py = 0;
-  for (size_t i = 0; i < sorted.size(); i++) {
-    Elem e = sorted[i];
-
+  for (auto const& e : sorted) {
     if (px > MAX_X_RESOLUTION) {
       px = 0;
       py = height;
