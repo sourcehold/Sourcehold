@@ -147,9 +147,9 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
   uint32_t offData = Parser::Tell();
 
   /* Read compressed images into buffer */
-  uint32_t buflen = Parser::GetLength() - offData;
-  auto imgdata = std::vector<char>(buflen);
-  Parser::GetData(imgdata.data(), buflen);
+  uint32_t n_textures = Parser::GetLength() - offData;
+  auto compressed_textures = std::vector<char>(n_textures);
+  Parser::GetData(compressed_textures.data(), n_textures);
 
   /* Close file */
   Parser::Close();
@@ -218,7 +218,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
     auto tileset_surf_lock = SDL::SurfaceScopedLock(tileset->GetSurface());
 
     for (n = 0; n < entries.size(); n++) {
-      GetImage(n, entries, imgdata.data(), &header);
+      GetImage(n, entries, compressed_textures.data(), &header);
     }
     tileset->Create();
     textureAtlas->Create();
@@ -238,7 +238,7 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
 
     /* One entry -> one texture */
     for (n = 0; n < entries.size(); n++) {
-      GetImage(n, entries, imgdata.data(), &header);
+      GetImage(n, entries, compressed_textures.data(), &header);
     }
     textureAtlas->Create();
   }

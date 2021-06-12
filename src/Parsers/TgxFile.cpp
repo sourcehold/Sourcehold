@@ -39,15 +39,15 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
                 static_cast<int>(header.height)});
 
   /* Calculate size */
-  size_t size = Parser::GetLength() - Parser::Tell();
+  size_t texture_size = Parser::GetLength() - Parser::Tell();
 
-  auto buf = std::vector<char>(size);
-  Parser::GetData(buf.data(), size);
+  auto compressed_texture = std::vector<char>(texture_size);
+  Parser::GetData(compressed_texture.data(), texture_size);
   Parser::Close();
 
   /* Read image data */
   auto surf_lock = SDL::SurfaceScopedLock(surf);
-  ReadTgx(surf, buf.data(), size, 0, 0, nullptr);
+  ReadTgx(surf, compressed_texture.data(), texture_size, 0, 0, nullptr);
 
   /* Convert to texture */
   Texture::AllocFromSurface(surf);
