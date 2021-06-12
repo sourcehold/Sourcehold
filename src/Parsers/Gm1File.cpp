@@ -147,9 +147,9 @@ bool Gm1File::LoadFromDisk(ghc::filesystem::path path, bool cached) {
   uint32_t offData = Parser::Tell();
 
   /* Read compressed images into buffer */
-  uint32_t n_textures = Parser::GetLength() - offData;
-  auto compressed_textures = std::vector<char>(n_textures);
-  Parser::GetData(compressed_textures.data(), n_textures);
+  uint32_t textures_size = Parser::GetLength() - offData;
+  auto compressed_textures = std::vector<char>(textures_size);
+  Parser::GetData(compressed_textures.data(), textures_size);
 
   /* Close file */
   Parser::Close();
