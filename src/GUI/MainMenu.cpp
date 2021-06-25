@@ -1,4 +1,5 @@
 #include <map>
+#include <memory>
 
 #include "GUI/MainMenu.h"
 #include "GUI/NarrScreen.h"
@@ -204,9 +205,7 @@ UIState MainMenu::EnterMenu() {
         aud_chantloop.Stop();
 
         int index = 0;
-        NarrScreen* narr = new NarrScreen(index + 1);
-        narr->Begin();
-        delete narr;
+        std::make_unique<NarrScreen>(index + 1)->Begin();
 
         Song music(GetDirectory() / "fx/music/the maidenA.raw", true);
         music.Play();

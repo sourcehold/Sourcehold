@@ -2,6 +2,8 @@
 #include "System/Config.h"
 #include "SDL/SurfaceLock.h"
 
+#include <vector>
+
 using namespace Sourcehold::Parsers;
 using namespace Sourcehold::System;
 
@@ -37,20 +39,19 @@ bool TgxFile::LoadFromDisk(ghc::filesystem::path path) {
                 static_cast<int>(header.height)});
 
   /* Calculate size */
-  size_t size = Parser::GetLength() - Parser::Tell();
+  size_t texture_size = Parser::GetLength() - Parser::Tell();
 
-  char *buf = new char[size];
-  Parser::GetData(buf, size);
+  auto compressed_texture = std::vector<char>(texture_size);
+  Parser::GetData(compressed_texture.data(), texture_size);
   Parser::Close();
 
   /* Read image data */
   auto surf_lock = SDL::SurfaceScopedLock(surf);
-  ReadTgx(surf, buf, size, 0, 0, nullptr);
+  ReadTgx(surf, compressed_texture.data(), texture_size, 0, 0, nullptr);
 
   /* Convert to texture */
   Texture::AllocFromSurface(surf);
 
-  delete[] buf;
   return true;
 }
 

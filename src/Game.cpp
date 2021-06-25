@@ -37,9 +37,7 @@ using namespace GUI;
 int MainLoop(UIState state) {
   switch (state) {
     case MAIN_MENU: {
-      MainMenu *menu = new MainMenu();
-      state = menu->EnterMenu();
-      delete menu;
+      state = std::make_unique<MainMenu>()->EnterMenu();
 
       MainLoop(state);
     } break;
@@ -173,7 +171,7 @@ int StartGame(GameOptions &opt) {
 
   Logger::message(GAME) << "Done" << std::endl;
 
-  Startup *start = new Startup();
+  auto start = std::make_unique<Startup>();
 
   int ret = EnterLoadingScreen();
   if (ret != EXIT_SUCCESS)
@@ -185,7 +183,6 @@ int StartGame(GameOptions &opt) {
     state = start->Begin();
   }
 
-  delete start;
   return MainLoop(state);
 }
 
