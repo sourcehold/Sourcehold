@@ -100,7 +100,7 @@ ghc::filesystem::path System::GetDocumentsPath() {
   else {
     *path = '\0';
   }
-#elif defiend(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
+#elif defined(SOURCEHOLD_WINDOWS) || defined(SOURCEHOLD_MINGW)
   LPITEMIDLIST pidl;
   SHGetSpecialFolderLocation(NULL, CSIDL_PERSONAL, &pidl);
   SHGetPathFromIDList(pidl, path);
