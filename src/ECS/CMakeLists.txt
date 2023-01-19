@@ -21,8 +21,8 @@ target_include_directories(ECS PRIVATE ../)
 target_link_libraries(ECS 
   PRIVATE ProjectOptions
   PRIVATE System
-  PUBLIC EnTT::EnTT
+  PUBLIC EnTT:EnTT
   PUBLIC Common
-  PRIVATE SDL2::SDL2
+  PRIVATE SDL2:SDL2
 )
 

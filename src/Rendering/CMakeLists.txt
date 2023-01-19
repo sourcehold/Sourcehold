@@ -33,8 +33,8 @@ target_link_libraries(Rendering
   PRIVATE System
   PRIVATE FFmpegUtil
   PUBLIC Common
-  PUBLIC Sourcehold::SDL 
-  PRIVATE OpenAL::OpenAL
+  PUBLIC Sourcehold:SDL 
+  PRIVATE OpenAL:OpenAL
 )
 
 add_library(Sourcehold::Rendering ALIAS Rendering)
