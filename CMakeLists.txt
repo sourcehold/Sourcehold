@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project
-project(Stronghold)
+project(Stronghold VERSION 0.1.2)
 
 
 include(cmake/Preamble.cmake)
