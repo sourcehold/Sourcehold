@@ -1,6 +1,13 @@
 # Sourcehold
+
+## Notice
+This project is frozen until we know what the new [Definitive Edition of Stronghold](https://store.steampowered.com/app/2140020/Stronghold_Definitive_Edition/) from Firefly will be able to do!
+
+Looking for a Stronghold (Crusader) community? Join the UCP Discord
+[![Discord](https://img.shields.io/discord/426318193603117057.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/anzCpnTGxY)
+
+## Project description
 [![Build Status](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml/badge.svg?event=push)](https://github.com/sourcehold/Sourcehold/actions/workflows/sourcehold.yml)
-[![Discord](https://img.shields.io/discord/566293677329219595.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/dzdBuNy)
 
 Open source engine implementation of Stronghold by Firefly Studios. This project is currently in an early stage of development. Once completed, it should be able to replace all editions of classic Stronghold, including the HD remaster.
 
