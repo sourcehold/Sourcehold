@@ -30,10 +30,10 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/entt)
 
 # OpenAL
 find_package(OpenAL REQUIRED)
-AddImportedTarget(OpenAL::OpenAL
-  ${OPENAL_LIBRARY}
-  ${OPENAL_INCLUDE_DIR}
-)
+#AddImportedTarget(OpenAL::OpenAL
+ # ${OPENAL_LIBRARY}
+  #${OPENAL_INCLUDE_DIR}
+#)
 
 if(TARGET_OS_IOS)
   set(THIRDPARTY_IOS_DIR_PATH ${CMAKE_SOURCE_DIR}/thirdparty/ios)
@@ -92,10 +92,10 @@ find_package(FFmpeg REQUIRED COMPONENTS
 
 # swresample
 find_package(Libswresample REQUIRED)
-AddImportedTarget(SWRESAMPLE::SWRESAMPLE 
-  ${LIBSWRESAMPLE_LIBRARIES}
-  ${LIBSWRESAMPLE_INCLUDE_DIRS}
-)
+#AddImportedTarget(SWRESAMPLE::SWRESAMPLE 
+ # ${LIBSWRESAMPLE_LIBRARIES}
+  #${LIBSWRESAMPLE_INCLUDE_DIRS}
+#)
 
 endif() # TARGET_OS_IOS
 

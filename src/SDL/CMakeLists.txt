@@ -16,7 +16,7 @@ target_include_directories(SourceholdSDL
 target_link_libraries(SourceholdSDL
   PRIVATE ProjectOptions
   PRIVATE System
-  PUBLIC SDL2::SDL2
+  PUBLIC SDL2:SDL2
   PUBLIC Common
 )
 
