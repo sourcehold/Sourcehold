@@ -3,6 +3,9 @@
 ## Notice
 This project is frozen until we know what the new [Definitive Edition of Stronghold](https://store.steampowered.com/app/2140020/Stronghold_Definitive_Edition/) from Firefly will be able to do!
 
+We have a Discord server!
+[![Discord](https://img.shields.io/discord/1259903348077756527.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/WdjYD39gJE)
+
 Looking for a Stronghold (Crusader) community? Join the UCP Discord
 [![Discord](https://img.shields.io/discord/426318193603117057.svg?color=7389D8&label=%20&logo=discord&logoColor=ffffff)](https://discord.gg/anzCpnTGxY)
 
